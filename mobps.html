@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en" >
+	<meta charset="utf-8"/>
+	<head>
+		<title>MoBPS </title>
+		<!-- Javascripte Online -->
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+		
+		<script src="https://unpkg.com/vue-slider"></script>
+			
+		<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@0.0.38/dist/vue-treeselect.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@0.0.38/dist/vue-treeselect.min.css">
+ 
+		
+		<!-- for plotting graphs: -->
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+		<script type="text/javascript" src="http://visjs.org/examples/network/exampleUtil.js"></script>
+		<script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
+		<link href="http://visjs.org/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+		
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+
+		<link rel="stylesheet" type="text/css" href="./styles/network.css">
+		
+		<!--  for javascript and ajax call -->		
+		<script type="text/javascript" src="javascript/jQ1.js"></script>
+		<script type="text/javascript" src="javascript/jQ2.js"></script>
+		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
+		<script type="text/javascript" src="javascript/jQ3.js"></script>
+		
+
+		
+	</head>
+
+	<body onload="init();">
+
+		
+		<div id="runningDog">
+			<button style="color: red" class='bar_button' onclick="stopR();">Stop R Simulation</button> 
+			<h3 id="runningDogTitle">
+			</h3>
+			<div id="runningDogLog">
+			</div>
+		</div>
+		
+		<div id='mainDiv'>
+
+			<div id="Project_Bar">
+				<div id="Icon" class="container" onclick="myFunction()">
+					<div class="bar1"></div>
+					<div class="bar2"></div>
+					<div class="bar3"></div>
+				</div> 
+				<div style="overflow:auto;">
+					&nbsp;&nbsp;
+					<< {{geninfo['Project Name']}} >>
+					&nbsp;&nbsp;
+					<button class='bar_button' id="save_button" onclick="saveProject();">Save Project</button> 
+					&nbsp;&nbsp;
+					<button class='bar_button' onclick="saveProjectAs();">Save As ...</button> 
+					&nbsp;&nbsp;
+					<button class='bar_button' id="download_button" onclick="downloadNetwork()" >Download Project</button>
+					&nbsp;&nbsp;
+					<button class='bar_button' id="delete_button" onclick="deleteProject()" >Delete Project</button>
+					&nbsp;&nbsp;
+					<button class='bar_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
+					&nbsp;&nbsp;
+					<button class='bar_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+				</div>
+			</div>
+			<div id='SaveAs_Div'>
+				New Project Name: <input id="saveAs-name" placeholder="Type a name"/> <br><br>
+				<input type="button" value="save" id="SaveAs-saveButton" onclick="saveProject(document.getElementById('saveAs-name').value)" />
+				<input type="button" value="cancel" id="SaveAs-cancelButton" onclick="document.getElementById('SaveAs_Div').style.display = 'none'"/>
+			</div>
+
+				<div id="Navigator" ref="Navigator" v-show="show_menu" onclick=myFunction();>
+					
+					<!--img id="MOBPS_logo" src="./styles/img/mobps.png" alt="MOBPS"-->
+					
+					<ul>
+						<li><a href="#LoadJSON_Div">New/Load Project</a></li> 
+						<li><a href="#General_Info">General information</a></li>
+						<li><a href="#Phenotype_Info_Div">Phenotype information</a></li>
+						<li><a href="#Selectionindex_Div">Optional information</a></li>
+						<li><a href="#Breeding_Scheme">Breeding Scheme</a></li>
+						<li><a href="#Results_Div">R Simulation/ Results</a></li>
+						<li><a href="#Export_Data_H3">Export/ Import</a></li>
+						<li><a href="/logout"> User: {{user}} <br> Logout</a> </li>
+						<li><a href="/Change_Password"> Change Password</a> </li>
+					</ul> 
+					
+				</div>
+
+			
+						
+	<!--		<div id="showGenInfo_button">
+				<button v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Informations</button>
+			</div>
+			<div id="showWarning_button">
+				<button v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+			</div> -->
+			<div id="warnings_sum">
+				<h4 v-if="warnings.length > 0" style="color: red; font-style:italic;"> Attention, there are {{warnings.length}} warnings! R Simulation cannot be run unless they are fixed.</h4>
+			</div>
+			<transition name="slide-generalInfo">
+				<div id ="warnings" v-show='show_warnings' >
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<span style="font-weight:bold;">Warnings  </span>
+					<br><br>
+					<span v-for='(war, index) in warnings'> Warning {{index}} : <span style="color: red">{{war}} <br><br></span></span>
+				</div>
+			</transition>
+			<transition name="slide-generalInfo">
+				<div id ="generalInfo" v-show='show_geninfo' >
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<span v-if="show_info =='general'">
+						<span style="font-weight:bold;">General Info  </span>
+						<br><br>
+						<span v-if="key != 'Ensembl Filter' & key != 'Ensembl Filter Values' & value != ''" v-for='(value,key) in geninfo'> {{key}} : <span style="color: red">{{value}}  <br><br></span></span> 
+					</span>
+					
+					<span v-if="show_info =='node'">
+						<span style="font-weight:bold;">Node Info  </span>
+						<br><br>
+						<span v-if="['x','y', 'individualsVar', 'label','color','title'].indexOf(key) == -1 && value != '' && value != []" v-for='(value,key) in active_node'> {{key}} : <span style="color: red">{{value}} <br><br></span></span>
+					</span>
+					<span v-if="show_info =='edge'">
+						<span style="font-weight:bold;">Edge Info  </span>
+						<br><br>
+						<span v-if="['useVar','id','color','title'].indexOf(key) == -1 && value != '' && value != []" v-for='(value,key) in active_edge'> {{key}} : 
+							<span style="color: red">{{value}} 
+								<span v-if="active_edge.useVar.indexOf(key)>-1"> ({{individualsVar_options[active_edge.useVar.indexOf(key)].name}})</span><br><br> 
+							</span>
+						</span>
+					</span>
+				</div>
+			</transition>
+			<div id="LoadJSON_Div">
+			<br>
+			<br>
+			<h2>MoBPS</h2>
+			<h3>Load a new/existent project from your own database:</h3>
+			Project: 
+			<select id="Project_Name" onchange="loadData(value)" v-model="geninfo['Project Name']">
+				<option value="Create_New_123456YYYY">New Project</option>
+				<option v-for="option in database" v-bind:value="option">
+					{{ option }}
+				</option>
+			</select>
+			&nbsp;&nbsp; Version: 
+			<select id="Version" onchange="loadVersion(value)">
+				<option value="recent">(most recent)</option>
+				<template v-if="versions.length >0">
+				<option v-for="(option, index) in versions" v-bind:value="index">
+					{{ option.date }}
+				</option>
+				</template>
+			</select>
+			<h3>Or choose a template as a starting point:</h3>
+			<select onchange="loadTemplate(value)" >
+				<option value="Create_New_12345XXX"></option>
+				<option v-for="(option,index) in template_database" v-bind:value="index">
+					{{ option.name }}
+				</option>
+			</select>
+			
+			</div>
+			
+			<div id="General_Info" v-on:click="show_info ='general'" onchange="checkEverything(this.id)">
+				<br>
+				<br>
+				<h3> General Information</h3> 
+				<table id="geninfo_table">
+					<colgroup>
+						<col width="40%">
+						<col width="60%">
+					</colgroup>
+					<tr>
+						<td>Project Name</td><td><input placeholder="Type a name" v-model="geninfo['Project Name']"></td>
+					</tr>
+					<tr>
+						<td>Species</td>
+						<td> 
+							<select v-model="geninfo.Species">  <!-- onchange="updateSpeciesData(value)">  -->
+								<option v-for="option in Species_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Time Unit</td>
+						<td>
+							<select v-model="geninfo['Time Unit']">
+								<option v-for="option in Time_Unit_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Genetic Data </td>
+						<td>
+						<input type="radio" id="ens" value="Ens" v-model="genetic_data">
+						<label for="ens">Use Ensembl Map</label> <br>
+						<input type="radio" id="own" value="Own" v-model="genetic_data">
+						<label for="own">Upload Own Map (vcf/plink)</label> <br>
+						<input type="radio" id="cus" value="Cus" v-model="genetic_data">
+						<label for="cus">Create customized Map</label>
+						</td>
+					</tr>	
+					<tr v-if="genetic_data == 'Ens'">
+						<td>Ensembl Dataset </td>
+						<td v-if="geninfo.Species != ''">
+							<select v-model="geninfo['Ensembl Dataset']">
+								<option v-for="option in ensembl_options[geninfo.Species]" v-bind:value="option.Value" >
+								{{ option.Value }}
+								</option>
+							</select>
+						</td>
+						<td v-else>
+							Please choose a species first.
+						</td>
+					</tr>	
+					<tr v-if="genetic_data == 'Ens'">
+						<td>Max. Number of SNPs 	
+							<span class="tooltip">? <span class="tooltiptext">Only a subsample of the Ensembl dataset is used to save computation time.</span></span>
+						</td>
+						<td v-if="geninfo.Species != ''">
+							<input placeholder="Type a number" v-model="geninfo['Max Number of SNPs']">
+						</td>
+						<td v-else>
+						</td>
+					</tr>	
+<!--					<tr v-if="geninfo['Use Ensembl Map'] =='No'">
+						<td>Use Own Map (vcf or plink-map file)</td>
+						<td>
+						<input type="checkbox" false-value="No" true-value="Yes" v-model="geninfo['Use Own Map']">
+						<template v-if="geninfo['Use Own Map'] == 'Yes'">
+								hier kommt upload-modul!
+						</template>
+						</td>
+					</tr>  -->
+					<tr v-if="geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='Yes'">
+						<td>Upload Map File</td>
+						<td>
+							<form id='MapUpload' target="print_popup" action='/MapUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800'); setMapPath();">
+								<input type='file' name='mapFile' id='mapFile'>
+								<input type='submit' value='Upload Map'>
+							</form>
+						</td>
+					</tr>
+					<tr v-if="geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='Yes'">
+						<td>Own Map Path</td>
+						<td>
+							{{geninfo["Own Map Path"]}}
+						</td>
+					</tr>
+					<tr v-if="geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='No'">
+						<td>Number of Chromosomes</td>
+						<td><input placeholder="Type a number" v-model="geninfo['Number of Chromosomes']" v-on:change='createChrom();'></td>
+					</tr>			
+					<tr v-if="geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='No'">
+						<td>Chromosomes of Equal Length</td>
+						<td> 
+							<input type="checkbox" false-value="No" true-value="Yes" v-model="geninfo['Chromosomes of Equal Length']">
+						</td>
+					</tr>			
+					<tr v-show="geninfo['Chromosomes of Equal Length'] == 'Yes' & geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='No'">
+						<td colspan=2>
+							<button v-on:click='show_chromo_info = !show_chromo_info' >Show/Hide Chromosome Information</button>
+							<br>
+							<br>
+								<table id="chrom_table" v-show="show_chromo_info">
+									<thead>
+										<tr>
+											<td>Chromosome</td>
+											<td>Physical Length (in MbP)</td>
+											<td>Marker Density (SNP/Mbp)</td>
+											<td>Recombination (cM/Mbp)</td>
+										</tr>
+									</thead>
+									<tbody>
+										<tr v-for='chrom in chromo_display.slice(0,1)' >
+											<td>Chrom 1 - {{geninfo['Number of Chromosomes']}}</td>
+											<td v-for="key in Object.keys(chrom)">
+												<input v-model="chrom[key]"> 
+											</td>
+										</tr>
+									</tbody>
+								</table>
+						</td>
+					</tr>
+					<tr v-show="geninfo['Chromosomes of Equal Length'] == 'No' & geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='No'">
+						<td colspan=2>
+							<button v-on:click='show_chromo_info = !show_chromo_info' >Show/Hide Chromosome Information</button>
+							<br>
+							<br>
+							<table id="chrom_table" v-show="show_chromo_info">
+								<thead>
+									<tr>
+										<td>Chromosome</td>
+										<td>Physical Length (in MbP)</td>
+										<td>Marker Density (SNP/Mbp)</td>
+										<td>Recombination (cM/Mbp)</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for='chrom in chromo_display' >
+										<td>Chrom {{chromo_display.indexOf(chrom)+1}}</td>
+										<td v-for="key in Object.keys(chrom)">
+											<input v-model="chrom[key]"> 
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<br>
+				<br>
+			</div>
+			<div id="Phenotype_Info_Div" onchange="checkEverything(this.id)">
+				<br>
+				<br>
+				<h3 id="Phenotype_Info"> Phenotype Information</h3> 
+				<button v-on:click="addPheno();"> Add new phenotype</button>
+				<button v-if="traitsinfo.length > 0" v-on:click='show_pheno_info = !show_pheno_info' >Show/Hide {{traitsinfo.length}} phenotypes</button>
+				<button v-if="traitsinfo.length > 0" v-on:click="show_QTL = !show_QTL"> Show/Hide QTLs</button>
+				<button v-if="traitsinfo.length > 1" v-on:click="show_matrix = !show_matrix"> Show/Hide phenotypic correlation</button>
+				<button v-if="traitsinfo.length > 1" v-on:click="show_matrix2 = !show_matrix2"> Show/Hide genetic correlation</button>
+				<br>
+				<br>
+				<table class="trait_table" v-if="traitsinfo.length > 0 && show_pheno_info">
+					<thead>
+						<tr>
+							<td style="padding:5px;">Phenotype</td>
+							<td style="padding:5px;">Unit</td>
+							<td style="padding:5px;">Pheno. Mean</td>
+							<td style="padding:5px;">Pheno. SD</td>
+							<td style="padding:5px;">Heritability</td>
+							<td style="padding:5px;"># polygenic loci</td>
+							<td style="padding:5px;">Major QTL</td>
+							<td style="padding:5px;">Value per unit (&#8364;)</td>
+							<td style="padding:5px;">Show Cor</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for='(trait, index) in traitsinfo' >
+							<td>
+								<input v-model="trait['Trait Name']" style="width:80px;"> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Unit']" style="width:50px;"> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Mean']" style="width:50px;" type="Number" class="no-spinners" step=0.001> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Std Deviation']" style="width:50px;" type="Number" class="no-spinners" step=0.001> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Heritability']" max=1 min=0 style="width:50px;" type="Number" class="no-spinners" step=0.0001> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:50px;" type="Number" class="no-spinners" step=1> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Major QTL']" style="width:50px;" type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Value per Unit']" style="width:50px;" type="Number" class="no-spinners" step=0.001> 
+							</td>
+							<td>
+								<input type="checkbox" v-model="show_matrix_element[index].show">
+							</td>
+							<td>
+								<button v-on:click="removePheno(index)">X</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<br>
+				<template v-for="trait in traitsinfo" v-if="show_QTL && trait['Trait Major QTL'] > 0">
+					<table class="trait_table">
+						<thead>
+							<tr>
+								<td>QTLs for {{trait['Trait Name']}}</td>
+								<td>SNP ID</td>
+								<td>bp</td>
+								<td>chromo</td>
+								<td>Effect AA</td>
+								<td>Effect AB</td>
+								<td>Effect BB</td>
+								<td>Allele Freq. (A)</td>
+								<td>Optional Info</td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for='snp in trait["Trait QTL Info"]' >
+								<td v-for="key in Object.keys(snp).slice(0,1)">
+									<input v-model="snp[key]" style="width:100px;"> 
+								</td>
+								<td v-for="key in Object.keys(snp).slice(1,9)">
+									<input v-model="snp[key]" style="width:60px;"> 
+								</td>
+								<td>
+									<button v-on:click="removeQTL(trait,snp)">X</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<br>
+				</template>
+				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix">
+					<tr>
+						<td style="font-weight:bold;width:60px;padding:5px;">Phenotypic Correlation</td>
+						<td style="width:60px;padding:5px;" v-for="(row, rind) in matrix" v-if="show_matrix_element[rind].show">
+							{{traitsinfo[rind]['Trait Name']}}
+						</td>
+					</tr>
+					<tr v-for='(row, rind) in matrix' v-if="show_matrix_element[rind].show">
+						<td style="padding:2px;">
+							{{traitsinfo[rind]['Trait Name']}}
+						</td>
+						<td v-for="(cl, cind) in matrix" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
+							<input v-model="matrix[rind].row[cind].val" style="width:40px;" v-if="rind > cind" class="no-spinners" type="number" step=0.000001 min=-1 max=1> 
+							<template v-if="rind <= cind">
+								{{ matrix[cind].row[rind].val }}
+							</template>
+						</td>
+					</tr>
+				</table>
+				<br>
+				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix2">
+					<tr>
+						<td style="font-weight:bold;width:60px;padding:5px;">Genetic Correlation</td>
+						<td style="width:60px;padding:5px;" v-for="(row, rind) in matrix2" v-if="show_matrix_element[rind].show">
+							{{traitsinfo[rind]['Trait Name']}}
+						</td>
+					</tr>
+					<tr v-for='(row, rind) in matrix2' v-if="show_matrix_element[rind].show">
+						<td style="padding:2px;">
+							{{traitsinfo[rind]['Trait Name']}}
+						</td>
+						<td v-for="(cl, cind) in matrix2" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
+							<input v-model="matrix2[rind].row[cind].val" style="width:40px;" v-if="rind > cind" class="no-spinners" type="number" step=0.000001 min=-1 max=1> 
+							<template v-if="rind <= cind">
+								{{ matrix2[cind].row[rind].val }}
+							</template>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div id="Selectionindex_Div" onchange="checkEverything(this.id)">
+				<br>
+				<br>
+				<h3>Creating own Selection Indexes (Optional)
+					<span class="tooltip">? <span class="tooltiptext">Create your own selection indexes in order to use it in the breeding scheme.</span></span>
+				</h3> 
+				<input id="newSI" placeholder="Type SI name" v-show="traitsinfo.length > 0">
+				<button v-on:click="addSI()" v-if="traitsinfo.length > 0"> Add new SI</button>
+				<br>
+				<br>
+				<template v-if="traitsinfo.length > 0">
+					<table class="trait_table">
+						<thead>
+							<tr>
+								<td>SI</td>
+								<td v-for="trait in traitsinfo"> {{trait['Trait Name']}}</td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for='(si,index) in selection_index' >
+								<td>
+									<!-- <input v-model="si['Name']" style="width:80px;"> -->
+									{{si['Name']}}
+								</td>
+								<td v-for="(key, ind) in Object.keys(si)" v-if="ind >0">
+									<input v-model="si[key]" style="width:30px;"> 
+								</td>
+								<td>
+									<button v-on:click="removeSI(si, index)" v-if="index > 0">X</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<br>
+					<br>
+				</template>			
+				<h3>Creating own Phenotyping Classes (Optional)
+					<span class="tooltip">? <span class="tooltiptext">Phenotyping Classes can be attached to each cohort in the breeding scheme, indicating which phenotype is available in the respective cohort. </span></span>
+				</h3>
+				<input id="newPhenoC" placeholder="Type PhenoC name" v-show="traitsinfo.length > 0">
+				<button v-on:click="addPC()" v-if="traitsinfo.length > 0"> Add new PhenoC</button>
+				<br>
+				<br>
+				<template v-if="traitsinfo.length > 0">
+					<table class="trait_table">
+						<thead>
+							<tr>
+								<td>PhenoClass</td>
+								<td>Phenotyping Cost</td>
+								<td v-for="trait in traitsinfo"> {{trait['Trait Name']}}</td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for='(si,index) in phenotyping_class' >
+								<td>
+									<!-- <input v-model="si['Name']" style="width:90px;"> -->
+									{{si['Name']}}
+								</td>
+								<td v-for="(key, ind) in Object.keys(si)" v-if="ind >0" >
+									<input v-model="si[key]" style="width:30px;"> 
+								</td>
+								<td>
+									<button v-on:click="removePC(si, index)" v-if="index > 0">X</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<br>
+				</template>	
+				<h3>General Economy Parameters (Optional)
+					<span class="tooltip">? <span class="tooltiptext">Define your own economic parameters for the calculation of economic values in your breeding scheme. </span></span>
+				</h3>
+				<table style="text-align:left;background:white; border: 1px solid lightgray" class="trait_table">
+					<colgroup>	
+						<col width="40%">
+						<col width="60%">
+					</colgroup>
+					<tr>
+						<td>Fixed cost (&#8364;)</td><td><input placeholder="Type a number" v-model="economy['Fixed Cost']"></td>
+					</tr>
+					<tr>
+						<td>Interest rate (%)</td><td><input placeholder="Type a number" v-model="economy['Interest Rate']"></td>
+					</tr>
+					<tr>
+						<td>Genotyping cost per individual(&#8364;)</td><td><input placeholder="Type a number" v-model="economy['Genotyping Cost']"></td>
+					</tr>
+					<tr style="height:15px"><td colspan=2></td></tr>
+					<tr>	
+						<td style="font-weight:bold">Housing/Field cost class	
+							<span class="tooltip">? <span class="tooltiptext">Type a name and then click on "Creating new HFC Class" to create your own classes of housing/field costs. These classes can then be assigned to each cohort in the breeding scheme. </span></span>
+						</td>
+						<td style="font-weight:bold">Housing/Field cost (&#8364;)</td>
+					</tr>
+					<tr v-for="(vv, ind) in economy['Animal Housing Costs']">
+						<td>
+							{{vv.Name}}  
+						</td>
+						<td>
+							<input v-model="vv.Cost" style="width:100px;"> 
+							<button v-if="ind > 0" v-on:click="removeHCostClass(vv, ind)">X</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input id="newHCostClass" placeholder="Type a HFC name">
+						</td>
+						<td>
+							<button for="newHCostClass" v-on:click="createHCostClass()"> Creating new HFC Class </button>
+						</td>
+					</tr>					
+				</table>
+			<br>
+			<br>
+				<div id="Variables_Info" onchange="checkEverything(this.id)">
+					<h3> Declaring own variables (Optional)	
+						<span class="tooltip">? <span class="tooltiptext">Create your own variables, which then can be used for e.g. number of individuals, number of repeats,... in the breeding scheme. </span></span>
+					</h3> 
+					<input id="newVariable" placeholder="Type variable name">
+					<button for="newVariable" v-on:click="createVariable()"> Creating new Variable </button>
+					<br>
+					<br>
+					<table class="trait_table" v-if="individualsVar_options.length > 0" style="width:500px">  
+						<thead>
+							<tr>
+								<td>Variable Name</td>
+								<td>Variable Value</td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="vv in individualsVar_options">
+								<td>
+									{{vv.name}}  
+								</td>
+								<td>
+									<input v-model="vv.value" style="width:100px;" v-on:input="updateNodesVar(vv); updateEdgesVar(vv);"> 
+								</td>
+								<td>
+									<button v-on:click="removeVariable(vv)">X</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<br>
+					<br>
+				</div>
+			</div>
+			<div id="Breeding_Scheme">
+				<br>
+				<br>
+				<h3> Breeding Scheme</h3> 
+				<h4 style="color: red">Important: Please AVOID node names with underscore und trailing numbers combined, e.g. ABC_1, DEF_2, ...</h4>
+				<div id="mynetwork_container">
+					<div id="mynetwork"></div>
+					<div id="mynetwork_label">
+		<!--				<button onclick="saveProject();">Save to Database</button>
+						<br>
+						<br>
+						<input style="width:100px" type="text" value = "" name="saveAs_name" id="saveAs_name" placeholder="Enter a file name">
+						<button id = "save_as" onclick="saveAsProject();">Save As</button>
+						<br> -->
+						<h4>Legends</h4>
+						Nodes:
+						<p v-for="key in Object.keys(node_colors)" v-bind:style="{color: node_colors[key]}"> &#9645;  {{key}}</p>
+						Edges:
+						<p v-for="key in Object.keys(edge_colors)" v-bind:style="{color: edge_colors[key]}"> &#8599;  {{key}}</p>
+					</div>
+				</div>
+			</div>
+
+			<div id="node-popUp" onchange="checkEverything(this.id)">
+				<h3> {{node_operation}} </h3><br>
+				<h4> Node {{ active_node.id }}</h4>
+				<table style="margin:auto; width:100%">
+					<colgroup>
+						<col width="40%">
+						<col width="60%">
+					</colgroup>
+					<tr>
+						<td>Name</td><td><input placeholder="Type a name" v-model="active_node.id" ></td>
+					</tr>
+					<tr>
+						<td>Number of individuals</td>
+						<td><input placeholder="Type number/Select variable" id="individuals" list="indVar" v-model="active_node.individualsVar" onchange="updateIndividuals(value)">
+							<datalist id="indVar">
+								<option v-for="ivar in individualsVar_options" v-bind:value="ivar.name">
+							</datalist>
+						</td>
+	
+					</tr>
+					
+					<tr>
+						<td>Founder</td>
+						<td> 
+							<input type="checkbox" false-value="No" true-value="Yes" v-model="active_node.Founder">
+						</td>
+					</tr>
+					<tr v-show="active_node.Founder == 'Yes'">
+						<td> Genotype generation type </td>
+						<td>
+							<select v-model="active_node['Genotype generation']">
+								<option v-for="option in Genotype_generation_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr v-show="active_node.Founder == 'Yes' & active_node['Genotype generation'] == 'Upload Genotypes'">
+						<td>Upload genotypes (plink/vcf)</td>
+						<td> 
+							<form id='GenoUpload' target="print_popup" action='/GenoUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800'); setGenoPath();">
+								<input type='file' name='genoFile' id='genoFile'>
+								<input type='submit' value='Upload'>
+							</form>
+						</td>
+					</tr>
+					<tr v-show="active_node.Founder == 'Yes' &active_node['Genotype generation'] == 'Upload Genotypes' ">
+						<td> Path genotypes </td><td>{{active_node.Path}}</td>
+					</tr>	
+					<tr>
+						<td>Sex</td>
+						<td> 
+							<select v-model="active_node.Sex">
+								<option v-for="option in Sex_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Phenotyping Class</td>
+						<td> 
+							<select v-model="active_node['Phenotyping Class']">
+								<option v-for="option in phenotyping_class" v-bind:value="option.Name">
+								{{ option.Name }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Housing Cost Class</td>
+						<td> 
+							<select v-model="active_node['Housing Cost Class']">
+								<option v-for="option in economy['Animal Housing Costs']" v-bind:value="option.Name">
+								{{ option.Name }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Proportion of genotyped individuals</td>
+						<td> <input placeholder="Type a number" type="number" max=1 min=0 step=0.001 v-model="active_node['Proportion of genotyped individuals']"> </td>
+					</tr>
+					<!--tr>
+						<td>Include in Plot </td> 
+						<td> <input type="checkbox" false-value="No" true-value="Yes" v-model="active_node['BV Plot']"> 
+						</td>
+					</tr-->	
+					<tr v-show="active_node.Sex == 'Both'">
+						<td>Proportion of Male</td>
+						<td> <input placeholder="Type a number" type="number" max=1 min=0 step=0.001 v-model="active_node['Proportion of Male']"> </td>
+					</tr>
+				</table>
+				<br>
+				<input type="button" value="save" id="node-saveButton" />
+				<input type="button" value="cancel" id="node-cancelButton" />
+			</div>
+			<div id="edge-popUp" onchange="checkEverything(this.id)">
+				<h3> {{edge_operation}} </h3><br>
+				<h4>Edge {{ active_edge.id }}</h4>
+				<table style="margin:auto; width: 100%;">
+					<colgroup>
+						<col width="40%">
+						<col width="60%">
+					</colgroup>
+					<tr>
+						<td>Breeding Type</td>
+						<td> 
+							<select v-model="active_edge['Breeding Type']">
+								<option v-for="option in Breedingtype_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr v-if="active_edge['Breeding Type'] == 'Split' && edge_operation == 'Add Edge'">
+						<td>ID of 2.Sub-Group</td>
+						<td> 
+							<input id="split_input" list="splits" placeholder="Create/Choose ID">
+							<datalist id="splits">
+								<option v-for="par in nodes.get()" v-if="par.Sex == nodes.get(active_edge.from).Sex & par.id != nodes.get(active_edge.to).id & par.id != nodes.get(active_edge.from).id" v-bind:value="par.id">
+							</datalist>
+						</td>
+					</tr>
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production','Aging', 'Selection', 'Split','Combine'].indexOf(active_edge['Breeding Type']) >= 0 ">
+						<td>Time needed</td>
+						<td><input id="time_n" list="indVar" onchange="updateVar('Time Needed', value)" placeholder="Type a number" min="0" max="10000" step="1" v-model="active_edge['Time Needed']"> {{geninfo['Time Unit']}}</td>
+					</tr>	
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 ">
+						<td>OGC</td>
+						<td><input type="checkbox" false-value="No" true-value="Yes"  v-model="active_edge['OGC']"></td>
+					</tr>	
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 ">
+						<td>Maximal # offspring</td>
+						<td><input list="indVar" onchange="updateVar('Max Offspring', value)" placeholder="Type a number" min="1" max="Infinity" step="1" v-model="active_edge['Max Offspring']"></td>
+					</tr>	
+					<tr v-if="active_edge['Breeding Type'] == 'Reproduction' && edge_operation == 'Add Edge'">
+						<td>ID of 2.parent </td> 
+						<td> 
+							<input id="parents_input" list="parents" placeholder="Create/Choose ID">
+							<datalist id="parents">
+								<option v-for="par in nodes.get()" v-if="par.Sex != nodes.get(active_edge.from).Sex & par.id != nodes.get(active_edge.to).id" v-bind:value="par.id">
+							</datalist>
+						</td>
+					</tr>
+					<tr v-show="active_edge['Breeding Type'] == 'Repeat'">
+						<td>Number of Repeat </td> 
+						<td> 
+							<input list="indVar" placeholder="Type a number" v-model="active_edge['Number of Repeat']" onchange="updateVar('Number of Repeat', value)">
+						</td>
+					</tr>
+					<!--tr v-show="active_edge['Breeding Type'] == 'Recombination'">
+						<td>New Mutation Rate </td> 
+						<td> <input onchange="updateVar('New Mutation Rate', value)" placeholder="Type a number" v-model="active_edge['New Mutation Rate']" list="indVar"></td>
+					</tr>
+					<tr v-show="active_edge['Breeding Type'] == 'Recombination'">
+						<td>New Remutation Rate </td> 
+						<td> <input onchange="updateVar('New Remutation Rate', value)" placeholder="Type a number" v-model="active_edge['New Remutation Rate']" list="indVar"></td>
+					</tr>
+					<tr v-show="active_edge['Breeding Type'] == 'Recombination'">
+						<td>Number of Recombination per M </td> 
+						<td> <input onchange="updateVar('Number of Rec per M', value)" placeholder="Type a number" v-model="active_edge['Number of Rec per M']" list="indVar"></td>
+					</tr -->
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 ">
+						<td>Selection Type</td>
+						<td> 
+							<select v-model="active_edge['Selection Type']">
+								<option v-for="option in selectionType_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0">
+						<td>Selection Index</td>
+						<td> 
+							<select v-model="active_edge['Selection Index']">
+								<option v-for="option in selection_index" v-bind:value="option.Name">
+								{{ option.Name }}
+								</option>
+							</select>
+						</td>
+					</tr>						
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0">
+						<td>Selection Proportion</td>
+						<td>
+							<!-- <input list="indVar" onchange="updateVar('Selection Proportion', value)" placeholder="Type a number" min="0" max="1" step="0.001" v-model="selection_proportion"> -->
+							{{ selection_proportion }} (calculated based on # Individuals)
+						</td>
+					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0">
+						<td>Use offspring for BVE</td>
+						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['Use Offspring for BVE']"> </td>
+					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
+						<td>Relationship Matrix</td>
+						<td> 
+							<select v-model="active_edge['Relationship Matrix']">
+								<option v-for="option in RelationshipMatrix_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE' && ( active_edge['Relationship Matrix']== 'Single Step'|active_edge['Relationship Matrix']== 'Pedigree')">
+						<td>Depth of Pedigree (# generation back)</td> 
+						<td> <input onchange="updateVar('Depth of Pedigree', value)" placeholder="Type a number" v-model="active_edge['Depth of Pedigree']" list="indVar"></td>
+					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
+						<td>BVE Method</td>
+						<td> 
+							<select v-model="active_edge['BVE Method']">
+								<option v-for="option in BVEMethod_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
+						<td>Cohorts used in BVE</td>
+						<td> 
+							<select v-model="active_edge['Cohorts used in BVE']">
+								<option v-for="option in Cohorts_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE' && active_edge['Cohorts used in BVE'] == 'Manual select'">
+						<td>Select cohorts for manuel select (press ctrl key to select many):</td>
+						<td> 
+							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
+							<!--select v-model="active_edge['Manuel selected cohorts']" size=6 multiple>
+								<option v-for="option in nodes.getIds()" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select-->
+						</td>
+					</tr>
+				</table>
+				<br>
+				<input type="button" value="save" id="edge-saveButton" />
+				<input type="button" value="cancel" id="edge-cancelButton" />
+			</div>
+			<br>
+        	
+        	<br>
+        	<br>	
+			<div id="Results_Div">
+				<h3 id="RSim"></h3>
+				<br>
+				<br>
+				<h3>Analyze Breeding Program with R</h3>
+				<p>Click on button 'Sart R Simulation' to run R.</p>
+				<button onclick="runningR1(); " >Start R Simulation</button>
+				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
+				<button onclick="ReloadSim(); " >Reload Old Results</button>
+				<p>Or click here to upload your own R result to analyze. </p>
+				<p>Attention: The actual breeding program must match the uploaded R results, otherwise plot functions will not work.</p>
+				<form id='ResultUpload' target="print_popup" action='/ResultUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800')">
+					<input type='file' name='ResultFile' id='ResultFile'>
+					<!--input type='submit' value='Load Results'-->
+					<button onclick="UploadSim();">Load Results</button>
+				</form>
+				<p v-show="runned">Click here to clear all results and plots.</p>
+				<button v-show="runned" onclick="clearResult()" >Clear Results</button>
+				<button v-show="runned" v-on:click="rlog = !rlog" >Show/Hide R Log</button>
+				<br>
+				<br>
+				<div v-show="runned & rlog" id="Rout_Div">
+
+				</div>
+				<br>
+				<br>
+				<div v-show="runned">
+					<h4 style="color: 'red'">Results: Summary</h4>
+					<div id="Result_Summary">
+					</div>
+					<br>
+					<br>
+					<h4>Results: Observed Phenotypes</h4>
+					<button v-if="plottingData.RespMean == ''" onclick="RunResultpMean()" >Run Analysis</button>
+					<template v-if="plottingData.RespMean != ''">
+						Select plotting type:
+						<select v-model="plottingPar.RespMean_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }}
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible): 
+						<button onclick="plottingResultpMean()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.RespMean_cohorts" :searchable="true" style="width:800px"/>
+						<!--select v-model="plottingPar.RespMean_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.RespMean != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div v-for="(trait, index) in traitsinfo" v-bind:id="'RespMean_Div'+(index+1)">
+						</div>
+					</div>
+					<br>
+					<br>
+					<h4>Results: True Breeding Values</h4>
+					<button v-if="plottingData.ResgMean == ''" onclick="RunResultgMean()" >Run Analysis</button>
+					<template v-if="plottingData.ResgMean != ''">
+						Select plotting type:
+						<select v-model="plottingPar.ResgMean_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }}
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible): 
+						<!--select v-model="plottingPar.ResgMean_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+						<button onclick="plottingResultgMean()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResgMean_cohorts" :searchable="true" style="width:800px"/>
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.ResgMean != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div v-for="(trait, index) in traitsinfo" v-bind:id="'ResgMean_Div'+(index+1)">
+						</div>
+					</div>
+					<br>
+					<br>
+					<h4>Results: Accuracy of Breeding Value Estimation</h4>
+					<button v-if="plottingData.ResAccBVE == ''" onclick="RunResultAccBVE()" >Run Analysis</button>
+					<template v-if="plottingData.ResAccBVE != ''">
+						Select plotting type:
+						<select v-model="plottingPar.ResAccBVE_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }}
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible):
+						<!--select v-model="plottingPar.ResAccBVE_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+						<button onclick="plottingResultAccBVE()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary_AccBVE" v-model="plottingPar.ResAccBVE_cohorts" :searchable="true" style="width:800px"/>
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.ResAccBVE != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div v-for="(trait, index) in selection_index" v-bind:id="'ResAccBVE_Div'+(index+1)">
+						</div>
+					</div>
+					<br>
+					<br>
+					<h4> Results: Relationship and Inbreeding within Cohorts </h4>
+					<button v-if="plottingData.ResRel == ''" onclick="RunResultRel()" >Run Analysis</button>
+					<template v-if="plottingData.ResRel != ''">
+						Select plotting type:
+						<select v-model="plottingPar.ResRel_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }} 
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible):
+						<!--select v-model="plottingPar.ResRel_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+						<button onclick="plottingResultRel()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResRel_cohorts" :searchable="true" style="width:800px"/>
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.ResRel != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div id="ResRel_Div1">
+						</div>
+						<div id="ResRel_Div2">
+						</div>
+					</div>
+					<br>
+					<br>
+					<h4> Results: Relationship between Cohorts </h4>
+					<button v-if="plottingData.ResRelbetweenC == ''" onclick="RunResultRelbetweenC()" >Run Analysis</button>
+					<template v-if="plottingData.ResRelbetweenC != ''">
+						Select cohort 1 :
+						<select v-model="plottingPar.ResRelbetweenC_cohort1">
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select>
+						Select cohort 2 :
+						<select v-model="plottingPar.ResRelbetweenC_cohort2">
+							<option v-if="option != plottingPar.ResRelbetweenC_cohort1" v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select>
+						<button onclick="plottingResultRelbetweenC()" >Plot Results</button>
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.ResRelbetweenC != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div id="ResRelbetweenC_Div1">
+						</div>
+					</div>
+					<br>
+					<br>
+					<h4> Results: Major QTLs (Allele Frequency, exp./obs. Heterozygosity)</h4>
+					<button v-if="plottingData.ResQTL == ''" onclick="RunResultQTL()" >Run Analysis</button>
+					<template v-if="plottingData.ResQTL != ''">
+						Select Trait :
+						<select v-model="plottingPar.ResQTL_trait">
+							<option v-if="option['Trait Major QTL'] > 0" v-for="(option, index) in traitsinfo" v-bind:value="index+1">
+							{{ option["Trait Name"] }} 
+							</option>
+						</select>
+						Select QTL :
+						<select v-if="plottingPar.ResQTL_trait != ''" v-model="plottingPar.ResQTL_qtl">
+							<option v-for="(option, index) in traitsinfo[plottingPar.ResQTL_trait -1]['Trait QTL Info']" v-bind:value="index">
+							{{ option['QTL ID'] }}  
+							</option>
+						</select>
+						<br>
+						Select Cohorts (multiple selection possible):
+						<!--select v-model="plottingPar.ResQTL_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+						<button onclick="plottingResultQTL()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResQTL_cohorts" :searchable="true" style="width:800px"/>
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.ResQTL != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div id="ResQTL_Div1">
+						</div>
+						<div id="ResQTL_Div2">
+						</div>				
+						<div id="ResQTL_Div3">
+						</div>
+					</div>
+				</div>
+				<br>
+				<br>
+			</div>
+			<div id="Export_Data_H3">
+				<br>
+				<br>
+				<h3> Export/Import JSON Data </h3>
+				<p> This option can be used to manually export the JSON File in order to run the MoBPS R-package on one's own computer.</p>
+				<p> You might also paste a JSON File into this text area and import it for further processing. </p>
+				<button id="export_button" onclick="exportNetwork()" >Export Data</button>
+				<button id="import_button" onclick="importNetwork()" >Import Data</button>
+				<br>
+				<br>
+				<div>
+					<textarea id='OutputArea' style="width:700px; height:800px;"></textarea>
+				</div>
+				<br>
+				<br>
+			</div>
+		</div>
+	</body>
+		
+	<!-- Eigene Javascripte Species Data -->
+	<script type="text/javascript" src="javascript/GenomeData.js"></script>
+	
+	<!-- Eigene Javascripte Main Code -->
+	<script src="javascript/socket.io.js"></script>
+	<script type="text/javascript" src="javascript/network.js"></script>
+	<script type="text/javascript" src="javascript/Rmodule.js"></script>
+	
+	
+	<!-- Eigene Javascripte Checking and addtional Services -->
+	<script type="text/javascript" src="javascript/Check_Services.js"></script>
+
+
+
+</html>
+
