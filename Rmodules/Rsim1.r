@@ -27,13 +27,39 @@ if(file.exists(fileSum)){
   file.remove(fileSum)
 }
 
-population <- try(json.simulation(total=dat))
-if("try-error" %in% is(population)){
-  print(population)
-  stop("Cannot Simulate Project!")
+if(length(dat$'Genomic Info'$'multi-mode')>0 && dat$'Genomic Info'$'multi-mode' =="Yes"){
+  for(rep in 1:as.numeric(dat$'Genomic Info'$'number-simulations')){
+
+    t1 <- Sys.time()
+    cat("\n\n\n\n\n")
+    cat(paste0("Start simulation number ", rep, "\n"))
+    population <- try(json.simulation(total=dat))
+    if("try-error" %in% is(population)){
+      print(population)
+      stop("Cannot Simulate Project!")
+    }
+    t2 <- Sys.time()
+    save(population, file=paste(fname, rep, ".RData",sep=""))
+    if(rep==1){
+      save(population, file=paste(fname, ".RData",sep=""))
+    }
+    cat(paste0("Finished simulation number ", rep,".\n"))
+    cat(paste0("Simulation took ", round(t2-t1, digit=3), " seconds.\n"))
+  }
+} else{
+  t1 <- Sys.time()
+  population <- try(json.simulation(total=dat))
+  if("try-error" %in% is(population)){
+    print(population)
+    stop("Cannot Simulate Project!")
+  }
+
+  save(population, file=paste(fname, ".RData",sep=""))
+  t2 <- Sys.time()
+  cat(paste0("Finished simulation.\n"))
+  cat(paste0("Simulation took ", round(t2-t1, digit=3), " seconds.\n"))
 }
 
-save(population, file=paste(fname, ".RData",sep=""))
 
 coh <- get.cohorts(population, extended=TRUE)
 ttnames <- NULL
@@ -51,10 +77,10 @@ for(nn in coh[,1]){
 
 result <- as.list(table(ttnames))
 for(rr in names(result)){
-     result[[rr]] <- list(tfounder=(coh[rr,"creating.type"] =="0"),trep=result[[rr]])                            
+     result[[rr]] <- list(tfounder=(coh[rr,"creating.type"] =="0"),trep=result[[rr]])
 }
 
-json <- as.character(toJSON(result))     
+json <- as.character(toJSON(result))
 write.table(json, file=paste(fname,"Summary.json",sep=""), row.names=FALSE, col.names=FALSE, quote=FALSE)
 
 ################################################################################

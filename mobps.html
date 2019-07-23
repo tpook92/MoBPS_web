@@ -117,7 +117,7 @@
 					<br>
 					<span style="font-weight:bold;">Warnings  </span>
 					<br><br>
-					<span v-for='(war, index) in warnings'> Warning {{index}} : <span style="color: red">{{war}} <br><br></span></span>
+					<span v-for='(war, index) in warnings'> Warning {{index}} : <span style="color: red">{{war}} <br></span></span>
 				</div>
 			</transition>
 			<transition name="slide-generalInfo">
@@ -131,20 +131,20 @@
 					<span v-if="show_info =='general'">
 						<span style="font-weight:bold;">General Info  </span>
 						<br><br>
-						<span v-if="key != 'Ensembl Filter' & key != 'Ensembl Filter Values' & value != ''" v-for='(value,key) in geninfo'> {{key}} : <span style="color: red">{{value}}  <br><br></span></span> 
+						<span v-if="key != 'Ensembl Filter' & key != 'Ensembl Filter Values' & value != ''" v-for='(value,key) in geninfo'> {{key}} : <span style="color: red">{{value}}  <br></span></span> 
 					</span>
 					
 					<span v-if="show_info =='node'">
 						<span style="font-weight:bold;">Node Info  </span>
 						<br><br>
-						<span v-if="['x','y', 'individualsVar', 'label','color','title'].indexOf(key) == -1 && value != '' && value != []" v-for='(value,key) in active_node'> {{key}} : <span style="color: red">{{value}} <br><br></span></span>
+						<span v-if="['x','y', 'individualsVar', 'label','color','title'].indexOf(key) == -1 && value != '' && value != []" v-for='(value,key) in active_node'> {{key}} : <span style="color: red">{{value}} <br></span></span>
 					</span>
 					<span v-if="show_info =='edge'">
 						<span style="font-weight:bold;">Edge Info  </span>
 						<br><br>
 						<span v-if="['useVar','id','color','title'].indexOf(key) == -1 && value != '' && value != []" v-for='(value,key) in active_edge'> {{key}} : 
 							<span style="color: red">{{value}} 
-								<span v-if="active_edge.useVar.indexOf(key)>-1"> ({{individualsVar_options[active_edge.useVar.indexOf(key)].name}})</span><br><br> 
+								<span v-if="active_edge.useVar.indexOf(key)>-1"> ({{individualsVar_options[active_edge.useVar.indexOf(key)].name}})</span><br>
 							</span>
 						</span>
 					</span>
@@ -191,10 +191,17 @@
 						<col width="60%">
 					</colgroup>
 					<tr>
-						<td>Project Name</td><td><input placeholder="Type a name" v-model="geninfo['Project Name']"></td>
+						<td>Project Name
+							<span class="tooltip">? <span class="tooltiptext">Enter the name of your project. You can load save/download/delete your project via the action bar and load different version to return to.</span></span>
+						</td>
+						<td>
+							<input placeholder="Type a name" v-model="geninfo['Project Name']">
+						</td>
 					</tr>
 					<tr>
-						<td>Species</td>
+						<td>Species
+							<span class="tooltip">? <span class="tooltiptext">Select the species. This will unlock the correct Ensembl Datasets etc. Use a template to start with already entered somewhat realistic values.</span></span>
+						</td>
 						<td> 
 							<select v-model="geninfo.Species">  <!-- onchange="updateSpeciesData(value)">  -->
 								<option v-for="option in Species_options" v-bind:value="option">
@@ -204,7 +211,9 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Time Unit</td>
+						<td>Time Unit
+							<span class="tooltip">? <span class="tooltiptext">Select the time unit used (this is only relevant for economic calculation). Time of generation for each cohort will be displayed.</span></span>
+						</td>
 						<td>
 							<select v-model="geninfo['Time Unit']">
 								<option v-for="option in Time_Unit_options" v-bind:value="option">
@@ -213,8 +222,47 @@
 							</select>
 						</td>
 					</tr>
+					
 					<tr>
-						<td>Genetic Data </td>
+						<td>Test/Speed Mode
+							<span class="tooltip">? <span class="tooltiptext">Activate this to set the number of repeats to 1, reduce the genome length to 10M and 200 SNPs and deactivate data import. This should heavily reduce computation times for testing</span></span>
+						</td>
+						<td> 
+							<input type="checkbox" false-value="No" true-value="Yes" v-model="geninfo['speed-mode']">
+						</td>
+					</tr>
+					
+					<tr v-show="geninfo['speed-mode'] == 'Yes'">
+						<td>Individual numbers scaling 
+							<span class="tooltip">? <span class="tooltiptext">Scale the number of individuals in each node by this factor. This can further reduce comp. times! Make sure each node contains at least 1 individual ( do not worry about point numbers - round() is used)</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['individual-scaling']">
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Multi-Simulation Mode 
+							<span class="tooltip">? <span class="tooltiptext">Activate this to run the simulation multiple times. This will heavily increase running time but also reduce variance of the results.</span></span>
+						</td>
+						<td> 
+							<input type="checkbox" false-value="No" true-value="Yes" v-model="geninfo['multi-mode']">
+						</td>
+					</tr>
+
+					<tr v-show="geninfo['multi-mode'] == 'Yes'">
+						<td>Number of Simulations 
+							<span class="tooltip">? <span class="tooltiptext">Number of simulations of the breeding program you what to perform.</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['number-simulations']">
+						</td>
+					</tr>
+
+					<tr>
+						<td>Genetic Data 
+							<span class="tooltip">? <span class="tooltiptext">Select the genome you want to work with.</span></span>
+						</td>
 						<td>
 						<input type="radio" id="ens" value="Ens" v-model="genetic_data">
 						<label for="ens">Use Ensembl Map</label> <br>
@@ -225,7 +273,9 @@
 						</td>
 					</tr>	
 					<tr v-if="genetic_data == 'Ens'">
-						<td>Ensembl Dataset </td>
+						<td>Ensembl Dataset 
+							<span class="tooltip">? <span class="tooltiptext">Currently only the genomic maps available in MoBPSmaps are provided. To add an additional map here contact Torsten or upload your own.</span></span>
+						</td>
 						<td v-if="geninfo.Species != ''">
 							<select v-model="geninfo['Ensembl Dataset']">
 								<option v-for="option in ensembl_options[geninfo.Species]" v-bind:value="option.Value" >
@@ -239,7 +289,7 @@
 					</tr>	
 					<tr v-if="genetic_data == 'Ens'">
 						<td>Max. Number of SNPs 	
-							<span class="tooltip">? <span class="tooltiptext">Only a subsample of the Ensembl dataset is used to save computation time.</span></span>
+							<span class="tooltip">? <span class="tooltiptext">Only a subsample of the Ensembl dataset is used to save computation time. If nothing is enter use the full dataset.</span></span>
 						</td>
 						<td v-if="geninfo.Species != ''">
 							<input placeholder="Type a number" v-model="geninfo['Max Number of SNPs']">
@@ -257,7 +307,9 @@
 						</td>
 					</tr>  -->
 					<tr v-if="geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='Yes'">
-						<td>Upload Map File</td>
+						<td>Upload Map File
+							<span class="tooltip">? <span class="tooltiptext">Currently only .vcf .map and .RData-files are supported. Adding more is no problem. Contact Torsten if required.</span></span>
+						</td>
 						<td>
 							<form id='MapUpload' target="print_popup" action='/MapUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800'); setMapPath();">
 								<input type='file' name='mapFile' id='mapFile'>
@@ -266,7 +318,7 @@
 						</td>
 					</tr>
 					<tr v-if="geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='Yes'">
-						<td>Own Map Path</td>
+						<td>Own Map Path </td>
 						<td>
 							{{geninfo["Own Map Path"]}}
 						</td>
@@ -290,9 +342,15 @@
 									<thead>
 										<tr>
 											<td>Chromosome</td>
-											<td>Physical Length (in MbP)</td>
-											<td>Marker Density (SNP/Mbp)</td>
-											<td>Recombination (cM/Mbp)</td>
+											<td>Physical Length (in MbP)
+												<span class="tooltip">? <span class="tooltiptext">The human genome has a size of 3200 Mb. Most livestock/crops are smaller!</span></span>
+											</td>
+											<td>Marker Density (SNP/Mbp)
+												<span class="tooltip">? <span class="tooltiptext">Do not overdo it with markers! They oftentimes mostly add memory requirement and computation time.</span></span>
+											</td>
+											<td>Recombination (cM/Mbp)
+												<span class="tooltip">? <span class="tooltiptext">1cM/Mbp is commonly assumed. E.g. chicken have higher recombination rates (~3-4 cM/Mbp).</span></span>
+											</td>
 										</tr>
 									</thead>
 									<tbody>
@@ -338,7 +396,9 @@
 			<div id="Phenotype_Info_Div" onchange="checkEverything(this.id)">
 				<br>
 				<br>
-				<h3 id="Phenotype_Info"> Phenotype Information</h3> 
+				<h3 id="Phenotype_Info"> Phenotype Information
+					<span class="tooltip">? <span class="tooltiptext">Here you can design the traits you want to work with.</span></span>
+				</h3> 
 				<button v-on:click="addPheno();"> Add new phenotype</button>
 				<button v-if="traitsinfo.length > 0" v-on:click='show_pheno_info = !show_pheno_info' >Show/Hide {{traitsinfo.length}} phenotypes</button>
 				<button v-if="traitsinfo.length > 0" v-on:click="show_QTL = !show_QTL"> Show/Hide QTLs</button>
@@ -349,14 +409,30 @@
 				<table class="trait_table" v-if="traitsinfo.length > 0 && show_pheno_info">
 					<thead>
 						<tr>
-							<td style="padding:5px;">Phenotype</td>
-							<td style="padding:5px;">Unit</td>
-							<td style="padding:5px;">Pheno. Mean</td>
-							<td style="padding:5px;">Pheno. SD</td>
-							<td style="padding:5px;">Heritability</td>
-							<td style="padding:5px;"># polygenic loci</td>
-							<td style="padding:5px;">Major QTL</td>
-							<td style="padding:5px;">Value per unit (&#8364;)</td>
+							<td style="padding:5px;">Phenotype
+								<span class="tooltip">? <span class="tooltiptext">Name of the trait.</span></span>
+							</td>
+							<td style="padding:5px;">Unit
+								<span class="tooltip">? <span class="tooltiptext">Optional. Unit of measurement for the trait.</span></span>
+							</td>
+							<td style="padding:5px;">Pheno. Mean
+								<span class="tooltip">? <span class="tooltiptext">The avg. Founder individual will have this mean. Currently not supported to start with founders with different averages.</span></span>
+							</td>
+							<td style="padding:5px;">Pheno. SD
+								<span class="tooltip">? <span class="tooltiptext">Trait variance for the group of all founders will be scaled accordingly.</span></span>
+							</td>
+							<td style="padding:5px;">Heritability
+								<span class="tooltip">? <span class="tooltiptext">Heritability of the trait.</span></span>
+							</td>
+							<td style="padding:5px;"># polygenic loci
+								<span class="tooltip">? <span class="tooltiptext">Number of QTL. Currently only additive single locus QTL are simulated. Contact Torsten if you need more!</span></span>
+							</td>
+							<td style="padding:5px;">Major QTL
+								<span class="tooltip">? <span class="tooltiptext">Use this if you want to manually add single marker effect to SNPs with known effects (e.g. DGAT1 for milk).</span></span>
+							</td>
+							<td style="padding:5px;">Value per unit (&#8364;)
+								<span class="tooltip">? <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
+							</td>
 							<td style="padding:5px;">Show Cor</td>
 							<td></td>
 						</tr>
@@ -401,14 +477,18 @@
 					<table class="trait_table">
 						<thead>
 							<tr>
-								<td>QTLs for {{trait['Trait Name']}}</td>
-								<td>SNP ID</td>
+								<td>SNP for {{trait['Trait Name']}}</td>
+								<td>SNP ID
+									<span class="tooltip">? <span class="tooltiptext">If SNP ID is present in the dataset it is used. If not the closed marker to bp/chromo combination is used. If not given use SNP/chromo combination.</span></span>
+								</td>
 								<td>bp</td>
 								<td>chromo</td>
 								<td>Effect AA</td>
 								<td>Effect AB</td>
 								<td>Effect BB</td>
-								<td>Allele Freq. (A)</td>
+								<td>Allele Freq. (A)
+									<span class="tooltip">? <span class="tooltiptext">Simulated allele frequency of the marker is set to this. Only active if no genotype data is imported.</span></span>
+								</td>
 								<td>Optional Info</td>
 								<td></td>
 							</tr>
@@ -431,7 +511,9 @@
 				</template>
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix">
 					<tr>
-						<td style="font-weight:bold;width:60px;padding:5px;">Phenotypic Correlation</td>
+						<td style="font-weight:bold;width:60px;padding:5px;">Phenotypic Correlation
+							<span class="tooltip">? <span class="tooltiptext">Make sure this matrix is positive definit. Otherwise program will crash!</span></span>
+						</td>
 						<td style="width:60px;padding:5px;" v-for="(row, rind) in matrix" v-if="show_matrix_element[rind].show">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
@@ -451,7 +533,9 @@
 				<br>
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix2">
 					<tr>
-						<td style="font-weight:bold;width:60px;padding:5px;">Genetic Correlation</td>
+						<td style="font-weight:bold;width:60px;padding:5px;">Genetic Correlation
+							<span class="tooltip">? <span class="tooltiptext">Make sure this matrix is positive definit. Otherwise program will crash!</span></span>
+						</td>
 						<td style="width:60px;padding:5px;" v-for="(row, rind) in matrix2" v-if="show_matrix_element[rind].show">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
@@ -484,7 +568,9 @@
 					<table class="trait_table">
 						<thead>
 							<tr>
-								<td>SI</td>
+								<td>SI
+									<span class="tooltip">? <span class="tooltiptext">Breeding value estimated will be standardized before being used in the index!</span></span>
+								</td>
 								<td v-for="trait in traitsinfo"> {{trait['Trait Name']}}</td>
 								<td></td>
 							</tr>
@@ -518,7 +604,9 @@
 					<table class="trait_table">
 						<thead>
 							<tr>
-								<td>PhenoClass</td>
+								<td>PhenoClass
+									<span class="tooltip">? <span class="tooltiptext">A number higher than 1 means multiple INDEPENDET phenotypes are observed. This reduces residual variance - increases heritability.</span></span>
+								</td>
 								<td>Phenotyping Cost</td>
 								<td v-for="trait in traitsinfo"> {{trait['Trait Name']}}</td>
 								<td></td>
@@ -550,13 +638,22 @@
 						<col width="60%">
 					</colgroup>
 					<tr>
-						<td>Fixed cost (&#8364;)</td><td><input placeholder="Type a number" v-model="economy['Fixed Cost']"></td>
+						<td>Fixed cost (&#8364;)
+							<span class="tooltip">? <span class="tooltiptext">Fixed costs of the breeding program</span></span>
+						</td>
+						<td><input placeholder="Type a number" v-model="economy['Fixed Cost']"></td>
 					</tr>
 					<tr>
-						<td>Interest rate (%)</td><td><input placeholder="Type a number" v-model="economy['Interest Rate']"></td>
+						<td>Interest rate (%)
+							<span class="tooltip">? <span class="tooltiptext">Applied interest rate for all costs occuring.</span></span>
+						</td>
+						<td><input placeholder="Type a number" v-model="economy['Interest Rate']"></td>
 					</tr>
 					<tr>
-						<td>Genotyping cost per individual(&#8364;)</td><td><input placeholder="Type a number" v-model="economy['Genotyping Cost']"></td>
+						<td>Genotyping cost per individual(&#8364;)
+							<span class="tooltip">? <span class="tooltiptext">Genotyping costs per individual</span></span>
+						</td>
+						<td><input placeholder="Type a number" v-model="economy['Genotyping Cost']"></td>
 					</tr>
 					<tr style="height:15px"><td colspan=2></td></tr>
 					<tr>	
@@ -622,9 +719,11 @@
 			<div id="Breeding_Scheme">
 				<br>
 				<br>
-				<h3> Breeding Scheme</h3> 
-				<h4 style="color: red">Important: Please AVOID node names with underscore und trailing numbers combined, e.g. ABC_1, DEF_2, ...</h4>
-				<div id="mynetwork_container">
+				<h3> Breeding Scheme
+					<span class="tooltip">? <span class="tooltiptext">Draw your breeding scheme in the following interactive enviroment.</span></span>
+				</h3> 
+				<h4 style="color: red">Important: Please AVOID node names with underscore and trailing numbers combined, e.g. ABC_1, DEF_2, ...</h4>
+				<div id="mynetwork_container" >
 					<div id="mynetwork"></div>
 					<div id="mynetwork_label">
 		<!--				<button onclick="saveProject();">Save to Database</button>
@@ -651,10 +750,14 @@
 						<col width="60%">
 					</colgroup>
 					<tr>
-						<td>Name</td><td><input placeholder="Type a name" v-model="active_node.id" ></td>
+						<td>Name
+							<span class="tooltip">? <span class="tooltiptext">Name of the cohort. Please avoid names with underscore and trailing numbers combined (e.g. ABC_2)</span></span>
+						</td><td><input placeholder="Type a name" v-model="active_node.id" ></td>
 					</tr>
 					<tr>
-						<td>Number of individuals</td>
+						<td>Number of individuals
+							<span class="tooltip">? <span class="tooltiptext">Number of individuals in this cohort</span></span>
+						</td>
 						<td><input placeholder="Type number/Select variable" id="individuals" list="indVar" v-model="active_node.individualsVar" onchange="updateIndividuals(value)">
 							<datalist id="indVar">
 								<option v-for="ivar in individualsVar_options" v-bind:value="ivar.name">
@@ -664,13 +767,17 @@
 					</tr>
 					
 					<tr>
-						<td>Founder</td>
+						<td>Founder
+							<span class="tooltip">? <span class="tooltiptext">Are the individuals in this cohort founders or are they generated?</span></span>
+						</td>
 						<td> 
 							<input type="checkbox" false-value="No" true-value="Yes" v-model="active_node.Founder">
 						</td>
 					</tr>
 					<tr v-show="active_node.Founder == 'Yes'">
-						<td> Genotype generation type </td>
+						<td> Genotype generation type 
+							<span class="tooltip">? <span class="tooltiptext">How to generate genotypes/haplotypes for founder individuals</span></span>
+						</td>
 						<td>
 							<select v-model="active_node['Genotype generation']">
 								<option v-for="option in Genotype_generation_options" v-bind:value="option">
@@ -680,7 +787,9 @@
 						</td>
 					</tr>
 					<tr v-show="active_node.Founder == 'Yes' & active_node['Genotype generation'] == 'Upload Genotypes'">
-						<td>Upload genotypes (plink/vcf)</td>
+						<td>Upload genotypes (plink/vcf)
+							<span class="tooltip">? <span class="tooltiptext">Currently only phased plink/vcf files are supported. Use pedmap.to.phasedbeaglevcf() for phasing - Will soon be implemented in the Interface.</span></span>
+						</td>
 						<td> 
 							<form id='GenoUpload' target="print_popup" action='/GenoUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800'); setGenoPath();">
 								<input type='file' name='genoFile' id='genoFile'>
@@ -692,7 +801,9 @@
 						<td> Path genotypes </td><td>{{active_node.Path}}</td>
 					</tr>	
 					<tr>
-						<td>Sex</td>
+						<td>Sex
+							<span class="tooltip">? <span class="tooltiptext">Sex of the individuals in this cohort</span></span>
+						</td>
 						<td> 
 							<select v-model="active_node.Sex">
 								<option v-for="option in Sex_options" v-bind:value="option">
@@ -702,7 +813,9 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Phenotyping Class</td>
+						<td>Phenotyping Class
+							<span class="tooltip">? <span class="tooltiptext">Choose one of the phenotyping classes generated prior. Default is observation of all traits.</span></span>
+						</td>
 						<td> 
 							<select v-model="active_node['Phenotyping Class']">
 								<option v-for="option in phenotyping_class" v-bind:value="option.Name">
@@ -712,7 +825,9 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Housing Cost Class</td>
+						<td>Housing Cost Class
+							<span class="tooltip">? <span class="tooltiptext">Choose the housing class for the individuals in this cohort</span></span>
+						</td>
 						<td> 
 							<select v-model="active_node['Housing Cost Class']">
 								<option v-for="option in economy['Animal Housing Costs']" v-bind:value="option.Name">
@@ -722,7 +837,9 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Proportion of genotyped individuals</td>
+						<td>Proportion of genotyped individuals
+							<span class="tooltip">? <span class="tooltiptext">Select the share of genotyped individuals. Mostly relevant for the use of single-step and economic calculations.</span></span>
+						</td>
 						<td> <input placeholder="Type a number" type="number" max=1 min=0 step=0.001 v-model="active_node['Proportion of genotyped individuals']"> </td>
 					</tr>
 					<!--tr>
@@ -748,7 +865,9 @@
 						<col width="60%">
 					</colgroup>
 					<tr>
-						<td>Breeding Type</td>
+						<td>Breeding Type
+							<span class="tooltip">? <span class="tooltiptext">Selected the breeding action you want to use generate new cohorts and/or link them. </span></span>
+						</td>
 						<td> 
 							<select v-model="active_edge['Breeding Type']">
 								<option v-for="option in Breedingtype_options" v-bind:value="option">
@@ -758,7 +877,9 @@
 						</td>
 					</tr>
 					<tr v-if="active_edge['Breeding Type'] == 'Split' && edge_operation == 'Add Edge'">
-						<td>ID of 2.Sub-Group</td>
+						<td>ID of 2.Sub-Group
+							<span class="tooltip">? <span class="tooltiptext">Some breeding action require multiple cohorts</span></span>
+						</td>
 						<td> 
 							<input id="split_input" list="splits" placeholder="Create/Choose ID">
 							<datalist id="splits">
@@ -767,16 +888,27 @@
 						</td>
 					</tr>
 					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production','Aging', 'Selection', 'Split','Combine'].indexOf(active_edge['Breeding Type']) >= 0 ">
-						<td>Time needed</td>
+						<td>Time needed
+							<span class="tooltip">? <span class="tooltiptext">Time this breeding action needs. Please avoid no required time for Reproduction.</span></span>
+						</td>
 						<td><input id="time_n" list="indVar" onchange="updateVar('Time Needed', value)" placeholder="Type a number" min="0" max="10000" step="1" v-model="active_edge['Time Needed']"> {{geninfo['Time Unit']}}</td>
 					</tr>	
 					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 ">
-						<td>OGC</td>
+						<td>OGC
+							<span class="tooltip">? <span class="tooltiptext">Use OGC according to Meuwissen 1996 to determine how often each individual is used for reproduction</span></span>
+						</td>
 						<td><input type="checkbox" false-value="No" true-value="Yes"  v-model="active_edge['OGC']"></td>
 					</tr>	
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['OGC']=='Yes'">
+						<td>maximum increase of inbreeding </td>
+						<td><input placeholder="Type in the target increase in inbreeding. Use 0 to minimize." v-model="active_edge['ogc_aCa']"></td>
+					</tr>	
+
 					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 ">
-						<td>Maximal # offspring</td>
-						<td><input list="indVar" onchange="updateVar('Max Offspring', value)" placeholder="Type a number" min="1" max="Infinity" step="1" v-model="active_edge['Max Offspring']"></td>
+						<td>Maximal # offspring
+							<span class="tooltip">? <span class="tooltiptext">Maximum number of offspring each parent from this cohort is allowed to have</span></span>
+						</td>
+						<td><input placeholder="Type a number or Inf" v-model="active_edge['Max Offspring']"></td>
 					</tr>	
 					<tr v-if="active_edge['Breeding Type'] == 'Reproduction' && edge_operation == 'Add Edge'">
 						<td>ID of 2.parent </td> 
@@ -788,7 +920,9 @@
 						</td>
 					</tr>
 					<tr v-show="active_edge['Breeding Type'] == 'Repeat'">
-						<td>Number of Repeat </td> 
+						<td>Number of Repeat 
+							<span class="tooltip">? <span class="tooltiptext">Number of times the Repeat is executed. The parent node will be the new input of the child node and everything inbetween is rerun.</span></span>
+						</td> 
 						<td> 
 							<input list="indVar" placeholder="Type a number" v-model="active_edge['Number of Repeat']" onchange="updateVar('Number of Repeat', value)">
 						</td>
@@ -806,7 +940,9 @@
 						<td> <input onchange="updateVar('Number of Rec per M', value)" placeholder="Type a number" v-model="active_edge['Number of Rec per M']" list="indVar"></td>
 					</tr -->
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 ">
-						<td>Selection Type</td>
+						<td>Selection Type
+							<span class="tooltip">? <span class="tooltiptext">Random: Each individual is taken with same probability, BVE/Pheno selected based on BVE/Phenotypes</span></span>
+						</td>
 						<td> 
 							<select v-model="active_edge['Selection Type']">
 								<option v-for="option in selectionType_options" v-bind:value="option">
@@ -816,7 +952,9 @@
 						</td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0">
-						<td>Selection Index</td>
+						<td>Selection Index
+						<span class="tooltip">? <span class="tooltiptext">Select which index to use for BVE/Phenotypic selection</span></span>
+						</td>
 						<td> 
 							<select v-model="active_edge['Selection Index']">
 								<option v-for="option in selection_index" v-bind:value="option.Name">
@@ -826,18 +964,24 @@
 						</td>
 					</tr>						
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0">
-						<td>Selection Proportion</td>
+						<td>Selection Proportion
+							<span class="tooltip">? <span class="tooltiptext">Selection intensity - the tool will automatically calculate this for you base on cohort sizes.</span></span>
+						</td>
 						<td>
 							<!-- <input list="indVar" onchange="updateVar('Selection Proportion', value)" placeholder="Type a number" min="0" max="1" step="0.001" v-model="selection_proportion"> -->
 							{{ selection_proportion }} (calculated based on # Individuals)
 						</td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0">
-						<td>Use offspring for BVE</td>
+						<td>Use offspring for BVE
+							<span class="tooltip">? <span class="tooltiptext">Use the avg. phenotype of the offspring as the phenotype of the individuals in the parent node. Make sure there are offspring! (use of time needed!)</span></span>
+						</td>
 						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['Use Offspring for BVE']"> </td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
-						<td>Relationship Matrix</td>
+						<td>Relationship Matrix
+							<span class="tooltip">? <span class="tooltiptext">According to vanRaden 2008, pedigree-based or singleStep (H based on Legarra 2014)</span></span>
+						</td>
 						<td> 
 							<select v-model="active_edge['Relationship Matrix']">
 								<option v-for="option in RelationshipMatrix_options" v-bind:value="option">
@@ -847,11 +991,15 @@
 						</td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE' && ( active_edge['Relationship Matrix']== 'Single Step'|active_edge['Relationship Matrix']== 'Pedigree')">
-						<td>Depth of Pedigree (# generation back)</td> 
+						<td>Depth of Pedigree (# generation back)
+							<span class="tooltip">? <span class="tooltiptext">Depth of the pedigree. All individuals before are assumed to be unrelated! If you need something else contact Torsten or use the R-package.</span></span>
+						</td> 
 						<td> <input onchange="updateVar('Depth of Pedigree', value)" placeholder="Type a number" v-model="active_edge['Depth of Pedigree']" list="indVar"></td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
-						<td>BVE Method</td>
+						<td>BVE Method
+							<span class="tooltip">? <span class="tooltiptext">Direct-Mixed-Model assumes known heritability and thereby is fastest. EMMREML/sommer use the respective R-package. Sommer also support multi-variable models but takes much longer! Bayesian models used are using BGLR.</span></span>
+						</td>
 						<td> 
 							<select v-model="active_edge['BVE Method']">
 								<option v-for="option in BVEMethod_options" v-bind:value="option">
@@ -861,7 +1009,9 @@
 						</td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
-						<td>Cohorts used in BVE</td>
+						<td>Cohorts used in BVE
+							<span class="tooltip">? <span class="tooltiptext">Manual select provides you with maximum flexibility to select which individuals to use but can be tiring to set up</span></span>
+						</td>
 						<td> 
 							<select v-model="active_edge['Cohorts used in BVE']">
 								<option v-for="option in Cohorts_options" v-bind:value="option">
@@ -871,7 +1021,9 @@
 						</td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE' && active_edge['Cohorts used in BVE'] == 'Manual select'">
-						<td>Select cohorts for manuel select (press ctrl key to select many):</td>
+						<td>Select cohorts for manuel select (press ctrl key to select many):
+							<span class="tooltip">? <span class="tooltiptext">In case repeat is used only the name of the parent node of a repeat is displayed here!</span></span>
+						</td>
 						<td> 
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 							<!--select v-model="active_edge['Manuel selected cohorts']" size=6 multiple>
@@ -895,7 +1047,7 @@
 				<br>
 				<br>
 				<h3>Analyze Breeding Program with R</h3>
-				<p>Click on button 'Sart R Simulation' to run R.</p>
+				<p>Click on button 'Start R Simulation' to run R.</p>
 				<button onclick="runningR1(); " >Start R Simulation</button>
 				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
 				<button onclick="ReloadSim(); " >Reload Old Results</button>
