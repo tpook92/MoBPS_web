@@ -446,22 +446,22 @@
 								<input v-model="trait['Trait Unit']" style="width:50px;"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Mean']" style="width:50px;" type="Number" class="no-spinners" step=0.001> 
+								<input v-model="trait['Trait Mean']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Std Deviation']" style="width:50px;" type="Number" class="no-spinners" step=0.001> 
+								<input v-model="trait['Trait Std Deviation']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
 							</td>
 							<td>
-								<input v-model="trait['Trait Heritability']" max=1 min=0 style="width:50px;" type="Number" class="no-spinners" step=0.0001> 
+								<input v-model="trait['Trait Heritability']" max=1 min=0 style="width:50px;" class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:50px;" type="Number" class="no-spinners" step=1> 
+								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:50px;" class="no-spinners" step=1> 
 							</td>
 							<td>
 								<input v-model="trait['Trait Major QTL']" style="width:50px;" type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Value per Unit']" style="width:50px;" type="Number" class="no-spinners" step=0.001> 
+								<input v-model="trait['Trait Value per Unit']" style="width:50px;" type="Number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
 							</td>
 							<td>
 								<input type="checkbox" v-model="show_matrix_element[index].show">
@@ -499,7 +499,7 @@
 									<input v-model="snp[key]" style="width:100px;"> 
 								</td>
 								<td v-for="key in Object.keys(snp).slice(1,9)">
-									<input v-model="snp[key]" style="width:60px;"> 
+									<input v-model="snp[key]" style="width:60px;" v-on:change="snp[key] = snp[key].replace(/,/g, '.')"> 
 								</td>
 								<td>
 									<button v-on:click="removeQTL(trait,snp)">X</button>
@@ -523,7 +523,7 @@
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
 						<td v-for="(cl, cind) in matrix" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
-							<input v-model="matrix[rind].row[cind].val" style="width:40px;" v-if="rind > cind" class="no-spinners" type="number" step=0.000001 min=-1 max=1> 
+							<input v-model="matrix[rind].row[cind].val" style="width:40px;" v-if="rind > cind" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix[rind].row[cind].val = matrix[rind].row[cind].val.replace(/,/g, '.')">  
 							<template v-if="rind <= cind">
 								{{ matrix[cind].row[rind].val }}
 							</template>
@@ -545,7 +545,7 @@
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
 						<td v-for="(cl, cind) in matrix2" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
-							<input v-model="matrix2[rind].row[cind].val" style="width:40px;" v-if="rind > cind" class="no-spinners" type="number" step=0.000001 min=-1 max=1> 
+							<input v-model="matrix2[rind].row[cind].val" style="width:40px;" v-if="rind > cind" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix2[rind].row[cind].val = matrix2[rind].row[cind].val.replace(/,/g, '.')">
 							<template v-if="rind <= cind">
 								{{ matrix2[cind].row[rind].val }}
 							</template>
@@ -582,8 +582,7 @@
 									{{si['Name']}}
 								</td>
 								<td v-for="(key, ind) in Object.keys(si)" v-if="ind >0">
-									<input v-model="si[key]" style="width:30px;"> 
-								</td>
+									<input v-model="si[key]" style="width:30px;" v-on:change="si[key] = si[key].replace(/,/g, '.')">								</td>
 								<td>
 									<button v-on:click="removeSI(si, index)" v-if="index > 0">X</button>
 								</td>
@@ -619,8 +618,7 @@
 									{{si['Name']}}
 								</td>
 								<td v-for="(key, ind) in Object.keys(si)" v-if="ind >0" >
-									<input v-model="si[key]" style="width:30px;"> 
-								</td>
+									<input v-model="si[key]" style="width:30px;" v-on:change="si[key] = si[key].replace(/,/g, '.')">								</td>
 								<td>
 									<button v-on:click="removePC(si, index)" v-if="index > 0">X</button>
 								</td>
