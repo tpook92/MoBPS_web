@@ -209,7 +209,7 @@ $(document).ready(function(){
 function UploadSim(){
 	var filename = document.getElementById('ResultFile').files[0].name
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
-	console.log(filename);
+	//console.log(filename);
 	data_Vue.geninfo['Project Name'] = filename;
 	
 	$.ajax
