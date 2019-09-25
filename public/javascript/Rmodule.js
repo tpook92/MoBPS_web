@@ -123,7 +123,6 @@ function runningR1(){
 		success: function (data, msg) {
 			//console.log(data);
 
-
 			document.getElementById("Rout_Div").innerHTML = data;
 			
 			where = document.getElementById("Rout_Div").innerHTML.indexOf("Execution");
@@ -132,13 +131,12 @@ function runningR1(){
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/Error/g, "<span style=\"color:red\">Error</span>");
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/\n/g, "<br/>");
 			
-			alert(where2)
+
 			
 			if(where == -1){
 				alert("Simulation Finished successfully!");
 
 			} else if(where2 > (-1)){
-				alert(where2)
 				alert("EAAPguest is not allowed to run simulations. Please contact Torsten Pook if you need/want more rights.")
 			} else{
 				alert("Your Simulation failed! Check your inputs and potential warnings!");
@@ -201,7 +199,6 @@ function ReloadSim(){
 		dataType: "text",
 	});
 }
-
 
 $(document).ready(function(){
     $("#ResultUpload").on('change',function(){
