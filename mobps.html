@@ -17,9 +17,9 @@
 		<!-- for plotting graphs: -->
 		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-		<script type="text/javascript" src="http://visjs.org/examples/network/exampleUtil.js"></script>
-		<script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
-		<link href="http://visjs.org/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="https://visjs.github.io/vis-network/examples/network/exampleUtil.js"></script>
+		<script type="text/javascript" src="https://visjs.github.io/vis-network/dist/vis-network.min.js" ></script>
+		<link src="https://visjs.github.io/vis-network/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
 		
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
@@ -589,9 +589,12 @@
 
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix">
 					<tr>
-						<td style="font-weight:bold;width:60px;padding:5px;">Residual Correlation
+						<td colspan="5" style="font-weight:bold;width:60px;padding:5px;text-align:left">Residual Correlation
 							<span class="tooltip">&#9432 <span class="tooltiptext">Make sure this matrix is positive definit. Otherwise program will crash!</span></span>
 						</td>
+					</tr>
+					<tr>
+						<td></td>
 						<td style="width:60px;padding:5px;" v-for="(row, rind) in matrix" v-if="show_matrix_element[rind].show">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
@@ -608,21 +611,30 @@
 						</td>
 					</tr>
 				</table>
-				<tr v-if="traitsinfo.length > 1 && show_matrix">
-					<td>
-						Enter Phenotypic correlation instead of residual correlation
+				<br>
+
+				<table v-if="traitsinfo.length > 1 && show_matrix">
+				<tr>
+				<td>
+					Enter Phenotypic correlation instead of residual correlation
 					</td>
 					<td>
 						<input type="checkbox" v-model="use_phenotypic_cor">
 					</td>
-				</tr>
-				
+					</tr>
+				</table>
 				<br>
+				
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix2">
 					<tr>
-						<td style="font-weight:bold;width:60px;padding:5px;">Genetic Correlation
+						<td colspan="5" style="font-weight:bold;width:60px;padding:5px;text-align:left">Genetic Correlation
 							<span class="tooltip">&#9432 <span class="tooltiptext">Make sure this matrix is positive definit. Otherwise program will crash!</span></span>
 						</td>
+					</tr>
+
+					<tr>
+						<td></td>
+						
 						<td style="width:60px;padding:5px;" v-for="(row, rind) in matrix2" v-if="show_matrix_element[rind].show">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
@@ -994,7 +1006,7 @@
 						<td>
 							<input id="newHCostClass" placeholder="Type a HFC name">
 						</td>
-						<td>
+						<td colspan="2">
 							<button for="newHCostClass" v-on:click="createHCostClass()"> Creating new HFC Class </button>
 						</td>
 					</tr>					
@@ -1412,6 +1424,9 @@
 				<button onclick="runningR1(); " >Start R Simulation</button>
 				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
 				<button onclick="ReloadSim(); " >Reload Old Results</button>	
+				&nbsp;&nbsp;
+				<a v-if="filename != ''" href="/Rdownload"> Download RData</a>
+				
 				<p>Attention: The actual breeding program must match the uploaded R results, otherwise plot functions will not work.</p>
 				<form id='ResultUpload' target="print_popup" action='/ResultUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800')">
 					<input type='file' name='ResultFile' id='ResultFile'>
@@ -1607,6 +1622,8 @@
 				</div>
 				<br>
 				<br>
+			</div>
+			<div>
 			</div>
 			<div id="Export_Data_H3">
 				<br>
