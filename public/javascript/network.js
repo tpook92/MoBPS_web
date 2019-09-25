@@ -63,7 +63,6 @@ function myGeneral () {
 	// this['chromo will be filled with myChromo elements later=
 	this['Chromosomes Info'] = [];
 	this['Upload_CorrFile'] = 'No';
-	this['curUserGroup'] = '';
 }
 
 function myTrait (ind){
@@ -232,8 +231,6 @@ var data_Vue = new Vue({
 		plottingData: new myPlottingData(),
 		Summary: [],
 		socket: '',
-		curUserGroup:'',
-		filename:'',
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -348,6 +345,7 @@ var data_Vue = new Vue({
 			get: function(){
 				var data = this.nodes.get()
 					.map(function(x){return({id: x.id, label: x.id, children:[
+						{id: x.id+":X", label:x.id},
 						{id: x.id+":0", label:x.id+":Same Repeat"},
 						{id: x.id+":-1", label:x.id+":Previous Repeat"},
 						{id: x.id+":-2", label:x.id+":2 Repeats before"},
@@ -527,7 +525,7 @@ var data_Vue = new Vue({
 			this.selection_index.push(mySI);	
 			this.selection_index_scaling.push(mySIscaling);
 			document.getElementById("newSI").value='';		
-		//	document.getElementById("newSIscaling").value='';	 - gives error, and i don't see this is exist in html' so removing(Amudha)		
+			document.getElementById("newSIscaling").value='';			
 		},		
 		addPC: function(name){
 			if(name){
@@ -949,7 +947,10 @@ function downloadNetwork(){
     document.body.removeChild(element);
 }
 
+
+
 // function to import Data from OutputArea:
+
 function importNetwork() {
 	var exportArea = document.getElementById('OutputArea');
 	var inputValue = exportArea.value;
@@ -1022,9 +1023,10 @@ function importNetwork_intern(inputData1) {
 	data_Vue.genetic_data = inputData["Intern"].genetic_data;
 	//data_Vue.runned = inputData["Intern"].runned;
 	
+
 	var mat1 = inputData['Phenotypic Correlation'];
 	var mat2 = inputData['Genetic Correlation'];
-	//console.log(mat1);
+	console.log(mat1);
 	if(mat1.length > 0){		
 		var matrix = [];
 		var matrix2 = [];
@@ -1259,8 +1261,8 @@ function draw() {
 	network.on("doubleClick", function(params){
 		var copy_node = data_Vue.nodes.get(params.nodes[0]);
 		var str = Math.round(Math.random() * 10000);
-		copy_node.id = copy_node.id + '_Copy' +str;
-		copy_node.label = copy_node.label + '_Copy' +str;
+		copy_node.id = copy_node.id + 'Copy' +str;
+		copy_node.label = copy_node.label + 'Copy' +str;
 		copy_node.x = copy_node.x + 50;
 		copy_node.y = copy_node.y + 50;
 		data_Vue.nodes.add(copy_node);
@@ -1314,9 +1316,9 @@ function addNode_extern(data) {
 
 function saveNodeData(data, callback) {
 	var old_id = data.id;
-	data = data_Vue.active_node;	
+	data = data_Vue.active_node;
+	//data.label = data.id;
 	var myInd = JSON.stringify(data['Number of Individuals']).replace(/\"/g, "");
-	//data.label = data.id+'\n'+myInd;
 	data.label = data.id+" ("+myInd+")";
 	data.color = data_Vue.node_color;
 	data.title = data_Vue.node_title;
@@ -1411,9 +1413,7 @@ function init() {
 //******************* If the User take data from database, then load them here **********/
 function updateUser(){
 	$.get('/user', function(dat){
-		data_Vue.user = dat.username;
-		data_Vue.curUserGroup = dat.usergroup;
-		data_Vue.geninfo['curUserGroup'] = dat.usergroup;
+		data_Vue.user = dat;
 	})
 	
 	$.post('/database', function(dat){
@@ -1429,7 +1429,6 @@ function updateUser(){
 
 
 function loadData(ind){
-//	console.log(ind);
 	if(ind != "Create_New_123456YYYY"){
 		$.ajax
 		({
@@ -1439,8 +1438,7 @@ function loadData(ind){
 			success: function (data, msg) {
 				if(data != ''){
 					//console.log("data original");
-					console.log(data);
-					data_Vue.filename = data[0].name;
+					//console.log(data);
 					importNetwork_intern(data[0].json);
 					if(data[0].versions.length > 0){
 						data_Vue.versions = data[0].versions.reverse();
@@ -1503,14 +1501,12 @@ function myFunction() {
 } 
 
 
+
 // excel to Array 
-var excelToArr = document.getElementById('excelToArray');
-if(excelToArr) {
-	excelToArr.addEventListener('change', importexcelToArray, false);
-}
+document.getElementById('excelToArray').addEventListener('change', importexcelToArray, false);
 
 
-function importexcelToArray(evt) {   
+function importexcelToArray(evt) {    
     var selectedFile = evt.target.files; 
     var excelToArray = new ExcelToArray();
     excelToArray.parseExcel(selectedFile[0]);
