@@ -63,6 +63,7 @@ function myGeneral () {
 	// this['chromo will be filled with myChromo elements later=
 	this['Chromosomes Info'] = [];
 	this['Upload_CorrFile'] = 'No';
+	this['curUserGroup'] = '';
 }
 
 function myTrait (ind){
@@ -231,6 +232,8 @@ var data_Vue = new Vue({
 		plottingData: new myPlottingData(),
 		Summary: [],
 		socket: '',
+		curUserGroup:'',
+		filename:'',
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -887,8 +890,6 @@ function exportNetwork() {
 			for(let j=0; j <= i; j++){
 				row1.push(data_Vue.matrix[i].row[j].val);
 				row2.push(data_Vue.matrix2[i].row[j].val);
-				console.log('row1'+row1);
-				console.log('row2'+row2);
 			}
 			mat1.push(row1);
 			mat2.push(row2);
@@ -1021,7 +1022,6 @@ function importNetwork_intern(inputData1) {
 	data_Vue.genetic_data = inputData["Intern"].genetic_data;
 	//data_Vue.runned = inputData["Intern"].runned;
 	
-
 	var mat1 = inputData['Phenotypic Correlation'];
 	var mat2 = inputData['Genetic Correlation'];
 	//console.log(mat1);
@@ -1411,7 +1411,9 @@ function init() {
 //******************* If the User take data from database, then load them here **********/
 function updateUser(){
 	$.get('/user', function(dat){
-		data_Vue.user = dat;
+		data_Vue.user = dat.username;
+		data_Vue.curUserGroup = dat.usergroup;
+		data_Vue.geninfo['curUserGroup'] = dat.usergroup;
 	})
 	
 	$.post('/database', function(dat){
@@ -1427,7 +1429,7 @@ function updateUser(){
 
 
 function loadData(ind){
-	console.log(ind);
+//	console.log(ind);
 	if(ind != "Create_New_123456YYYY"){
 		$.ajax
 		({
@@ -1437,7 +1439,8 @@ function loadData(ind){
 			success: function (data, msg) {
 				if(data != ''){
 					//console.log("data original");
-					//console.log(data);
+					console.log(data);
+					data_Vue.filename = data[0].name;
 					importNetwork_intern(data[0].json);
 					if(data[0].versions.length > 0){
 						data_Vue.versions = data[0].versions.reverse();
@@ -1498,7 +1501,6 @@ function myFunction() {
   document.getElementById("Icon").classList.toggle("change");
   data_Vue.show_menu = !data_Vue.show_menu;
 } 
-
 
 
 // excel to Array 

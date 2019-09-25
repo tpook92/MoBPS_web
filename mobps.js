@@ -54,6 +54,8 @@ app.post('/auth', function(request, response) {
 				if(result.length > 0){
 					request.session.loggedin = true;
 					request.session.username = username;
+										request.session.usergroup = result[0]['group'];
+					
 					db.close();	
 					response.redirect('/home');					
 				} else {
@@ -79,7 +81,7 @@ app.get('/home', function(request, response) {
 
 app.get('/user', function(request, response) {
 	if (request.session.loggedin) {
-		response.send(request.session.username);
+		response.send({username: request.session.username, usergroup: request.session.usergroup});		
 	} else {
 		response.send('');
 	}
@@ -337,11 +339,15 @@ app.post('/RsimResult', function(request, response) {
 	});
 });
 
-
 // Get RData for download
 app.get('/Rdownload', function(request, res){	
-	var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'.RData');
- 	res.download(textfile); 
+	if (request.session.filename) {
+		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'.RData');
+ 		res.download(textfile); 
+	} else {
+		res.send('Please select a project to download RData!');
+	}
+
 });
 
 // Uploading R Results:

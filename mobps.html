@@ -37,16 +37,9 @@
 		<script lang="javascript" src="javascript/xlsx_excelToArray.js"></script>
 		<script lang="javascript" src="javascript/excelToArray.js"></script>
 		
-		
-		
-		
-		
-		
-		
 	</head>
 
 	<body onload="init();">
-
 		
 		<div id="runningDog">
 			<button style="color: red" class='bar_button' onclick="stopR();">Stop R Simulation</button> 
@@ -567,19 +560,20 @@
 					<br>
 				</template>
 				
-			<table>
-				<tr v-if="traitsinfo.length > 1">
-					<td style="font-weight:bold;width:60px;">Upload Excel file for Correlation:
-						<span class="tooltip">i <span class="tooltiptext">"Here you can import an Excel file with genetic correlations above the diagonal and residual correlations below the diagonal. Please set "1" to the diagonal elements. The first row and first column should be name of the Phenotype."</span></span>
+				<br>
+				<table>
+					<tr>
+					<td style="font-weight:bold;width:60px;padding:5px;">Upload Excel file for Correlation:
+						<span class="tooltip">? <span class="tooltiptext">"Here you can import an Excel file with genetic correlations above the diagonal and residual correlations below the diagonal. Please set "1" to the diagonal elements. The first row and first column should be name of the Phenotype."</span></span>
 					</td>
-				</tr>
-				<tr v-if="traitsinfo.length > 1">
+					</tr>
+					<tr>
 					<td> <input id="excelToArray" type=file ></td>
 					<td><button id="save_button" onclick="saveMatrixToProject();">Save to Project</button></td>
-				</tr>
-			</table>
-				<br>
-
+					</tr>
+				</table>
+				<br> 
+		
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix">
 					<tr>
 						<td colspan="5" style="font-weight:bold;width:60px;padding:5px;text-align:left">Residual Correlation
@@ -1422,6 +1416,8 @@
 				<button onclick="runningR1(); " >Start R Simulation</button>
 				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
 				<button onclick="ReloadSim(); " >Reload Old Results</button>	
+				&nbsp;&nbsp;
+				<a v-if="filename != ''" href="/Rdownload"> Download RData</a>
 				<p>Attention: The actual breeding program must match the uploaded R results, otherwise plot functions will not work.</p>
 				<form id='ResultUpload' target="print_popup" action='/ResultUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800')">
 					<input type='file' name='ResultFile' id='ResultFile'>
@@ -1619,7 +1615,7 @@
 				<br>
 			</div>
 			<div>
-			<a href="/Rdownload"> Download RData</a>
+
 			</div>
 			<div id="Export_Data_H3">
 				<br>

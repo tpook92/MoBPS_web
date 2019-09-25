@@ -203,37 +203,6 @@ function ReloadSim(){
 }
 
 
-function dloadRData(){
-	var filename = data_Vue.geninfo["Project Name"];
-	//var filename = "test";
-	$.ajax
-	({
-		type: "get",
-		url: './RData_Testing',
-		data: {
-			//filename : 'TestOneRun',
-			filename : filename,
-			},
-		success: function (data, msg) {
-			//console.log('mydata:'+data);
-			alert("Doneeeeee!");
-			//downloadthisData(data);
-	},
-		failure: function(msg) 
-		{
-			alert("Failed to get data from the file. Please select a project first!");
-		},
-		complete: function(obj, msg){
-			console.log(obj);
-		},
-		//dataType: "RData",
-	});
-}
-
-
-
-
-
 $(document).ready(function(){
     $("#ResultUpload").on('change',function(){
         UploadSim();
@@ -243,7 +212,7 @@ $(document).ready(function(){
 function UploadSim(){
 	var filename = document.getElementById('ResultFile').files[0].name
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
-	console.log(filename);
+	//console.log(filename);
 	data_Vue.geninfo['Project Name'] = filename;
 	
 	$.ajax
