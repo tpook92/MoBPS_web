@@ -1,0 +1,504 @@
+/****** General Styles **********************/
+body {
+	line-height: 1.5;
+}
+
+h3 {
+	font-size:14pt;
+}
+h4 {
+	font-size:12pt;
+	font-style: italic;
+}
+
+/****  turn off the arrows of number fileds  */
+.no-spinners {
+  -moz-appearance:textfield;
+}
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#MOBPS_logo {
+	top: 10px;
+	left:1%;
+	width:9%;
+	position:fixed;
+	z-index:100;
+}
+
+#mainDiv{
+	padding-left:10px;
+	position:absolute;
+	left: 10px;
+}
+
+.container {
+  display: inline-block;
+  cursor: pointer;
+  float: left;
+  left: 5px;
+  top: 0px;
+}
+
+.bar1, .bar2, .bar3 {
+  width: 35px;
+  height: 5px;
+  background-color: #4A5289;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+
+/* Rotate first bar */
+.change .bar1 {
+  -webkit-transform: rotate(-45deg) translate(-9px, 6px) ;
+  transform: rotate(-45deg) translate(-9px, 6px) ;
+}
+
+/* Fade out the second bar */
+.change .bar2 {
+  opacity: 0;
+}
+
+/* Rotate last bar */
+.change .bar3 {
+  -webkit-transform: rotate(45deg) translate(-8px, -8px) ;
+  transform: rotate(45deg) translate(-8px, -8px) ;
+}
+
+#Project_Bar {
+	background-color: #d0daf0;
+	position:fixed;
+	left:0px;
+	top:0px;
+	height:30px;
+	width:100%;
+	margin: 0px;
+	padding-left: 5px;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-right:30px;
+	z-index:550;
+	font-size: 14pt;
+	font-weight:bold;
+	color: red;
+}
+
+#SaveAs_Div {
+	display:none;
+	position:fixed;
+	top:25%;
+	left:25%;
+	z-index:299;
+	width:500px;
+	height:200px;
+	background-color: #f9f9f9;
+	border-style:solid;
+	border-width:3px;
+	border-color: #5394ed;
+	padding:30px;
+	text-align: center;
+	font-size: 14pt;
+}
+
+.bar_button {
+	background-color: #490d79;
+	font-size: 10pt;
+	padding: 3px 5px;
+	font-weight: bold;
+}
+
+#Navigator {
+	background-color: rgba(208,218,240, 0.5);
+	position:fixed;
+	left:0px;
+	top:50px;
+	width:300px;
+	margin: 0px;
+	padding: 0px;
+	padding-right:0px;
+	z-index: 600;
+}
+
+#runningDog {
+	background-image: url("img/runningDog.webp");
+	background-color: white;
+	border:2px;
+	background-repeat: no-repeat;
+	background-position:center;
+	background-size:400px;
+	z-index: 700;
+	position:fixed;
+	left:10%;
+	top:50px;
+	height:80%;
+	width:70%;
+	visibility: hidden;
+	padding: 50px;
+	text-align: center;
+	font-size:10pt;
+	overflow: auto;
+}
+
+ul {
+  list-style-type: none;
+  font-size:13pt;
+  font-weight:bold;
+  margin: 0;
+  padding: 0;
+  top: 50px;
+  width: 300px;
+  background-color: rgba(208,218,240, 0.95);
+  height: 100%; 
+  position: fixed;
+  overflow-y: auto;
+}
+
+li a {
+  display: block;
+  color: #4f567c;
+  padding: 7% 12%;
+  text-decoration: none;
+}
+
+li a.active {
+  background-color: #555;
+  color: white;
+}
+
+li a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+#geninfo_table {
+	position:relative;
+	width: 800px;
+	border: 1px solid lightgray;
+}
+
+#chrom_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+}
+
+#chrom_table td {
+	padding: 5px;
+}
+
+.trait_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	width: 800px;
+}
+
+.corr_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	max-width:800px;
+}
+
+#trait_table td {
+	padding: 5px;
+}
+
+#generalInfo {
+	position:fixed; 
+	padding: 20px ;
+	z-index:200; 
+	right:0vw; 
+	top:0vw; 
+	width:20%; 
+	height:100%; 
+	background-color:rgba(233,243,255, 0.5);
+}
+
+#warnings {
+	position:fixed; 
+	padding: 20px ;
+	z-index:201; 
+	right:0vw; 
+	top:0vw; 
+	width:20%; 
+	height:100%; 
+	background-color: rgba(252,222,222, 0.5) ;
+}
+
+#warnings_sum {
+	position:fixed; 
+	padding: 0 20px ;
+	z-index:250; 
+	right:0vw; 
+	top:50px; 
+	width:20%; 
+	height:10%; 
+	background-color: rgba(0, 0, 0, 0);
+	overflow-y:auto;
+}
+
+#showGenInfo_button {
+	float:right;
+	position:fixed; 
+	padding: 0px ;
+	z-index:210; 
+	right:130px;
+	margin:0px;
+	top:1px; 
+	background-color: rgba(0, 0, 0, 0);
+}
+
+#showWarning_button {
+	float:right;
+	position:fixed; 
+	padding: 0px ;
+	z-index:210; 
+	right:1px;
+	margin:0px;
+	top:1px; 
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.RSim_Div {
+	position:relative;
+	width: 800px;
+	border: 1px solid lightgray;
+}
+
+#Rout_Div {
+	position:relative;
+	width: 800px;
+	font-size:10pt;
+	height: 500px;
+	overflow:scroll;
+	border: 1px solid lightgray;
+}
+
+/********* Some tooltip styles for additional info on hover ********************/
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: black;
+  font-size:9pt;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  top: -5px;
+  left: 105%; 
+  z-index: 500;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+/****** some funny animations ***************/
+
+.slide-generalInfo-enter-active {
+  transition: all .3s ease;
+}
+.slide-generalInfo-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-generalInfo-enter, .slide-generalInfo-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.slide-menu-enter-active {
+  transition: all .3s ease;
+}
+.slide-menu-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-menu-enter, .slide-menu-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+/****** nice styles for our buttons :) ******/
+button {
+  display: inline-block;
+  padding: 2px 5px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: white;
+  background-color: #486F88;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px #999;
+}
+
+button:hover {background-color: #032236}
+
+button:active {
+  background-color: #032236;
+  box-shadow: 0 1px #666;
+  transform: translateY(4px);
+}
+
+button:disabled,
+button[disabled]{
+  background-color: #cccccc;
+  color: #666666;
+}
+
+/******* Network Styles *********************/
+#mynetwork_container {
+	position:relative;
+	width: 800px;
+	height: 600px;
+	border: 1px solid lightgray;
+}
+#mynetwork_label {
+	float:left;
+	position:relative;
+	width: 125px;
+	height: 600px;
+	border: 0;
+	padding: 5px;
+}
+
+#mynetwork {
+	float:left;
+	position:relative;
+	width: 660px;
+	height: 598px;
+	border: 1px solid lightgray ;
+}
+#node-popUp {
+	display:none;
+	position:fixed;
+	top:5vw;
+	left:25%;
+	z-index:700;
+	width:600px;
+	height:400px;
+	background-color: #f9f9f9;
+	border-style:solid;
+	border-width:3px;
+	border-color: #5394ed;
+	padding:30px;
+	text-align: left;
+	overflow-y: scroll;
+}
+#edge-popUp {
+	text-align:left;
+	display:none;
+	position:fixed;
+	top:5vw;
+	left:25%;
+	z-index:700;
+	width:600px;
+	height:350px;
+	background-color: #f9f9f9;
+	border-style:solid;
+	border-width:3px;
+	border-color: #5394ed;
+	padding:30px;
+	overflow-y: scroll;
+}
+
+/*** for login user details ***/
+#displayUserlogin { 
+	position:fixed;
+	background-color: none;
+	top: 750px;
+	left:2.5%;
+	width:9%;
+}
+
+#displayText {
+    display: block;
+    color: green;
+    font-family: verdana, arial, sans-serif;
+    font-weight: bold;
+    font-size : 12px;
+    text-decoration: none;
+}
+
+/*** Save and Save As submit ***/
+
+/****** nice styles for our buttons :) ******/
+input[type=submit]  {
+  display: inline-block;
+  padding: 2px 5px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: white;
+  background-color: #486F88;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px #999;
+}
+
+input[type=submit]:hover {background-color: #032236}
+
+input[type=submit]:active {
+  background-color: #032236;
+  box-shadow: 0 1px #666;
+  transform: translateY(4px);
+}
+
+table.saveTable {
+	margin:0px;
+	font-size: 11px;
+	text-align: center;
+	color: green;
+	border-width: 1px;
+}
+
+table.saveTable tr:hover td {
+	}
+
+
+table.saveTable input[type=text]{
+	width: 200px;
+	text-align: center;
+	border: 2px solid lightblue;
+}
+
+
+/** by default, Mozilla add red color box-shadow when the input field is invalid. Same doesn't effect other browsers. So removing. **/
+input:invalid {
+    box-shadow: none;
+}
+
+/**
+table.trait_table input[type=Number]{
+	box-shadow:none;
+}
+*/
+
+.excel_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	max-width:800px;
+}

@@ -54,6 +54,8 @@ app.post('/auth', function(request, response) {
 				if(result.length > 0){
 					request.session.loggedin = true;
 					request.session.username = username;
+										request.session.usergroup = result[0]['group'];
+					
 					db.close();	
 					response.redirect('/home');					
 				} else {
@@ -76,9 +78,10 @@ app.get('/home', function(request, response) {
 	}
 });
 
+
 app.get('/user', function(request, response) {
 	if (request.session.loggedin) {
-		response.send(request.session.username);
+		response.send({username: request.session.username, usergroup: request.session.usergroup});		
 	} else {
 		response.send('');
 	}
@@ -151,6 +154,7 @@ app.post('/loadproject', function(request, response) {
 			if (err) throw err;
 			var dbo = db.db("DB");
 			var obj = {name: request.body.name};
+			request.session.filename = request.body.name;
 			dbo.collection(request.session.username).find(obj).toArray(function(err, result){
 				if (err) throw err;
 				db.close();	
@@ -311,7 +315,8 @@ app.post('/RsimAccBVE', function(request, response) {
 
 // Run R simulation: Calculate Result
 app.post('/RsimResult', function(request, response) {
-	
+	console.log(request);
+	console.log(response);
 	request.setTimeout(5*24*60*60*1000);
 
 	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' "; // '" + JSON.stringify(request.body.cohorts) + "'";
@@ -332,6 +337,17 @@ app.post('/RsimResult', function(request, response) {
 			});
 		}
 	});
+});
+
+// Get RData for download
+app.get('/Rdownload', function(request, res){	
+	if (request.session.filename) {
+		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'.RData');
+ 		res.download(textfile); 
+	} else {
+		res.send('Please select a project to download RData!');
+	}
+
 });
 
 // Uploading R Results:

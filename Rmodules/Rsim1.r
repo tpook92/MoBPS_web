@@ -8,6 +8,7 @@ path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
 
+
 dat <- try(fromJSON(arg[2], simplifyVector=FALSE))
 if("try-error" %in% is(dat)){
   print(dat)
@@ -26,6 +27,10 @@ fileSum  <- paste(fname,"Summary.json",sep="")
 if(file.exists(fileSum)){
   file.remove(fileSum)
 }
+if(arg[1]==paste0("EAAP","guest")){
+  stop(paste0("EAAP","guest is not allowed to run simulations."))
+}
+
 
 if(length(dat$'Genomic Info'$'multi-mode')>0 && dat$'Genomic Info'$'multi-mode' =="Yes"){
   for(rep in 1:as.numeric(dat$'Genomic Info'$'number-simulations')){
