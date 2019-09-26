@@ -1317,6 +1317,18 @@
 							</select>
 						</td>
 					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && (active_edge['Selection Type']== 'Parent_Mean' || active_edge['Selection Type']== 'Grandparent_Mean')">
+						<td> Mean between
+							<span class="tooltip">&#9432 <span class="tooltiptext">Select the mean between that parent values is used for the breeding value estimation</span></span>
+						</td>
+						<td>
+							<select v-model="active_edge['Selection Type Mean']">
+								<option v-for="option in selectionType_options2" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced']">
 						<td>Calculate reliability
 							<span class="tooltip">&#9432 <span class="tooltiptext">Calculate reliability of BVE according to vanRaden 2008</span></span>
