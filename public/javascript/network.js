@@ -1078,7 +1078,6 @@ function postProject(name, url, jsondata){
 			alert("Saving Success!");
 			data_Vue.project_saved = true;
 			//loadData(name);
-			console.log(data);
 			data_Vue.versions = data.reverse();
 			//document.getElementById("Project_Name").value = name; //data_Vue.geninfo['Project Name'];
 			document.getElementById("Version").value = "recent";
