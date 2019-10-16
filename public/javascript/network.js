@@ -205,7 +205,7 @@ var data_Vue = new Vue({
 		
 		show_geninfo: false,
 		show_menu: false,
-		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Other'],
+		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Other'],
 		Time_Unit_options: ['Years', 'Month', 'Weeks', 'Days'],
 		true_false_options: ['TRUE', 'FALSE'],
 		w_options: ['Per Unit', 'Per Phenotypic SD', 'Per Breeding Value SD'],
@@ -281,6 +281,11 @@ var data_Vue = new Vue({
 				{Dataset: "oaries_snp", Filter:"variation_set_name", Value: "Genotyping chip variants"}
 			],
 			Maize: [{Dataset: "", Filter:"variation_set_name", Value: "Affymetrix Axiom Maize Genotyping Array"}],
+			Sorghum: [{Dataset: "", Filter:"variation_set_name", Value: "3k_Sorghum_Bekele"}],
+			Wheat: [
+				{Dataset: "", Filter:"variation_set_name", Value: "12k_Wheat_Bekele"},
+				{Dataset: "", Filter:"variation_set_name", Value: "29k_Wheat_Wen"},
+			],
 			Horse: [{Dataset: "ecaballus_snp", Filter:"variation_set_name", Value: "Illumina EquineSNP50 BeadChip"}],
 			Goat: [{Dataset: "placeholder", Filter:"placeholder", Value: "Illumina_GoatSNP50"}],
 			Human: [
