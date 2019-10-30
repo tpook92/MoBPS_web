@@ -1317,6 +1317,16 @@
 							</select>
 						</td>
 					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & active_edge['Selection Type']=='Pseudo-BVE'" v-for='(trait, index) in traitsinfo' >
+						<td>Accuracy for Trait {{ trait[["Trait Name"]] }} 
+							<span class="tooltip">&#9432 <span class="tooltiptext">If nothing is entered here the accuracy will be chosen according to the starting heritability</span></span>
+						</td>
+						<td>
+							<input v-model="active_edge[index]" style="width:80px;"> 
+						</td>
+					</tr>					
+					
+					
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced']">
 						<td>Calculate reliability
 							<span class="tooltip">&#9432 <span class="tooltiptext">Calculate reliability of BVE according to vanRaden 2008</span></span>

@@ -253,7 +253,7 @@ var data_Vue = new Vue({
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
 		Genotype_generation_options: ["Upload Genotypes", "Random-sampling", "Fully-homozygous", "Fully-heterozygous", "All-B-Allele", "All-A-Allele"],
 		Breedingtype_options: ['Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production'],
-		selectionType_options: ['Phenotypic', 'Random', 'BVE' ],
+		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
 		BVEMethod_options: ['Direct Mixed-Model', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'BayesA', 'BayesB', 'BayesC', 'RKHS'],
 		Cohorts_options: ['Only this cohort', 'Last Generation', 'Last 2 Generations', 'Last 3 Generations', 'All',  'Manual select'],
