@@ -2,71 +2,75 @@
 // it will check all possibly inconsistencies if anything of the following components are changed:
 function checkEverything(id){
     	console.log(id);
+		
+
 	if(id == "General_Info"){  
-			
+		
+		data_Vue.warnings1 = [];
+
 		gen_warn_text = "Please specify a Project Name.";
-		if(!data_Vue.geninfo['Project Name'] & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(data_Vue.geninfo['Project Name'] != "" & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		if(!data_Vue.geninfo['Project Name'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings1.push(gen_warn_text);
+		}else if(data_Vue.geninfo['Project Name'] != "" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
         	}
 			
 		gen_warn_text = "Please specify a Species.";
-		if(!data_Vue.geninfo['Species'] & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(data_Vue.geninfo['Species'] != "" & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		if(!data_Vue.geninfo['Species'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings1.push(gen_warn_text);
+		}else if(data_Vue.geninfo['Species'] != "" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
         	}
 						
 		gen_warn_text = "Please specify Time Unit.";
-		if(!data_Vue.geninfo['Time Unit'] & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(data_Vue.geninfo['Time Unit'] != "" & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		if(!data_Vue.geninfo['Time Unit'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings1.push(gen_warn_text);
+		}else if(data_Vue.geninfo['Time Unit'] != "" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
             	}			
 		
 		gen_warn_textEns = "Please specify an Ensembl Dataset.";
-		if ((data_Vue.genetic_data == "Ens" & !data_Vue.geninfo['Ensembl Dataset'] & data_Vue.warnings.indexOf(gen_warn_textEns) == -1)){
-			data_Vue.warnings.push(gen_warn_textEns);
-		}else if(data_Vue.genetic_data == "Ens" & data_Vue.geninfo['Ensembl Dataset'] != "" & data_Vue.warnings.indexOf(gen_warn_textEns) > -1) {
-                	data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_textEns),1);
+		if ((data_Vue.genetic_data == "Ens" & !data_Vue.geninfo['Ensembl Dataset'] & data_Vue.warnings1.indexOf(gen_warn_textEns) == -1)){
+			data_Vue.warnings1.push(gen_warn_textEns);
+		}else if(data_Vue.genetic_data == "Ens" & data_Vue.geninfo['Ensembl Dataset'] != "" & data_Vue.warnings1.indexOf(gen_warn_textEns) > -1) {
+                	data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_textEns),1);
 		}
-		else if (data_Vue.genetic_data != "Ens" & data_Vue.warnings.indexOf(gen_warn_textEns) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_textEns),1);
+		else if (data_Vue.genetic_data != "Ens" & data_Vue.warnings1.indexOf(gen_warn_textEns) > -1){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_textEns),1);
 		}      
 
 		gen_warn_textSNP = "Please specify Max.Number of SNPs. SNPs are in positive integer";
 		checkPosSNP = isPositiveInt(data_Vue.geninfo['Max Number of SNPs']);
-		if (data_Vue.genetic_data == "Ens" & (isNaN(data_Vue.geninfo['Max Number of SNPs']) || data_Vue.geninfo['Max Number of SNPs'] < 0  || (data_Vue.geninfo['Max Number of SNPs'] != "" & checkPosSNP == false )) & data_Vue.warnings.indexOf(gen_warn_textSNP) == -1){
-			data_Vue.warnings.push(gen_warn_textSNP);
-		}else if((data_Vue.geninfo['Max Number of SNPs'] == "" || (data_Vue.geninfo['Max Number of SNPs'] >=0 & checkPosSNP == true)) & data_Vue.warnings.indexOf(gen_warn_textSNP) > -1) {
-                	data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_textSNP),1);
+		if (data_Vue.genetic_data == "Ens" & (isNaN(data_Vue.geninfo['Max Number of SNPs']) || data_Vue.geninfo['Max Number of SNPs'] < 0  || (data_Vue.geninfo['Max Number of SNPs'] != "" & checkPosSNP == false )) & data_Vue.warnings1.indexOf(gen_warn_textSNP) == -1){
+			data_Vue.warnings1.push(gen_warn_textSNP);
+		}else if((data_Vue.geninfo['Max Number of SNPs'] == "" || (data_Vue.geninfo['Max Number of SNPs'] >=0 & checkPosSNP == true)) & data_Vue.warnings1.indexOf(gen_warn_textSNP) > -1) {
+                	data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_textSNP),1);
             	}
-		else if (data_Vue.genetic_data != "Ens" & data_Vue.warnings.indexOf(gen_warn_textSNP) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_textSNP),1);
+		else if (data_Vue.genetic_data != "Ens" & data_Vue.warnings1.indexOf(gen_warn_textSNP) > -1){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_textSNP),1);
 		}   	
 			
 		gen_warn_text = "Please upload Own Map.";
-		if ((data_Vue.genetic_data == "Own" & !data_Vue.geninfo['Own Map Path']) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
-            	}else if(data_Vue.geninfo['Own Map Path'] != "Own" & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		if ((data_Vue.genetic_data == "Own" & !data_Vue.geninfo['Own Map Path']) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings1.push(gen_warn_text);
+            	}else if(data_Vue.geninfo['Own Map Path'] != "Own" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
 		}
             
 		gen_warn_text = "Please enter number of Chromosomes. Chromosomes are in positive integer.";			
 		checkCus = isPositiveInteger(data_Vue.geninfo['Number of Chromosomes']) ? "true" : "false";
 		checkNumeric = isNumeric(data_Vue.geninfo['Number of Chromosomes']);
-		if ((data_Vue.genetic_data == "Cus" & !data_Vue.geninfo['Number of Chromosomes'] & checkCus == "false") & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
+		if ((data_Vue.genetic_data == "Cus" & !data_Vue.geninfo['Number of Chromosomes'] & checkCus == "false") & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings1.push(gen_warn_text);
 		}
-		else if ((data_Vue.genetic_data == "Cus" & (data_Vue.geninfo['Number of Chromosomes'] != "" & (checkNumeric == "false") || checkCus == "false")) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
+		else if ((data_Vue.genetic_data == "Cus" & (data_Vue.geninfo['Number of Chromosomes'] != "" & (checkNumeric == "false") || checkCus == "false")) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings1.push(gen_warn_text);
 		}
-		else if ((data_Vue.genetic_data == "Cus" & data_Vue.geninfo['Number of Chromosomes'] != "" & checkCus == "true") & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		else if ((data_Vue.genetic_data == "Cus" & data_Vue.geninfo['Number of Chromosomes'] != "" & checkCus == "true") & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
 		}                            
-		else if (data_Vue.genetic_data != "Cus" & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		else if (data_Vue.genetic_data != "Cus" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
 		}                            
 
 
@@ -76,30 +80,32 @@ function checkEverything(id){
         	if (thisChromoNum > 0 ) {
 			for (i=0; i<thisChromoNum; i++) {
 			gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes Length and must be in number.";
-			if((!data_Vue.geninfo['Chromosomes Info'][i]['Length'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Length']) || data_Vue.geninfo['Chromosomes Info'][i]['Length'] < 0 ) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings.push(gen_warn_text);
+			if((!data_Vue.geninfo['Chromosomes Info'][i]['Length'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Length']) || data_Vue.geninfo['Chromosomes Info'][i]['Length'] < 0 ) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+				data_Vue.warnings1.push(gen_warn_text);
 			}
-			else if((data_Vue.geninfo['Chromosomes Info'][i]['Length'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['Length'] > 0 ) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-				data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+			else if((data_Vue.geninfo['Chromosomes Info'][i]['Length'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['Length'] > 0 ) & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
+				data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
 			}
 
 			gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes MD and must be in number.";
-			if((!data_Vue.geninfo['Chromosomes Info'][i]['MD'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['MD']) || data_Vue.geninfo['Chromosomes Info'][i]['MD'] < 0) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings.push(gen_warn_text);
+			if((!data_Vue.geninfo['Chromosomes Info'][i]['MD'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['MD']) || data_Vue.geninfo['Chromosomes Info'][i]['MD'] < 0) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+				data_Vue.warnings1.push(gen_warn_text);
 			}
-			else if((data_Vue.geninfo['Chromosomes Info'][i]['MD'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['MD'] > 0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){                                                        
-				data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+			else if((data_Vue.geninfo['Chromosomes Info'][i]['MD'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['MD'] > 0) & data_Vue.warnings1.indexOf(gen_warn_text) > -1){                                                        
+				data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
         		}                                                            
 
 			gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes Recombination and must be in number.";
-			if((!data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Recombination']) || data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] < 0) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings.push(gen_warn_text);
+			if((!data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Recombination']) || data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] < 0) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+				data_Vue.warnings1.push(gen_warn_text);
 			}
-			else if((data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] > 0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-				data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+			else if((data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] > 0) & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
+				data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
 			}
 			}
 		}
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}             
 // end general info validation
 
@@ -107,69 +113,83 @@ function checkEverything(id){
 		
 	// phenotype validation
 	if(id == "Phenotype_Info_Div"){
+		
+
+		data_Vue.warnings2 = [];
+		count = 0;
+		for(key in data_Vue.warnings1) {
+			if(data_Vue.warnings1.hasOwnProperty(key)) {
+				count++;
+			}	
+		}
+		
+		if(count==0){
+			data_Vue.warnings1 = [];
+		}
+		
 		var phenoLength = data_Vue.traitsinfo.length;
 
 		if (phenoLength > 0 ) {
 		for (i=0; i<phenoLength; i++)
 			{
 				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Phenotype Name.";
-				if(!data_Vue.traitsinfo[i]['Trait Name']  & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings.push(gen_warn_text);
+				if(!data_Vue.traitsinfo[i]['Trait Name']  & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
 					}
-				else if (data_Vue.traitsinfo[i]['Trait Name'] != "" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+				else if (data_Vue.traitsinfo[i]['Trait Name'] != "" & data_Vue.warnings2.indexOf(gen_warn_text) > -1){               
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}	
 				
 				gen_warn_text = "Pheno "+(i+1)+": Please enter Phenotype Mean and must be in number.";
-				if((!data_Vue.traitsinfo[i]['Trait Mean'] || isNaN(data_Vue.traitsinfo[i]['Trait Mean'])) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings.push(gen_warn_text);
+				if((!data_Vue.traitsinfo[i]['Trait Mean'] || isNaN(data_Vue.traitsinfo[i]['Trait Mean'])) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if (data_Vue.traitsinfo[i]['Trait Mean'] != "" & isNaN(data_Vue.traitsinfo[i]['Trait Mean']) == false & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+				else if (data_Vue.traitsinfo[i]['Trait Mean'] != "" & isNaN(data_Vue.traitsinfo[i]['Trait Mean']) == false & data_Vue.warnings2.indexOf(gen_warn_text) > -1){               
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}	
 
 				gen_warn_text = "Pheno "+(i+1)+" : "+"Please enter Phenotype Standard deviation and must be a Positive number.";
 				thisStdDev = data_Vue.traitsinfo[i]['Trait Std Deviation'];
 
-				if ((!thisStdDev || isNaN(thisStdDev) || thisStdDev < 0)  & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings.push(gen_warn_text);
+				if ((!thisStdDev || isNaN(thisStdDev) || thisStdDev < 0)  & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((thisStdDev != "" & thisStdDev >=0) & isNaN(thisStdDev) == false & data_Vue.warnings.indexOf(gen_warn_text) > -1) {
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
+				else if ((thisStdDev != "" & thisStdDev >=0) & isNaN(thisStdDev) == false & data_Vue.warnings2.indexOf(gen_warn_text) > -1) {
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1); 
 				}	
 		
 				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Trait Heritability and must be a number between 0 and 1. ";
-				if((!data_Vue.traitsinfo[i]['Trait Heritability'] || data_Vue.traitsinfo[i]['Trait Heritability'] < 0 ||  data_Vue.traitsinfo[i]['Trait Heritability'] > 1) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings.push(gen_warn_text);
+				if((!data_Vue.traitsinfo[i]['Trait Heritability'] || data_Vue.traitsinfo[i]['Trait Heritability'] < 0 ||  data_Vue.traitsinfo[i]['Trait Heritability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((data_Vue.traitsinfo[i]['Trait Heritability'] != "" & data_Vue.traitsinfo[i]['Trait Heritability'] >= 0 & data_Vue.traitsinfo[i]['Trait Heritability'] <= 1) & data_Vue.warnings.indexOf(gen_warn_text) > -1){  
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+				else if ((data_Vue.traitsinfo[i]['Trait Heritability'] != "" & data_Vue.traitsinfo[i]['Trait Heritability'] >= 0 & data_Vue.traitsinfo[i]['Trait Heritability'] <= 1) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){  
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}
 
 				checkPoly = isPositiveInt(data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci']);
 				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter polygenic loci and must be a Number.";
-				if((!data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] || data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] < 0 || checkPoly == false) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings.push(gen_warn_text);
+				if((!data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] || data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] != "" & data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] > 0 & checkPoly == true) & data_Vue.warnings.indexOf(gen_warn_text) > -1){   
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+				else if ((data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] != "" & data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] > 0 & checkPoly == true) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}
 				
 				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Value per Unit and must be in number.";
-				if((data_Vue.traitsinfo[i]['Trait Value per Unit'] == "" & data_Vue.traitsinfo[i]['Trait Value per Unit']  != "0") & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings.push(gen_warn_text);
+				if((data_Vue.traitsinfo[i]['Trait Value per Unit'] == "" & data_Vue.traitsinfo[i]['Trait Value per Unit']  != "0") & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if (data_Vue.traitsinfo[i]['Trait Value per Unit'] != "" & data_Vue.warnings.indexOf(gen_warn_text) > -1){   
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+				else if (data_Vue.traitsinfo[i]['Trait Value per Unit'] != "" & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}
 								
 				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Major QTL and must be in positive number or can be zero. ";
 				thisMajorQTL = data_Vue.traitsinfo[i]['Trait Major QTL']
-				if(thisMajorQTL < 0 & data_Vue.warnings.indexOf(gen_warn_text) ==-1){  
-					data_Vue.warnings.push(gen_warn_text);
+				if(thisMajorQTL < 0 & data_Vue.warnings2.indexOf(gen_warn_text) ==-1){  
+					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if(thisMajorQTL >= 0 & data_Vue.warnings.indexOf(gen_warn_text) > -1){  
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+				else if(thisMajorQTL >= 0 & data_Vue.warnings2.indexOf(gen_warn_text) > -1){  
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}
 
 				var qtlCnt = data_Vue.traitsinfo[i]['Trait Major QTL'];
@@ -184,6 +204,8 @@ function checkEverything(id){
 
 			}
 		}
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}	// end of phenotype validation
 	
 	
@@ -196,6 +218,19 @@ function checkEverything(id){
 	
 
 	if(id == "Variables_Info"){
+
+		data_Vue.warnings3 = [];
+
+		count = 0;
+		for(key in data_Vue.warnings1) {
+			if(data_Vue.warnings1.hasOwnProperty(key)) {
+				count++;
+			}	
+		}
+		
+		if(count==0){
+			data_Vue.warnings1 = [];
+		}
 		var ownVariableCnt = data_Vue.individualsVar_options.length;
 		var ownVariable = data_Vue.individualsVar_options;
 
@@ -205,235 +240,198 @@ function checkEverything(id){
 
 			gen_warn_text = thisName+" : "+"Please enter Own variable and must be a positive number.";
 
-			if((thisValue == "" || thisValue =="0" || thisValue <0 || isNaN(thisValue)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings.push(gen_warn_text);
+			if((thisValue == "" || thisValue =="0" || thisValue <0 || isNaN(thisValue)) & data_Vue.warnings3.indexOf(gen_warn_text) == -1){
+				data_Vue.warnings2.push(gen_warn_text);
 			}
-			else if((thisValue != "" & thisValue >0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-				data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
+			else if((thisValue != "" & thisValue >0) & data_Vue.warnings3.indexOf(gen_warn_text) > -1){
+				data_Vue.warnings3.splice(data_Vue.warnings3.indexOf(gen_warn_text),1); 
 			}		
 				
 		}
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}
 	
 	
-	if(id == "node-popUp"){
+	if(id == "edge-popUp" || id == "node-popUp"){
 		
-		gen_warn_text = "Please enter Name of the Node. ";
-		if (!data_Vue.active_node['id'] & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(data_Vue.active_node['id'] != "" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}	
-		
-		gen_warn_text = "Please enter Positive Number or select a Variable. ";
-		if (!data_Vue.active_node['Number of Individuals'] & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_node['Number of Individuals'] != "" || data_Vue.active_node['Number of Individuals'] > 0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-		 
-		gen_warn_text = "Please enter Proportion of genotyped individuals of the node. And must be a number between 0 and 1.";
-		if((!data_Vue.active_node['Proportion of genotyped individuals'] || data_Vue.active_node['Proportion of genotyped individuals'] < 0 || data_Vue.active_node['Proportion of genotyped individuals']  > 1) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-			data_Vue.warnings.push(gen_warn_text);
-		}
-		else if ((data_Vue.active_node['Proportion of genotyped individuals'] != "" & data_Vue.active_node['Proportion of genotyped individuals'] >= 0 & data_Vue.active_node['Proportion of genotyped individuals']  <= 1) & data_Vue.warnings.indexOf(gen_warn_text) > -1){  
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		data_Vue.warnings4 = [];
+		count = 0;
+		for(key in data_Vue.warnings1) {
+			if(data_Vue.warnings1.hasOwnProperty(key)) {
+				count++;
+			}	
 		}
 		
-		gen_warn_text = "Please enter Proportion of Male. And must be a number between 0 and 1.";
-		if((data_Vue.active_node['Sex'] == "Both" & (!data_Vue.active_node['Proportion of Male'] || data_Vue.active_node['Proportion of Male'] < 0 || data_Vue.active_node['Proportion of Male']  > 1)) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-			data_Vue.warnings.push(gen_warn_text);
+		if(count==0){
+			data_Vue.warnings1 = [];
 		}
-		else if ((data_Vue.active_node['Sex'] == "Both" & (data_Vue.active_node['Proportion of Male'] != "" & data_Vue.active_node['Proportion of Male'] >= 0 & data_Vue.active_node['Proportion of Male']  <= 1)) & data_Vue.warnings.indexOf(gen_warn_text) > -1){  
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		nodes = data_Vue.nodes.get();
+		nodes = Array.from(nodes);
+		if(nodes.length > 0){
+			for(let i=0; i < nodes.length; i++){
+				active_node = nodes[i];
+				
+				gen_warn_text = "Please assign each node with a name.";
+				if (!active_node['id'] & data_Vue.warnings4.indexOf(gen_warn_text) == -1){			
+					data_Vue.warnings4.push(gen_warn_text);
+				}
+				
+				gen_warn_text = "Number of individuals in Node " + active_node['id'] + " is not specified";
+				if (!active_node['Number of Individuals'] & data_Vue.warnings4.indexOf(gen_warn_text) == -1){			
+					data_Vue.warnings4.push(gen_warn_text);
+				}
+				
+				gen_warn_text = "Share of genotyped individuals in " + active_node['id'] + " must be between 0 and 1.";
+				if((!active_node['Proportion of genotyped individuals'] || active_node['Proportion of genotyped individuals'] < 0 || active_node['Proportion of genotyped individuals']  > 1) & data_Vue.warnings4.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings4.push(gen_warn_text);
+				}
+				
+				gen_warn_text = "Share of male individuals in " + active_node['id'] + " must be between 0 and 1.";
+				if((active_node['Sex'] == "Both" & (!active_node['Proportion of Male'] || active_node['Proportion of Male'] < 0 || active_node['Proportion of Male']  > 1)) & data_Vue.warnings4.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings4.push(gen_warn_text);
+				}
+				
+			}
 		}
-		else if (data_Vue.active_node['Sex'] != "Both"  & data_Vue.warnings.indexOf(gen_warn_text) > -1){  
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}		
-
+		
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}
 	
 
-	if(id == "edge-popUp"){
+	if(id == "edge-popUp" || id == "node-popUp"){
 		
-		gen_warn_text = "Please select Selection type. ";
-		if ((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "") & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] != "")& data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}else if(data_Vue.active_edge['Breeding Type'] != "Selection" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+		count = 0;
+		for(key in data_Vue.warnings1) {
+			if(data_Vue.warnings1.hasOwnProperty(key)) {
+				count++;
+			}	
 		}
 		
-		gen_warn_text = "Please enter Time needed for Selection. And it must be a positive number";
-		if ((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Time Needed'] == null || data_Vue.active_edge['Time Needed'] < 0 || isNaN(data_Vue.active_edge['Time Needed'])) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Time Needed'] != null) & data_Vue.active_edge['Time Needed'] >= 0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Selection" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}	
+		if(count==0){
+			data_Vue.warnings1 = [];
+		}
+		
+		data_Vue.warnings5 = [];
 
-		gen_warn_text = "Please select Relationship Matrix for Selection type BVE. ";
-		if (((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE") & !data_Vue.active_edge['Relationship Matrix']) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] != "") &data_Vue.active_edge['Relationship Matrix'] != "") & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}else if(data_Vue.active_edge['Breeding Type'] != "Selection" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
+				
+		nodes = data_Vue.nodes.get();
+		nodes = Array.from(nodes);
+		edges = data_Vue.edges.get();
+		edges = Array.from(edges);
+		
+		if(edges.length > 0){
+			edge_from = [];
+			edge_to = [];
+			edge_nrfrom = [];
+			edge_nrto = [];
+			edge_type = [];
+			node_name = [];
+			node_founder = [];
+			
+			for(let i=0; i < nodes.length; i++){
+				node_name.push(nodes[i]['id'])
+				node_founder.push(nodes[i]['Founder'])
+			}
+			
+			for(let i=0; i < edges.length; i++){
+				edge_to.push(edges[i]['to']);
+				edge_from.push(edges[i]['from']);
+				edge_type.push(edges[i]['Breeding Type']);
+				for(let j=0; j < nodes.length; j++){
+					if(edge_from[i]==node_name[j]){
+						edge_nrfrom.push(j);
+					}
+					if(edge_to[i]==node_name[j]){
+						edge_nrto.push(j);
+					}
+				}
+				gen_warn_text = "No Breeding Type selected for Edge between " + edges[i]['from'] + " and " + edges[i]['to'];
+				if (edges[i]['Breeding Type']=="" & data_Vue.warnings5.indexOf(gen_warn_text) == -1){			
+					data_Vue.warnings5.push(gen_warn_text);
+				}
+			}
+			
+			
+			for(let i=0; i < edges.length; i++){
+				if(edge_type[i] =="Selection" || edge_type[i] == "Aging" || edge_type[i] == "Split"){
+					size1 = parseFloat(nodes[edge_nrfrom[i]]['Number of Individuals']);
+					size2 = parseFloat(nodes[edge_nrto[i]]['Number of Individuals']);
+					if(size1<size2){
+						gen_warn_text = "More individuals selected in " + edge_to[i] + " than present in " + edge_from[i];
+						data_Vue.warnings5.push(gen_warn_text);
+					}
+				}
+				if(edge_type[i] =="Selection" || edge_type[i] == "Aging" || edge_type[i] == "Split"){
+					if(nodes[edge_nrfrom[i]]['Sex']!=nodes[edge_nrto[i]]['Sex']){
+						gen_warn_text = "Different sex between nodes " + edge_to[i] + " and " + edge_from[i];
+						data_Vue.warnings5.push(gen_warn_text);
+					}
+				}
+				if(edge_type[i] =="Repeat"){
+					if(nodes[edge_nrfrom[i]]['Number of Individuals']!=nodes[edge_nrto[i]]['Number of Individuals']){
+						gen_warn_text = "Different number of individuals in nodes of the Repeat between " + edge_to[i] + " and " + edge_from[i];
+						data_Vue.warnings5.push(gen_warn_text);
+					}
+				}
+			}
+			
+			for(let i=0; i < nodes.length; i++){
+				if(node_founder[i] == 'Yes'){
+					for(let j=0; j <edges.length; j++){
+						if(edge_nrto[j] == i && edge_type[j] != 'Repeat'){
+							gen_warn_text = "Founder-Node " + node_name[i] + " has incoming Edges.";
+							data_Vue.warnings5.push(gen_warn_text);	
+						}
+					}
+				}
+				else{
+					count = 0;
+					combine_count = 0;
+					split_count = 0;
+					for(let j=0; j < edges.length; j++){
+						if(edge_nrto[j] == i){
+							count++;
+							if(edge_type[j] == "Combine"){
+								size1 = parseFloat(nodes[edge_nrfrom[j]]['Number of Individuals']);
+								combine_count = combine_count + size1;
+							}
+						}
+						if(edge_nrfrom[j] == i){
+							if(edge_type[j] == "Split"){
+								size1 = parseFloat(nodes[edge_nrto[j]]['Number of Individuals']);
+								split_count = split_count + size1;
+							}
+						}
+					}
+					if(count==0){
+						gen_warn_text = "Node "+ node_name[i] +" is no Founder but has no incoming Edges";
+						data_Vue.warnings5.push(gen_warn_text);	
+					}
+					size2 = nodes[i]['Number of Individuals'];
+					if(combine_count>0 && combine_count != size2){
+						gen_warn_text = "Individual number for Combining nodes to "+ node_name[i] +" do not add up";
+						data_Vue.warnings5.push(gen_warn_text);	
+					}
+					if(split_count>0 && split_count != size2){
+						gen_warn_text = "Individual numbers for Splitting node "+ node_name[i] +" do not add up";
+						data_Vue.warnings5.push(gen_warn_text);	
+					}
+				}
+			}
+			
+			
 		}
+		
 
-		gen_warn_text = "Please select BVE Method for Selection type BVE. ";
-		if (((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE") & !data_Vue.active_edge['BVE Method']) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] != "") &data_Vue.active_edge['BVE Method'] != "") & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}else if(data_Vue.active_edge['Breeding Type'] != "Selection" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
 
-		gen_warn_text = "Please enter Depth of Pedigree. And it is a Number ";
-		if ((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE" & data_Vue.active_edge['Relationship Matrix'] == "Pedigree") & (!data_Vue.active_edge['Depth of Pedigree'] || isNaN(data_Vue.active_edge['Depth of Pedigree'])) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE" & data_Vue.active_edge['Relationship Matrix'] == "Pedigree") & data_Vue.active_edge['Depth of Pedigree'] != "" & data_Vue.active_edge['Depth of Pedigree'] >= 0 ) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}else if(((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE" & data_Vue.active_edge['Relationship Matrix'] != "Pedigree") || (data_Vue.active_edge['Depth of Pedigree'] == "" || data_Vue.active_edge['Depth of Pedigree'] != "" || data_Vue.active_edge['Depth of Pedigree'] >= 0 )) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}else if((data_Vue.active_edge['Breeding Type'] != "Selection" & data_Vue.active_edge['Selection Type'] == "BVE" & data_Vue.active_edge['Relationship Matrix'] == "Pedigree") & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-	
-		gen_warn_text = "Please enter Depth of Pedigree for Single Step. And it is a Number ";
-		if ((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE" & data_Vue.active_edge['Relationship Matrix'] == "Single Step") & (!data_Vue.active_edge['Depth of Pedigree'] || isNaN(data_Vue.active_edge['Depth of Pedigree'])) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE" & data_Vue.active_edge['Relationship Matrix'] == "Single Step") & data_Vue.active_edge['Depth of Pedigree'] != "" & data_Vue.active_edge['Depth of Pedigree'] >= 0 ) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}else if((data_Vue.active_edge['Breeding Type'] != "Selection" & data_Vue.active_edge['Selection Type'] != "BVE" || data_Vue.active_edge['Relationship Matrix'] == "Single Step" || data_Vue.active_edge['Relationship Matrix'] != "Single Step") & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-
-	
-		gen_warn_text = "Please select Cohorts Used in BVE for Selection type BVE. ";
-		if (((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE") & !data_Vue.active_edge['Cohorts used in BVE']) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if(((data_Vue.active_edge['Breeding Type'] == "Selection" & data_Vue.active_edge['Selection Type'] == "BVE") & data_Vue.active_edge['Cohorts used in BVE'] != "") & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}else if(data_Vue.active_edge['Breeding Type'] != "Selection" & data_Vue.active_edge['Selection Type'] == "BVE" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
 		
-		gen_warn_text = "Please enter Time needed for Reproduction. It must be a positive number";
-		if (data_Vue.active_edge['Breeding Type'] == "Reproduction" & ( data_Vue.active_edge['Time Needed'] == null || data_Vue.active_edge['Time Needed'] <0 || isNaN(data_Vue.active_edge['Time Needed']))  & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Reproduction" & data_Vue.active_edge['Time Needed'] !=null & data_Vue.active_edge['Time Needed'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Reproduction" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-		
-		gen_warn_text = "Please select id for Reproduction. ";
-		if (data_Vue.active_edge['Breeding Type'] == "Reproduction" & (data_Vue.active_edge['id'] == "" || data_Vue.active_edge['id'] <0)  & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Reproduction" & data_Vue.active_edge['id'] !="" & data_Vue.active_edge['Time Needed'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Reproduction" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-		
-		gen_warn_text = "Please enter number of repeat for breeding type Repeat. It must be a positive number ";
-		if (data_Vue.active_edge['Breeding Type'] == "Repeat" & (!data_Vue.active_edge['Number of Repeat'] || data_Vue.active_edge['Number of Repeat'] < 0 || isNaN(data_Vue.active_edge['Time Needed'])) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Repeat" & data_Vue.active_edge['Number of Repeat'] != "" & data_Vue.active_edge['Number of Repeat'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}else if(data_Vue.active_edge['Breeding Type'] != "Repeat" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-
-		gen_warn_text = "Please enter Time needed for Cloning. And it must be a positive number";
-		if (data_Vue.active_edge['Breeding Type'] == "Cloning" & (data_Vue.active_edge['Time Needed'] == null || data_Vue.active_edge['Time Needed'] <0 || isNaN(data_Vue.active_edge['Time Needed']))  & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Cloning" & data_Vue.active_edge['Time Needed'] != null & data_Vue.active_edge['Time Needed'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Cloning" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}		
-		
-		gen_warn_text = "Please enter Time needed for Split. And it must be a positive number";
-		if (data_Vue.active_edge['Breeding Type'] == "Split" & (data_Vue.active_edge['Time Needed'] == null || data_Vue.active_edge['Time Needed'] <0 || isNaN(data_Vue.active_edge['Time Needed']))  & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Split" & data_Vue.active_edge['Time Needed'] != null & data_Vue.active_edge['Time Needed'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Split" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}		
-		
-		gen_warn_text = "Please enter Time needed for Selfing. And it must be a positive number";
-		if (data_Vue.active_edge['Breeding Type'] == "Selfing" & (data_Vue.active_edge['Time Needed'] == null || data_Vue.active_edge['Time Needed'] <0 || isNaN(data_Vue.active_edge['Time Needed']))  & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Selfing" & data_Vue.active_edge['Time Needed'] != null & data_Vue.active_edge['Time Needed'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Selfing" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}		
-		
-		gen_warn_text = "Please enter Time needed for Combine. It must be a positive number number";
-		if (data_Vue.active_edge['Breeding Type'] == "Combine" & (data_Vue.active_edge['Time Needed'] == null || data_Vue.active_edge['Time Needed'] <0 || isNaN(data_Vue.active_edge['Time Needed']))  & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Combine" & data_Vue.active_edge['Time Needed'] != null & data_Vue.active_edge['Time Needed'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Combine" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}	
-		
-		gen_warn_text = "Please enter Time needed for DH-Production. And it must be a positive number";
-		if (data_Vue.active_edge['Breeding Type'] == "DH-Production" & (data_Vue.active_edge['Time Needed'] == null || data_Vue.active_edge['Time Needed'] <0 || isNaN(data_Vue.active_edge['Time Needed']))  & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "DH-Production" & data_Vue.active_edge['Time Needed'] != null & data_Vue.active_edge['Time Needed'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "DH-Production" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}	
-	
-		gen_warn_text = "Please enter Time needed for Aging. And it must be a positive number";
-		if (data_Vue.active_edge['Breeding Type'] == "Aging" & (data_Vue.active_edge['Time Needed'] == null || data_Vue.active_edge['Time Needed'] <0 || isNaN(data_Vue.active_edge['Time Needed']))  & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Aging" & data_Vue.active_edge['Time Needed'] != null & data_Vue.active_edge['Time Needed'] >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Aging" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}	
-		
-		gen_warn_text = "Please enter Recombination - New Mutation Rate. ";
-		if ((data_Vue.active_edge['Breeding Type'] == "Recombination" & !data_Vue.active_edge['New Mutation Rate']) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		} else if((data_Vue.active_edge['Breeding Type'] == "Recombination" & data_Vue.active_edge['New Mutation Rate'] != "") & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Recombination" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-		
-		
-		gen_warn_text = "Please enter Recombination - New Remutation Rate. ";
-		if ((data_Vue.active_edge['Breeding Type'] == "Recombination" & !data_Vue.active_edge['New Remutation Rate']) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		} else if((data_Vue.active_edge['Breeding Type'] == "Recombination" & data_Vue.active_edge['New Remutation Rate'] != "") & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Recombination" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-		
-		
-		gen_warn_text = "Please enter Recombination - Number of Recombination per M. ";
-		if ((data_Vue.active_edge['Breeding Type'] == "Recombination" & !data_Vue.active_edge['Number of Rec per M']) & data_Vue.warnings.indexOf(gen_warn_text) == -1){			
-			data_Vue.warnings.push(gen_warn_text);
-		}else if((data_Vue.active_edge['Breeding Type'] == "Recombination" & data_Vue.active_edge['Number of Rec per M'] !="") & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		} else if(data_Vue.active_edge['Breeding Type'] != "Recombination" & data_Vue.warnings.indexOf(gen_warn_text) > -1){               
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-		}
-		
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}
 
+	
 	data_Vue.project_saved = false;
 }
 	
