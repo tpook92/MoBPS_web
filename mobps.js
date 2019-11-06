@@ -343,14 +343,7 @@ app.post('/RsimResult', function(request, response) {
 app.get('/Rdownload', function(request, res){	
 	if (request.session.filename) {
 		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'.RData');
-		fs.readFile(textfile, function(err, data){
-			if(err){
-				var message = 'Have not found any RData file for Project ' + request.session.filename  +'. Please finish R Simulation successfully and then download RData.';
-				res.send(message.fontcolor("red"));
-			}else{
-				res.download(textfile);
-			}
-		});
+ 		res.download(textfile); 
 	} else {
 		res.send('Please select a project to download RData!');
 	}
