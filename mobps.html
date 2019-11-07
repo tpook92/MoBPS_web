@@ -37,7 +37,11 @@
 		<script lang="javascript" src="javascript/xlsx_excelToArray.js"></script>
 		<script lang="javascript" src="javascript/excelToArray.js"></script>
 		
-	</head>
+				<!-- for drag and drop for Phenotype table -->	
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.16.0/vuedraggable.min.js"></script>	
+		
+			</head>
 
 	<body onload="init();">
 
@@ -68,7 +72,7 @@
 					&nbsp;&nbsp;
 					<button class='bar_button' id="download_button" onclick="downloadNetwork()" >Download Project</button>
 					&nbsp;&nbsp;
-					<button class='bar_button' id="delete_button" onclick="deleteProject()" >Delete Project</button>
+					<button class='bar_button' id="delete_button" onclick="deleteProject()" style="color: red" >Delete Project</button>
 					&nbsp;&nbsp;
 					<button class='bar_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
 					&nbsp;&nbsp;
@@ -499,43 +503,52 @@
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr v-for='(trait, index) in traitsinfo' >
+					<table>
+					<draggable :list="traitsinfo" 
+					class="dragArea"
+					:move="moveMatrix"
+					@change="seeChange"
+	                  @end="onEnd">
+					<template v-for='(trait, index) in traitsinfo' >
+						<tr>
 							<td>
-								<input v-model="trait['Trait Name']" style="width:80px;"> 
+								<input v-model="trait['Trait Name']" style="width:80px;height:20px;"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Unit']" style="width:50px;"> 
+								<input v-model="trait['Trait Unit']" style="width:50px;height:20px;"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Mean']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
+								<input v-model="trait['Trait Mean']" style="width:90px;height:20px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Std Deviation']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
+								<input v-model="trait['Trait Std Deviation']" style="width:80px;height:20px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
 							</td>
 							<td>
-								<input v-model="trait['Trait Heritability']" max=1 min=0 style="width:50px;" class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
+								<input v-model="trait['Trait Heritability']" max=1 min=0 style="width:90px;height:20px;" class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:50px;" class="no-spinners" step=1> 
+								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:100px;height:20px;" class="no-spinners" step=1> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Major QTL']" style="width:50px;" type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
+								<input v-model="trait['Trait Major QTL']" style="width:100px;height:20px;" type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
 							</td>
 							<td>
-								<input v-model="trait['Trait Value per Unit']" style="width:50px;" type="Number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
+								<input v-model="trait['Trait Value per Unit']" style="width:110px;height:20px;" type="Number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
 							</td>
 							<td>
-								<input type="checkbox" v-model="show_matrix_element[index].show">
+								<input type="checkbox" style="width:50px;height:20px;" v-model="show_matrix_element[index].show">
 							</td>
 							<td>
 								<button v-on:click="removePheno(index)">X</button>
 							</td>
 						</tr>
-					</tbody>
-				</table>
-				<br>
-				<template v-for="trait in traitsinfo" v-if="show_QTL && trait['Trait Major QTL'] > 0">
+					</template>
+					</draggable>
+					</table >
+					
+					<br>
+														
+								<template v-for="trait in traitsinfo" v-if="show_QTL && trait['Trait Major QTL'] > 0">
 					<table class="trait_table">
 						<thead>
 							<tr>
@@ -573,15 +586,13 @@
 				</template>
 
 				<br>
-				<table v-if="traitsinfo.length > 1 && show_matrix">
-					<tr>
-					<td style="font-weight:bold;width:60px;padding:5px;">Upload Excel file for Correlation:
+				<table >
+					<tr><td style="font-weight:bold;width:60px;">Upload Excel file for Correlation:
 						<span class="tooltip">&#9432 <span class="tooltiptext">"Here you can import an Excel file with genetic correlations above the diagonal and residual correlations below the diagonal. Please set "1" to the diagonal elements. The first row and first column should be name of the Phenotype."</span></span>
-					</td>
-					</tr>
+					</td></tr>
 					<tr>
 					<td> <input id="excelToArray" type=file ></td>
-					<td><button id="save_button" onclick="saveMatrixToProject();">Save to Project</button></td>
+					<td ><button id="save_button" onclick="saveProject(geninfo['Project Name']);loadData(geninfo['Project Name']);">Save to Project</button></td>
 					</tr>
 				</table>
 				<br>
@@ -610,8 +621,13 @@
 						</td>
 					</tr>
 				</table>
-				<br>
 
+				<table v-if="traitsinfo.length > 1 && show_matrix">
+				<tr><td> <button id="save_button" onclick="loadData(geninfo['Project Name']);">Refresh</button>
+				<span class="tooltip">&#9432 <span class="tooltiptext">Please click this button if the correlation values are not loaded!</span></span>
+				</td></tr>
+				</table>
+				
 				<table v-if="traitsinfo.length > 1 && show_matrix">
 				<tr>
 				<td>
@@ -948,7 +964,7 @@
 								<td>
 									<button v-on:click='removeQTLsub(subpop, subpop["QTL Info"], snp)'>X</button>
 								</td>
---->								
+-->								
 							</tr>
 						</tbody>
 					</table>

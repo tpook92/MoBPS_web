@@ -496,9 +496,4 @@ table.trait_table input[type=Number]{
 }
 */
 
-.excel_table {
-	background-color: #f0f0f0;
-	border-collapse: collapse;
-	text-align: center;
-	max-width:800px;
-}
+

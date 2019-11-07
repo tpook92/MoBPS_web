@@ -426,32 +426,6 @@ var data_Vue = new Vue({
 		},	
 	},
 	methods: {
-	 moveMatrix: function(evt) { 
-	 localStorage.clear();
-	 sessionStorage.clear();
-     getMatrix();
-     
-     var traitsfrom = evt.draggedContext.index;
-     var traitsTo = evt.draggedContext.futureIndex;
-     var traitsLen = data_Vue.traitsinfo.length;
-     
-     this['Traits moveFrom'] = evt.draggedContext.index;
-     this['Traits moveTo'] = evt.draggedContext.futureIndex;
-     data_Vue.geninfo['Traits moveFrom'] = evt.draggedContext.index;
-     data_Vue.geninfo['Traits moveTo'] = evt.draggedContext.futureIndex;
-	 
-     //data_Vue.savedragicon = true;
-},
-seeChange(event) {
-	 getSI();
-	 getPC();
-     var oldRow = event.moved.oldIndex;
-     var newRow = event.moved.newIndex;
-  },
-onEnd: function(evt) {
-	 saveProject(data_Vue.geninfo['Project Name']);
-     //alert('Moved!!');
-   },
 		// add a new animal housing cost class:
 		createHCostClass: function(){
 			var val = document.getElementById("newHCostClass").value;
@@ -840,61 +814,6 @@ onEnd: function(evt) {
 //**************** own functions required to manually update data_Vue or DOM ***************//
 
 
-function getMatrix() {
-	 data_Vue['Upload_CorrFile'] == 'No';
-     localStorage.setItem("movetrait", "yes");
-
-     for(let i=0; i < data_Vue.traitsinfo.length; i++){     
-         for(let j=0; j <= i; j++){
-              
-              var matrixval1 = data_Vue.matrix[i].row[j].val;
-              var matrixval2 = data_Vue.matrix2[i].row[j].val;
-              
-              localStorage.setItem(data_Vue.traitsinfo[i]['Trait Name']+'_'+data_Vue.traitsinfo[j]['Trait Name'], JSON.stringify(matrixval1));
-              localStorage.setItem(data_Vue.traitsinfo[j]['Trait Name']+'_'+data_Vue.traitsinfo[i]['Trait Name'], JSON.stringify(matrixval1));
-              
-              sessionStorage.setItem(data_Vue.traitsinfo[i]['Trait Name']+'_'+data_Vue.traitsinfo[j]['Trait Name'], JSON.stringify(matrixval2));
-              sessionStorage.setItem(data_Vue.traitsinfo[j]['Trait Name']+'_'+data_Vue.traitsinfo[i]['Trait Name'], JSON.stringify(matrixval2));
-         }
-     }
-
-}
-
-
-function getSI() {
-      for(let u=0; u < data_Vue.selection_index.length; u++){    
-		 var thisSIName = data_Vue.selection_index[u]['Name'];
-        for(var key in data_Vue.selection_index[u]) {
-			var thisSIVar = key;
-			var thisSIVal = data_Vue.selection_index[u][key];
-			localStorage.setItem(thisSIName+'_'+thisSIVar, thisSIVal);
-     	}
-	}
-}
-
-function getPC() {
-      for(let x=0; x < data_Vue.phenotyping_class.length; x++){    
-		 var thisPCName = data_Vue.phenotyping_class[x]['Name'];
-        for(var key in data_Vue.phenotyping_class[x]) {
-			var thisPCVar = key;
-			var thisPCVal = data_Vue.phenotyping_class[x][key];
-			localStorage.setItem(thisPCName+'_'+thisPCVar, thisPCVal);
-     	}
-	}
-}
-
-function trait_move(si, from, to) {
-    if (to >= si.length) {
-        var k = to - si.length + 1;
-        while (k--) {
-			si.push(undefined);
-        }
-    }
-    si.splice(to, 0, si.splice(from, 1)[0]);
-    return si; 
-};
-
-
 // if we use Variables for the # individuals, we need to update node.individuals:
 function updateIndividuals(ivar){
 	var item = data_Vue.individualsVar_options.filter(function(vv){ return(vv.name == ivar)})[0];
@@ -952,115 +871,36 @@ function updateSpeciesData(value){
 // function to export Data into OutputArea:
 
 function exportNetwork() {
-     exportArea = document.getElementById('OutputArea');
-     exportArea.value = "";
-     
-     if(data_Vue.geninfo['Chromosomes of Equal Length'] == 'Yes'){
-         data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display.slice(0,1);
-     }else{
-         data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display;
-     }
-     
-     var mat1 = [];
-     var mat2 = [];
-     var row1;
-     var row2; 
-     
-     // getting array list 
-     var listArray5 = [];
-     for(let a=0; a < data_Vue.traitsinfo.length; a++){
-         listArray5.push(data_Vue.traitsinfo[a]['Trait Name']);
-     }
-
-     if(data_Vue['Upload_CorrFile'] == 'Yes') {
-         var mat1 = data_Vue.mymatrix1;
-         var mat2 = data_Vue.mymatrix2; 
-     }
-     else if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {
-         var arrayLength = listArray5.length;
-         
-         for(let i=0; i < arrayLength; i++){
-              row1 = [];
-              row2 = [];
-              var am = listArray5[i]; 
-         
-              for(let j=0; j <= i; j++){
-                   var thisvar = (am+'_'+data_Vue.traitsinfo[j]['Trait Name']);
-                   var thisvar2 = (am+'_'+data_Vue.traitsinfo[j]['Trait Name']);
-                   
-                   if (thisvar === null) { 
-                   var thisvar = (data_Vue.traitsinfo[j]['Trait Name']+'_'+am);
-                   }
-                   if (thisvar2 === null) { 
-                   var thisvar2 = (data_Vue.traitsinfo[j]['Trait Name']+'_'+am);
-                   }
-              
-                   if (i == j) { 
-                   row1.push("1");
-                   row2.push("1");
-                   }
-                   else { 
-                   row1.push(JSON.parse(localStorage.getItem(thisvar)));
-                   row2.push(JSON.parse(sessionStorage.getItem(thisvar2)));
-                   }
-              }
-     
-         mat1.push(row1);
-         mat2.push(row2);       
-         }         
-        }
-     else {
-         for(let i=0; i < data_Vue.traitsinfo.length; i++){
-              row1 = [];
-              row2 = [];
-              for(let j=0; j <= i; j++){
-                   row1.push(data_Vue.matrix[i].row[j].val);
-                   row2.push(data_Vue.matrix2[i].row[j].val);
-              }
-              mat1.push(row1);
-              mat2.push(row2);
-         }
-     }
-     
-
-	// getting SI values after dragging
-	if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {          
-	    		var siKeys = Object.keys(data_Vue.selection_index[0]);
-		    siKeys.shift(); //remove "Name" from the array
-		    newSIKey = trait_move(siKeys, data_Vue.geninfo['Traits moveFrom'], data_Vue.geninfo['Traits moveTo']);
-		    var siArray = [];
-		    for(let u=0; u < data_Vue.selection_index.length; u++){
-			        var siObject = {}; 
-        	 	var getSIName = data_Vue.selection_index[u]['Name'];		
-         			siObject['Name'] = localStorage.getItem(getSIName+'_'+'Name');
-               			for(let v=0; v < newSIKey.length; v++){
-               				siObject[newSIKey[v]] = localStorage.getItem(getSIName+'_'+newSIKey[v]); 
-            		   	}
-     	siArray.push(siObject);
-     		}
-     		data_Vue.selection_index = siArray;
+	exportArea = document.getElementById('OutputArea');
+	exportArea.value = "";
+	
+	if(data_Vue.geninfo['Chromosomes of Equal Length'] == 'Yes'){
+		data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display.slice(0,1);
+	}else{
+		data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display;
 	}
 	
-	// getting PC values after dragging
-	if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {          
-    		var pcKeys = Object.keys(data_Vue.phenotyping_class[0]);
-    		pcKeys.shift(); //remove "Name" from the array
-    		pcKeys.shift(); // remove Phenotyping Cost from the array
-    		newPCKey = trait_move(pcKeys, data_Vue.geninfo['Traits moveFrom'], data_Vue.geninfo['Traits moveTo']);
-    		var pcArray = [];
-    		for(let p=0; p < data_Vue.phenotyping_class.length; p++){
-    		    	var pcObject = {}; 
-        	var getPCName = data_Vue.phenotyping_class[p]['Name'];		
-    			    pcObject['Name'] = localStorage.getItem(getPCName+'_'+'Name');
-        			pcObject['Cost of phenotyping'] = localStorage.getItem(getPCName+'_'+'Cost of phenotyping');
-        			for(let q=0; q < newPCKey.length; q++){
-        				pcObject[newPCKey[q]] = localStorage.getItem(getPCName+'_'+newPCKey[q]); 
-     		   	}
-    		pcArray.push(pcObject);
-    		}
-    		data_Vue.phenotyping_class = pcArray;
+	var mat1 = [];
+	var mat2 = [];
+	var row1;
+	var row2;
+
+	if(data_Vue['Upload_CorrFile'] == 'Yes') {
+		var mat1 = data_Vue.mymatrix1;
+		var mat2 = data_Vue.mymatrix2; 
 	}
-	
+	else {
+		for(let i=0; i < data_Vue.traitsinfo.length; i++){
+			row1 = [];
+			row2 = [];
+			for(let j=0; j <= i; j++){
+				row1.push(data_Vue.matrix[i].row[j].val);
+				row2.push(data_Vue.matrix2[i].row[j].val);
+			}
+			mat1.push(row1);
+			mat2.push(row2);
+		}
+	}
 	
 	var Intern = {
 		show_matrix_element : data_Vue.show_matrix_element,
@@ -1599,35 +1439,6 @@ function updateUser(){
 
 
 function loadData(ind){
-	localStorage.clear();
-	sessionStorage.clear();	
-	document.getElementById("excelToArray").value = "";
-     if(ind != "Create_New_123456YYYY"){
-         $.ajax
-         ({
-              type: "POST",
-              url: '/loadproject',
-              data: {name : ind},
-              success: function (data, msg) {
-                   if(data != ''){
-                        data_Vue.filename = data[0].name;
-                        importNetwork_intern(data[0].json);
-                        if(data[0].versions.length > 0){
-                            data_Vue.versions = data[0].versions.reverse();
-                        }
-                        document.getElementById("Version").value = "recent";
-                        data_Vue.project_saved = true;
-                   }else{
-                        alert("Loading Data failed. Contact administrator.");
-                   }
-              },           
-         });
-     }else{
-         location.reload();
-     }
-}
-
-function loadData_old(ind){
 	//	console.log(ind);
 	if(ind != "Create_New_123456YYYY"){
 		$.ajax
@@ -1715,5 +1526,14 @@ function importexcelToArray(evt) {
     excelToArray.parseExcel(selectedFile[0]);
  }	
 
-// excel to Array end
+function saveMatrixToProject(name) {
+	if(!name){
+		var name = data_Vue.geninfo['Project Name'];
+	}else{
+		data_Vue.geninfo['Project Name'] = name;
+	}
+	saveProject(name);
+	loadData(name);
+}
 
+// excel to Array end

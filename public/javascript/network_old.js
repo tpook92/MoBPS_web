@@ -205,7 +205,7 @@ var data_Vue = new Vue({
 		
 		show_geninfo: false,
 		show_menu: false,
-		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Other'],
+		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Other'],
 		Time_Unit_options: ['Years', 'Month', 'Weeks', 'Days'],
 		true_false_options: ['TRUE', 'FALSE'],
 		w_options: ['Per Unit', 'Per Phenotypic SD', 'Per Breeding Value SD'],
@@ -253,7 +253,7 @@ var data_Vue = new Vue({
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
 		Genotype_generation_options: ["Upload Genotypes", "Random-sampling", "Fully-homozygous", "Fully-heterozygous", "All-B-Allele", "All-A-Allele"],
 		Breedingtype_options: ['Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production'],
-		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
+		selectionType_options: ['Phenotypic', 'Random', 'BVE' ],
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
 		BVEMethod_options: ['Direct Mixed-Model', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'BayesA', 'BayesB', 'BayesC', 'RKHS'],
 		Cohorts_options: ['Only this cohort', 'Last Generation', 'Last 2 Generations', 'Last 3 Generations', 'All',  'Manual select'],
@@ -281,11 +281,6 @@ var data_Vue = new Vue({
 				{Dataset: "oaries_snp", Filter:"variation_set_name", Value: "Genotyping chip variants"}
 			],
 			Maize: [{Dataset: "", Filter:"variation_set_name", Value: "Affymetrix Axiom Maize Genotyping Array"}],
-			Sorghum: [{Dataset: "", Filter:"variation_set_name", Value: "3k_Sorghum_Bekele"}],
-			Wheat: [
-				{Dataset: "", Filter:"variation_set_name", Value: "12k_Wheat_Bekele"},
-				{Dataset: "", Filter:"variation_set_name", Value: "29k_Wheat_Wen"},
-			],
 			Horse: [{Dataset: "ecaballus_snp", Filter:"variation_set_name", Value: "Illumina EquineSNP50 BeadChip"}],
 			Goat: [{Dataset: "placeholder", Filter:"placeholder", Value: "Illumina_GoatSNP50"}],
 			Human: [
@@ -353,7 +348,6 @@ var data_Vue = new Vue({
 			get: function(){
 				var data = this.nodes.get()
 					.map(function(x){return({id: x.id, label: x.id, children:[
-						{id: x.id+":X", label:x.id},
 						{id: x.id+":0", label:x.id+":Same Repeat"},
 						{id: x.id+":-1", label:x.id+":Previous Repeat"},
 						{id: x.id+":-2", label:x.id+":2 Repeats before"},
@@ -426,32 +420,6 @@ var data_Vue = new Vue({
 		},	
 	},
 	methods: {
-	 moveMatrix: function(evt) { 
-	 localStorage.clear();
-	 sessionStorage.clear();
-     getMatrix();
-     
-     var traitsfrom = evt.draggedContext.index;
-     var traitsTo = evt.draggedContext.futureIndex;
-     var traitsLen = data_Vue.traitsinfo.length;
-     
-     this['Traits moveFrom'] = evt.draggedContext.index;
-     this['Traits moveTo'] = evt.draggedContext.futureIndex;
-     data_Vue.geninfo['Traits moveFrom'] = evt.draggedContext.index;
-     data_Vue.geninfo['Traits moveTo'] = evt.draggedContext.futureIndex;
-	 
-     //data_Vue.savedragicon = true;
-},
-seeChange(event) {
-	 getSI();
-	 getPC();
-     var oldRow = event.moved.oldIndex;
-     var newRow = event.moved.newIndex;
-  },
-onEnd: function(evt) {
-	 saveProject(data_Vue.geninfo['Project Name']);
-     //alert('Moved!!');
-   },
 		// add a new animal housing cost class:
 		createHCostClass: function(){
 			var val = document.getElementById("newHCostClass").value;
@@ -559,7 +527,7 @@ onEnd: function(evt) {
 			this.selection_index.push(mySI);	
 			this.selection_index_scaling.push(mySIscaling);
 			document.getElementById("newSI").value='';		
-			
+		//	document.getElementById("newSIscaling").value='';	 - gives error, and i don't see this is exist in html' so removing(Amudha)		
 		},		
 		addPC: function(name){
 			if(name){
@@ -840,61 +808,6 @@ onEnd: function(evt) {
 //**************** own functions required to manually update data_Vue or DOM ***************//
 
 
-function getMatrix() {
-	 data_Vue['Upload_CorrFile'] == 'No';
-     localStorage.setItem("movetrait", "yes");
-
-     for(let i=0; i < data_Vue.traitsinfo.length; i++){     
-         for(let j=0; j <= i; j++){
-              
-              var matrixval1 = data_Vue.matrix[i].row[j].val;
-              var matrixval2 = data_Vue.matrix2[i].row[j].val;
-              
-              localStorage.setItem(data_Vue.traitsinfo[i]['Trait Name']+'_'+data_Vue.traitsinfo[j]['Trait Name'], JSON.stringify(matrixval1));
-              localStorage.setItem(data_Vue.traitsinfo[j]['Trait Name']+'_'+data_Vue.traitsinfo[i]['Trait Name'], JSON.stringify(matrixval1));
-              
-              sessionStorage.setItem(data_Vue.traitsinfo[i]['Trait Name']+'_'+data_Vue.traitsinfo[j]['Trait Name'], JSON.stringify(matrixval2));
-              sessionStorage.setItem(data_Vue.traitsinfo[j]['Trait Name']+'_'+data_Vue.traitsinfo[i]['Trait Name'], JSON.stringify(matrixval2));
-         }
-     }
-
-}
-
-
-function getSI() {
-      for(let u=0; u < data_Vue.selection_index.length; u++){    
-		 var thisSIName = data_Vue.selection_index[u]['Name'];
-        for(var key in data_Vue.selection_index[u]) {
-			var thisSIVar = key;
-			var thisSIVal = data_Vue.selection_index[u][key];
-			localStorage.setItem(thisSIName+'_'+thisSIVar, thisSIVal);
-     	}
-	}
-}
-
-function getPC() {
-      for(let x=0; x < data_Vue.phenotyping_class.length; x++){    
-		 var thisPCName = data_Vue.phenotyping_class[x]['Name'];
-        for(var key in data_Vue.phenotyping_class[x]) {
-			var thisPCVar = key;
-			var thisPCVal = data_Vue.phenotyping_class[x][key];
-			localStorage.setItem(thisPCName+'_'+thisPCVar, thisPCVal);
-     	}
-	}
-}
-
-function trait_move(si, from, to) {
-    if (to >= si.length) {
-        var k = to - si.length + 1;
-        while (k--) {
-			si.push(undefined);
-        }
-    }
-    si.splice(to, 0, si.splice(from, 1)[0]);
-    return si; 
-};
-
-
 // if we use Variables for the # individuals, we need to update node.individuals:
 function updateIndividuals(ivar){
 	var item = data_Vue.individualsVar_options.filter(function(vv){ return(vv.name == ivar)})[0];
@@ -952,115 +865,36 @@ function updateSpeciesData(value){
 // function to export Data into OutputArea:
 
 function exportNetwork() {
-     exportArea = document.getElementById('OutputArea');
-     exportArea.value = "";
-     
-     if(data_Vue.geninfo['Chromosomes of Equal Length'] == 'Yes'){
-         data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display.slice(0,1);
-     }else{
-         data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display;
-     }
-     
-     var mat1 = [];
-     var mat2 = [];
-     var row1;
-     var row2; 
-     
-     // getting array list 
-     var listArray5 = [];
-     for(let a=0; a < data_Vue.traitsinfo.length; a++){
-         listArray5.push(data_Vue.traitsinfo[a]['Trait Name']);
-     }
-
-     if(data_Vue['Upload_CorrFile'] == 'Yes') {
-         var mat1 = data_Vue.mymatrix1;
-         var mat2 = data_Vue.mymatrix2; 
-     }
-     else if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {
-         var arrayLength = listArray5.length;
-         
-         for(let i=0; i < arrayLength; i++){
-              row1 = [];
-              row2 = [];
-              var am = listArray5[i]; 
-         
-              for(let j=0; j <= i; j++){
-                   var thisvar = (am+'_'+data_Vue.traitsinfo[j]['Trait Name']);
-                   var thisvar2 = (am+'_'+data_Vue.traitsinfo[j]['Trait Name']);
-                   
-                   if (thisvar === null) { 
-                   var thisvar = (data_Vue.traitsinfo[j]['Trait Name']+'_'+am);
-                   }
-                   if (thisvar2 === null) { 
-                   var thisvar2 = (data_Vue.traitsinfo[j]['Trait Name']+'_'+am);
-                   }
-              
-                   if (i == j) { 
-                   row1.push("1");
-                   row2.push("1");
-                   }
-                   else { 
-                   row1.push(JSON.parse(localStorage.getItem(thisvar)));
-                   row2.push(JSON.parse(sessionStorage.getItem(thisvar2)));
-                   }
-              }
-     
-         mat1.push(row1);
-         mat2.push(row2);       
-         }         
-        }
-     else {
-         for(let i=0; i < data_Vue.traitsinfo.length; i++){
-              row1 = [];
-              row2 = [];
-              for(let j=0; j <= i; j++){
-                   row1.push(data_Vue.matrix[i].row[j].val);
-                   row2.push(data_Vue.matrix2[i].row[j].val);
-              }
-              mat1.push(row1);
-              mat2.push(row2);
-         }
-     }
-     
-
-	// getting SI values after dragging
-	if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {          
-	    		var siKeys = Object.keys(data_Vue.selection_index[0]);
-		    siKeys.shift(); //remove "Name" from the array
-		    newSIKey = trait_move(siKeys, data_Vue.geninfo['Traits moveFrom'], data_Vue.geninfo['Traits moveTo']);
-		    var siArray = [];
-		    for(let u=0; u < data_Vue.selection_index.length; u++){
-			        var siObject = {}; 
-        	 	var getSIName = data_Vue.selection_index[u]['Name'];		
-         			siObject['Name'] = localStorage.getItem(getSIName+'_'+'Name');
-               			for(let v=0; v < newSIKey.length; v++){
-               				siObject[newSIKey[v]] = localStorage.getItem(getSIName+'_'+newSIKey[v]); 
-            		   	}
-     	siArray.push(siObject);
-     		}
-     		data_Vue.selection_index = siArray;
+	exportArea = document.getElementById('OutputArea');
+	exportArea.value = "";
+	
+	if(data_Vue.geninfo['Chromosomes of Equal Length'] == 'Yes'){
+		data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display.slice(0,1);
+	}else{
+		data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display;
 	}
 	
-	// getting PC values after dragging
-	if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {          
-    		var pcKeys = Object.keys(data_Vue.phenotyping_class[0]);
-    		pcKeys.shift(); //remove "Name" from the array
-    		pcKeys.shift(); // remove Phenotyping Cost from the array
-    		newPCKey = trait_move(pcKeys, data_Vue.geninfo['Traits moveFrom'], data_Vue.geninfo['Traits moveTo']);
-    		var pcArray = [];
-    		for(let p=0; p < data_Vue.phenotyping_class.length; p++){
-    		    	var pcObject = {}; 
-        	var getPCName = data_Vue.phenotyping_class[p]['Name'];		
-    			    pcObject['Name'] = localStorage.getItem(getPCName+'_'+'Name');
-        			pcObject['Cost of phenotyping'] = localStorage.getItem(getPCName+'_'+'Cost of phenotyping');
-        			for(let q=0; q < newPCKey.length; q++){
-        				pcObject[newPCKey[q]] = localStorage.getItem(getPCName+'_'+newPCKey[q]); 
-     		   	}
-    		pcArray.push(pcObject);
-    		}
-    		data_Vue.phenotyping_class = pcArray;
+	var mat1 = [];
+	var mat2 = [];
+	var row1;
+	var row2;
+
+	if(data_Vue['Upload_CorrFile'] == 'Yes') {
+		var mat1 = data_Vue.mymatrix1;
+		var mat2 = data_Vue.mymatrix2; 
 	}
-	
+	else {
+		for(let i=0; i < data_Vue.traitsinfo.length; i++){
+			row1 = [];
+			row2 = [];
+			for(let j=0; j <= i; j++){
+				row1.push(data_Vue.matrix[i].row[j].val);
+				row2.push(data_Vue.matrix2[i].row[j].val);
+			}
+			mat1.push(row1);
+			mat2.push(row2);
+		}
+	}
 	
 	var Intern = {
 		show_matrix_element : data_Vue.show_matrix_element,
@@ -1115,10 +949,7 @@ function downloadNetwork(){
     document.body.removeChild(element);
 }
 
-
-
 // function to import Data from OutputArea:
-
 function importNetwork() {
 	var exportArea = document.getElementById('OutputArea');
 	var inputValue = exportArea.value;
@@ -1191,7 +1022,6 @@ function importNetwork_intern(inputData1) {
 	data_Vue.genetic_data = inputData["Intern"].genetic_data;
 	//data_Vue.runned = inputData["Intern"].runned;
 	
-
 	var mat1 = inputData['Phenotypic Correlation'];
 	var mat2 = inputData['Genetic Correlation'];
 	//console.log(mat1);
@@ -1428,8 +1258,8 @@ function draw() {
 	network.on("doubleClick", function(params){
 		var copy_node = data_Vue.nodes.get(params.nodes[0]);
 		var str = Math.round(Math.random() * 10000);
-		copy_node.id = copy_node.id + 'Copy' +str;
-		copy_node.label = copy_node.label + 'Copy' +str;
+		copy_node.id = copy_node.id + '_Copy' +str;
+		copy_node.label = copy_node.label + '_Copy' +str;
 		copy_node.x = copy_node.x + 50;
 		copy_node.y = copy_node.y + 50;
 		data_Vue.nodes.add(copy_node);
@@ -1483,8 +1313,7 @@ function addNode_extern(data) {
 
 function saveNodeData(data, callback) {
 	var old_id = data.id;
-	data = data_Vue.active_node;
-	//data.label = data.id;
+	data = data_Vue.active_node;	
 	var myInd = JSON.stringify(data['Number of Individuals']).replace(/\"/g, "");
 	//data.label = data.id+'\n'+myInd;
 	data.label = data.id+" ("+myInd+")";
@@ -1599,36 +1428,7 @@ function updateUser(){
 
 
 function loadData(ind){
-	localStorage.clear();
-	sessionStorage.clear();	
-	document.getElementById("excelToArray").value = "";
-     if(ind != "Create_New_123456YYYY"){
-         $.ajax
-         ({
-              type: "POST",
-              url: '/loadproject',
-              data: {name : ind},
-              success: function (data, msg) {
-                   if(data != ''){
-                        data_Vue.filename = data[0].name;
-                        importNetwork_intern(data[0].json);
-                        if(data[0].versions.length > 0){
-                            data_Vue.versions = data[0].versions.reverse();
-                        }
-                        document.getElementById("Version").value = "recent";
-                        data_Vue.project_saved = true;
-                   }else{
-                        alert("Loading Data failed. Contact administrator.");
-                   }
-              },           
-         });
-     }else{
-         location.reload();
-     }
-}
-
-function loadData_old(ind){
-	//	console.log(ind);
+//	console.log(ind);
 	if(ind != "Create_New_123456YYYY"){
 		$.ajax
 		({
@@ -1638,7 +1438,7 @@ function loadData_old(ind){
 			success: function (data, msg) {
 				if(data != ''){
 					//console.log("data original");
-					console.log(data);
+					//console.log(data);
 					data_Vue.filename = data[0].name;
 					importNetwork_intern(data[0].json);
 					if(data[0].versions.length > 0){
@@ -1647,6 +1447,7 @@ function loadData_old(ind){
 					//document.getElementById("Project_Name") = ind;
 					document.getElementById("Version").value = "recent";
 					data_Vue.project_saved = true;
+					//isRSimulated(ind);
 				}else{
 					alert("Loading Data failed. Contact administrator.");
 				}
@@ -1659,6 +1460,25 @@ function loadData_old(ind){
 	}else{
 		location.reload();
 	}
+}
+
+function isRSimulated(val) {
+	console.log(val);
+	console.log(data_Vue.user);
+	
+	$.ajax
+		({
+			type: "POST",
+			url: '/isRDataExist',
+			data: {name : val},
+			success: function (data, msg) {
+				console.log('mine'+msg);
+			},
+			failure:function(msg)
+			{
+				alert('RData is not there!');
+			}
+		});
 }
 
 function loadVersion(ind){
@@ -1702,18 +1522,29 @@ function myFunction() {
 } 
 
 
-
 // excel to Array 
 var excelToArr = document.getElementById('excelToArray');
 if(excelToArr) {
 	excelToArr.addEventListener('change', importexcelToArray, false);
 }
 
-function importexcelToArray(evt) {    
+
+function importexcelToArray(evt) {   
     var selectedFile = evt.target.files; 
     var excelToArray = new ExcelToArray();
     excelToArray.parseExcel(selectedFile[0]);
  }	
+
+function saveMatrixToProject(name) {
+	console.log(name);
+	if(!name){
+		var name = data_Vue.geninfo['Project Name'];
+	}else{
+		data_Vue.geninfo['Project Name'] = name;
+	}
+	saveProject(name);
+	loadData(name);
+}
 
 // excel to Array end
 

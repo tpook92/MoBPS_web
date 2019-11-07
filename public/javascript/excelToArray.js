@@ -46,8 +46,9 @@
 					var m2 = [];
 					
 					var row1;
-					//console.log(mydatawork);
+					console.log(mydatawork);
 					var cnt = data_Vue.traitsinfo.length;
+					console.log(cnt);
 					for (var i=0; i<cnt; i++) {
 						r1 = [];
 						for (var j=0; j<=i; j++){
@@ -81,10 +82,3 @@
         reader.readAsBinaryString(selectedFile);
       };
   };
-
-function importexcelToArray(evt) {    
-    var selectedFile = evt.target.files; 
-    var excelToArray = new ExcelToArray();
-    excelToArray.parseExcel(selectedFile[0]);
-}	
-
