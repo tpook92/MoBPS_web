@@ -36,12 +36,20 @@ h4 {
 	left: 10px;
 }
 
-.container {
+.container_orig {
   display: inline-block;
   cursor: pointer;
   float: left;
   left: 5px;
   top: 0px;
+}
+
+.container {
+  display: block;
+  cursor: pointer;
+  float: left;
+  left: 5px;
+  top: 40px;
 }
 
 .bar1, .bar2, .bar3 {
@@ -111,6 +119,18 @@ h4 {
 	font-weight: bold;
 }
 
+#Navigator_Orig {
+	background-color: rgba(208,218,240, 0.5);
+	position:fixed;
+	left:0px;
+	top:50px;
+	width:300px;
+	margin: 0px;
+	padding: 0px;
+	padding-right:0px;
+	z-index: 600;
+}
+
 #Navigator {
 	background-color: rgba(208,218,240, 0.5);
 	position:fixed;
@@ -121,6 +141,7 @@ h4 {
 	padding: 0px;
 	padding-right:0px;
 	z-index: 600;
+	overflow-x: hidden;
 }
 
 #runningDog {
@@ -389,9 +410,9 @@ button[disabled]{
 	height: 598px;
 	border: 1px solid lightgray ;
 }
-#node-popUp {
+#node-popUp_Old {
 	display:none;
-	position:fixed;
+	position:relative;
 	top:5vw;
 	left:25%;
 	z-index:700;
@@ -405,7 +426,87 @@ button[disabled]{
 	text-align: left;
 	overflow-y: scroll;
 }
+
+#node-popUp {
+	display:none;
+	top:140vw;
+	left:45%;
+	min-width:500px;
+	min-height:300px;
+	max-width:600px;
+	max-height:700px;
+	background-color: #f9f9f9;
+	border-style:solid;
+	border-width:3px;
+	border-color: #5394ed;
+	padding:30px;
+	text-align: left;	
+	overflow-y: scroll;
+}
+
+#node-popUp {
+	position:absolute;
+}
+
+#node-popUpheader {
+	padding: 8px;
+	cursor: move;
+	text-align: center; 
+	font-size: 15px; 
+	background-color: lightgray;
+}
+
 #edge-popUp {
+	text-align:left;
+	display:none;
+	top:140vw;
+	left:45%;
+	min-width:500px;
+	min-height:300px;
+	max-width:600px;
+	max-height:700px;
+	background-color: #f9f9f9;
+	border-style:solid;
+	border-width:3px;
+	border-color: #5394ed;
+	padding:30px;
+	text-align: left;	
+	overflow-y: scroll;
+}
+
+#edge-popUp {
+	position:absolute;
+}
+
+#edge-popUpheader {
+	padding: 8px;
+	cursor: move;
+	text-align: center; 
+	font-size: 15px; 
+	background-color: lightgray;
+}
+
+#node-popUp * {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+#edge-popUp * {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+#edge-popUp_old {
 	text-align:left;
 	display:none;
 	position:fixed;
@@ -496,9 +597,66 @@ table.trait_table input[type=Number]{
 }
 */
 
-.excel_table {
-	background-color: #f0f0f0;
-	border-collapse: collapse;
-	text-align: center;
-	max-width:800px;
+
+
+/** navigation menu */
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 8px;
+  left: 0;
+  background-color: #d0daf0;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
 }
+
+.sidebar a {
+  padding: 15px 15px 15px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+  color:  #490d79;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color:   #490d79;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 20;
+  right: 25px;
+  font-size: 15px;
+  margin-left: 50px;
+  color: white;
+}
+
+.openbtn {
+  margin-top : 20px;
+  font-size: 15px;
+  cursor: pointer;
+  color: white;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+#main {
+  margin-top: 30px;
+  padding: 12px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+}
+
+/** navigation menu ends */
+
