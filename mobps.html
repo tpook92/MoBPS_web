@@ -62,6 +62,8 @@
 					&nbsp;&nbsp;
 					<< {{geninfo['Project Name']}} >>
 					&nbsp;&nbsp;
+					<button class='bar_button' id="new_button" onclick="window.location.reload();">New Project</button> 
+					&nbsp;&nbsp;
 					<button class='bar_button' id="save_button" onclick="saveProject();">Save Project</button> 
 					&nbsp;&nbsp;
 					<button class='bar_button' onclick="saveProjectAs();">Copy Project</button> 
@@ -86,7 +88,6 @@
 					<!--img id="MOBPS_logo" src="./styles/img/mobps.png" alt="MOBPS"-->
 					
 					<ul>
-						<li><a href="#LoadJSON_Div">New/Load Project</a></li> 
 						<li><a href="#General_Info">General information</a></li>
 						<li><a href="#Phenotype_Info_Div">Phenotype information</a></li>
 						<li><a href="#Selectionindex_Div">Optional information</a></li>
@@ -108,7 +109,7 @@
 				<button v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 			</div> -->
 			<div id="warnings_sum">
-				<h4 v-if="warnings.length > 0" style="color: red; font-style:italic;"> Attention, there are {{warnings.length}} warnings! R Simulation cannot be run unless they are fixed.</h4>
+				<h4 v-if="warnings.length > 0" style="color: red; font-style:italic;"> Attention, there are {{warnings.length}} warnings! R Simulation mostly likely cannot be run unless they are fixed.</h4>
 			</div>
 			<transition name="slide-generalInfo">
 				<div id ="warnings" v-show='show_warnings' >
@@ -174,7 +175,8 @@
 				</option>
 				</template>
 			</select>
-			<h3>Or choose a template as a starting point:</h3>
+			<br>
+			Exemplary Templates:
 			<select onchange="loadTemplate(value)" >
 				<option value="Create_New_12345XXX"></option>
 				<option v-for="(option,index) in template_database" v-bind:value="index">
@@ -201,7 +203,6 @@
 			
 			
 			<div id="General_Info" v-on:click="show_info ='general'" onchange="checkEverything(this.id)">
-				<br>
 				<br>
 				<h3> General Information</h3> 
 				<table id="geninfo_table">
@@ -493,8 +494,6 @@
 				<br>
 			</div>
 			<div id="Phenotype_Info_Div" onchange="checkEverything(this.id)">
-				<br>
-				<br>
 				<h3 id="Phenotype_Info"> Phenotype Information
 					<span class="tooltip">&#9432 <span class="tooltiptext">Here you can design the traits you want to work with.</span></span>
 				</h3> 
@@ -503,7 +502,6 @@
 				<button v-if="traitsinfo.length > 0" v-on:click="show_QTL = !show_QTL"> Show/Hide QTLs</button>
 				<button v-if="traitsinfo.length > 1" v-on:click="show_matrix = !show_matrix"> Show/Hide phenotypic correlation</button>
 				<button v-if="traitsinfo.length > 1" v-on:click="show_matrix2 = !show_matrix2"> Show/Hide genetic correlation</button>
-				<br>
 				<br>
 				<table class="trait_table" v-if="traitsinfo.length > 0 && show_pheno_info && (geninfo['advanced']==false || geninfo['advanced_trait']==false)">
 					<thead>
@@ -691,10 +689,9 @@
 							</tr>
 						</tbody>
 					</table>
-					<br>
 				</template>
 
-				<br>
+
 				<table v-if="traitsinfo.length > 1 && show_matrix">
 					<tr>
 					<td style="font-weight:bold;width:60px;padding:5px;">Upload Excel file for Correlation:
@@ -732,7 +729,6 @@
 						</td>
 					</tr>
 				</table>
-				<br>
 
 				<table v-if="traitsinfo.length > 1 && show_matrix">
 				<tr>
@@ -743,8 +739,9 @@
 						<input type="checkbox" v-model="use_phenotypic_cor">
 					</td>
 					</tr>
+					<br>
 				</table>
-				<br>
+
 				
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix2">
 					<tr>
@@ -772,11 +769,10 @@
 						</td>
 					</tr>
 				</table>
+
 			</div>
 			
 			<div id="Selectionindex_Div" onchange="checkEverything(this.id)">
-				<br>
-				<br>
 				<h3>Creating own Selection Indexes (Optional)
 					<span class="tooltip">&#9432 <span class="tooltiptext">Create your own selection indexes in order to use it in the breeding scheme.</span></span>
 				</h3> 
@@ -1173,7 +1169,6 @@
 				</h3> 
 				<h4 style="color: red">Important: Please AVOID node names with underscore and trailing numbers combined, e.g. ABC_1, DEF_2, ...</h4>
 				<div id="mynetwork_container" >
-					<div id="mynetwork"></div>
 					<div id="mynetwork_label">
 		<!--				<button onclick="saveProject();">Save to Database</button>
 						<br>
@@ -1187,6 +1182,8 @@
 						Edges:
 						<p v-for="key in Object.keys(edge_colors)" v-bind:style="{color: edge_colors[key]}"> &#8599;  {{key}}</p>
 					</div>
+					<div id="mynetwork"></div>
+
 				</div>
 			</div>
 

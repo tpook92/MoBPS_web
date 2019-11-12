@@ -14,8 +14,8 @@ function myNode (id, x, y) {
 	this['Proportion of Male'] = "1";
 	this['BV Plot'] = 'Yes';
 	this['Sex'] = "Male";
-	this['Phenotyping Class'] = "Default PhenoC";
-	this['Housing Cost Class'] = "Default Housing Cost";
+	this['Phenotyping Class'] = "Fully phenotyped";
+	this['Housing Cost Class'] = "No Housing";
 	this['Proportion of genotyped individuals'] = 1;
 	this['Genotype generation'] = "Random-sampling";
 	this['Genotype generation subpopulation'] = "Population 1"; 
@@ -117,7 +117,7 @@ function myEconomy (){
 	this['Fixed Cost'] = 0,
 	this['Interest Rate'] = 0,
 	this['Genotyping Cost'] = 50,
-	this['Animal Housing Costs'] = [{Name: "Default Housing Cost", Cost: 0}, {Name: 'Male individuals', Cost: 2000}, {Name: 'Female individuals', Cost: 3000}]
+	this['Animal Housing Costs'] = [{Name: "No Housing", Cost: 0}, {Name: 'Male individuals', Cost: 2000}, {Name: 'Female individuals', Cost: 3000}]
 }
 
 function myCulling (){
@@ -232,7 +232,7 @@ var data_Vue = new Vue({
 		show_matrix_element: [],
 		selection_index : [{'Name': 'Default Index'}, {'Name': 'Non'}],
 		selection_index_scaling : [{'Name': 'Default Index', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}, {'Name': 'Non', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}],
-		phenotyping_class : [{'Name': 'Default PhenoC', 'Cost of phenotyping': 0.1}, {'Name': 'Not phenotyped', 'Cost of phenotyping': 0.1}],
+		phenotyping_class : [{'Name': 'Fully phenotyped', 'Cost of phenotyping': 0}, {'Name': 'Not phenotyped', 'Cost of phenotyping': 0}],
 		show_warnings: false,
 		warnings: [],
 		runned: false,
@@ -332,7 +332,7 @@ var data_Vue = new Vue({
 					}
 				}	
 			}else if(len ==0){
-				this.phenotyping_class = [{Name: "Default PhenoC", 'Cost of phenotyping': "0"}, {Name: "Not phenotyped", 'Cost of phenotyping': "0"}];
+				this.phenotyping_class = [{Name: "Fully phenotyped", 'Cost of phenotyping': "0"}, {Name: "Not phenotyped", 'Cost of phenotyping': "0"}];
 				this.selection_index = [{Name: "Default Index"}, {Name: 'Non'}];
 			}
 							
@@ -1032,7 +1032,7 @@ function importNetwork_intern(inputData1) {
 		data_Vue.phenotyping_class = inputData['Phenotyping Info'];
 	}else{
 		// an older Version of JSON file, maually add phenoC
-		data_Vue.phenotyping_class = [{Name: "Default PhenoC"}];
+		data_Vue.phenotyping_class = [{Name: "Fully phenotyped"}];
 		for(let i=0; i <data_Vue.traitsinfo.length; i++ ){
 			data_Vue.phenotyping_class[0]['P'+(i+1)] =1;
 		}

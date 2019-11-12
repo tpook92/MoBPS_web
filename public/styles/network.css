@@ -369,15 +369,15 @@ button[disabled]{
 /******* Network Styles *********************/
 #mynetwork_container {
 	position:relative;
-	width: 800px;
-	height: 600px;
+	width: 1500px;
+	height: 800px;
 	border: 1px solid lightgray;
 }
 #mynetwork_label {
 	float:left;
 	position:relative;
 	width: 125px;
-	height: 600px;
+	height: 800px;
 	border: 0;
 	padding: 5px;
 }
@@ -385,8 +385,8 @@ button[disabled]{
 #mynetwork {
 	float:left;
 	position:relative;
-	width: 660px;
-	height: 598px;
+	width: 1360px;
+	height: 798px;
 	border: 1px solid lightgray ;
 }
 #node-popUp {
