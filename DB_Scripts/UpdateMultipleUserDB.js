@@ -6,8 +6,8 @@ MongoClient.connect(url, {useNewUrlParser: true }, function(err, db) {
 	var dbo = db.db("DB");
 
 	dbo.collection("Users").updateMany(
-		{group:"2"},
-			{$set : {group:"3"}}, 
+			{},
+			{$set : {group:"2"}}, 
 			{upsert:true}
 		);
 		if (err) throw err;

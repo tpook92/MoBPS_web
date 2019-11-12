@@ -5,7 +5,7 @@ MongoClient.connect(url, {useNewUrlParser: true }, function(err, db) {
 	if (err) throw err;
 	var dbo = db.db("DB");
 	
-	dbo.collection("Users").updateOne({_id: "Amudha3"},
+	dbo.collection("Users").updateOne({_id: "Amudha1"},
 		{$set : {group:"3"}}, 
 		{upsert:true});
 		

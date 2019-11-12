@@ -53,6 +53,17 @@ function myGeneral () {
 	this['Use Ensembl Map'] = "Yes";
 	this['Ensembl Dataset'] = "";
 	this['Max Number of SNPs'] = 5000;
+	this['number-simulations'] = 1;
+	this['number-simulations-parallel'] = 1;
+	this['number-simulations-core'] = 1;
+	this['advanced'] = false;
+	this['advanced_test'] = true;
+	this['advanced_trait'] = true;
+	this['advanced_culling'] = true;
+	this['advanced_sub'] = true;
+	this['advanced_eco'] = true;
+	this['advanced_advanced'] = true;
+	this['advanced_user'] = true;
 //	this['Ensembl Filter'] = "";
 //	this['Ensembl Filter Values'] = "";
 	this['Number of Chromosomes'] = '';
@@ -69,10 +80,13 @@ function myGeneral () {
 function myTrait (ind){
 	this['Trait Name'] = "Pheno " + ind,
 	this['Trait Unit'] = "",
-	this['Trait Mean'] = Math.round(Math.random()*100) +1,
-	this['Trait Std Deviation'] = Math.round(Math.random()*10) +1,
-	this['Trait Heritability'] = Math.round(Math.random()*100)/100,
-	this['Trait Number of Polygenic Loci'] = Math.round(Math.random()*10000),
+	this['Trait Mean'] = 100,
+	this['Trait Std Deviation'] = 10,
+	this['Trait Heritability'] = 0.3,
+	this['Trait Number of Polygenic Loci'] = 1000,
+	this['dominant_qtl'] = 0,
+	this['qualitative_qtl'] = 0,
+	this['quantitative_qtl'] = 0,
 	this['Trait Major QTL'] = 0,
 	this['Trait Value per Unit'] = 0,
 	this['Trait QTL Info'] = []
@@ -141,7 +155,7 @@ function myChromo (len, md, recomb){
 function myArray(len){
 	var a = [];
 	for(let i=0; i<len; i++){
-		a[i] = {val:0.01};
+		a[i] = {val:0};
 	}
 	a[len-1].val = 1;
 	return a;
@@ -255,7 +269,7 @@ var data_Vue = new Vue({
 		Breedingtype_options: ['Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production'],
 		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
-		BVEMethod_options: ['Direct Mixed-Model', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'BayesA', 'BayesB', 'BayesC', 'RKHS'],
+		BVEMethod_options: ['Direct Mixed-Model', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
 		Cohorts_options: ['Only this cohort', 'Last Generation', 'Last 2 Generations', 'Last 3 Generations', 'All',  'Manual select'],
 		ensembl_options:{
 			Cattle: [
@@ -927,6 +941,7 @@ function exportNetwork() {
 		'PhenotypicResidual': data_Vue.use_phenotypic_cor,
 		'Genetic Correlation': mat2,
 		'Intern': Intern,
+		'Class' : data_Vue.curUserGroup
 	};
 	var exportValue = JSON.stringify(data_to_export, undefined, 2);
 
@@ -1185,6 +1200,7 @@ function draw() {
 		autoResize: false,
 		layout: {
 			improvedLayout: false,
+
 		},
 		manipulation: {
 			addNode: function (data, callback) {

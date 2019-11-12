@@ -181,8 +181,24 @@
 					{{ option.name }}
 				</option>
 			</select>
-
+			
+			<br>
+			<br>			
+			
+			<h3 v-if="curUserGroup =='4'"> You are assigned to User Class Admin. 
+				This enables you to use 20 Cores and maximum run time of 120 hours 
+			</h3>
+			<h3 v-if="curUserGroup =='3'"> You are assigned to User Class Professional. 
+				This enables you to use 10 Cores and maximum run time of 48 hours 
+			</h3>
+			<h3 v-if="curUserGroup =='2'"> You are assigned to User Class Student. 
+				This enables you to use 5 Cores and maximum run time of 4 hour 
+			</h3>
+			<h3 v-if="curUserGroup =='1'"> You are assigned to User Class Test. 
+				It is not possible to use our backend-server for simulation. To simulate download the json-file run via json.simulation() in R.	</h3>
+			
 			</div>
+			
 			
 			<div id="General_Info" v-on:click="show_info ='general'" onchange="checkEverything(this.id)">
 				<br>
@@ -207,15 +223,27 @@
 							<input type="checkbox" v-model="geninfo['advanced']">
 						</td>
 					</tr>
+
 					<tr v-if="geninfo['advanced']">
-						<td>Test-Mode 
+						<td>Test-Mode / Parallel Computing
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock the scaling of node sizes, allow to run a simulation multiple times and ignore imported genotypes.</span></span>
 						</td>
 						<td> 
 							<input type="checkbox" v-model="geninfo['advanced_test']">
 						</td>
 					</tr>
+					
+					<tr v-if="geninfo['advanced']">
+						<td>Complex Trait architecture
+							<span class="tooltip">&#9432 <span class="tooltiptext"> Activating this will unlock use of dominate and epistatic trait architectures.</span></span>
+						</td>
+						<td> 
+							<input type="checkbox" v-model="geninfo['advanced_trait']">
+						</td>
+					</tr>
 				
+				
+
 					<tr v-if="geninfo['advanced']">
 						<td>Culling Module 
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock the culling module to simulate the death of individuals - that then can not be used for breeding.</span></span>
@@ -296,7 +324,7 @@
 					</tr>
 					
 					<tr v-if="geninfo['advanced'] && geninfo['advanced_test']">
-						<td>Multi-Simulation Mode 
+						<td>Enable parellel computing 
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activate this to run the simulation multiple times. This will heavily increase running time but also reduce variance of the results.</span></span>
 						</td>
 						<td> 
@@ -318,6 +346,14 @@
 						</td>
 						<td>
 							<input type="value" v-model="geninfo['number-simulations-parallel']">
+						</td>
+					</tr>
+					<tr v-show="geninfo['multi-mode'] == 'Yes' && geninfo['advanced'] && geninfo['advanced_test']">
+						<td>Number of cores used per simulation
+							<span class="tooltip">&#9432 <span class="tooltiptext">Number of cores used per simulation.</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['number-simulations-core']">
 						</td>
 					</tr>
 
@@ -453,6 +489,7 @@
 					</tr>
 				</table>
 				<br>
+
 				<br>
 			</div>
 			<div id="Phenotype_Info_Div" onchange="checkEverything(this.id)">
@@ -468,7 +505,7 @@
 				<button v-if="traitsinfo.length > 1" v-on:click="show_matrix2 = !show_matrix2"> Show/Hide genetic correlation</button>
 				<br>
 				<br>
-				<table class="trait_table" v-if="traitsinfo.length > 0 && show_pheno_info">
+				<table class="trait_table" v-if="traitsinfo.length > 0 && show_pheno_info && (geninfo['advanced']==false || geninfo['advanced_trait']==false)">
 					<thead>
 						<tr>
 							<td style="padding:5px;">Phenotype
@@ -518,6 +555,91 @@
 							</td>
 							<td>
 								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:50px;" class="no-spinners" step=1> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Major QTL']" style="width:50px;" type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Value per Unit']" style="width:50px;" type="Number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
+							</td>
+							<td>
+								<input type="checkbox" v-model="show_matrix_element[index].show">
+							</td>
+							<td>
+								<button v-on:click="removePheno(index)">X</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<table class="trait_table" v-if="traitsinfo.length > 0 && show_pheno_info && geninfo['advanced']==true && geninfo['advanced_trait']==true">
+					<thead>
+						<tr>
+							<td style="padding:5px;">Phenotype
+								<span class="tooltip">&#9432 <span class="tooltiptext">Name of the trait.</span></span>
+							</td>
+							<td style="padding:5px;">Unit
+								<span class="tooltip">&#9432 <span class="tooltiptext">Optional. Unit of measurement for the trait.</span></span>
+							</td>
+							<td style="padding:5px;">Pheno. Mean
+								<span class="tooltip">&#9432 <span class="tooltiptext">The avg. Founder individual will have this mean. Currently not supported to start with founders with different averages.</span></span>
+							</td>
+							<td style="padding:5px;">Pheno. SD
+								<span class="tooltip">&#9432 <span class="tooltiptext">Trait variance for the group of all founders will be scaled accordingly.</span></span>
+							</td>
+							<td style="padding:5px;">Heritability
+								<span class="tooltip">&#9432 <span class="tooltiptext">Heritability of the trait.</span></span>
+							</td>
+							<td style="padding:5px;"># additive QTL
+								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. Currently only additive single locus QTL are simulated. Contact Torsten if you need more!</span></span>
+							</td>
+							<td style="padding:5px;"># dominat QTL
+								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. Currently only additive single locus QTL are simulated. Contact Torsten if you need more!</span></span>
+							</td>
+							<td style="padding:5px;"># qualitative epistatic QTL
+								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. Currently only additive single locus QTL are simulated. Contact Torsten if you need more!</span></span>
+							</td>
+							<td style="padding:5px;"># quantitative epistatic QTL
+								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. Currently only additive single locus QTL are simulated. Contact Torsten if you need more!</span></span>
+							</td>
+							<td style="padding:5px;">Major QTL
+								<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to manually add single marker effect to SNPs with known effects (e.g. DGAT1 for milk).</span></span>
+							</td>
+							<td style="padding:5px;">Value per unit (&#8364;)
+								<span class="tooltip">&#9432 <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
+							</td>
+							<td style="padding:5px;">Show Cor</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for='(trait, index) in traitsinfo' >
+							<td>
+								<input v-model="trait['Trait Name']" style="width:80px;"> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Unit']" style="width:50px;"> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Mean']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Std Deviation']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
+							</td>
+							<td>
+								<input v-model="trait['Trait Heritability']" max=1 min=0 style="width:50px;" class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
+							</td>
+							<td>
+								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:50px;" class="no-spinners" step=1> 
+							</td>
+							<td>
+								<input v-model="trait['dominant_qtl']" style="width:50px;" class="no-spinners" step=1> 
+							</td>
+							<td>
+								<input v-model="trait['qualitative_qtl']" style="width:50px;" class="no-spinners" step=1> 
+							</td>
+							<td>
+								<input v-model="trait['quantitative_qtl']" style="width:50px;" class="no-spinners" step=1> 
 							</td>
 							<td>
 								<input v-model="trait['Trait Major QTL']" style="width:50px;" type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
@@ -1317,6 +1439,26 @@
 							</select>
 						</td>
 					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
+						<td>BVE Method
+							<span class="tooltip">&#9432 <span class="tooltiptext">Direct-Mixed-Model assumes known heritability and thereby is fastest. EMMREML/sommer use the respective R-package. Sommer also support multi-variable models but takes much longer! Bayesian models used are using BGLR.</span></span>
+						</td>
+						<td> 
+							<select v-model="active_edge['BVE Method']">
+								<option v-for="option in BVEMethod_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE' & active_edge['BVE Method']=='Marker assisted selection (lm)'">
+						<td>Number of markers used for MAS
+							<span class="tooltip">&#9432 <span class="tooltiptext">This is a very simple implementation of MAS using a linear model of randomly sampled effect markers</span></span>
+						</td>
+						<td><input placeholder="Type a number or Inf" v-model="active_edge['MAS_marker']"></td>
+					</tr>
+					
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & active_edge['Selection Type']=='Pseudo-BVE'" v-for='(trait, index) in traitsinfo' >
 						<td>Accuracy for Trait {{ trait[["Trait Name"]] }} 
 							<span class="tooltip">&#9432 <span class="tooltiptext">If nothing is entered here the accuracy will be chosen according to the starting heritability</span></span>
@@ -1327,12 +1469,6 @@
 					</tr>					
 					
 					
-					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced']">
-						<td>Calculate reliability
-							<span class="tooltip">&#9432 <span class="tooltiptext">Calculate reliability of BVE according to vanRaden 2008</span></span>
-						</td>		
-						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['reliability']"> </td>
-					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & traitsinfo.length > 1">
 						<td>Selection Index
 						<span class="tooltip">&#9432 <span class="tooltiptext">Select which index to use for BVE/Phenotypic selection</span></span>
@@ -1353,6 +1489,12 @@
 							<!-- <input list="indVar" onchange="updateVar('Selection Proportion', value)" placeholder="Type a number" min="0" max="1" step="0.001" v-model="selection_proportion"> -->
 							{{ selection_proportion }} (calculated based on # Individuals)
 						</td>
+					</tr>
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced']">
+						<td>Calculate reliability
+							<span class="tooltip">&#9432 <span class="tooltiptext">Calculate reliability of BVE according to vanRaden 2008</span></span>
+						</td>		
+						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['reliability']"> </td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
 						<td>Use offspring for BVE
@@ -1378,18 +1520,7 @@
 						</td> 
 						<td> <input onchange="updateVar('Depth of Pedigree', value)" placeholder="Type a number" v-model="active_edge['Depth of Pedigree']" list="indVar"></td>
 					</tr>
-					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
-						<td>BVE Method
-							<span class="tooltip">&#9432 <span class="tooltiptext">Direct-Mixed-Model assumes known heritability and thereby is fastest. EMMREML/sommer use the respective R-package. Sommer also support multi-variable models but takes much longer! Bayesian models used are using BGLR.</span></span>
-						</td>
-						<td> 
-							<select v-model="active_edge['BVE Method']">
-								<option v-for="option in BVEMethod_options" v-bind:value="option">
-								{{ option }}
-								</option>
-							</select>
-						</td>
-					</tr>
+
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
 						<td>Cohorts used in BVE
 							<span class="tooltip">&#9432 <span class="tooltiptext">Manual select provides you with maximum flexibility to select which individuals to use but can be tiring to set up</span></span>
