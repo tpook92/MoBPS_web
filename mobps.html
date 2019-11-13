@@ -53,11 +53,6 @@
 		<div id='mainDiv'>
 
 			<div id="Project_Bar">
-				<div id="Icon" class="container" onclick="myFunction()">
-					<div class="bar1"></div>
-					<div class="bar2"></div>
-					<div class="bar3"></div>
-				</div> 
 				<div style="overflow:auto;">
 					&nbsp;&nbsp;
 					<< {{geninfo['Project Name']}} >>
@@ -67,6 +62,8 @@
 					<button class='bar_button' id="save_button" onclick="saveProject();">Save Project</button> 
 					&nbsp;&nbsp;
 					<button class='bar_button' onclick="saveProjectAs();">Copy Project</button> 
+					&nbsp;&nbsp;
+					<button class='bar_button' id="download_button" onclick="importNetwork()" >Import Project</button>
 					&nbsp;&nbsp;
 					<button class='bar_button' id="download_button" onclick="downloadNetwork()" >Export Project</button>
 					&nbsp;&nbsp;
@@ -83,31 +80,7 @@
 				<input type="button" value="cancel" id="SaveAs-cancelButton" onclick="document.getElementById('SaveAs_Div').style.display = 'none'"/>
 			</div>
 
-				<div id="Navigator" ref="Navigator" v-show="show_menu" onclick=myFunction();>
-					
-					<!--img id="MOBPS_logo" src="./styles/img/mobps.png" alt="MOBPS"-->
-					
-					<ul>
-						<li><a href="#General_Info">General information</a></li>
-						<li><a href="#Phenotype_Info_Div">Phenotype information</a></li>
-						<li><a href="#Selectionindex_Div">Optional information</a></li>
-						<li><a href="#Breeding_Scheme">Breeding Scheme</a></li>
-						<li><a href="#Results_Div">R Simulation/ Results</a></li>
-						<li><a href="#Export_Data_H3">Export/ Import</a></li>
-						<li><a href="/logout"> User: {{user}} <br> Logout</a> </li>
-						<li><a href="/Change_Password"> Change Password</a> </li>
-					</ul> 
-					
-				</div>
 
-			
-						
-	<!--		<div id="showGenInfo_button">
-				<button v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Informations</button>
-			</div>
-			<div id="showWarning_button">
-				<button v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
-			</div> -->
 			<div id="warnings_sum">
 				<h4 v-if="warnings.length > 0" style="color: red; font-style:italic;"> Attention, there are {{warnings.length}} warnings! R Simulation mostly likely cannot be run unless they are fixed.</h4>
 			</div>
@@ -154,6 +127,28 @@
 					</span>
 				</div>
 			</transition>
+			
+			<div id="mySidebar" class="sidebar">
+			<div id="closeDiv">
+				<button onclick="closeNav()" class="closebtn"> Navigation Close </button>
+			</div>  
+			<!-- <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">Close</a> -->
+				<a>&nbsp;</a>
+					<a href="#General_Info">General information</a>
+					<a href="#Phenotype_Info_Div">Phenotype information</a>
+					<a href="#Selectionindex_Div">Optional information</a>
+					<a href="#Breeding_Scheme">Breeding Scheme</a>
+					<a href="#Results_Div">R Simulation/ Results</a>
+					<a href="#Export_Data_H3">Export/ Import</a>
+					<a href="/logout"> User: {{user}} <br> Logout</a>
+					<a href="/Change_Password"> Change Password</a> 
+			</div>
+
+		<div id="main">
+			<div id="openDiv">
+		  		<button onclick="openNav()" class="openbtn"> Navigation Open </button>  
+			</div>
+			
 			<div id="LoadJSON_Div" >
 			<br>
 			<br>
@@ -1763,12 +1758,11 @@
 			<div>
 			</div>
 			<div id="Export_Data_H3">
-				<br>
-				<br>
-				<h3> Export/Import JSON Data </h3>
-				<p> This option can be used to manually export the JSON File in order to run the MoBPS R-package on one's own computer.</p>
-				<p> You might also paste a JSON File into this text area and import it for further processing. </p>
-				<button id="export_button" onclick="exportNetwork()" >Export Data</button>
+				<span class="tooltip">&#9432 <span class="tooltiptext"><p> Download JSON file to Desktop. </p>
+				<p> Display JSON data into this text area. </p></span></span>
+				<button id="export_button" onclick="downloadNetwork()" >Download Project</button>
+				<span class="tooltip">&#9432 <span class="tooltiptext"><p> This option can be used to manually export the JSON File in order to run the MoBPS R-package on one's own computer.</p>
+				<p> You might also paste a JSON File into this text area and import it for further processing. </p></span></span>
 				<button id="import_button" onclick="importNetwork()" >Import Data</button>
 				<br>
 				<br>
@@ -1778,7 +1772,24 @@
 				<br>
 				<br>
 			</div>
+			<!-- <div id="Export_Data_H3">
+				<br>
+				<br>
+				<h3> Import JSON Data </h3>
+				<p> This option can be used to manually export the JSON File in order to run the MoBPS R-package on one's own computer.</p>
+				<p> You might also paste a JSON File into this text area and import it for further processing. </p>
+				<button id="export_button" onclick="downloadNetwork()" >Download Project</button>
+				<button id="import_button" onclick="importNetwork()" >Import Data</button>
+				<br>
+				<br>
+				<div>
+					<textarea id='OutputArea' style="width:700px; height:200px;"></textarea>
+				</div>
+				<br>
+				<br>
+			 </div> -->
 		</div>
+	</div>
 	</body>
 		
 	<!-- Eigene Javascripte Species Data -->
@@ -1793,7 +1804,20 @@
 	<!-- Eigene Javascripte Checking and addtional Services -->
 	<script type="text/javascript" src="javascript/Check_Services.js"></script>
 
-
+	<!-- Navigation Menu related -->
+	<script type="text/javascript">
+		function openNav() {
+		  document.getElementById("mySidebar").style.width = "250px";
+		  document.getElementById("main").style.marginLeft = "250px";
+		  document.getElementById("openDiv").style.display = "none";
+		}
+		
+		function closeNav() {
+		  document.getElementById("mySidebar").style.width = "0";
+		  document.getElementById("main").style.marginLeft= "0";
+		  document.getElementById("openDiv").style.display = "block";
+		}		
+	</script>
 
 </html>
 

@@ -44,6 +44,14 @@ h4 {
   top: 0px;
 }
 
+.container {
+  display: block;
+  cursor: pointer;
+  float: left;
+  left: 5px;
+  top: 40px;
+}
+
 .bar1, .bar2, .bar3 {
   width: 35px;
   height: 5px;
@@ -111,6 +119,18 @@ h4 {
 	font-weight: bold;
 }
 
+#Navigator_Orig {
+	background-color: rgba(208,218,240, 0.5);
+	position:fixed;
+	left:0px;
+	top:50px;
+	width:300px;
+	margin: 0px;
+	padding: 0px;
+	padding-right:0px;
+	z-index: 600;
+}
+
 #Navigator {
 	background-color: rgba(208,218,240, 0.5);
 	position:fixed;
@@ -121,6 +141,7 @@ h4 {
 	padding: 0px;
 	padding-right:0px;
 	z-index: 600;
+	overflow-x: hidden;
 }
 
 #runningDog {
@@ -502,3 +523,64 @@ table.trait_table input[type=Number]{
 	text-align: center;
 	max-width:800px;
 }
+
+/** navigation menu */
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 8px;
+  left: 0;
+  background-color: #d0daf0;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 15px 15px 15px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+  color:  #490d79;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color:   #490d79;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 20;
+  right: 25px;
+  font-size: 15px;
+  margin-left: 50px;
+  color: white;
+}
+
+.openbtn {
+  margin-top : 20px;
+  font-size: 15px;
+  cursor: pointer;
+  color: white;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+#main {
+  margin-top: 30px;
+  padding: 12px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+}
+
+/** navigation menu ends */
