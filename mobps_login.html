@@ -1,95 +1,202 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>MoBPS User Interface</title>
-		<style>
-		.login-form {
-			width: 400px;
-			margin: 0 auto;
-			font-family: Tahoma, Geneva, sans-serif;
-		}
-		.login-form h1 {
-			text-align: center;
-			color: #4d4d4d;
-			font-size: 24px;
-			padding: 20px 0 20px 0;
-		}
-		.login-form input[type="password"],
-		.login-form input[type="text"] {
-			width: 100%;
-			padding: 15px;
-			border: 1px solid #dddddd;
-			margin-bottom: 15px;
-			box-sizing:border-box;
-		}
-		.login-form input[type="submit"] {
-			width: 100%;
-			padding: 15px;
-			background-color: #535b63;
-			border: 0;
-			box-sizing: border-box;
-			cursor: pointer;
-			font-weight: bold;
-			color: #ffffff;
-		}
-		</style>
-		<style>
-			div.center {
-				text-align: center;
-			}
-		</style>
-	</head>
-	<body>
+<html lang="en" >
+<head>
+<meta charset="utf-8"/><title>MoBPS User Interface</title>
+
+<style>
+body { 
+  background-color: #d0daf0; 
+  margin-left :10%;
+  margin-left :10%;
+}
+
+.bg-img {
+  background-image: url("../desktop/univ_images/image1.png");
+ }
+
+h1 {font-size:14px; }
+  
+.container {
+  position: absolute;
+  background-color: #d0daf0;
+  width:80%;
+}
+
+.container {
+	width: 80%;
+	height: 200px;
+	margin: auto;
+	padding: 10px;
+} 
+
+/* The navbar */
+.topnav {
+  overflow: hidden;
+  background-color: darkblue;
+}
+
+/* Navbar links */
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #d0daf0;
+  color: black;
+  text-decoration: underline;
+}
+
+.topnav a.active {
+  background-color: darkgreen;
+  color: white;
+}
+
+header {
+	font-size: 16pt;
+	font-weight:bold;
+	text-align:right;
+}
+	
+.login-form {
+	width: 20%;
+	height:100%;
+	margin-top: 50px;
+	float: left;
+	font-family: Tahoma, Geneva, sans-serif;
+}
+
+.login-form h1 {
+	text-align: left;
+	color: #4d4d4d;
+	font-size: 24px;
+	padding: 20px 0 20px 0;
+}
+
+.login-form input[type="password"],
+.login-form input[type="text"] {
+	width: 100%;
+	padding: 15px;
+	border: 1px solid #dddddd;
+	margin-bottom: 15px;
+	box-sizing:border-box;
+}
+.login-form input[type="submit"] {
+	width: 100%;
+	padding: 15px;
+	background-color: #535b63;
+	border: 0;
+	box-sizing: border-box;
+	cursor: pointer;
+	font-weight: bold;
+	color: #ffffff;
+}
+		
+
+h6 {
+	font-size:12pt;
+	text-align: left;
+	line-height: normal;
+}
+	
+	
+footer{
+	position: fixed;
+	bottom: 0;
+}
+ 
+@media (max-height:800px){
+	footer { position: static; }
+	header { padding-top:40px; }
+}
+ 
+ 
+.footer-distributed{
+	background-color: gray;
+	box-sizing: border-box;
+	width: 80%;
+	text-align: left;
+	font: bold 16px sans-serif;
+}
+ 
+.footer-distributed .footer-left{
+	display: inline-block;
+	vertical-align: top;
+} 
+ 
+
+.footer-distributed .footer-left{
+	width: 35%;
+	margin-left:8%;
+}
+ 
+ 
+.footer-distributed .footer-left p{
+	display: inline-block;
+	color: white;
+	font-size:10px;
+	vertical-align: middle;
+	margin-left:30px;
+	margin:0;
+}
+   
+@media (max-width: 880px) { 
+	.footer-distributed .footer-left{
+		display: block;
+		width: 100%;
+		margin-bottom: 40px;
+		text-align: center;
+	}
+ 
+	.footer-distributed .footer-center i{
+		margin-left: 0;
+	}
+ 
+}
+
+</style>
+</head>
+<body>
+
+  <section class="container">
+	<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:652px;height:128px;">	<header> MoBPS </header>
+    <div class="topnav">
+      <a href="../Desktop/login_page.html" class="active">MoBPS Home</a>
+      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html">Team</a>
+      <a href="https://www.uni-goettingen.de/de/publikationen/93141.html">Publications</a>
+      <a href="#FAQ">FAQ</a>
+	</div>
+	
 		<div class="login-form">
-			<h1>MoBPS Login</h1>
+			<h1> MoBPS Login</h1>
 			<form action="auth" method="POST">
 				<input type="text" name="username" placeholder="Username" required>
 				<input type="password" name="password" placeholder="Password" required>
 				<input type="submit" value="Login">
 			</form>
-			<br>
-        	<br>
-			<br>
-			<a href="mailto:torsten.pook@uni-goettingen.de"> Email Me: </a>
-			<td> For Questions and new account generation 
-			</td>
 			
-			<br>
-			<br> 
-			<a href="https://github.com/tpook92/MoBPS" target="_blank"> GitHub: </a>
-			<td> For the R-package and source code 
-			</td>
-			<br>
-			<td> Test-account with permission to use computational resources: </td>
-			<br>
-			<td> User: EAAPguest </td>
-			<br>
-			<td> pw: eaap2019 </td>
-			<br>
-        	<br>
 		</div>
-			<br>
-        	<br>
-			<br>
-			<br>
-        	
-			<br>
-		<div class="center">
-			<td> MoBPS was developed in the context of the EU project <a href="http://www.imageh2020.eu/" target="_blank"> IMAGE </a> </td>
-			<br>
-			<td> Copyright &copy; 2017 -- 2019  Torsten Pook </td>
-			<br>
-			<br>
-			<br>
-			<br>
-			<img src="./styles/img/mobps.png"" alt="MoBPS" style="width:128px;height:128px;">
-			<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:652px;height:128px;">
-			<img src="./styles/img/Logo_cibreed.png"" alt="Cibreed" style="width:425px;height:128px;">
-			<img src="./styles/img/Image_logo.png"" alt="Horizon 2020 - IMAGE" style="width:159px;height:128px;">
-		</div>
+	</section>	
+	
+<footer class="footer-distributed">
+	<div class="footer-left">
+	<p></p><br>
+	<p>CONTACT: </p> <br>
+	<p></p><br>
+	<p>Torsten Pook </p><br>
+	<p>Department of Animal Breeding and Genetics</p>
+	<p>Albrecht-Thaer-Weg 3</p><br>
+	<p>37075 Göttingen</p><br>
+	<p>torsten.pook (at) uni-goettingen.de</p><br>
+	<p></p>
+</div>
+ 
+</footer>
 
 
-	</body>
-
+</body>
 </html>
