@@ -15,8 +15,37 @@ const MongoStore = require('connect-mongo')(session);
 
 var app = express();
 
+// included for SSL certificate 
+	//var read = fs.readFileSync;
+	//var privateKey = read(MY_KEY_LOCATION, 'utf8');
+	//var certificate = read(MY_CERT_LOCATION, 'utf8');
+	//var chainLines = read(MY_CHAIN_LOCATION, 'utf8').split("\n");
+	//var cert = [];
+	//var ca = [];
+	//chainLines.forEach(function(line) {
+	//  cert.push(line);
+	// if (line.match(/-END CERTIFICATE-/)) {
+	//    ca.push(cert.join("\n"));
+	//    cert = [];
+	//  }
+	//});
+	//var credentials = {
+	// "key": privateKey,
+	//  "cert": certificate,
+	//  "ca": ca
+	//};
+
+// SSL certificate ended
+
+// This line is from the Node.js HTTPS documentation.
+var options = {
+  key: fs.readFileSync('D:/nodejs/master/openSSL/keys/localhost_8080.key'),
+  cert: fs.readFileSync('D:/nodejs/master/openSSL/keys/localhost_8080.cert')
+};
+
 // socket for streaming R output:
-var http = require('http').Server(app);
+//var http = require('http').Server(credentials, app);
+var http = require('http').Server(options, app);
 var io = require('socket.io')(http);
 
 app.use(express.static('public'))
@@ -54,7 +83,7 @@ app.post('/auth', function(request, response) {
 				if(result.length > 0){
 					request.session.loggedin = true;
 					request.session.username = username;
-										request.session.usergroup = result[0]['group'];
+					request.session.usergroup = result[0]['group'];
 					
 					db.close();	
 					response.redirect('/home');					
@@ -77,7 +106,6 @@ app.get('/home', function(request, response) {
 		response.send('Please login to view this page!');
 	}
 });
-
 
 app.get('/user', function(request, response) {
 	if (request.session.loggedin) {
@@ -343,12 +371,20 @@ app.post('/RsimResult', function(request, response) {
 app.get('/Rdownload', function(request, res){	
 	if (request.session.filename) {
 		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'.RData');
- 		res.download(textfile); 
+		fs.readFile(textfile, function(err, data){
+			if(err){
+				var message = 'Have not found any RData file for the requested Project of ' + request.session.filename  +'. Please finish R Simulation successfully and then download RData.';
+				res.send(message.fontcolor("red"));
+			}else{
+				res.download(textfile);
+			}
+		});
 	} else {
 		res.send('Please select a project to download RData!');
 	}
 
 });
+
 
 // Uploading R Results:
 app.post('/ResultUpload', function(req, res) {
@@ -472,6 +508,23 @@ app.post('/delete', function(request, response) {
 		});
 	}); 
 	response.end();
+});
+
+// no need to have request scope of username and password for intro, faq, history, agb links
+app.get('/intro', function(request, response) {
+		response.sendFile(path.join(__dirname + '/mobps_intro.html'));
+});
+
+app.get('/faq', function(request, response) {
+		response.sendFile(path.join(__dirname + '/mobps_faq.html'));
+});
+
+app.get('/history', function(request, response) {
+		response.sendFile(path.join(__dirname + '/mobps_history.html'));
+});
+
+app.get('/agb', function(request, response) {
+		response.sendFile(path.join(__dirname + '/mobps_AGB.html'));
 });
 
 
