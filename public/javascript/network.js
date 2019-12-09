@@ -260,6 +260,7 @@ var data_Vue = new Vue({
 		node_operation: '',
 		edge_operation: '',
 		Sex_options: ['Male', 'Female'],
+		Sex_options2: ['Male', 'Female', 'Both'],
 		node_colors: {'Male':'#9acef4', 'Female':'#f29595', 'Both':'#ddd264'},
 		edge_colors: {'Selection':'#7bbb44', 'Reproduction':'#f5a623', 'Aging':'#dba59a', 'Combine':'#5a4f7c', 'Repeat':'#f14235', 'Split': '#94db8e', 'Cloning':'#aa76fd', 'Selfing':'#ff90b7', 'DH-Production':'#aa76fd'},
 		counter_pheno: 0,

@@ -19,6 +19,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+
+
 app.use(express.static('public'))
 
 app.use(fileUpload({
@@ -365,7 +367,14 @@ app.post('/RsimResult', function(request, response) {
 app.get('/Rdownload', function(request, res){	
 	if (request.session.filename) {
 		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'.RData');
- 		res.download(textfile); 
+		fs.readFile(textfile, function(err, data){
+			if(err){
+				var message = 'Have not found any RData file for the requested Project of ' + request.session.filename  +'. Please finish R Simulation successfully and then download RData.';
+				res.send(message.fontcolor("red"));
+			}else{
+				res.download(textfile);
+			}
+		});
 	} else {
 		res.send('Please select a project to download RData!');
 	}
@@ -430,6 +439,23 @@ app.post('/ResultUpload', function(req, res) {
 	console.log(sampleFile.name);
     res.send('File uploaded!');
   });
+});
+
+// no need to have request scope of username and password for intro, faq, history, agb links
+app.get('/intro', function(request, response) {
+		response.sendFile(path.join(__dirname + '/mobps_intro.html'));
+});
+
+app.get('/faq', function(request, response) {
+		response.sendFile(path.join(__dirname + '/mobps_faq.html'));
+});
+
+app.get('/history', function(request, response) {
+		response.sendFile(path.join(__dirname + '/mobps_history.html'));
+});
+
+app.get('/agb', function(request, response) {
+		response.sendFile(path.join(__dirname + '/mobps_AGB.html'));
 });
 
 

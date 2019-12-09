@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-
+	<meta charset="utf-8"/><title>MoBPS Version History</title>
+	<link rel="stylesheet" type="text/css" href="./styles/menu_pages.css">
 </head>
 
-<meta charset="utf-8"/><title>MoBPS User Interface</title>
-<link rel="stylesheet" type="text/css" href="./styles/menu_pages.css">
 <body>
 
   <section class="container">
 	<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:652px;height:128px;">	<header> MoBPS </header>
     <div class="topnav">
-      <a href="http://www.mobps.de/" class="active">MoBPS Home</a>
+      <a href="http://www.mobps.de/">MoBPS Home</a>
       <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
       <a href="https://www.uni-goettingen.de/de/publikationen/93141.html" target="_blank">Publications</a>
 	  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
@@ -20,15 +19,31 @@
 	  <a onclick="func('history');">Version history (in prep.) </a>
 	  <a onclick="func('agb');">AGB (in prep.)</a>
 	</div>
+
+	<div>
 	
-		<div class="login-form">
-		<h1> MoBPS Login</h1>
-		<form action="auth" method="POST">
-			<input type="text" name="username" placeholder="Username" required>
-			<input type="password" name="password" placeholder="Password" required>
-			<input type="submit" value="Login">
-		</form>			
-		</div>
+		<h4> The MoBPS Web-interface is still in an open beta stage!</h4>
+		
+		<img src="./styles/img/5884.png"" alt="Construction" style="width:500px">
+		<h4> Version history:</h4>
+		
+		<h2> Release 09.12.2019 (v0.1.1):</h2>
+			<p>Supported R-package = MoBPS v1.4.30 </p> 
+			<p>New Web-design for login-page </p> 
+			<p>MoBPS simulation can run without use of miraculix </p> 
+			<p>Added Module to export the population list + population data (vcf/pedmap/phenotypes etc.) </p> 
+			<p>Minor bug-fixes for parallel computing </p> 
+	</div>
+
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+
 	</section>	
 	
 	<footer class="footer-distributed">
@@ -44,6 +59,7 @@
 		<p></p>
 	</div> 
 	</footer>
+	
 	<script type="text/javascript" src="javascript/menu_pages.js"></script>
 
 </body>
