@@ -313,6 +313,26 @@ app.post('/RsimAccBVE', function(request, response) {
 	});
 });
 
+// Run R simulation: Prepare download stuff
+app.post('/RsimDownload', function(request, response) {
+	
+	request.setTimeout(5*24*60*60*1000);
+
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_download.r') + " --args "+request.body.auser+ " '"+ request.body.filename + "' " + " '"+ request.body.dtype + "' " + " '"+ request.body.cohort + "' " + " '"+ request.body.nrepeat + "' ";
+
+	console.log(command);
+		
+	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
+		if(err){
+			console.log(err);
+			response.send(stderr);
+		} else{
+			response.send('');
+		};
+	});
+});
+
+
 // Run R simulation: Calculate Result
 app.post('/RsimResult', function(request, response) {
 	console.log(request);
@@ -320,6 +340,7 @@ app.post('/RsimResult', function(request, response) {
 	request.setTimeout(5*24*60*60*1000);
 
 	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' "; // '" + JSON.stringify(request.body.cohorts) + "'";
+
 	console.log(command);
 		
 	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
@@ -339,6 +360,7 @@ app.post('/RsimResult', function(request, response) {
 	});
 });
 
+
 // Get RData for download
 app.get('/Rdownload', function(request, res){	
 	if (request.session.filename) {
@@ -346,6 +368,48 @@ app.get('/Rdownload', function(request, res){
  		res.download(textfile); 
 	} else {
 		res.send('Please select a project to download RData!');
+	}
+
+});
+
+// Get .txt for download
+app.get('/txtdownload', function(request, res){	
+	if (request.session.filename) {
+		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'_temp.txt');
+ 		res.download(textfile); 
+	} else {
+		res.send('Please select a project to download txt!');
+	}
+
+});
+
+// Get .txt for download
+app.get('/peddownload', function(request, res){	
+	if (request.session.filename) {
+		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'_temp.ped');
+ 		res.download(textfile); 
+	} else {
+		res.send('Please select a project to download ped!');
+	}
+
+});
+
+app.get('/mapdownload', function(request, res){	
+	if (request.session.filename) {
+		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'_temp.map');
+ 		res.download(textfile); 
+	} else {
+		res.send('Please select a project to download map!');
+	}
+
+});
+
+app.get('/vcfdownload', function(request, res){	
+	if (request.session.filename) {
+		var textfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'_temp.vcf');
+ 		res.download(textfile); 
+	} else {
+		res.send('Please select a project to download vcf!');
 	}
 
 });

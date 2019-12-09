@@ -126,8 +126,9 @@ function runningR1(){
 			document.getElementById("Rout_Div").innerHTML = data;
 			
 			where = document.getElementById("Rout_Div").innerHTML.indexOf("Execution");
-			where2 = document.getElementById("Rout_Div").innerHTML.indexOf("EAAPguest");
-
+			where2 = document.getElementById("Rout_Div").innerHTML.indexOf("exceeds your");
+			where3 = document.getElementById("Rout_Div").innerHTML.indexOf("run simulations");
+			
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/Error/g, "<span style=\"color:red\">Error</span>");
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/\n/g, "<br/>");
 			
@@ -136,8 +137,10 @@ function runningR1(){
 			if(where == -1){
 				alert("Simulation Finished successfully!");
 
-			} else if(where2 > (-1)){
-				alert("EAAPguest is not allowed to run simulations. Please contact Torsten Pook if you need/want more rights.")
+			} else if(where3 > (-1)){
+				alert("This account has no permission to run simulations in R!")
+			} else if(where2> (-1)){
+				alert("Limited of cores exceeded! Adapt parallel computing settings!")
 			} else{
 				alert("Your Simulation failed! Check your inputs and potential warnings!");
 			}
@@ -429,6 +432,50 @@ function RunResultpMean(){
 		failure: function(msg) 
 		{
 			alert("Failed to plot KS. Please run the Simulation first!");
+		},
+		complete: function(obj, msg){
+			document.getElementById("runningDog").style.visibility = 'hidden';
+			//document.getElementById("runningDog").innerHTML = '';
+			//alert(msg);
+			//console.log(obj);
+		},
+		dataType: "text",
+	});
+}
+
+function RunDataPreparation(){
+	
+	var auser = data_Vue.user
+	var filename = data_Vue.geninfo["Project Name"];
+	var dtype = data_Vue.plottingPar.download1;
+	var cohort = data_Vue.plottingPar.download2.id;
+	if(data_Vue.plottingPar.download3 == undefined){
+		var nrepeat = 0;
+	} else{
+		var nrepeat = data_Vue.plottingPar.download3;
+	};
+
+	$.ajax
+	({
+		type: "POST",
+		url: './RsimDownload',
+		data: {
+			auser: auser,
+			filename : filename,
+			dtype: dtype,
+			cohort: cohort,
+			nrepeat: nrepeat
+			},
+		beforeSend: function() {
+			document.getElementById("runningDogTitle").innerHTML = 'Preparing file for download...';
+			document.getElementById("runningDog").style.visibility = 'visible';
+			//alert("Now Sending!");
+		},
+		success: function (data, msg) {
+		},
+		failure: function(msg) 
+		{
+			alert("Data preparation failed! Check if your input makes sense!");
 		},
 		complete: function(obj, msg){
 			document.getElementById("runningDog").style.visibility = 'hidden';
@@ -983,7 +1030,6 @@ function plottingResultAccBVE(){
 
 function RunResultAccBVE(){
 	var filename = data_Vue.geninfo["Project Name"];
-	var sindex = data_Vue.selection_index;
 	
 	$.ajax
 	({

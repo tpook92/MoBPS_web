@@ -58,6 +58,8 @@ function myGeneral () {
 	this['number-simulations-core'] = 1;
 	this['advanced'] = false;
 	this['advanced_test'] = true;
+	this['advanced_miraculix'] = true;
+	this['advanced_parallel'] = true;
 	this['advanced_trait'] = true;
 	this['advanced_culling'] = true;
 	this['advanced_sub'] = true;
@@ -89,6 +91,7 @@ function myTrait (ind){
 	this['quantitative_qtl'] = 0,
 	this['Trait Major QTL'] = 0,
 	this['Trait Value per Unit'] = 0,
+	this['trafo'] = "function(x){return(x)}",
 	this['Trait QTL Info'] = []
 }
 
@@ -256,7 +259,7 @@ var data_Vue = new Vue({
 		active_edge:  new myEdge(),
 		node_operation: '',
 		edge_operation: '',
-		Sex_options: ['Male', 'Female', 'Both'],
+		Sex_options: ['Male', 'Female'],
 		node_colors: {'Male':'#9acef4', 'Female':'#f29595', 'Both':'#ddd264'},
 		edge_colors: {'Selection':'#7bbb44', 'Reproduction':'#f5a623', 'Aging':'#dba59a', 'Combine':'#5a4f7c', 'Repeat':'#f14235', 'Split': '#94db8e', 'Cloning':'#aa76fd', 'Selfing':'#ff90b7', 'DH-Production':'#aa76fd'},
 		counter_pheno: 0,
@@ -265,6 +268,8 @@ var data_Vue = new Vue({
 		
 		individualsVar_options: [],
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
+		download_data: ["VCF", "Ped", "Map", "Plain Genotypes", "Phenotypes", "Genomic Values", "Est. Breeding Values", "Pedigree"],
+		list_cohorts: [],		
 		Genotype_generation_options: ["Upload Genotypes", "Random-sampling", "Fully-homozygous", "Fully-heterozygous", "All-B-Allele", "All-A-Allele"],
 		Breedingtype_options: ['Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production'],
 		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
@@ -625,7 +630,7 @@ var data_Vue = new Vue({
 				this.geninfo['Chromosomes Info'].splice(diff);
 			}else if (diff > 0){
 				while (len < val){
-					var newChromo = new myChromo(100,500,1);
+					var newChromo = new myChromo(100,10,1);
 					this.geninfo['Chromosomes Info'].push(newChromo);
 					len++;
 				}
@@ -998,6 +1003,39 @@ function importNetwork_intern(inputData1) {
 	data_Vue.nodes = new vis.DataSet(inputData['Nodes']);
 	data_Vue.edges = new vis.DataSet(inputData['Edges']);
 	data_Vue.geninfo = inputData['Genomic Info'] ? inputData['Genomic Info'] : new myGeneral();
+	
+	
+	if(data_Vue.geninfo['advanced']==undefined){
+		data_Vue.geninfo['advanced'] = false;
+	}
+	if(data_Vue.geninfo['advanced_test']==undefined){
+		data_Vue.geninfo['advanced_test'] = true;
+	}
+	if(data_Vue.geninfo['advanced_miraculix']==undefined){
+		data_Vue.geninfo['advanced_miraculix'] = true;
+	}
+	if(data_Vue.geninfo['advanced_parallel']==undefined){
+		data_Vue.geninfo['advanced_parallel'] = true;
+	}
+	if(data_Vue.geninfo['advanced_trait']==undefined){
+		data_Vue.geninfo['advanced_trait'] = true;
+	}
+	if(data_Vue.geninfo['advanced_culling']==undefined){
+		data_Vue.geninfo['advanced_culling'] = true;
+	}
+	if(data_Vue.geninfo['advanced_sub']==undefined){
+		data_Vue.geninfo['advanced_sub'] = true;
+	}
+	if(data_Vue.geninfo['advanced_eco']==undefined){
+		data_Vue.geninfo['advanced_eco'] = true;
+	}
+	if(data_Vue.geninfo['advanced_advanced']==undefined){
+		data_Vue.geninfo['advanced_advanced'] = true;
+	}
+	if(data_Vue.geninfo['advanced_user']==undefined){
+		data_Vue.geninfo['advanced_user'] = true;
+	}
+
 	data_Vue.traitsinfo = inputData['Trait Info'] ? inputData['Trait Info'] : [];
 	data_Vue.selection_index = inputData['Selection Index'];
 	if(inputData['PhenotypicResidual']){
