@@ -284,6 +284,14 @@
 						</td>
 					</tr>
 					
+					<tr v-if="geninfo['advanced']">
+						<td>Population History 
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with additional features for the simulation of thousands of generation</span></span>
+						</td>
+						<td> 
+							<input type="checkbox" v-model="geninfo['advanced_history']">
+						</td>
+					</tr>
 					
 					<tr v-if="geninfo['advanced']">
 						<td>Advanced Edge/Node options
@@ -318,50 +326,6 @@
 						</td>
 					</tr>
 					
-					<tr v-if="geninfo['advanced'] && geninfo['advanced_test']">
-						<td>Test/Speed Mode
-							<span class="tooltip">&#9432 <span class="tooltiptext">Activate this to set the number of repeats to 1, reduce the genome length to 10M and 200 SNPs and deactivate data import. This should heavily reduce computation times for testing.</span></span>
-						</td>
-						<td> 
-							<input type="checkbox" false-value="No" true-value="Yes" v-model="geninfo['speed-mode']">
-						</td>
-					</tr>
-					
-					<tr v-if="geninfo['advanced'] && geninfo['advanced_test']">
-						<td>Individual numbers scaling 
-							<span class="tooltip">&#9432 <span class="tooltiptext">Scale the number of individuals in each node by this factor. This can massively reduce computing times! Point numbers are rounded.</span></span>
-						</td>
-						<td>
-							<input type="value" v-model="geninfo['individual-scaling']">
-						</td>
-					</tr>
-					
-
-					<tr v-show="geninfo['advanced'] && geninfo['advanced_parallel']">
-						<td>Number of Simulations 
-							<span class="tooltip">&#9432 <span class="tooltiptext">Number of simulations of the breeding program you what to perform. This will massively increase run-time but also reduce variance of results.</span></span>
-						</td>
-						<td>
-							<input type="value" v-model="geninfo['number-simulations']">
-						</td>
-					</tr>
-					<tr v-show="geninfo['advanced'] && geninfo['advanced_parallel']">
-						<td>Number of Simulations run in parallel
-							<span class="tooltip">&#9432 <span class="tooltiptext">Number of simulations of the breeding program to run simultaneously. If taking more cores than allowed this will automatically be reduced internally.</span></span>
-						</td>
-						<td>
-							<input type="value" v-model="geninfo['number-simulations-parallel']">
-						</td>
-					</tr>
-					<tr v-show="geninfo['advanced'] && geninfo['advanced_parallel']">
-						<td>Number of cores used per simulation
-							<span class="tooltip">&#9432 <span class="tooltiptext">Number of cores used per simulation. If taking more cores than allowed this will automatically be reduced internally.</span></span>
-						</td>
-						<td>
-							<input type="value" v-model="geninfo['number-simulations-core']">
-						</td>
-					</tr>
-
 					<tr>
 						<td>Genetic Data 
 							<span class="tooltip">&#9432 <span class="tooltiptext">Select the genome you want to work with.</span></span>
@@ -492,6 +456,85 @@
 							</table>
 						</td>
 					</tr>
+					
+					<tr v-if="geninfo['advanced'] && geninfo['advanced_test']">
+						<td>Advanced Test-mode:
+						</td>
+
+					</tr>
+					
+					<tr v-if="geninfo['advanced'] && geninfo['advanced_test']">
+						<td>Test/Speed Mode
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activate this to set the number of repeats to 1, reduce the genome length to 10M and 200 SNPs and deactivate data import. This should heavily reduce computation times for testing.</span></span>
+						</td>
+						<td> 
+							<input type="checkbox" false-value="No" true-value="Yes" v-model="geninfo['speed-mode']">
+						</td>
+					</tr>
+					
+					<tr v-if="geninfo['advanced'] && geninfo['advanced_test']">
+						<td>Individual numbers scaling 
+							<span class="tooltip">&#9432 <span class="tooltiptext">Scale the number of individuals in each node by this factor. This can massively reduce computing times! Point numbers are rounded.</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['individual-scaling']">
+						</td>
+					</tr>
+					
+
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_parallel']">
+						<td>Advanced parallel computing: 
+						</td>
+					</tr>
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_parallel']">
+						<td>Number of Simulations 
+							<span class="tooltip">&#9432 <span class="tooltiptext">Number of simulations of the breeding program you what to perform. This will massively increase run-time but also reduce variance of results.</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['number-simulations']">
+						</td>
+					</tr>
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_parallel']">
+						<td>Number of Simulations run in parallel
+							<span class="tooltip">&#9432 <span class="tooltiptext">Number of simulations of the breeding program to run simultaneously. If taking more cores than allowed this will automatically be reduced internally.</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['number-simulations-parallel']">
+						</td>
+					</tr>
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_parallel']">
+						<td>Number of cores used per simulation
+							<span class="tooltip">&#9432 <span class="tooltiptext">Number of cores used per simulation. If taking more cores than allowed this will automatically be reduced internally.</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['number-simulations-core']">
+						</td>
+					</tr>
+					
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_history']">
+						<td> Advanced population history:
+						</td>
+
+					</tr>
+					
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_history']">
+						<td> Set a new base-line population every X - generations
+							<span class="tooltip">&#9432 <span class="tooltiptext">Genotypes for a baseline/founder population are stored leading to less points of recombination/mutation.</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['history_baseline']">
+						</td>
+					</tr>
+					
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_history']">
+						<td> Delete generations before base-line
+							<span class="tooltip">&#9432 <span class="tooltiptext">Genotypes for a baseline/founder population are stored leading to less points of recombination/mutation.</span></span>
+						</td>
+						<td>
+							<input type="checkbox" v-model="geninfo['history_delete']">
+						</td>
+					</tr>
+
 				</table>
 				<br>
 

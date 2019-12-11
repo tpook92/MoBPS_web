@@ -57,15 +57,16 @@ function myGeneral () {
 	this['number-simulations-parallel'] = 1;
 	this['number-simulations-core'] = 1;
 	this['advanced'] = false;
-	this['advanced_test'] = true;
+	this['advanced_test'] = false;
+	this['advanced_history'] = false; 
 	this['advanced_miraculix'] = true;
-	this['advanced_parallel'] = true;
-	this['advanced_trait'] = true;
-	this['advanced_culling'] = true;
-	this['advanced_sub'] = true;
-	this['advanced_eco'] = true;
-	this['advanced_advanced'] = true;
-	this['advanced_user'] = true;
+	this['advanced_parallel'] = false;
+	this['advanced_trait'] = false;
+	this['advanced_culling'] = false;
+	this['advanced_sub'] = false;
+	this['advanced_eco'] = false;
+	this['advanced_advanced'] = false;
+	this['advanced_user'] = false;
 //	this['Ensembl Filter'] = "";
 //	this['Ensembl Filter Values'] = "";
 	this['Number of Chromosomes'] = '';
@@ -1010,31 +1011,34 @@ function importNetwork_intern(inputData1) {
 		data_Vue.geninfo['advanced'] = false;
 	}
 	if(data_Vue.geninfo['advanced_test']==undefined){
-		data_Vue.geninfo['advanced_test'] = true;
+		data_Vue.geninfo['advanced_test'] = false;
+	}
+	if(data_Vue.geninfo['advanced_history']==undefined){
+		data_Vue.geninfo['advanced_history'] = false;
 	}
 	if(data_Vue.geninfo['advanced_miraculix']==undefined){
 		data_Vue.geninfo['advanced_miraculix'] = true;
 	}
 	if(data_Vue.geninfo['advanced_parallel']==undefined){
-		data_Vue.geninfo['advanced_parallel'] = true;
+		data_Vue.geninfo['advanced_parallel'] = false;
 	}
 	if(data_Vue.geninfo['advanced_trait']==undefined){
-		data_Vue.geninfo['advanced_trait'] = true;
+		data_Vue.geninfo['advanced_trait'] = false;
 	}
 	if(data_Vue.geninfo['advanced_culling']==undefined){
-		data_Vue.geninfo['advanced_culling'] = true;
+		data_Vue.geninfo['advanced_culling'] = false;
 	}
 	if(data_Vue.geninfo['advanced_sub']==undefined){
-		data_Vue.geninfo['advanced_sub'] = true;
+		data_Vue.geninfo['advanced_sub'] = false;
 	}
 	if(data_Vue.geninfo['advanced_eco']==undefined){
-		data_Vue.geninfo['advanced_eco'] = true;
+		data_Vue.geninfo['advanced_eco'] = false;
 	}
 	if(data_Vue.geninfo['advanced_advanced']==undefined){
-		data_Vue.geninfo['advanced_advanced'] = true;
+		data_Vue.geninfo['advanced_advanced'] = false;
 	}
 	if(data_Vue.geninfo['advanced_user']==undefined){
-		data_Vue.geninfo['advanced_user'] = true;
+		data_Vue.geninfo['advanced_user'] = false;
 	}
 
 	data_Vue.traitsinfo = inputData['Trait Info'] ? inputData['Trait Info'] : [];

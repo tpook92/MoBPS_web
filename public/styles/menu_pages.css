@@ -91,6 +91,20 @@ header {
 	color: #ffffff;
 }
 		
+.guestLogin {
+  padding: 15px;
+  width:100%;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+  background-color:  #5394ed;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px #999;
+}
+
 
 h6 {
 	font-size:12pt;

@@ -44,6 +44,9 @@ if(file.exists(fileSum)){
 }
 
 
+
+write_json(dat, path=paste(fname, "_", paste0(substr(Sys.time(), start=1, stop=10), "_", substr(Sys.time(), start=12, stop=16)),".json",sep=""), auto_unbox =TRUE)
+
 if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advanced_parallel'){
 
   ## Perform phasing
@@ -116,6 +119,7 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
     t2 <- Sys.time()
     if(rep==1){
       save(population, file=paste(fname, ".RData",sep=""))
+      write.csv(file=paste0(fname, ".csv"), population$info$cost.data, row.names = FALSE, quote=FALSE)
     }
     save(population, file=paste(fname, rep, ".RData",sep=""))
     cat(paste0("Finished simulation number ", rep,".\n"))
@@ -133,6 +137,9 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
   }
 
   save(population, file=paste(fname, ".RData",sep=""))
+
+  write.csv(file=paste0(fname, ".csv"), population$info$cost.data, row.names = FALSE, quote=FALSE)
+
   t2 <- Sys.time()
   cat(paste0("Finished simulation.\n"))
   cat(paste0("Simulation took ", round(as.numeric(t2)-as.numeric(t1), digit=3), " seconds.\n"))
