@@ -11,6 +11,13 @@ h4 {
 	font-style: italic;
 }
 
+h6 {
+	font-size:11pt;
+	font-style: italic;
+	text-align: right;
+	color: #5394ed;
+}
+
 /****  turn off the arrows of number fileds  */
 .no-spinners {
   -moz-appearance:textfield;
@@ -443,6 +450,22 @@ button[disabled]{
 	overflow-y: scroll;
 }
 
+#node-drag {
+	padding: 0px;
+	cursor: move;
+	background-color: lightgray;
+}
+
+#edge-popUpheader {
+	cursor: move;
+	background-color: lightgray;
+}
+
+#node-popUpheader {
+	cursor: move;
+	background-color: lightgray;
+}
+
 /*** for login user details ***/
 #displayUserlogin { 
 	position:fixed;
@@ -524,6 +547,22 @@ table.trait_table input[type=Number]{
 	max-width:800px;
 }
 
+
+/* display Node and Save button */
+.button_type {
+  display: inline-block;
+  padding: 2px 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+  background-color:  #5394ed;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px #999;
+}
+
 /** navigation menu */
 .sidebar {
   height: 100%;
@@ -584,3 +623,57 @@ table.trait_table input[type=Number]{
 }
 
 /** navigation menu ends */
+
+
+
+/* Breeding Scheme Node and Edge guidelines */
+.accordion {
+  background-color: white;
+  color: #444;
+  cursor: pointer;
+  text-align: left;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.active, .accordion:hover {
+  background-color: white; 
+}
+
+.guideline {
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+/* Breeding Scheme Node and Edge guidelines ends */
+
+/* for apple products */
+
+.ios,
+.ios * {
+     cursor: pointer;
+}
+
+a[href], input[type='submit'], input[type='image'], label[for], select, button, .pointer {
+       cursor: pointer;
+}
+
+
+.trait_move_button {
+  display: none;
+  margin-top:5px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  width:100%;
+  text-decoration: none;
+  color: white;
+  position: right;
+  background-color: #486F88;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px #999;
+}
