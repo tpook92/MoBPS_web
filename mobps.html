@@ -683,11 +683,11 @@
 				</template>
 
 				<br>
-				
-				<table >
-					<tr><td colspan="3" style="font-weight:bold;width:60px;">Upload Excel file for Correlation:
-						<span class="tooltip">&#9432 <span class="tooltiptext">"Here you can import an Excel file with genetic correlations above the diagonal and residual correlations below the diagonal. Please set "1" to the diagonal elements. The first row and first column should be name of the Phenotype."</span></span>
-					</td></tr>
+								
+				<div id="corrDiv" style="display:none">
+				<button class="accordion" style="font-style:normal;font-size: 14px;"> Click here to Upload Excel file for Correlation:  <span class="tooltip">&#9432 <span class="tooltiptext">"Here you can import an Excel file with genetic correlations above the diagonal and residual correlations below the diagonal. Please set "1" to the diagonal elements. The first row and first column should be name of the Phenotype."</span></span> </button>
+				<div class="guideline">
+ 				<table>
 					<tr>
 					<td>Select the type of Excel File:
 						<span class="tooltip">&#9432 <span class="tooltiptext">"Please select an Excel file of genetic correlations or residual correlations or both."</span></span>
@@ -707,8 +707,14 @@
 					<button id="save_button" onclick="saveProject(geninfo['Project Name']);">Import Table</button></td>
 					</tr>
 				</table>
+				</div>	
+
+				</div>
+				
 				<br>
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix">
+				
+				
 					<tr>
 						<td colspan="5" style="font-weight:bold;width:60px;padding:5px;text-align:left">Residual Correlation
 							<span class="tooltip">&#9432 <span class="tooltiptext">Make sure this matrix is positive definit. Otherwise we will project the matrix to the space of positive definit matrices.</span></span>
@@ -1187,22 +1193,18 @@
 				<h3> Breeding Scheme
 					<span class="tooltip">&#9432 <span class="tooltiptext">Draw your breeding scheme in the following interactive enviroment.</span></span>
 				</h3> 
-				<button class="accordion"> Click here to read the guildelines: </button>
+				<button class="accordion"> Click here to read the guildelines for Breeding Scheme: </button>
 				<div class="guideline">
-					<p> - First tip. </p>
-					<p> - Second tip. </p>
-					<p> - Third tip. </p>
+					<p> Add a Node : Click Edit -> Add Node  -> Click in an empty space to place a new node.  </p>
+					<p> Edit a Node : Select a Node from the diagram -> Click Edit Node </p>
+					<p> Drag a Node : Add/Edit a Node or Edge -> Use grey area to drag the Node/Edge display box. </p>
+					<p> Doublic Click a Node/Edge : Display only box appears for double click a node or edge. Need to click Edit Node to update a node/edge.</p>
+					<p> Copy Node : Select a Node -> Right Click.</p>					
 				</div> 
 				
 				<h4 style="color: red">Important: Please AVOID node names with : and _ . In particular avoid trailing numbers like ABC_1. Repeated nodes will use this syntax!</h4>
 				<div id="mynetwork_container" >
 					<div id="mynetwork_label">
-		<!--				<button onclick="saveProject();">Save to Database</button>
-						<br>
-						<br>
-						<input style="width:100px" type="text" value = "" name="saveAs_name" id="saveAs_name" placeholder="Enter a file name">
-						<button id = "save_as" onclick="saveAsProject();">Save As</button>
-						<br> -->
 						<h4>Legends</h4>
 						Nodes:
 						<p v-for="key in Object.keys(node_colors)" v-bind:style="{color: node_colors[key]}"> &#9645;  {{key}}</p>
@@ -1586,7 +1588,7 @@
         	
         	<br>
         	<br>	
-			<div id="Results_Div">
+			<div v-if = "geninfo['Project Name']" id="Results_Div">
 				<h3 id="RSim"></h3>
 				<br>
 				<br>
@@ -1596,9 +1598,10 @@
 				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
 				<button onclick="ReloadSim(); " >Reload Old Results</button>	
 				&nbsp;&nbsp;
-												<a v-if="filename" href="/Rdownload"> Download RData</a>
+				<p> <a v-if="filename" href="/Rdownload"> Download {{geninfo['Project Name']}}.RData </a> </p>
+				<p> <a v-if="filename" href="/Exceldownload"> Download {{geninfo['Project Name']}}.csv </a> </p> 
 				
-				<p>Attention: The actual breeding program must match the uploaded R results, otherwise plot functions will not work.</p>
+				<p>Attention: The actual breeding program must match the uploaded R results, otherwise plot functions will not work.</p>				
 				<form id='ResultUpload' target="print_popup" action='/ResultUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800')">
 					<input type='file' name='ResultFile' id='ResultFile'>
 					<!--input type='submit' value='Load Results'-->
@@ -1928,8 +1931,16 @@
 		        }
 		    }
 
+
+		function showCorrDiv(val) {
+		if (val==true) {
+		    document.getElementById("corrDiv").style.display = "none";
+		  } else {
+		    document.getElementById("corrDiv").style.display = "block";
+		  }
+		}
+
 	</script>		
-	</script>
 
 </html>
 

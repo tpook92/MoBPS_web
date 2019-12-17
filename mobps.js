@@ -381,6 +381,26 @@ app.get('/Rdownload', function(request, res){
 
 });
 
+
+// Get Excel file for download
+app.get('/Exceldownload', function(request, res){	
+	if (request.session.filename) {
+		var Excelfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'.csv');
+		fs.readFile(Excelfile, function(err, data){
+			if(err){
+				var message = 'Have not found any Excel file for the requested Project of ' + request.session.filename  +'. Please finish R Simulation successfully and then download Excel File.';
+				res.send(message.fontcolor("red"));
+			}else{
+				res.download(Excelfile);
+			}
+		});
+	} else {
+		res.send('Please select a project to download Excel File!');
+	}
+
+});
+
+
 // Get .txt for download
 app.get('/txtdownload', function(request, res){	
 	if (request.session.filename) {

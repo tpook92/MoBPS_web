@@ -78,7 +78,7 @@ function myGeneral () {
 	this['Chromosomes Info'] = [];
 	this['Upload_CorrFile'] = 'No';
 	this['curUserGroup'] = '';
-		this['Excel_File'] = '';
+	this['Excel_File'] = '';
 }
 
 function myTrait (ind){
@@ -253,7 +253,7 @@ var data_Vue = new Vue({
 		socket: '',
 		curUserGroup:'',
 		filename:'',
-				Excel_File_options: ['', 'Genetic', 'Residual', 'both'],		
+		Excel_File_options: ['', 'Genetic', 'Residual', 'both'],		
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -735,7 +735,7 @@ var data_Vue = new Vue({
 			this.matrix.push({row: new myArray(len+1)});
 			this.matrix2.push({row: new myArray(len+1)});
 			this.show_matrix_element.push({show:true});
-						
+			if (len > 1) { showCorrDiv("true"); }
 		},
 		// remove clicked Phenotype
 		removePheno: function(ind){
@@ -1218,7 +1218,7 @@ function importNetwork() {
 	
 	importNetwork_intern(inputData);
 	data_Vue.project_saved = false;
-	
+	showCorrDiv("true");
 }
 
 function importNetwork_intern(inputData1) {
@@ -1344,8 +1344,8 @@ function importNetwork_intern(inputData1) {
 	
 	draw();
 	console.log("Loading Data successful.");
-	data_Vue.project_saved = true;
-	
+	data_Vue.project_saved = true;	 
+	showCorrDiv("true");
 }
 
 function resizeExportArea() {
