@@ -535,6 +535,22 @@
 						</td>
 					</tr>
 
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_trait']">
+						<td> Advanced trait rescaling:
+						</td>
+
+					</tr>
+					
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_trait']">
+						<td> Time point to apply trait rescaling
+							<span class="tooltip">&#9432 <span class="tooltiptext">Semicolon separated list of time point to apply rescaling of trait mean/variance (e.g. 50;100)</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['trait_rescaling']">
+						</td>
+					</tr>
+					
+
 				</table>
 				<br>
 
@@ -1434,6 +1450,12 @@
 						</td>
 						<td><input id="time_n" list="indVar" onchange="updateVar('Time Needed', value)" placeholder="Type a number" min="0" max="10000" step="1" v-model="active_edge['Time Needed']"> {{geninfo['Time Unit']}}</td>
 					</tr>	
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_advanced']">
+						<td>Use last available
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will use the last repeat available from that node - not necessary the node from the same repeat</span></span>
+						</td>		
+						<td><input type="checkbox" v-model="active_edge['last_available']"> </td>
+					</tr>
 					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
 						<td>OGC
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use optimum genetic contribution according to Meuwissen 1996 to determine how often each individual is used for reproduction.</span></span>
@@ -1457,6 +1479,17 @@
 						</td>
 						<td><input placeholder="Type a number (if nothing enter all individuals are picked equally)" v-model="active_edge['selection_ratio']"></td>
 					</tr>	
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+						<td>Selection ratio type
+							<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to use some individuals more frequently for reproduction. A value of 2 will lead to the individual will the highest genomic value to be used twice as often as the worst individual.</span></span>
+						</td>
+						<td> 
+							<select v-model="active_edge['selection_ratio_type']">
+								<option v-for="option in selection_type" v-bind:value="option">
+								{{ option}}
+								</option>
+							</select>
+						</td>					</tr>	
 					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
 						<td>Index for Selection ratio / OGC
 							<span class="tooltip">&#9432 <span class="tooltiptext">Select the index used for the selection ratio or OGC. </span></span>
@@ -1561,6 +1594,27 @@
 							{{ selection_proportion }} (calculated based on # Individuals)
 						</td>
 					</tr>
+					
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+						<td>Threshold for selection
+							<span class="tooltip">&#9432 <span class="tooltiptext">Calculate reliability of BVE according to vanRaden 2008</span></span>
+						</td>		
+						<td><input placeholder="Type a number if wanted" v-model="active_edge['threshold']"></td>
+					</tr>
+					
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+						<td>Threshold sign
+							<span class="tooltip">&#9432 <span class="tooltiptext"> Only keep individuals with higher/lower/eval estimated breeding value</span></span>
+						</td>		
+						<td> 
+							<select v-model="active_edge['threshold_sign']">
+								<option v-for="option in threshold_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced']">
 						<td>Calculate reliability
 							<span class="tooltip">&#9432 <span class="tooltiptext">Calculate reliability of BVE according to vanRaden 2008</span></span>
@@ -1659,6 +1713,7 @@
 					</div>
 					<br>
 					<br>
+					
 					
 					<h4> Download population list </h4>	
 					<a href="/Rdownload"> Download RData</a>
