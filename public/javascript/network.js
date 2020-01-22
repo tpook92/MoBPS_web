@@ -238,6 +238,7 @@ var data_Vue = new Vue({
 		selection_index : [{'Name': 'Default Index'}, {'Name': 'Non'}],
 		selection_index_scaling : [{'Name': 'Default Index', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}, {'Name': 'Non', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}],
 		phenotyping_class : [{'Name': 'Fully phenotyped', 'Cost of phenotyping': 0}, {'Name': 'Not phenotyped', 'Cost of phenotyping': 0}],
+		phenotype_options: ['Own phenotype', 'Avg. offspring phenotype', 'Mean own/offspring phenotype', 'Weighted own/offspring phenotype'],
 		show_warnings: false,
 		warnings: [],
 		runned: false,
@@ -383,6 +384,9 @@ var data_Vue = new Vue({
 						{id: x.id+":-3", label:x.id+":3 Repeats before"},
 						{id: x.id+":-4", label:x.id+":4 Repeats before"},
 						{id: x.id+":-5", label:x.id+":5 Repeats before"},
+						{id: x.id+":-6", label:x.id+":6 Repeats before"},
+						{id: x.id+":-7", label:x.id+":7 Repeats before"},
+						{id: x.id+":-8", label:x.id+":8 Repeats before"},
 					]})});
 				return(data);
 			}
@@ -1009,6 +1013,7 @@ function importNetwork_intern(inputData1) {
 	data_Vue.geninfo = inputData['Genomic Info'] ? inputData['Genomic Info'] : new myGeneral();
 	
 	
+
 	if(data_Vue.geninfo['advanced']==undefined){
 		data_Vue.geninfo['advanced'] = false;
 	}
@@ -1083,6 +1088,7 @@ function importNetwork_intern(inputData1) {
 		}
 	}
 	
+
 	data_Vue.show_matrix_element = inputData["Intern"].show_matrix_element;
 	data_Vue.counter_pheno = inputData["Intern"].counter_pheno;
 	data_Vue.counter_qtl = inputData["Intern"].counter_qtl;

@@ -1622,11 +1622,20 @@
 						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['reliability']"> </td>
 					</tr>
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
-						<td>Use offspring for BVE
+						<td>Input Phenotype
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use the avg. phenotype of the offspring as the phenotype of the individuals in the parent node. Make sure there are offspring! (use of time needed!)</span></span>
 						</td>
-						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['Use Offspring for BVE']"> </td>
+						<td>
+						<select v-model="active_edge['phenotype_used']">
+						
+								<option v-for="option in phenotype_options" v-bind:value="option">
+								{{ option }}
+								</option>
+								
+							</select>
+						</td>
 					</tr>
+					
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE'">
 						<td>Relationship Matrix
 							<span class="tooltip">&#9432 <span class="tooltiptext">According to vanRaden 2008, pedigree-based or singleStep (H based on Legarra 2014)</span></span>
