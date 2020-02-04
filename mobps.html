@@ -145,7 +145,7 @@
 					<a href="#Results_Div">R Simulation/ Results</a>
 					<a href="#Export_Data_H3">Export/ Import</a>
 					<a href="/logout"> User: {{user}} <br> Logout</a>
-					<a v-if="geninfo['curUserGroup'] > 1" href="/Change_Password"> Change Password</a>
+					<a v-if="geninfo['curUserGroup'] != 1" href="/Change_Password"> Change Password</a>
 			</div>
 
 		<div id="main">
