@@ -225,6 +225,22 @@ li a:hover:not(.active) {
 	max-width:70%;
 }
 
+.drag_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	width:700px;
+	table-layout: fixed;
+}
+
+.drag_table td {
+	padding:5px;
+	height:20px;
+  	width: 60px;
+	font-size:9pt;
+	font-weight:bold;
+}
+
 .corr_table {
 	background-color: #f0f0f0;
 	border-collapse: collapse;
