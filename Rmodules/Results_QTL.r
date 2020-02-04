@@ -8,8 +8,8 @@ library("jsonlite")
 path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
-# trait <- fromJSON("/home/nha/Simple_Cattle_mod.json", simplifyVector=FALSE)$`Trait Info`
-# arg <- c("Torsten", "Simple_Cattle")
+# trait <- fromJSON("/home/nha/MoBPS/Rmodules/UserScripts/Simianer_FAO_v2_2020-01-30_14:50.json", simplifyVector=FALSE)$`Trait Info`
+# arg <- c("Simianer", "FAO_v2")
 user <- arg[1]
 filename <- arg[2]
 trait <- fromJSON(arg[3], simplifyVector=FALSE)

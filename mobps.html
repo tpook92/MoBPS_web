@@ -145,7 +145,7 @@
 					<a href="#Results_Div">R Simulation/ Results</a>
 					<a href="#Export_Data_H3">Export/ Import</a>
 					<a href="/logout"> User: {{user}} <br> Logout</a>
-					<a href="/Change_Password"> Change Password</a> 
+					<a v-if="geninfo['curUserGroup'] > 1" href="/Change_Password"> Change Password</a>
 			</div>
 
 		<div id="main">
@@ -582,49 +582,49 @@
 				<br>
 				
 				
-				<table class="trait_table" v-if="traitsinfo.length > 0 && show_pheno_info">
+				<table class="drag_table" v-if="traitsinfo.length > 0 && show_pheno_info">
 					<thead>
 						<tr>
-							<td style="width:5%">Phenotype
+							<td style="width:80px;">Phenotype
 								<span class="tooltip">&#9432 <span class="tooltiptext">Name of the trait.</span></span>
 							</td>
-							<td style="width:7%">Unit
+							<td>Unit
 								<span class="tooltip">&#9432 <span class="tooltiptext">Optional. Unit of measurement for the trait.</span></span>
 							</td>
-							<td style="width:7%">Pheno. Mean
+							<td>Pheno. Mean
 								<span class="tooltip">&#9432 <span class="tooltiptext">The avg. Founder individual will have this mean. To have subpopulations with different mean use the Subpopulation module.</span></span>
 							</td>
-							<td style="width:7%">Pheno. SD
+							<td>Pheno. SD
 								<span class="tooltip">&#9432 <span class="tooltiptext">Trait variance for the group of all founders will be scaled accordingly. Residual variance is assumed to be fixed over all generations.</span></span>
 							</td>
-							<td style="width:7%">Heritability
+							<td>Heritability
 								<span class="tooltip">&#9432 <span class="tooltiptext">Heritability of the trait.</span></span>
 							</td>
-							<td style="width:7%" v-if = "geninfo['advanced']==false || geninfo['advanced_trait']==false"># Polygenic Loci
+							<td v-if = "geninfo['advanced']==false || geninfo['advanced_trait']==false"># Polygenic Loci
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. To simulate non-additive QTL effect activate the advanced setting Complex Trait architecture.</span></span>
 							</td>
-							<td style="width:7%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true"># additive QTL
+							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true"># additive QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. To simulate non-additive QTL effect activate the advanced setting Complex Trait architecture.</span></span>
 							</td>
-							<td style="width:9%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" ># dominant QTL
+							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" ># dominant QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of purely dominant QTL.</span></span>
 							</td>
-							<td style="width:8%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" ># qualitative epistatic QTL
+							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" ># qualitative epistatic QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL with qualitative epistatic effect between two markers.</span></span>
 							</td>
-							<td style="width:8%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" ># quantitative epistatic QTL
+							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" ># quantitative epistatic QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL with quantitative epistatic effect between two markers.</span></span>
 							</td>
-							<td style="width:6%">Major QTL
+							<td>Major QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to manually add single marker effects to SNPs with known effects.</span></span>
 							</td>
-							<td style="width:7%">Value per unit (&#8364;)
+							<td>Value per unit (&#8364;)
 								<span class="tooltip">&#9432 <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
 							</td>
-							<td style="width:20%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">Apply Transformation
+							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">Apply Transformation
 								<span class="tooltip">&#9432 <span class="tooltiptext">The only allowed input variable is the genomic value (x). Potential input: function(x){y = x^2; return(y)}</span></span>
 							</td>
-							<td style="width:7%">Show Cor</td>
+							<td>Show Cor</td>
 							<td></td>
 							
 						</tr>
@@ -639,37 +639,37 @@
 					@end="onEnd">
 					<template v-for='(trait, index) in traitsinfo' >
 						<tr>
-							<td style="width:5%">
+							<td style="width:1%;padding-right:6px;">
 								<input style="width:80px;" v-model="trait['Trait Name']" > 
 							</td>
-							<td style="width:5%">
+							<td style="width:1%;padding-right:20px;">
 								<input style="width:50px;" v-model="trait['Trait Unit']" > 
 							</td>
-							<td style="width:5%">
+							<td style="width:1%;padding-right:20px;">
 								<input style="width:50px;" v-model="trait['Trait Mean']" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
 							</td>
-							<td style="width:5%">
+							<td style="width:1%;padding-right:20px;">
 								<input style="width:50px;" v-model="trait['Trait Std Deviation']" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
 							</td>
-							<td style="width:5%">
+							<td style="width:1%;padding-right:20px;">
 								<input style="width:50px;" v-model="trait['Trait Heritability']" max=1 min=0 class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
 							</td>
-							<td style="width:5%">
+							<td style="width:1%;padding-right:17px;">
 								<input style="width:50px;" v-model="trait['Trait Number of Polygenic Loci']" class="no-spinners" step=1> 
 							</td>
-							<td style="width:5%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
+							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
 								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['dominant_qtl']"  class="no-spinners" step=1> 
 							</td>
-							<td style="width:5%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
+							<td style="width:1%;padding-right:12px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
 								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['qualitative_qtl']" class="no-spinners" step=1> 
 							</td>
-							<td style="width:5%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
+							<td style="width:1%;padding-right:17px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
 								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['quantitative_qtl']"  class="no-spinners" step=1> 
 							</td>
-							<td style="width:5%">
+							<td style="width:1%;padding-right:17px;">
 								<input style="width:50px;" v-model="trait['Trait Major QTL']"  type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
 							</td>
-							<td style="width:5%">
+							<td style="width:1%;padding-right:15px;">
 								<input style="width:50px;" v-model="trait['Trait Value per Unit']"  type="Number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
 							</td>
 							<td style="width:10%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
