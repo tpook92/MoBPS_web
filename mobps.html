@@ -621,7 +621,7 @@
 							<td>Value per unit (&#8364;)
 								<span class="tooltip">&#9432 <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">Apply Transformation
+							<td style="width:200px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">Apply Transformation
 								<span class="tooltip">&#9432 <span class="tooltiptext">The only allowed input variable is the genomic value (x). Potential input: function(x){y = x^2; return(y)}</span></span>
 							</td>
 							<td>Show Cor</td>
@@ -672,10 +672,10 @@
 							<td style="width:1%;padding-right:15px;">
 								<input style="width:50px;" v-model="trait['Trait Value per Unit']"  type="Number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
 							</td>
-							<td style="width:10%" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
+							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
 								<input v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['trafo']" style="width:200px;"> 
 							</td>
-							<td style="width:2%">
+							<td style="width:1%;padding-right:10px;">
 								<input style="width:50px;" type="checkbox" v-model="show_matrix_element[index].show">
 							</td>
 							<td>
