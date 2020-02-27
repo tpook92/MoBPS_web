@@ -1595,6 +1595,7 @@
 						<td><input placeholder="Type a number if wanted" v-model="active_edge['threshold']"></td>
 					</tr>
 					
+					
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
 						<td>Threshold sign
 							<span class="tooltip">&#9432 <span class="tooltiptext"> Only keep individuals with higher/lower/eval estimated breeding value</span></span>
@@ -1614,6 +1615,14 @@
 						</td>		
 						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['reliability']"> </td>
 					</tr>
+					
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced']">
+						<td> Skip traits with no index weight
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will lead to not performing BVE that are not assign with any weight (=0) in the selection index.</span></span>
+						</td>		
+						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['skip']"> </td>
+					</tr>
+					
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
 						<td>Input Phenotype
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use the avg. phenotype of the offspring as the phenotype of the individuals in the parent node. Make sure there are offspring! (use of time needed!)</span></span>
@@ -1664,13 +1673,11 @@
 						<td>Select cohorts for manuel select:
 							<span class="tooltip">&#9432 <span class="tooltiptext">Cohorts available for selection are only refresh on reloading or when EDITING an edge. We are working on that.</span></span>
 						</td>
-						<td> 
+						<td v-if="isCohortNameChanged ===''">						
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
-							<!--select v-model="active_edge['Manuel selected cohorts']" size=6 multiple>
-								<option v-for="option in nodes.getIds()" v-bind:value="option">
-								{{ option }}
-								</option>
-							</select-->
+						</td>
+						<td v-if="isCohortNameChanged ==='Yes'">	
+							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="updated_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 						</td>
 					</tr>
 				</table>
@@ -1817,10 +1824,10 @@
 					</div>
 					<br>
 					<br>
-<!--
-					<h4>CURRENTLY INACTIV - Results: Accuracy of Breeding Value Estimation</h4>
+
+					<h4>Results: Accuracy of Breeding Value Estimation</h4>
 					<button v-if="plottingData.ResAccBVE == ''" onclick="RunResultAccBVE()" >Run Analysis</button>
--->
+
 					<template v-if="plottingData.ResAccBVE != ''">
 						Select plotting type:
 						<select v-model="plottingPar.ResAccBVE_pType" >
@@ -1834,6 +1841,9 @@
 						<treeselect :multiple="true" :options="Summary_AccBVE" v-model="plottingPar.ResAccBVE_cohorts" :searchable="true" style="width:800px"/>
 					</template>
 
+					<br>
+					<br>
+					
 					<div v-show="plottingData.ResAccBVE != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
 						<div v-for="(trait, index) in selection_index" v-bind:id="'ResAccBVE_Div'+(index+1)">
 						</div>
@@ -1901,6 +1911,14 @@
 					<h4> Results: Major QTLs (Allele Frequency, exp./obs. Heterozygosity)</h4>
 					<button v-if="plottingData.ResQTL == ''" onclick="RunResultQTL()" >Run Analysis</button>
 					<template v-if="plottingData.ResQTL != ''">
+					
+						Select plotting type:
+						<select v-model="plottingPar.ResQTL_pType" >
+							<option v-for="option in plottingType2" v-bind:value="option">
+							{{ option }} 
+							</option>
+						</select>
+						
 						Select Trait :
 						<select v-model="plottingPar.ResQTL_trait">
 							<option v-if="option['Trait Major QTL'] > 0" v-for="(option, index) in traitsinfo" v-bind:value="index+1">

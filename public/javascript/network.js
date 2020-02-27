@@ -256,7 +256,10 @@ var data_Vue = new Vue({
 		socket: '',
 		curUserGroup:'',
 		filename:'',
-		Excel_File_options: ['', 'Genetic', 'Residual', 'both'],	
+		Excel_File_options: ['', 'Genetic', 'Residual', 'both'],
+		allNodes:[],
+		tempNodeforCohort:'',	
+		isCohortNameChanged:'',
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -275,6 +278,7 @@ var data_Vue = new Vue({
 		
 		individualsVar_options: [],
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
+		plottingType2: ["By Repeats", "By Time"],
 		download_data: ["VCF", "Ped", "Map", "Plain Genotypes", "Phenotypes", "Genomic Values", "Est. Breeding Values", "Pedigree"],
 		threshold_options: [">", "=", "<", ">=", "<="],
 		list_cohorts: [],		
@@ -379,6 +383,24 @@ var data_Vue = new Vue({
 		node_manualselect_options: {
 			get: function(){
 				var data = this.nodes.get()
+					.map(function(x){return({id: x.id, label: x.id, children:[
+						{id: x.id+":X", label:x.id},
+						{id: x.id+":0", label:x.id+":Same Repeat"},
+						{id: x.id+":-1", label:x.id+":Previous Repeat"},
+						{id: x.id+":-2", label:x.id+":2 Repeats before"},
+						{id: x.id+":-3", label:x.id+":3 Repeats before"},
+						{id: x.id+":-4", label:x.id+":4 Repeats before"},
+						{id: x.id+":-5", label:x.id+":5 Repeats before"},
+						{id: x.id+":-6", label:x.id+":6 Repeats before"},
+						{id: x.id+":-7", label:x.id+":7 Repeats before"},
+						{id: x.id+":-8", label:x.id+":8 Repeats before"},
+					]})});
+				return(data);
+			}
+		},
+		updated_manualselect_options:{
+			get: function(){
+				var data = this.allNodes
 					.map(function(x){return({id: x.id, label: x.id, children:[
 						{id: x.id+":X", label:x.id},
 						{id: x.id+":0", label:x.id+":Same Repeat"},
@@ -1638,7 +1660,7 @@ function editNode(data, cancelAction, callback) {
 	data_Vue.displayBtn = false;
 	var hidden = data_Vue.displayBtn;
 	action(hidden);
-	
+	data_Vue.tempNodeforCohort = data.id;
 	document.getElementById('node-saveButton').onclick = saveNodeData.bind(this, data, callback);
 	document.getElementById('node-cancelButton').onclick = cancelAction.bind(this, callback);
 	document.getElementById('node-popUp').style.display = 'block';
@@ -1718,6 +1740,7 @@ function saveNodeData(data, callback) {
 	}else if(data_Vue.node_operation=='Edit Node' && old_id != data.id){
 		data_Vue.nodes.add(data);
 		data_Vue.nodes.remove(old_id);
+		data_Vue.allNodes = data_Vue.nodes.get();
 		
 		// update edges from:
 		var items = data_Vue.edges.getIds({
@@ -1743,7 +1766,61 @@ function saveNodeData(data, callback) {
 				data_Vue.edges.update({id: items[ii], to: data.id});
 			}
 		}
-		cancelNodeEdit(callback);
+		
+		// update edge -- Selection -> BVE - > Manual select cohorts 27/02/2020
+		
+		var checkedgesforCohort = data_Vue.edges.get();		
+		if(checkedgesforCohort.length > 0) { 
+			var check_cohorts_edges = [];
+			if(data_Vue.tempNodeforCohort != data_Vue.active_node.id) {data_Vue.isCohortNameChanged = "Yes";}
+			var nn = data_Vue.tempNodeforCohort.length;
+			for(var i=0; i < checkedgesforCohort.length; i++){
+				var bType = checkedgesforCohort[i]['Breeding Type'];
+				var sType = checkedgesforCohort[i]['Selection Type'];
+				var isBVE = checkedgesforCohort[i]['Cohorts used in BVE'];
+				var isCohortNode = checkedgesforCohort[i]['Manuel selected cohorts'];
+				var isCohortExist = '';
+				if((bType == "Selection") && (sType == "BVE") && (isBVE == "Manual select")) {
+					var updatedCohortNode = [];
+					if(isCohortNode.length > 0) {
+						for(var j=0; j < isCohortNode.length; j++){
+							var curCoh = isCohortNode[j];
+						 	var res = curCoh.substring(0, nn);
+							if(res == data_Vue.tempNodeforCohort) { var isCohortExist = "yes";	}
+							updatedCohortNode.push(isCohortNode[j]);							
+						}
+					}
+					if (isCohortExist === "yes") { check_cohorts_edges.push(checkedgesforCohort[i]); }
+					isCohortExist = '';
+				}	
+			}
+			
+			if(check_cohorts_edges.length > 0 ) {
+				var tempNode = data_Vue.tempNodeforCohort;
+				for(var kk=0; kk < check_cohorts_edges.length; kk++){
+						var thisCohortArray = [];
+						var curCohortArray = check_cohorts_edges[kk]['Manuel selected cohorts'];
+						if(curCohortArray.length >0) {
+							for(var ll=0; ll < curCohortArray.length; ll++){
+								var thisCoh = curCohortArray[ll];
+								var res1 = thisCoh.substring(0, nn);
+								var thisCohortExist = '';
+								if(res1 == data_Vue.tempNodeforCohort) {
+									var thisCohortExist = "yes";
+									myVal = thisCoh.length;
+									mytext = thisCoh.substring(nn, myVal); 
+									thisCohortArray.push(data_Vue.active_node.id+mytext); 
+									}
+								else { thisCohortArray.push(curCohortArray[ll]); }										
+							}
+							data_Vue.edges.update({id: check_cohorts_edges[kk]['id'], 'Manuel selected cohorts': thisCohortArray});
+						}
+				}
+			}
+		}			
+		// ends update edge -- Selection -> BVE - > Manual select cohorts 27/02/2020 
+		
+	cancelNodeEdit(callback);
 	} else {
 		clearNodePopUp();
 		callback(data);
