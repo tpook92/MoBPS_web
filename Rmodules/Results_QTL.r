@@ -8,8 +8,8 @@ library("jsonlite")
 path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
-# trait <- fromJSON("/home/nha/MoBPS/Rmodules/UserScripts/Simianer_FAO_v2_2020-01-30_14:50.json", simplifyVector=FALSE)$`Trait Info`
-# arg <- c("Simianer", "FAO_v2")
+# trait <- fromJSON("/home/nha/MoBPS/Rmodules/UserScripts/Torsten_IMAGE_del_conservation_2020-02-18_08:43.json", simplifyVector=FALSE)$`Trait Info`
+# arg <- c("Torsten", "IMAGE_del_conservation")
 user <- arg[1]
 filename <- arg[2]
 trait <- fromJSON(arg[3], simplifyVector=FALSE)
@@ -21,14 +21,17 @@ load(paste(path,user,"_",filename,".RData",sep=""))
 coh <- get.cohorts(population)
 ttnames <- NULL
 ttrep <- NULL
+tttime <- NULL
 for(nn in coh){
   nn_s <- strsplit(nn, "_")[[1]]
   if(!is.na(as.numeric(nn_s[length(nn_s)]))){
     ttnames <- c(ttnames, paste(nn_s[-length(nn_s)],collapse="_" ))
     ttrep <- c(ttrep, as.numeric(nn_s[length(nn_s)]))
+    tttime <- c(tttime, as.numeric(get.time.point(population, cohorts=nn)[1]))
   }else{
     ttnames <- c(ttnames, nn)
     ttrep <- c(ttrep, 0)
+    tttime <- c(tttime, as.numeric(get.time.point(population, cohorts=nn)[1]))
   }
 }
 
@@ -62,7 +65,7 @@ if(length(avail)>1){
           freq <- (ttfreq[3,]+ttfreq[2,]/2)/colSums(ttfreq)
           oH <-  ttfreq[2,]/colSums(ttfreq)
           eH <- 2*freq*(1-freq)
-          result[[trait[[tr]][['Trait Name']]]][[qtl]] <- by(cbind(ttnames, ttrep, freq, oH, eH), ttnames, t)
+          result[[trait[[tr]][['Trait Name']]]][[qtl]] <- by(cbind(ttnames, ttrep, freq, oH, eH, tttime), ttnames, t)
           class(result[[trait[[tr]][['Trait Name']]]][[qtl]]) <- "list"
         }
       }
@@ -107,7 +110,7 @@ if(length(avail)>1){
         freq <- (ttfreq[3,]+ttfreq[2,]/2)/colSums(ttfreq)
         oH <-  ttfreq[2,]/colSums(ttfreq)
         eH <- 2*freq*(1-freq)
-        result[[trait[[tr]][['Trait Name']]]][[qtl]] <- by(cbind(ttnames, ttrep, freq, oH, eH), ttnames, t)
+        result[[trait[[tr]][['Trait Name']]]][[qtl]] <- by(cbind(ttnames, ttrep, freq, oH, eH, tttime), ttnames, t)
         class(result[[trait[[tr]][['Trait Name']]]][[qtl]]) <- "list"
       }
     }

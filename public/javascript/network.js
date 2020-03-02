@@ -275,6 +275,7 @@ var data_Vue = new Vue({
 		
 		individualsVar_options: [],
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
+		plottingType2: ["By Repeats", "By Time"],
 		download_data: ["VCF", "Ped", "Map", "Plain Genotypes", "Phenotypes", "Genomic Values", "Est. Breeding Values", "Pedigree"],
 		threshold_options: [">", "=", "<", ">=", "<="],
 		list_cohorts: [],		

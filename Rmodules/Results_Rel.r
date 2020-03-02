@@ -8,7 +8,7 @@ library("jsonlite")
 path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
-# arg <- c("Torsten", "Simple_Cattle")
+# arg <- c("Torsten", "IMAGE_del_conservation")
 user <- arg[1]
 filename <- arg[2]
 
@@ -69,23 +69,15 @@ if(length(avail)>1){
 } else{
   ttkinship <- NULL
   for(cc in 1:nrow(coh)){
+    print(cc)
     if(as.numeric(coh[cc,3]) + as.numeric(coh[cc,4]) > 1){
-      ttkinship <- rbind(ttkinship, kinship.emp.fast(population=population, cohorts=coh[cc,1],ibd.obs = 100, hbd.obs = 50))
+      ttkinship <- rbind(ttkinship, kinship.emp.fast(population=population, cohorts=coh[cc,1],ibd.obs = 100, hbd.obs = 25))
     }else{
       ttkinship <- rbind(ttkinship, c(0,0.5))
     }
   }
 }
 
-
-ttkinship <- NULL
-for(cc in 1:nrow(coh)){
-  if(as.numeric(coh[cc,3]) + as.numeric(coh[cc,4]) > 1){
-    ttkinship <- rbind(ttkinship, kinship.emp.fast(population=population, cohorts=coh[cc,1],ibd.obs = 50, hbd.obs = 50))
-  }else{
-    ttkinship <- rbind(ttkinship, c(0,0.5))
-  }
-}
 
 result <- cbind(ttnames, ttrep, coh[,"time point"], round(ttkinship[,1]*2,digits=6), round(ttkinship[,2]*2-1, digits=6))
 

@@ -831,33 +831,62 @@ function plottingResultQTL(){
 	var trait = data_Vue.plottingPar.ResQTL_trait-1;
 	var qtl = data_Vue.plottingPar.ResQTL_qtl;
 	var coh = data_Vue.plottingPar.ResQTL_cohorts;
+	var pType = data_Vue.plottingPar.ResQTL_pType;
 	
 	var data = data_Vue.plottingData.ResQTL[data_Vue.traitsinfo[trait]['Trait Name']][qtl];
 	
-	for(let i=0; i < coh.length; i++){
-		// allele frequency:
-		data1[0].push({
-			y : data[coh[i]][2],
-			x : data[coh[i]][1],
-			mode : 'scatter',
-			name : coh[i]
-		});	
-		// observed He:
-		data1[1].push({
-			y : data[coh[i]][3],
-			x : data[coh[i]][1],
-			mode : 'scatter',
-			name : coh[i]
-		});	
-		// expected He:
-		data1[2].push({
-			y : data[coh[i]][4],
-			x : data[coh[i]][1],
-			mode : 'scatter',
-			name : coh[i]
-		});			
+	if(pType=="By Repeats"){
+		for(let i=0; i < coh.length; i++){
+			// allele frequency:
+			data1[0].push({
+				y : data[coh[i]][2],
+				x : data[coh[i]][1],
+				mode : 'scatter',
+				name : coh[i]
+			});	
+			// observed He:
+			data1[1].push({
+				y : data[coh[i]][3],
+				x : data[coh[i]][1],
+				mode : 'scatter',
+				name : coh[i]
+			});	
+			// expected He:
+			data1[2].push({
+				y : data[coh[i]][4],
+				x : data[coh[i]][1],
+				mode : 'scatter',
+				name : coh[i]
+			});			
+		}
+
 	}
-		
+	if(pType=="By Time"){
+		for(let i=0; i < coh.length; i++){
+			// allele frequency:
+			data1[0].push({
+				y : data[coh[i]][2],
+				x : data[coh[i]][5],
+				mode : 'scatter',
+				name : coh[i]
+			});	
+			// observed He:
+			data1[1].push({
+				y : data[coh[i]][3],
+				x : data[coh[i]][5],
+				mode : 'scatter',
+				name : coh[i]
+			});	
+			// expected He:
+			data1[2].push({
+				y : data[coh[i]][4],
+				x : data[coh[i]][5],
+				mode : 'scatter',
+				name : coh[i]
+			});			
+		}
+	}
+	
 	var titles = ["Allele Frequency (A)", "Observed Heterozygosity", "Expected Heterozygosity"];
 	for(let i=0; i < 3; i++){
 		var layout = {
@@ -869,7 +898,7 @@ function plottingResultQTL(){
 				zeroline: false,
 				automargin: true
 			},
-			};
+		};
 		var config = {
 			scrollZoom: true,
 			toImageButtonOptions: {
@@ -882,6 +911,7 @@ function plottingResultQTL(){
 		};
 		Plotly.newPlot('ResQTL_Div'+(i+1), data1[i], layout, config);
 	}
+
 }
 
 function RunResultQTL(){
@@ -1037,7 +1067,7 @@ function RunResultAccBVE(){
 		url: './RsimAccBVE',
 		data: {
 			filename : filename,
-			sindex : sindex
+			sindex : data_Vue.selection_index
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for Accuracy of Breeding Value Estimations...';

@@ -9,10 +9,13 @@ path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle")
+# sindex <- fromJSON("/home/nha/MoBPS/Rmodules/UserScripts/Torsten_IMAGE_del_conservation_2020-02-18_08:43.json", simplifyVector=FALSE)$`Selection Index`
+
 user <- arg[1]
 filename <- arg[2]
-sindex <- fromJSON(arg[3])
+sindex <- fromJSON(arg[3], simplifyVector=FALSE)
 
+sindex <- matrix(unlist(sindex), nrow=length(sindex), byrow=TRUE)
 load(paste(path,user,"_",filename,".RData",sep=""))
 # Rel
 
