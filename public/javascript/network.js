@@ -79,7 +79,7 @@ function myGeneral () {
 	this['Upload_CorrFile'] = 'No';
 	this['curUserGroup'] = '';
 	this['Excel_File'] = '';
-	this['listOfCohorts_withInfo'] = '';
+	//this['listOfCohorts_withInfo'] = '';
 }
 
 function myTrait (ind){
@@ -259,7 +259,10 @@ var data_Vue = new Vue({
 		Excel_File_options: ['', 'Genetic', 'Residual', 'both'],
 		allNodes:[],
 		tempNodeforCohort:'',	
-		isCohortNameChanged:'',		
+isCohortNameChanged:'',
+		isBrowserSafari:'',
+		isDraggableOption:'',
+		cohortsList :[],
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -1400,14 +1403,37 @@ function loadCohortInfoFromServer(name) {
 		url: '/getCohortInfo',
 		success: function (data) {
 			if (data != '') {
-				data_Vue.geninfo['listOfCohorts_withInfo'] = data; 
-				document.getElementById("listOfCohorts").value = data;
-				return data;
+//				data_Vue.geninfo['listOfCohorts_withInfo'] = data; 
+				//document.getElementById("listOfCohorts").value = data;
+				data_Vue.cohortsList = csvToJSON(data);
+				console.log(data_Vue.cohortsList);
+				//return data;
+				return data_Vue.cohortsList;
 				}
 			}		
 	})
 }
 
+//csv to JSON to get list of Cohorts in json format
+
+function csvToJSON(cohorts) {
+	var lines=cohorts.split("\n");
+  	var result = [];
+  	var headers=lines[0].split(",");
+
+  for(var i=1;i<lines.length;i++){
+	  var obj = {};
+	  var currentline=lines[i].split(",");
+
+	  for(var j=0;j<headers.length;j++){
+		  obj[headers[j]] = currentline[j];
+	  }
+
+	  result.push(obj);
+  }
+  
+  return result; 
+}
 
 // function to save data to database:
 

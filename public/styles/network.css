@@ -153,6 +153,7 @@ h6 {
 
 #runningDog {
 	background-image: url("img/runningDog.webp");
+	/* background-image:url("img/Image_logo.png"); */
 	background-color: white;
 	border:2px;
 	background-repeat: no-repeat;
@@ -288,6 +289,20 @@ li a:hover:not(.active) {
 	overflow-y:auto;
 }
 
+#warnings_sum_safari {
+	position:fixed; 
+	padding: 0 20px ;
+	z-index:250; 
+	left:75%;
+	right:0vw; 
+	top:50px;
+	bottom:0px; 
+	width:20%; 
+	height:10%; 
+	background-color: rgba(0, 0, 0, 0);
+	overflow-y:auto;
+}
+
 #showGenInfo_button {
 	float:right;
 	position:fixed; 
@@ -323,6 +338,13 @@ li a:hover:not(.active) {
 	height: 500px;
 	overflow:scroll;
 	border: 1px solid lightgray;
+}
+
+#general_Economy {
+	position:relative;
+	width: 500px;
+	border: 1px solid lightgray;
+	background:white; 
 }
 
 /********* Some tooltip styles for additional info on hover ********************/
@@ -440,6 +462,8 @@ button[disabled]{
 	position:fixed;
 	top:5vw;
 	left:25%;
+	bottom:0%;
+	right:25%;
 	z-index:700;
 	width:600px;
 	height:400px;
@@ -457,6 +481,8 @@ button[disabled]{
 	position:fixed;
 	top:5vw;
 	left:25%;
+	bottom:0%;
+	right:25%;
 	z-index:700;
 	width:600px;
 	height:350px;
@@ -589,10 +615,17 @@ table.trait_table input[type=Number]{
   z-index: 1;
   top: 8px;
   left: 0;
+  bottom:0;
+  right:0;
   background-color: #d0daf0;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
+/*
+-webkit-transition: all 0.3s ease;
+-moz-transition: all 0.3s ease;
+-o-transition: all 0.3s ease;
+transition: all 0.5s ease; */
 }
 
 .sidebar a {
@@ -616,7 +649,9 @@ table.trait_table input[type=Number]{
   font-size: 15px;
   margin-left: 50px;
   color: white;
+  border: none;
 }
+
 
 .openbtn {
   margin-top : 20px;
@@ -642,6 +677,21 @@ table.trait_table input[type=Number]{
 
 /** navigation menu ends */
 
+/* CohortList table & Population List - after R simulation*/
+.cohortListHead  { overflow-y: auto; height: 155px; width:70%;}
+.cohortListHead thead th { position: sticky; top: 0; text-align: center; width:105px;  }
+.cohortListHead tbody { overflow-y: scroll; position: absolute; width:50%; height:125px;}
+.cohortListHead tbody td { position: sticky; top: 0; text-align: center; border:0;width:100px;  }
+.cohortListHead tbody input { width:60px;text-align: center; border:0; }
+
+.boldText {
+	font-size:12pt;
+	font-weight: bold;
+}
+
+.populationList { height: 170px; width:30%; background-color: #eee; }
+
+/* End : CohortList table - after R simulation*/
 
 /* Breeding Scheme Node and Edge guidelines */
 .accordion {
@@ -694,3 +744,15 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
   border-radius: 5px;
   box-shadow: 0 2px #999;
 }
+
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+		width:800px;
+		height:800px;
+    body {
+        color: #90f;
+    }
+}
+ 
+   
+
