@@ -1144,7 +1144,7 @@
 				<h3 v-if="geninfo['advanced'] && geninfo['advanced_eco']">General Economy Parameters (Optional)
 					<span class="tooltip">&#9432 <span class="tooltiptext">Define your own economic parameters for the calculation of economic values in your breeding scheme. </span></span>
 				</h3>
-				<table v-if="geninfo['advanced'] && geninfo['advanced_eco']" style="text-align:left;background:white; border: 1px solid lightgray" class="trait_table">
+				<table v-if="geninfo['advanced'] && geninfo['advanced_eco']" id="general_Economy">
 					<colgroup>	
 						<col width="40%">
 						<col width="60%">
@@ -1673,10 +1673,10 @@
 						<td>Select cohorts for manuel select:
 							<span class="tooltip">&#9432 <span class="tooltiptext">Cohorts available for selection are only refresh on reloading or when EDITING an edge. We are working on that.</span></span>
 						</td>
-						<td v-if="isCohortNameChanged ===''">
+						<td v-if="isCohortNameChanged ===''" >
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 						</td>
-						<td v-if="isCohortNameChanged ==='Yes'">	
+						<td v-if="isCohortNameChanged ==='Yes'" >	
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="updated_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 						</td>
 					</tr>
@@ -1698,8 +1698,10 @@
 				<button onclick="runningR1(); " >Start R Simulation</button>
 				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
 				<button onclick="ReloadSim(); " >Reload Old Results</button>	
-				&nbsp;&nbsp;
 				
+				
+				<br>
+				<!--
 				<p> <a v-if="filename" href="/Rdownload"> Download {{geninfo['Project Name']}}.RData </a> </p>
 				<p> <a v-if="filename" href="/Exceldownload"> Download {{geninfo['Project Name']}}.csv </a> </p> 
 
@@ -1713,6 +1715,14 @@
 					</td>
 				</tr>
 				</table>
+				-->
+				
+				<br>
+				<p v-if="cohortsList.length >0" class="boldText">  Download Rdata : 
+					<span class="tooltip">&#9432 <span class="tooltiptext"> Download the output of the simulation as Rdata file to save it on you own computer or use it for further analysis in R. </span></span> &nbsp;&nbsp;
+					<a v-if="filename" href="/Rdownload"> {{geninfo['Project Name']}}.RData </a> 
+				</p>
+				<br>
 				
 				<p>Attention: The actual breeding program must match the uploaded R results, otherwise plot functions will not work.</p>
 				<form id='ResultUpload' target="print_popup" action='/ResultUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800')">
@@ -1720,6 +1730,42 @@
 					<!--input type='submit' value='Load Results'-->
 					<button onclick="UploadSim();">Load Results</button>
 				</form>
+				
+				<br>
+				<p class="boldText">Cohorts List : </p>
+				<div v-if="cohortsList.length >0" class="cohortListHead">
+				<table>
+					<thead>
+						<tr><th><div style="width:160px;"> Cohort Name </div></th>
+							<th>Nr. of Individuals </th>
+							<th>Time-Point </th>
+							<th>Total Costs </th>
+							<th>Cost G.typing </th>
+							<th>Cost P.typing </th>
+							<th>Cost Housing </th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr v-for='(cohorts, index) in cohortsList' >
+							<td> <input v-model="cohorts['Cohort name']" style="border:0;width:175px;text-align:left;"></td>
+							<td> <input v-model="cohorts['Nr. of individuals']"> </td>
+							<td> <input v-model="cohorts['Time-point']"> </td>
+							<td> <input v-model="cohorts['Total costs']"> </td>
+							<td> <input v-model="cohorts['Cost genotyping']"> </td>
+							<td> <input v-model="cohorts['Cost phenotyping']"> </td>
+							<td> <input v-model="cohorts['Cost housing']"> </td>				
+						</tr>
+				</table>
+				<br>
+				</div>
+				<br>
+				<br>
+				<p v-if="cohortsList.length >0" class="boldText"> Download CSV file: 
+					<span class="tooltip">&#9432 <span class="tooltiptext"> Download CSV file containing cohort names, number of individuals, time-point of generation, total costs, genotyping costs, cost phenotyping and  housing costs.</span></span>&nbsp; 
+					<a v-if="filename" href="/Exceldownload"> Download {{geninfo['Project Name']}}.csv </a> 
+				</p>
+				<br>
+				
 				<p v-show="runned">Click here to clear all results and plots.</p>
 				<button v-show="runned" onclick="clearResult()" >Clear Results</button>
 				<button v-show="runned" v-on:click="rlog = !rlog" >Show/Hide R Log</button>
@@ -1733,39 +1779,42 @@
 				<div v-show="runned">
 					<h4 style="color: 'red'">Results: Summary</h4>
 					<div id="Result_Summary">
+
 					</div>
 					<br>
 					<br>
-					
-					
-					<h4> Download population list </h4>	
-					<a href="/Rdownload"> Download RData</a>
-					<br>
-					<br>
-					<h4>Download: Population data</h4>
-					<td> Selected datatype: </td>
-					<select v-model="plottingPar.download1" >
-						<option v-for="option in download_data" v-bind:value="option">
-						{{ option }}
-						</option>
-					</select>
-					<br>
-					<td> Selected cohort: </td>
-					<select v-model="plottingPar.download2" >
-						<option v-for="option in nodes.get()" v-bind:value="option">
-						{{ option.id }}
-						</option>
-					</select>
-					<br>
-					<td> Selected repeat: </td>
-						<input placeholder="Type a number (Default: 0)" v-model="plottingPar.download3">
-					<br>
-					
-					<button onclick="RunDataPreparation()">Prepare data</button>
-					<a v-if="plottingPar.download1=='Ped'" href="/peddownload"> Download Ped</a>
-					<a v-if="plottingPar.download1=='Map'" href="/mapdownload"> Download Map</a>
-					<a v-if="plottingPar.download1=='VCF'" href="/vcfdownload"> Download VCF</a>
-					<a v-if="plottingPar.download1!='Ped' && plottingPar.download1!='Map' && plottingPar.download1!='VCF'" href="/txtdownload"> Download txt</a>					
+						
+					<h4> Download population list: </h4>
+					<div class="populationList">	
+						<a href="/Rdownload" style="background-color:#eee;"> Download RData</a>
+						<br>
+						<br>
+						<h4>Download: Population data</h4>
+						<td> Selected datatype: </td>
+						<select v-model="plottingPar.download1" >
+							<option v-for="option in download_data" v-bind:value="option">
+							{{ option }}
+							</option>
+						</select>
+						<br>
+						<td> Selected cohort: </td>
+						<select v-model="plottingPar.download2" >
+							<option v-for="option in nodes.get()" v-bind:value="option">
+							{{ option.id }}
+							</option>
+						</select>
+						<br>
+						<td> Selected repeat: </td>
+							<input placeholder="Type a number (Default: 0)" v-model="plottingPar.download3">
+						<br>
+						
+						<button onclick="RunDataPreparation()">Prepare data</button>
+						<a v-if="plottingPar.download1=='Ped'" href="/peddownload"> Download Ped</a>
+						<a v-if="plottingPar.download1=='Map'" href="/mapdownload"> Download Map</a>
+						<a v-if="plottingPar.download1=='VCF'" href="/vcfdownload"> Download VCF</a>
+						<a v-if="plottingPar.download1!='Ped' && plottingPar.download1!='Map' && plottingPar.download1!='VCF'" href="/txtdownload"> Download txt</a>					
+					</div>
+
 					
 					<br>
 					<br>
