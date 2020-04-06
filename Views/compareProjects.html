@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" >
+	<meta charset="utf-8"/>
+	
+	<script type="text/javascript">
+		var isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+		console.log(isBrowserSafari);
+	</script>
+		
+	<head>
+		<title>MoBPS</title>
+		<!-- Javascripte Online -->
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+		
+		<!-- for plotting graphs: -->
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="./styles/mobps.css">
+	
+		<!--  for javascript and ajax call -->		
+		<script type="text/javascript" src="javascript/jQ1.js"></script>
+		<script type="text/javascript" src="javascript/jQ2.js"></script>
+		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
+		<script type="text/javascript" src="javascript/jQ3.js"></script>
+	
+	</head>
+
+	<body onload="init();">		
+	<div id="runningDog">
+		<button style="color: red" class='bar_button' onclick="stopR();">Stop R Analyze</button> 
+		<h3 id="runningDogTitle">
+		</h3>
+		<div id="runningDogLog">
+		</div>
+	</div>
+		
+	<div id='compareProjectDiv'>
+		<div id="Project_Bar">
+			<div style="overflow:auto;">	
+			<a>&nbsp;</a>
+			<a>&nbsp;</a>	
+				<a href="http://mobps.de/home" class="additional_link">Go back to MoBPS Home</a> 					
+			</div>
+		</div>
+			
+		<div id="mySidebar" class="sidebar">
+			<div id="closeDiv">
+				<button onclick="closeNav()" class="closebtn"> Navigation Close </button>
+			</div>  
+				<a>&nbsp;</a>
+					<a href="#General_Info">General information</a>
+					<a href="#Phenotype_Info_Div">Phenotype information</a>
+					<a href="#Selectionindex_Div">Optional information</a>
+					<a href="#Breeding_Scheme">Breeding Scheme</a>
+					<a href="#Results_Div">R Simulation/ Results</a>
+					<a href="#Export_Data_H3">Export/ Import</a>
+					<a href="/logout"> User: {{user}} <br> Logout</a>
+					<a v-if="cpInfo['curUserGroup'] != 1" href="/Change_Password"> Change Password</a>
+			</div>
+
+			<div id="main">
+				<div id="openDiv">
+			  		<button onclick="openNav()" class="openbtn"> Navigation Open </button>  
+				</div>
+				
+				<div id="LoadJSON_Div" >
+					<h2>MoBPS Compare Projects </h2>
+					<table>
+						<tr>
+						<td>
+						<h3>Select multiple projects to compare : {{compareProjects}}</h3><br>
+						<select id="thisArray" name="thisArray[]" multiple onChange="getProjects(this)" v-model="compareProjects" class="comparePSelect">
+							<option value="">Choose Multiple Projects:</option>
+							<option v-for="option in database" v-bind:value="option">
+								{{ option }}
+							</option>
+						</select>
+						</td>
+						</tr>
+					</table>
+				</div>
+    	
+	        	<br>
+				<div v-if = "compareProjects" id="Results_Div">
+					<h3 id="RSim"></h3>
+					<h3>Analyze with R</h3>
+					<p>Click on button 'Analyze' to run R.</p>
+					<button onclick="analyzeR(); " >Analyze</button>				
+					<br>				
+				</div>						
+			</div>
+	</div>
+	</body>
+
+	<!-- Eigene Javascripte Main Code -->
+	<script src="javascript/socket.io.js"></script>
+	<script type="text/javascript" src="javascript/compareProjects.js"></script>
+	<script type="text/javascript" src="javascript/Rmodule.js"></script>
+	
+	
+	<!-- Navigation Menu related -->
+	<script type="text/javascript">
+		function openNav() {
+		  document.getElementById("mySidebar").style.width = "250px";
+		  document.getElementById("main").style.marginLeft = "250px";
+		  document.getElementById("openDiv").style.display = "none";
+		}
+		
+		function closeNav() {
+		  document.getElementById("mySidebar").style.width = "0";
+		  document.getElementById("main").style.marginLeft= "0";
+		  document.getElementById("openDiv").style.display = "block";
+		}			
+	
+	</script>		
+
+</html>
+

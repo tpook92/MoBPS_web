@@ -16,3 +16,7 @@
 		window.location.href = "auth";
 		}
 	}
+	function guestLogin() {
+		document.getElementById("username").value = "Guest";
+		document.getElementById("password").value = "guest";
+	}  

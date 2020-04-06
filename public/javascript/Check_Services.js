@@ -234,7 +234,7 @@ function checkEverything(id){
 		var ownVariableCnt = data_Vue.individualsVar_options.length;
 		var ownVariable = data_Vue.individualsVar_options;
 
-		for(let i=0; i < ownVariableCnt; i++){			
+		for(var i=0; i < ownVariableCnt; i++){			
 			thisName = ownVariable[i]['name'];
 			thisValue = ownVariable[i]['value'];
 
@@ -269,7 +269,7 @@ function checkEverything(id){
 		nodes = data_Vue.nodes.get();
 		nodes = Array.from(nodes);
 		if(nodes.length > 0){
-			for(let i=0; i < nodes.length; i++){
+			for(var i=0; i < nodes.length; i++){
 				active_node = nodes[i];
 				
 				gen_warn_text = "Please assign each node with a name.";
@@ -330,16 +330,16 @@ function checkEverything(id){
 			node_name = [];
 			node_founder = [];
 			
-			for(let i=0; i < nodes.length; i++){
+			for(var i=0; i < nodes.length; i++){
 				node_name.push(nodes[i]['id'])
 				node_founder.push(nodes[i]['Founder'])
 			}
 			
-			for(let i=0; i < edges.length; i++){
+			for(var i=0; i < edges.length; i++){
 				edge_to.push(edges[i]['to']);
 				edge_from.push(edges[i]['from']);
 				edge_type.push(edges[i]['Breeding Type']);
-				for(let j=0; j < nodes.length; j++){
+				for(var j=0; j < nodes.length; j++){
 					if(edge_from[i]==node_name[j]){
 						edge_nrfrom.push(j);
 					}
@@ -354,7 +354,7 @@ function checkEverything(id){
 			}
 			
 			
-			for(let i=0; i < edges.length; i++){
+			for(var i=0; i < edges.length; i++){
 				if(edge_type[i] =="Selection" || edge_type[i] == "Aging" || edge_type[i] == "Split"){
 					size1 = parseFloat(nodes[edge_nrfrom[i]]['Number of Individuals']);
 					size2 = parseFloat(nodes[edge_nrto[i]]['Number of Individuals']);
@@ -377,9 +377,9 @@ function checkEverything(id){
 				}
 			}
 			
-			for(let i=0; i < nodes.length; i++){
+			for(var i=0; i < nodes.length; i++){
 				if(node_founder[i] == 'Yes'){
-					for(let j=0; j <edges.length; j++){
+					for(var j=0; j <edges.length; j++){
 						if(edge_nrto[j] == i && edge_type[j] != 'Repeat'){
 							gen_warn_text = "Founder-Node " + node_name[i] + " has incoming Edges.";
 							data_Vue.warnings5.push(gen_warn_text);	
@@ -391,7 +391,7 @@ function checkEverything(id){
 					combine_count = 0;
 					split_count = 0;
 					types = [];
-					for(let j=0; j < edges.length; j++){
+					for(var j=0; j < edges.length; j++){
 						if(edge_nrto[j] == i){
 							count++;
 							if(edge_type[j] == "Combine"){
@@ -538,8 +538,8 @@ function checkEverything(id){
 
 	function matrix1() {
 		var traitsCnt = data_Vue.traitsinfo.length;
-		for(let i=0; i < traitsCnt; i++){			
-			for(let j=0; j < data_Vue.matrix[i].row.length; j++){
+		for(var i=0; i < traitsCnt; i++){			
+			for(var j=0; j < data_Vue.matrix[i].row.length; j++){
 				curMatVal = data_Vue.matrix[i].row[j].val;	
 					
 				gen_warn_text = data_Vue.traitsinfo[i]['Trait Name']+"-"+data_Vue.traitsinfo[j]['Trait Name']+":Please enter Phenotypic Correlation and must be a number between -1 and 1 ";
@@ -558,8 +558,8 @@ function checkEverything(id){
   
 	function matrix2() {
 			var traitsCnt = data_Vue.traitsinfo.length;
-			for(let i=0; i < traitsCnt; i++){			
-				for(let j=0; j < data_Vue.matrix2[i].row.length; j++){
+			for(var i=0; i < traitsCnt; i++){			
+				for(var j=0; j < data_Vue.matrix2[i].row.length; j++){
 					curMatVal2 = data_Vue.matrix2[i].row[j].val;	
 
 					gen_warn_text = data_Vue.traitsinfo[i]['Trait Name']+"-"+data_Vue.traitsinfo[j]['Trait Name']+":Please enter Genetic Correlation and must be a number between -1 and 1 ";
@@ -583,9 +583,9 @@ function checkEverything(id){
 			var siCnt = data_Vue.selection_index.length
 
 			if (siCnt > 0) {
-				for(let i=0; i<siCnt; i++){
+				for(var i=0; i<siCnt; i++){
 
-					for(let j=0; j < traitsCnt; j++)
+					for(var j=0; j < traitsCnt; j++)
 					{
 
 						var objSI = pVar =	data_Vue.selection_index[i];
@@ -616,8 +616,8 @@ function checkEverything(id){
 	var piCnt = data_Vue.phenotyping_class.length
 
 		if (piCnt > 0) {
-		   for(let i=0; i<piCnt; i++){
-			for(let j=0; j < traitsCnt; j++)
+		   for(var i=0; i<piCnt; i++){
+			for(var j=0; j < traitsCnt; j++)
 			{	
 				var objPC = pVar =	data_Vue.phenotyping_class[i];
 				var keys = Object.keys(objPC);
@@ -698,7 +698,7 @@ function animalHousingCost() {
 		var animal_housing_costCnt = data_Vue.economy['Animal Housing Costs'].length;
 		var thisAnimalHousingCosts = data_Vue.economy['Animal Housing Costs'];
 		
-		for(let i=0; i < animal_housing_costCnt; i++){			
+		for(var i=0; i < animal_housing_costCnt; i++){			
 			thisCost = thisAnimalHousingCosts[i]['Cost'];
 			nameOfCost = thisAnimalHousingCosts[i]['Name'];
 
@@ -736,7 +736,7 @@ function addServices(){
 		var new_edge = new myEdge(val, child_node.id);
 		new_edge['Breeding Type'] = "Reproduction";
 		new_edge['Time Needed'] = document.getElementById("time_n").value;
-		for(let i=0; i < data_Vue.active_edge.useVar.length; i++){
+		for(var i=0; i < data_Vue.active_edge.useVar.length; i++){
 			new_edge['useVar'].push(data_Vue.active_edge.useVar[i]);
 		}
 		

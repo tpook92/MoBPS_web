@@ -13,15 +13,22 @@ var urldb = "mongodb://localhost:27017/";
 
 const MongoStore = require('connect-mongo')(session);
 
+var mobpsLoginRouter = require('./routes/index');
+var homeRouter = require('./routes/home');
+var compareProjectsRouter = require('./routes/compareProjects');
+
 var app = express();
 
 // socket for streaming R output:
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+//app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.use(express.static('public'))
+app.use('/', mobpsLoginRouter);
+app.use('/', homeRouter);
+app.use('/', compareProjectsRouter);
 
 app.use(fileUpload({
 	limits: {fileSize: 1024*1024*1024 *1024},
@@ -41,10 +48,6 @@ app.use(session({
 app.use(bodyParser.urlencoded({limit: '1000mb', extended : true}));
 app.use(bodyParser.json({limit: '1000mb', extended: true}));
 
-app.get('/', function(request, response) {
-	response.sendFile(path.join(__dirname + '/mobps_login.html'));
-});
-
 app.post('/auth', function(request, response) {
 	var username = request.body.username;
 	var password = request.body.password;
@@ -56,10 +59,10 @@ app.post('/auth', function(request, response) {
 				if(result.length > 0){
 					request.session.loggedin = true;
 					request.session.username = username;
-										request.session.usergroup = result[0]['group'];
+					request.session.usergroup = result[0]['group'];
 					
 					db.close();	
-					response.redirect('/home');					
+					response.redirect('/home');			
 				} else {
 					db.close();	
 					response.send('Incorrect Username and/or Password!');
@@ -71,15 +74,6 @@ app.post('/auth', function(request, response) {
 		response.end();
 	}
 });
-
-app.get('/home', function(request, response) {
-	if (request.session.loggedin) {
-		response.sendFile(path.join(__dirname + '/mobps.html'));
-	} else {
-		response.send('Please login to view this page!');
-	}
-});
-
 
 app.get('/user', function(request, response) {
 	if (request.session.loggedin) {
@@ -102,7 +96,7 @@ app.get('/logout', function(request, response) {
 // change Password:
 
 app.get('/Change_Password', function(request, response) {
-	response.sendFile(path.join(__dirname + '/mobps_changePW.html'));
+	response.sendFile(path.join(__dirname + '/changePW.html'));
 });
 
 app.post('/changePW', function(request, response) {
@@ -184,6 +178,7 @@ app.post('/template_database', function(request, response) {
 		response.send('');
 	}
 });
+
 
 // Run R simulation:
 app.post('/Rsim', function(request, response) {
@@ -476,19 +471,19 @@ app.post('/ResultUpload', function(req, res) {
 
 // no need to have request scope of username and password for intro, faq, history, agb links
 app.get('/intro', function(request, response) {
-		response.sendFile(path.join(__dirname + '/mobps_intro.html'));
+		response.sendFile(path.join(__dirname + '/Views/intro.html'));
 });
 
 app.get('/faq', function(request, response) {
-		response.sendFile(path.join(__dirname + '/mobps_faq.html'));
+		response.sendFile(path.join(__dirname + '/Views/faq.html'));
 });
 
 app.get('/history', function(request, response) {
-		response.sendFile(path.join(__dirname + '/mobps_history.html'));
+		response.sendFile(path.join(__dirname + '/Views/history.html'));
 });
 
 app.get('/agb', function(request, response) {
-		response.sendFile(path.join(__dirname + '/mobps_AGB.html'));
+		response.sendFile(path.join(__dirname + '/Views/AGB.html'));
 });
 
 

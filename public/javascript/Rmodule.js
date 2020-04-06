@@ -5,7 +5,7 @@ function checkRunTime(){
 	
 	var nInd = 0;
 	var nF = 0;
-	for(let i=0;i < nodes.length; i++){
+	for(var i=0;i < nodes.length; i++){
 		if(nodes[i].Founder == 'Yes'){
 			nF = nF + parseInt(nodes[i]['Number of Individuals']);
 		}
@@ -23,7 +23,7 @@ function checkRunTime(){
 	var edges = data_Vue.edges.get();
 	var nRep = 0;
 	var nZucht = 0;
-	for(let i=0;i < edges.length; i++){
+	for(var i=0;i < edges.length; i++){
 		if(edges[i]['Breeding Type'] == 'Repeat'){
 			nRep = edges[i]['Number of Repeat'];
 		}
@@ -86,14 +86,15 @@ function runningR1(){
   
 	clearResult();
 	data_Vue.plottingData = new myPlottingData();
-	var jsondata = JSON.stringify(exportNetwork());
-	//console.log(jsondata);
+	//var jsondata = JSON.stringify(exportNetwork());
+	var jsondata = data_Vue.compareProjects;
+	console.log(jsondata);
 	//alert("Approx. simulation running time: " + Math.round(checkRunTime()/60*2.6*100)/100 + "minutes.");
 	
 	savedNodes = data_Vue.nodes.get();
 	var savedNodesLen = savedNodes.length;
 	var isFounder = "";
-	for(let i=0; i < savedNodesLen; i++){
+	for(var i=0; i < savedNodesLen; i++){
 		var checkFounder = savedNodes[i].Founder;
 		if (checkFounder == "Yes") {
 			isFounder = "Found";
@@ -163,6 +164,15 @@ function runningR1(){
 		dataType: "text",
 	});
 }
+
+
+//compareProjects to analyze in R 
+function analyzeR() {
+	data_Vue.plottingData = new myPlottingData();
+	var jsondataList = data_Vue.jsonDataList;
+	console.log(jsondataList);
+}
+
 
 function ReloadSim(){
 	var filename = data_Vue.geninfo["Project Name"];
@@ -286,14 +296,14 @@ function writeSum(){
 			var el = document.getElementById("Result_Summary");
 			el.innerHTML = "==> " + "Project <b>" + data_Vue.geninfo["Project Name"]+ "</b> successfully processed in R." + "<br/>";
 			el.innerHTML += "<br/><b>Founders: </b>" + "<br/>";
-			for(let key in data){
+			for(var key in data){
 				console.log(key);
 				if(data[key].tfounder[0]){
 					el.innerHTML += "==> Cohort <b>" + key + "</b> with " + (data[key].trep[0] - 1) + " repetitions.<br/>";
 				}
 			}
 			el.innerHTML += "<br/><b>Non-founders: </b>" + "<br/>";
-			for(let key in data){
+			for(var key in data){
 				if(!data[key].tfounder[0]){
 					el.innerHTML += "==> Cohort <b>" + key + "</b> with " + (data[key].trep[0] - 1) + " repetitions.<br/>";
 				}
@@ -317,15 +327,15 @@ function plottingResultpMean(){
 	var pType = data_Vue.plottingPar.RespMean_pType;
 	
 	var data1 = [];
-	for(let i=0; i< data_Vue.traitsinfo.length; i++){
+	for(var i=0; i< data_Vue.traitsinfo.length; i++){
 		data1.push([]);
 	}
 	
 	if(pType=="By Repeats"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// each trait:
-			for(let j=0; j< data_Vue.traitsinfo.length; j++){
+			for(var j=0; j< data_Vue.traitsinfo.length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
 					x : Object.keys(data[coh[i]]),
@@ -338,15 +348,15 @@ function plottingResultpMean(){
 	}
 	if(pType=="By Cohorts"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			var red = ((Math.floor(i/3)+1)*85)%255;
 			var green = ((Math.floor(i/6)+1)*85)%255;
 			var blue = ((i+1)*85)%255;
 			// each rep:
 			var ttimes = Object.keys(data[coh[i]]);
-			for(let k=0; k < ttimes.length; k++){
+			for(var k=0; k < ttimes.length; k++){
 				// eacht trait
-				for(let j=0; j< data_Vue.traitsinfo.length; j++){
+				for(var j=0; j< data_Vue.traitsinfo.length; j++){
 					data1[j].push({
 						y : data[coh[i]][ttimes[k]].tval[j],
 						name : coh[i]+'_'+ttimes[k],
@@ -362,9 +372,9 @@ function plottingResultpMean(){
 	}
 	if(pType=="By Time"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// each trait:
-			for(let j=0; j< data_Vue.traitsinfo.length; j++){
+			for(var j=0; j< data_Vue.traitsinfo.length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
 					x : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))}),
@@ -378,7 +388,7 @@ function plottingResultpMean(){
 		
 	//console.log(data);
 	var titles = data_Vue.traitsinfo.map(function(x){return(x['Trait Name'])});
-	for(let i=0; i < data_Vue.traitsinfo.length; i++){
+	for(var i=0; i < data_Vue.traitsinfo.length; i++){
 		var layout = {
 			title : titles[i],
 			showlegend: pType != 'By Cohorts',
@@ -494,15 +504,15 @@ function plottingResultgMean(){
 	var pType = data_Vue.plottingPar.ResgMean_pType;
 	
 	var data1 = [];
-	for(let i=0; i< data_Vue.traitsinfo.length; i++){
+	for(var i=0; i< data_Vue.traitsinfo.length; i++){
 		data1.push([]);
 	}
 	
 	if(pType=="By Repeats"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// each trait:
-			for(let j=0; j< data_Vue.traitsinfo.length; j++){
+			for(var j=0; j< data_Vue.traitsinfo.length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
 					x : Object.keys(data[coh[i]]),
@@ -515,15 +525,15 @@ function plottingResultgMean(){
 	}
 	if(pType=="By Cohorts"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			var red = ((Math.floor(i/3)+1)*85)%255;
 			var green = ((Math.floor(i/6)+1)*85)%255;
 			var blue = ((i+1)*85)%255;
 			// each rep:
 			var ttimes = Object.keys(data[coh[i]]);
-			for(let k=0; k < ttimes.length; k++){
+			for(var k=0; k < ttimes.length; k++){
 				// eacht trait
-				for(let j=0; j< data_Vue.traitsinfo.length; j++){
+				for(var j=0; j< data_Vue.traitsinfo.length; j++){
 					data1[j].push({
 						y : data[coh[i]][ttimes[k]].tval[j],
 						name : coh[i]+'_'+ttimes[k],
@@ -539,9 +549,9 @@ function plottingResultgMean(){
 	}
 	if(pType=="By Time"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// each trait:
-			for(let j=0; j< data_Vue.traitsinfo.length; j++){
+			for(var j=0; j< data_Vue.traitsinfo.length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
 					x : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))}),
@@ -554,7 +564,7 @@ function plottingResultgMean(){
 	}
 		
 	var titles = data_Vue.traitsinfo.map(function(x){return(x['Trait Name'])});
-	for(let i=0; i < data_Vue.traitsinfo.length; i++){
+	for(var i=0; i < data_Vue.traitsinfo.length; i++){
 		var layout = {
 			title : titles[i],
 			showlegend: pType != 'By Cohorts',
@@ -629,9 +639,9 @@ function plottingResultRel(){
 
 	if(pType=="By Repeats"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// each value:
-			for(let j=0; j< data1.length; j++){
+			for(var j=0; j< data1.length; j++){
 				data1[j].push({
 					y : data[coh[i]][3+j],
 					x : data[coh[i]][1],
@@ -645,17 +655,17 @@ function plottingResultRel(){
 	if(pType=="By Cohorts"){
 		var data1 = [[{}],[{}]];// Relationship and Inbreeding
 		// each cohort
-		for(let j=0; j< data1.length; j++){
+		for(var j=0; j< data1.length; j++){
 			data1[j][0].y = [];
 			data1[j][0].x = [];
 			data1[j][0].type = "bar";
-			for(let i=0; i < coh.length; i++){
+			for(var i=0; i < coh.length; i++){
 				var red = ((Math.floor(i/3)+1)*85)%255;
 				var green = ((Math.floor(i/6)+1)*85)%255;
 				var blue = ((i+1)*85)%255;
 				// each value
 				var ttimes = data[coh[i]][1];
-				for(let k=0; k< ttimes.length; k++){
+				for(var k=0; k< ttimes.length; k++){
 					data1[j][0].y.push(Number(data[coh[i]][3+j][k]));
 					data1[j][0].x.push(coh[i] +'_'+ ttimes[k]);
 				}
@@ -667,9 +677,9 @@ function plottingResultRel(){
 	}
 	if(pType=="By Time"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// each value:
-			for(let j=0; j< data1.length; j++){
+			for(var j=0; j< data1.length; j++){
 				data1[j].push({
 					y : data[coh[i]][3+j],
 					x : data[coh[i]][2],
@@ -682,7 +692,7 @@ function plottingResultRel(){
 	}
 		
 	var titles = ["Average Relationship within Cohorts", "Average Inbreeding within Cohorts"];
-	for(let i=0; i < data1.length; i++){
+	for(var i=0; i < data1.length; i++){
 		var layout = {
 			title : titles[i],
 			showlegend: pType != 'By Cohorts',
@@ -836,7 +846,7 @@ function plottingResultQTL(){
 	var data = data_Vue.plottingData.ResQTL[data_Vue.traitsinfo[trait]['Trait Name']][qtl];
 	
 	if(pType=="By Repeats"){
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// allele frequency:
 			data1[0].push({
 				y : data[coh[i]][2],
@@ -862,7 +872,7 @@ function plottingResultQTL(){
 
 	}
 	if(pType=="By Time"){
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// allele frequency:
 			data1[0].push({
 				y : data[coh[i]][2],
@@ -888,7 +898,7 @@ function plottingResultQTL(){
 	}
 	
 	var titles = ["Allele Frequency (A)", "Observed Heterozygosity", "Expected Heterozygosity"];
-	for(let i=0; i < 3; i++){
+	for(var i=0; i < 3; i++){
 		var layout = {
 			title : titles[i],
 			showlegend: true,
@@ -917,7 +927,7 @@ function plottingResultQTL(){
 function RunResultQTL(){
 	var filename = data_Vue.geninfo["Project Name"];
 	var qtl = 0;
-	for(let i=0; i< data_Vue.traitsinfo.length; i++){
+	for(var i=0; i< data_Vue.traitsinfo.length; i++){
 		qtl += data_Vue.traitsinfo[i]["Trait Major QTL"];
 	}
 	if(qtl == 0){
@@ -968,15 +978,15 @@ function plottingResultAccBVE(){
 	var pType = data_Vue.plottingPar.ResAccBVE_pType;
 	var sindex = data_Vue.selection_index;
 	var data1 = [];
-	for(let i=0;i < sindex.length; i++){
+	for(var i=0;i < sindex.length; i++){
 		data1.push([]);
 	} 
 
 	if(pType=="By Repeats"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// each value:
-			for(let j=0; j< data1.length; j++){
+			for(var j=0; j< data1.length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(Number(x.tval[j]))}),
 					x : Object.keys(data[coh[i]]),
@@ -989,18 +999,18 @@ function plottingResultAccBVE(){
 	}
 	if(pType=="By Cohorts"){
 		var data1 = [];
-		for(let i=0;i < sindex.length; i++){
+		for(var i=0;i < sindex.length; i++){
 			data1.push([{}]);
 		} // Relationship and Inbreeding
 		// each cohort
-		for(let j=0; j< data1.length; j++){
+		for(var j=0; j< data1.length; j++){
 			data1[j][0].y = [];
 			data1[j][0].x = [];
 			data1[j][0].type = "bar";
-			for(let i=0; i < coh.length; i++){
+			for(var i=0; i < coh.length; i++){
 				// each value
 				var ttimes = Object.keys(data[coh[i]]);
-				for(let k=0; k< ttimes.length; k++){
+				for(var k=0; k< ttimes.length; k++){
 					data1[j][0].y.push(Number(Object.values(data[coh[i]])[k].tval[j]));
 					data1[j][0].x.push(coh[i] + "_"+ ttimes[k]);
 				}
@@ -1012,9 +1022,9 @@ function plottingResultAccBVE(){
 	}
 	if(pType=="By Time"){
 		// each cohort
-		for(let i=0; i < coh.length; i++){
+		for(var i=0; i < coh.length; i++){
 			// each value:
-			for(let j=0; j< data1.length; j++){
+			for(var j=0; j< data1.length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(Number(x.tval[j]))}),
 					x : Object.values(data[coh[i]]).map(function(x){return(x.ttime[0])}),
@@ -1027,7 +1037,7 @@ function plottingResultAccBVE(){
 	}
 		
 	var titles = sindex.map(function(x){return(x['Name'])});
-	for(let i=0; i < data1.length; i++){
+	for(var i=0; i < data1.length; i++){
 		var layout = {
 			title : titles[i],
 			showlegend: pType != 'By Cohorts',
@@ -1105,22 +1115,22 @@ function clearResult(){
 	document.getElementById("Rout_Div").innerHTML = '';
 	document.getElementById("Result_Summary").innerHTML = '';
 	data_Vue.plottingData = new myPlottingData();
-	for(let i=0; i< data_Vue.traitsinfo.length; i++){
+	for(var i=0; i< data_Vue.traitsinfo.length; i++){
 		Plotly.purge('ResgMean_Div'+(i+1));
 	}
-	for(let i=0; i< data_Vue.traitsinfo.length; i++){
+	for(var i=0; i< data_Vue.traitsinfo.length; i++){
 		Plotly.purge('RespMean_Div'+(i+1));
 	}
-	for(let i=0; i< data_Vue.selection_index.length; i++){
+	for(var i=0; i< data_Vue.selection_index.length; i++){
 		Plotly.purge('ResAccBVE_Div'+(i+1));
 	}
-	for(let i=0; i< 2; i++){
+	for(var i=0; i< 2; i++){
 		Plotly.purge('ResRel_Div'+(i+1));
 	}
-	for(let i=0; i< 1; i++){
+	for(var i=0; i< 1; i++){
 		Plotly.purge('ResRelbetweenC_Div'+(i+1));
 	}
-	for(let i=0; i< 3; i++){
+	for(var i=0; i< 3; i++){
 		Plotly.purge('ResQTL_Div'+(i+1));
 	}
 	data_Vue.runned=false;

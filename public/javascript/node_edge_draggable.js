@@ -35,3 +35,8 @@ function dragElement(elmnt) {
     document.onmousemove = null;
   }
 }
+
+		//<script type="text/javascript">
+	//	var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+		//alert(isSafari);
+		//</script>
