@@ -82,7 +82,7 @@
 					&nbsp;&nbsp;
 					<button v-if="isBrowserSafari !== true" class='bar_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a v-if="geninfo['curUserGroup'] == 4" href="http://mobps.de/compareProjects" class ="additional_link">MoBPS Compare Projects</a> 
+					<a v-if="curUserGroup =='4'" href="http://mobps.de/compareProjects" class ="additional_link">MoBPS Compare Projects</a> 
 				</div>
 			</div>
 			<div id='SaveAs_Div'>
@@ -1309,7 +1309,7 @@
 				</div>
 			</div>
 
-			<div id="node-popUp" onchange="checkEverything(this.id)">
+			<div id="node-popUp" onclick="checkEverything(this.id)">
 				<div id="node-popUpheader"> 
 					<h3> {{node_operation}} </h3> <h6> Drag Node in this Area! </h6> 
 					<h4> Node {{ active_node.id }}</h4> <h6> </h6>
@@ -1446,7 +1446,7 @@
 				<input class='button_type' type="button" value="save" id="node-saveButton" />
 				<input class='button_type' type="button" value="cancel" id="node-cancelButton" />
 			</div>
-			<div id="edge-popUp" onchange="checkEverything(this.id)">
+			<div id="edge-popUp" onclick="checkEverything(this.id)">
 				
 				<div id="edge-popUpheader"> 
 					<h3> {{edge_operation}} </h3><h6> Drag Edge in this Area! </h6><br>
@@ -1790,11 +1790,11 @@
 					<thead>
 						<tr><th><div style="width:160px;"> Cohort Name </div></th>
 							<th>Nr. of Individuals </th>
-							<th>Time-Point </th>
-							<th>Total Costs </th>
-							<th>Cost G.typing </th>
-							<th>Cost P.typing </th>
-							<th>Cost Housing </th>
+							<th>Time point </th>
+							<th>Total csts </th>
+							<th>Cost genotyping </th>
+							<th>Cost phenotyping </th>
+							<th>Cost housing </th>
 						</tr>
 						</thead>
 						<tbody>

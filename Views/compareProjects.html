@@ -45,20 +45,6 @@
 			</div>
 		</div>
 			
-		<div id="mySidebar" class="sidebar">
-			<div id="closeDiv">
-				<button onclick="closeNav()" class="closebtn"> Navigation Close </button>
-			</div>  
-				<a>&nbsp;</a>
-					<a href="#General_Info">General information</a>
-					<a href="#Phenotype_Info_Div">Phenotype information</a>
-					<a href="#Selectionindex_Div">Optional information</a>
-					<a href="#Breeding_Scheme">Breeding Scheme</a>
-					<a href="#Results_Div">R Simulation/ Results</a>
-					<a href="#Export_Data_H3">Export/ Import</a>
-					<a href="/logout"> User: {{user}} <br> Logout</a>
-					<a v-if="cpInfo['curUserGroup'] != 1" href="/Change_Password"> Change Password</a>
-			</div>
 
 			<div id="main">
 				<div id="openDiv">
@@ -83,14 +69,26 @@
 				</div>
     	
 	        	<br>
-				<div v-if = "compareProjects" id="Results_Div">
-					<h3 id="RSim"></h3>
-					<h3>Analyze with R</h3>
-					<p>Click on button 'Analyze' to run R.</p>
-					<button onclick="analyzeR(); " >Analyze</button>				
-					<br>				
-				</div>						
-			</div>
+				
+					<h4>Results: True Breeding Values</h4>
+					<button v-if="plottingData.ResgMeanGroup == ''" onclick="RunResultgMeanGroup()" >Run Analysis</button>
+					<template v-if="plottingData.ResgMeanGroup != ''">
+						Select plotting type:
+						<select v-model="plottingPar.ResgMeanGroup_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }}
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible): 
+						<!--select v-model="plottingPar.ResgMean_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+						<button onclick="plottingResultgMean()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResgMeanGroup_cohorts" :searchable="true" style="width:800px"/>
+					</template>
 	</div>
 	</body>
 

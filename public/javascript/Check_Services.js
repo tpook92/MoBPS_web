@@ -655,38 +655,38 @@ function checkEverything(id){
 	
 	function economyWarning() {
 	
-		gen_warn_text = "Please enter Fixed Cost must be a number between 0 and 100.";
+		gen_warn_text = "Fixed costs are negative!";
 		
 		curFixedCost = data_Vue.economy['Fixed Cost'];
 		console.log(curFixedCost);
 
-		if(((!curFixedCost & curFixedCost !=0) || curFixedCost < 0 || curFixedCost > 100 || isNaN(curFixedCost)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
+		if(((!curFixedCost & curFixedCost !=0) || curFixedCost < 0 || isNaN(curFixedCost)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings.push(gen_warn_text);
 			console.log('empty'+curFixedCost);
 		}
-		else if((curFixedCost != "" & curFixedCost >= 0 & curFixedCost <= 100) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
+		else if((curFixedCost != "" & curFixedCost >= 0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
 			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
 		}
 		
-		gen_warn_text = "Please enter Interest Rate must be a number.";
+		gen_warn_text = "Invalid Interest Rate provided. Assume interest of 0 percent.";
 		curInt = data_Vue.economy['Interest Rate'];	
 
-		if(((!curInt & curInt !=0) || curInt < 0 || curInt > 100 || isNaN(curInt)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
+		if(((!curInt & curInt !=0) || curInt < (-100) || isNaN(curInt)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings.push(gen_warn_text);
 			console.log('empty'+curInt);
 		}
-		else if((curInt != "" & curInt >= 0 & curInt <= 100) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
+		else if((curInt != "" & curInt >= (-100) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
 			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
 		}
 		
-		gen_warn_text = "Please enter Genotyping Cost must be a number. Cost must be less than 100 euros";
+		gen_warn_text = "Genotyping costs are negative / not entered!";
 		curGenoType = data_Vue.economy['Genotyping Cost'];
 
-		if(((!curGenoType & curGenoType !=0) || curGenoType < 0 || curGenoType > 100 || isNaN(curGenoType)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
+		if(((!curGenoType & curGenoType !=0) || curGenoType < 0 || isNaN(curGenoType)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings.push(gen_warn_text);
 			console.log('empty'+curInt);
 		}
-		else if((curGenoType != "" & curGenoType >= 0 & curGenoType <= 100) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
+		else if((curGenoType != "" & curGenoType >= 0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
 			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
 		}		
 		
@@ -702,7 +702,7 @@ function animalHousingCost() {
 			thisCost = thisAnimalHousingCosts[i]['Cost'];
 			nameOfCost = thisAnimalHousingCosts[i]['Name'];
 
-			gen_warn_text = nameOfCost+" : "+"Please enter Animal Housing Cost and must be a number.";
+			gen_warn_text = "Housing costs for class " + nameOfCost + " are negative / not entered!";
 
 			if(((thisCost =="" & thisCost !=0) || thisCost <0 || isNaN(thisCost)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
 				data_Vue.warnings.push(gen_warn_text);

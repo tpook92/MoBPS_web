@@ -1867,6 +1867,7 @@ function saveNodeData(data, callback) {
 		clearNodePopUp();
 		callback(data);
 	}
+	
 }
 
 function editEdgeWithoutDrag(data, callback) {
