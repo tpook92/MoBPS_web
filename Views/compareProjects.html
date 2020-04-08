@@ -9,13 +9,24 @@
 		
 	<head>
 		<title>MoBPS</title>
-		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
 		
+		<script src="https://unpkg.com/vue-slider"></script>
+			
+		<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
+    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
+		
 		<!-- for plotting graphs: -->
 		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+		<script type="text/javascript" src="https://visjs.github.io/vis-network/dist/vis-network.min.js" ></script>
+		<script type="text/javascript" src="https://visjs.github.io/vis-network/examples/network/exampleUtil.js"></script>
+		<link src="https://visjs.github.io/vis-network/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+		
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
 
 		<link rel="stylesheet" type="text/css" href="./styles/mobps.css">
 	
@@ -24,7 +35,15 @@
 		<script type="text/javascript" src="javascript/jQ2.js"></script>
 		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
 		<script type="text/javascript" src="javascript/jQ3.js"></script>
-	
+		
+		<!-- excel to json related files -->
+		<script lang="javascript" src="javascript/jszip_excelToArray.js"></script>
+		<script lang="javascript" src="javascript/xlsx_excelToArray.js"></script>
+		<script lang="javascript" src="javascript/excelToArray.js"></script>
+		
+		<!-- for drag and drop for Phenotype table -->	
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.16.0/vuedraggable.min.js"></script>	
 	</head>
 
 	<body onload="init();">		
@@ -71,7 +90,7 @@
 	        	<br>
 				
 					<h4>Results: True Breeding Values</h4>
-					<button v-if="plottingData.ResgMeanGroup == ''" onclick="RunResultgMeanGroup()" >Run Analysis</button>
+					<button onclick="RunResultgMeanGroup()" >Run Analysis</button>
 					<template v-if="plottingData.ResgMeanGroup != ''">
 						Select plotting type:
 						<select v-model="plottingPar.ResgMeanGroup_pType" >
@@ -89,6 +108,7 @@
 						<button onclick="plottingResultgMean()" >Plot Results</button>
 						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResgMeanGroup_cohorts" :searchable="true" style="width:800px"/>
 					</template>
+	</div>
 	</div>
 	</body>
 

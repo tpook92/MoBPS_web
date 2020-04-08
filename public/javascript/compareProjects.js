@@ -1,3 +1,5 @@
+Vue.component('treeselect', VueTreeselect.Treeselect);
+
 function cpInfo () {
 	this['curUserGroup'] = '';
 }
@@ -46,7 +48,10 @@ var data_Vue = new Vue({
 		plottingData: new myPlottingData(),
 		socket: '',
 		curUserGroup:'',
-		isBrowserSafari:'',		
+		isBrowserSafari:'',
+		plottingType: ["By Repeats", "By Cohorts", "By Time"],
+		plottingType2: ["By Repeats", "By Time"],
+		Summary: [],		
 	}
 	
 })

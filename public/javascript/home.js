@@ -241,7 +241,7 @@ var data_Vue = new Vue({
 		selection_index_scaling : [{'Name': 'Default Index', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}, {'Name': 'Non', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}],
 		phenotyping_class : [{'Name': 'Fully phenotyped', 'Cost of phenotyping': 0}, {'Name': 'Not phenotyped', 'Cost of phenotyping': 0}],
 		phenotype_options: ['Own phenotype', 'Avg. offspring phenotype', 'Mean own/offspring phenotype', 'Weighted own/offspring phenotype'],
-		show_warnings: false,
+		show_warnings: true,
 		warnings: [],
 		runned: false,
 		genetic_data:'Ens',
@@ -264,6 +264,7 @@ var data_Vue = new Vue({
 		isBrowserSafari:'',
 		isDraggableOption:'',
 		cohortsList :[],
+		cohortsTimeList : [],
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -272,7 +273,7 @@ var data_Vue = new Vue({
 		active_edge:  new myEdge(),
 		node_operation: '',
 		edge_operation: '',
-		Sex_options: ['Male', 'Female'],
+		Sex_options: ['Male', 'Female', 'Both', 'Indefinit'],
 		Sex_options2: ['Male', 'Female', 'Both'],
 		node_colors: {'Male':'#9acef4', 'Female':'#f29595', 'Both':'#ddd264'},
 		edge_colors: {'Selection':'#7bbb44', 'Reproduction':'#f5a623', 'Aging':'#dba59a', 'Combine':'#5a4f7c', 'Repeat':'#f14235', 'Split': '#94db8e', 'Cloning':'#aa76fd', 'Selfing':'#ff90b7', 'DH-Production':'#aa76fd'},
@@ -1399,6 +1400,7 @@ function importNetwork_intern(inputData1) {
 		data_Vue.matrix2 = [];		
 	}
 	loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
+	loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
 	
 	draw();
 	console.log("Loading Data successful.");
@@ -1422,6 +1424,22 @@ function loadCohortInfoFromServer(name) {
 				data_Vue.cohortsList = csvToJSON(data);
 				console.log(data_Vue.cohortsList);
 				return data_Vue.cohortsList;
+				}
+			}		
+	})
+}
+
+//function to Load Coghort information from Server
+function loadCohortTimeInfoFromServer(name) {
+	$.ajax
+	({
+		type: "GET",
+		url: '/getCohortTimeInfo',
+		success: function (data) {
+			if (data != '') {
+				data_Vue.cohortsTimeList = csvToJSON(data);
+				console.log(data_Vue.cohortsTimeList);
+				return data_Vue.cohortsTimeList;
 				}
 			}		
 	})
@@ -1765,12 +1783,23 @@ function addNode_extern(data) {
 }
 
 function saveNodeData(data, callback) {
+
+	
 	var old_id = data.id;
+
 	data = data_Vue.active_node;
+	
+	change_id = data.id;
+	change_id = change_id.replace("_","-");
+	data.id = change_id;
+	
 	//data.label = data.id;
 	var myInd = JSON.stringify(data['Number of Individuals']).replace(/\"/g, "");
 	//data.label = data.id+'\n'+myInd;
 	data.label = data.id+" ("+myInd+")";
+	if(data.Founder == "Yes"){
+		data.label = data.label + " *F"
+	}
 	data.color = data_Vue.node_color;
 	data.title = data_Vue.node_title;
 	if(data['Sex'] != "Both"){

@@ -10,7 +10,8 @@ path <- "./Rmodules/UserScripts/"
 arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle", "Simple_Cattle2")
 user <- arg[1]
-filename <- arg[2:length(arg)]
+#filename <- arg[2:length(arg)]
+filename <- unlist(strsplit(arg[2], split=","))
 #cohorts <- fromJSON(arg[3])
 
 gMeanTotal <- list()

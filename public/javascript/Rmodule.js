@@ -152,6 +152,76 @@ function runningR1(){
 }
 
 
+//Running R with streaming
+function runningR2(){
+	clearResult();
+	data_Vue.plottingData = new myPlottingData();
+	var jsondata = JSON.stringify(exportNetwork());
+	//console.log(jsondata);
+	//alert("Approx. simulation running time: " + Math.round(checkRunTime()/60*2.6*100)/100 + "minutes.");
+	savedNodes = data_Vue.nodes.get();
+	var savedNodesLen = savedNodes.length;
+	var isFounder = "";
+	for(var i=0; i < savedNodesLen; i++){
+		var checkFounder = savedNodes[i].Founder;
+		if (checkFounder == "Yes") {
+			isFounder = "Found";
+		}
+	}
+	if(isFounder == ""){
+		alert("There is no Founder in the Project. Please add a Founder!");
+	}		
+	$.ajax
+	({
+		type: "POST",
+		url: './Rsim2',
+		data: {jsondata : jsondata},
+		beforeSend: function() {
+			document.getElementById("runningDogTitle").innerHTML = 'MoBPS is running .... please wait';
+			document.getElementById("runningDog").style.visibility = 'visible';
+			if(data_Vue.socket == ''){
+				data_Vue.socket = io();
+				data_Vue.socket.on(data_Vue.user, function(d){
+					document.getElementById("runningDogLog").innerHTML += d + "<br>";
+				})
+			}
+			//alert("Now Sending!");
+		},
+		success: function (data, msg) {
+			//console.log(data);
+			document.getElementById("Rout_Div").innerHTML = data;
+			where = document.getElementById("Rout_Div").innerHTML.indexOf("Execution");
+			where2 = document.getElementById("Rout_Div").innerHTML.indexOf("exceeds your");
+			where3 = document.getElementById("Rout_Div").innerHTML.indexOf("run simulations");
+			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/Error/g, "<span style=\"color:red\">Error</span>");
+			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/\n/g, "<br/>");
+			if(where == -1){
+				alert("Simulation Finished successfully!");
+			} else if(where3 > (-1)){
+				alert("This account has no permission to run simulations in R!")
+			} else if(where2> (-1)){
+				alert("Limited of cores exceeded! Adapt parallel computing settings!")
+			} else{
+				alert("Your Simulation failed! Check your inputs and potential warnings!");
+			}
+			data_Vue.runned = true;
+			writeSum();
+		},
+		error: function(obj, msg, err)
+		{
+			alert("Simulation failed!");
+			alert(err);
+		},
+		complete: function(obj, msg){
+			document.getElementById("runningDog").style.visibility = 'hidden';
+			document.getElementById("runningDogLog").innerHTML = '';
+			//alert(msg);
+			//console.log(obj);
+		},
+		dataType: "text",
+	});
+}
+
 //compareProjects to analyze in R 
 function analyzeR() {
 	data_Vue.plottingData = new myPlottingData();
@@ -615,6 +685,46 @@ function RunResultgMean(){
 	});
 }
 
+
+function RunResultgMeanGroup(){
+	var filename = data_Vue.compareProjects;
+	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
+	
+	$.ajax
+	({
+		type: "POST",
+		url: './RsimResult',
+		data: {
+			filename : filename,
+			script: "gMeanGroup"
+			},
+		beforeSend: function() {
+			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for genomic breeding values...';
+			document.getElementById("runningDog").style.visibility = 'visible';
+			//alert("Now Sending!");
+		},
+		success: function (data, msg) {
+			if(data != ''){
+				//console.log(data);
+				data_Vue.plottingData.ResgMean = JSON.parse(data);
+				//plottingResultgMean(JSON.parse(data));
+			}else{
+				alert("Failed to plot KS. Please run the Simulation first!");
+			}
+		},
+		failure: function(msg) 
+		{
+			alert("Failed to plot KS. Please run the Simulation first!");
+		},
+		complete: function(obj, msg){
+			document.getElementById("runningDog").style.visibility = 'hidden';
+			//document.getElementById("runningDog").innerHTML = '';
+			//alert(msg);
+			//console.log(obj);
+		},
+		dataType: "text",
+	});
+}
 
 // ---- Plotting Relationship:
 function plottingResultRel(){

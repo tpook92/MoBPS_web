@@ -241,6 +241,51 @@ app.post('/Rsim1', function(request, response) {
 	}
 });
 
+// Run R simulation Test with spawn:
+app.post('/Rsim2', function(request, response) {
+	
+	request.setTimeout(5*24*60*60*1000);
+
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Rsim2.r') + " --args "+request.session.username+" "+ JSON.stringify(request.body.jsondata) +"";
+	console.log(command);
+	
+	fs.writeFile(path.join(__dirname + '/Rmodules/UserScripts/'+ request.session.username+ '.sh'), command, function(err){
+		if(err) console.log(err);
+		exec("chmod 777 "+ path.join(__dirname + '/Rmodules/UserScripts/'+ request.session.username+ '.sh'),function(err, stdout, stderr){
+			if(err){
+				console.log(err);
+			}else{
+				startR();
+			}
+		})
+	});
+		
+	startR = function(){
+
+			const ps = spawn(path.join(__dirname + '/Rmodules/UserScripts/'+ request.session.username+ '.sh'));
+			//ps.stdout.pipe(response);
+			ps.stdout.on('data', function(data){
+				//console.log(data.toString());
+				response.write(data, 'utf-8');
+				io.emit(request.session.username, data.toString());
+			});	
+			ps.stderr.on('data', function(data){
+				//console.log(data.toString());
+				response.write(data, 'utf-8');
+			});	
+			ps.on('close', function(code){
+			  if (code !== 0) {
+				console.log('ps process exited with code ${code}');
+			  }
+			  io.data = '';
+			  response.end();
+			});
+	
+	}
+});
+
+
+
 // Run R simulation:
 app.post('/StopR', function(request, response) {
 	
@@ -398,6 +443,21 @@ app.get('/Exceldownload', function(request, res){
 app.get('/getCohortInfo', function(request, res){	
 	if (request.session.filename) {
 		var Excelfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'.csv');
+		fs.readFile(Excelfile, function(err, data){
+			if(err){
+				var message = 'Have not found any Excel file for the requested Project of ' + request.session.filename  +'. Please finish R Simulation successfully and then you could see Cohort Information here.';
+				res.send(message);
+			}else{
+			res.send(data);
+			}
+			});
+	}
+});
+
+// Get Excel file -- Cohort time information to display in the interface
+app.get('/getCohortTimeInfo', function(request, res){	
+	if (request.session.filename) {
+		var Excelfile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'_time.csv');
 		fs.readFile(Excelfile, function(err, data){
 			if(err){
 				var message = 'Have not found any Excel file for the requested Project of ' + request.session.filename  +'. Please finish R Simulation successfully and then you could see Cohort Information here.';

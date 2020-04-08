@@ -71,13 +71,24 @@ function checkEverything(id){
 		}                            
 		else if (data_Vue.genetic_data != "Cus" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
 			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-		}                            
+		}                  
+
+
 
 
 		thisChromoLen = data_Vue.geninfo['Chromosomes of Equal Length'];
 	        thisChromoNum = data_Vue.geninfo['Chromosomes Info'].length;
 	
         	if (thisChromoNum > 0 ) {
+				
+			gen_warn_text = "Simulation contains more than 1.000.000 SNPs! Check if that is needed!";
+
+			if(data_Vue.geninfo["Chromosomes Info"][0].Length * data_Vue.geninfo["Chromosomes Info"][0].MD >= 1000000){
+				data_Vue.warnings1.push(gen_warn_text);
+			} else{
+				data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
+			}	
+			
 			for (i=0; i<thisChromoNum; i++) {
 			gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes Length and must be in number.";
 			if((!data_Vue.geninfo['Chromosomes Info'][i]['Length'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Length']) || data_Vue.geninfo['Chromosomes Info'][i]['Length'] < 0 ) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
@@ -132,7 +143,7 @@ function checkEverything(id){
 		if (phenoLength > 0 ) {
 		for (i=0; i<phenoLength; i++)
 			{
-				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Phenotype Name.";
+				gen_warn_text = "No trait name provided for phenotype "+(i+1);
 				if(!data_Vue.traitsinfo[i]['Trait Name']  & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 					}
@@ -140,7 +151,7 @@ function checkEverything(id){
 					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}	
 				
-				gen_warn_text = "Pheno "+(i+1)+": Please enter Phenotype Mean and must be in number.";
+				gen_warn_text = "No phenotypic mean provided for phenotype "+(i+1);
 				if((!data_Vue.traitsinfo[i]['Trait Mean'] || isNaN(data_Vue.traitsinfo[i]['Trait Mean'])) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
@@ -148,7 +159,7 @@ function checkEverything(id){
 					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}	
 
-				gen_warn_text = "Pheno "+(i+1)+" : "+"Please enter Phenotype Standard deviation and must be a Positive number.";
+				gen_warn_text = "No phenotypic standard deviation provided for phenotype "+(i+1);
 				thisStdDev = data_Vue.traitsinfo[i]['Trait Std Deviation'];
 
 				if ((!thisStdDev || isNaN(thisStdDev) || thisStdDev < 0)  & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
@@ -158,7 +169,7 @@ function checkEverything(id){
 					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1); 
 				}	
 		
-				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Trait Heritability and must be a number between 0 and 1. ";
+				gen_warn_text = "Heritability for phenotype"+(i+1)+" must be between 0 and 1";
 				if((!data_Vue.traitsinfo[i]['Trait Heritability'] || data_Vue.traitsinfo[i]['Trait Heritability'] < 0 ||  data_Vue.traitsinfo[i]['Trait Heritability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
@@ -166,8 +177,34 @@ function checkEverything(id){
 					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}
 
+				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].dominant_qtl);
+				gen_warn_text = "Number of dominant QTL not provided for phenotype"+(i+1)
+				if(data_Vue.geninfo.advanced_trait & (!data_Vue.traitsinfo[i].dominant_qtl || data_Vue.traitsinfo[i].dominant_qtl < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
+				}
+				else if ((data_Vue.traitsinfo[i].dominant_qtl != "" & data_Vue.traitsinfo[i].dominant_qtl > 0 & checkPoly == true) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
+				}
+				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].qualitative_qtl);
+				gen_warn_text = "Number of qualitative epistatic QTL not provided for phenotype"+(i+1)
+				if(data_Vue.geninfo.advanced_trait&(!data_Vue.traitsinfo[i].qualitative_qtl || data_Vue.traitsinfo[i].qualitative_qtl < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
+				}
+				else if ((data_Vue.traitsinfo[i].qualitative_qtl != "" & data_Vue.traitsinfo[i].qualitative_qtl > 0 & checkPoly == true) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
+				}
+				
+				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].quantitative_qtl);
+				gen_warn_text = "Number of quantitative epistatic QTL not provided for phenotype"+(i+1)
+				if((data_Vue.geninfo.advanced_trait & !data_Vue.traitsinfo[i].quantitative_qtl || data_Vue.traitsinfo[i].quantitative_qtl < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
+				}
+				else if ((data_Vue.traitsinfo[i].quantitative_qtl != "" & data_Vue.traitsinfo[i].quantitative_qtl > 0 & checkPoly == true) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
+					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
+				}
+				
 				checkPoly = isPositiveInt(data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci']);
-				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter polygenic loci and must be a Number.";
+				gen_warn_text = "Number of purely additive QTL not provided for phenotype"+(i+1)
 				if((!data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] || data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
@@ -253,6 +290,7 @@ function checkEverything(id){
 	}
 	
 	
+
 	if(id == "edge-popUp" || id == "node-popUp"){
 		
 		data_Vue.warnings4 = [];
@@ -289,6 +327,16 @@ function checkEverything(id){
 				
 				gen_warn_text = "Share of male individuals in " + active_node['id'] + " must be between 0 and 1.";
 				if((active_node['Sex'] == "Both" & (!active_node['Proportion of Male'] || active_node['Proportion of Male'] < 0 || active_node['Proportion of Male']  > 1)) & data_Vue.warnings4.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings4.push(gen_warn_text);
+				}
+				
+				gen_warn_text = "Node " + active_node['id'] + " only contains male individuals. Adapt chosen sex!";
+				if((active_node['Sex'] == "Both" & (!active_node['Proportion of Male'] || active_node['Proportion of Male']  == 1)) & data_Vue.warnings4.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings4.push(gen_warn_text);
+				}
+				
+				gen_warn_text = "Node " + active_node['id'] + " only contains female individuals. Adapt chosen sex!";
+				if((active_node['Sex'] == "Both" & (!active_node['Proportion of Male'] || active_node['Proportion of Male']  == 0)) & data_Vue.warnings4.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings4.push(gen_warn_text);
 				}
 				
@@ -364,7 +412,7 @@ function checkEverything(id){
 					}
 				}
 				if(edge_type[i] =="Selection" || edge_type[i] == "Aging" || edge_type[i] == "Split"){
-					if(nodes[edge_nrfrom[i]]['Sex']!=nodes[edge_nrto[i]]['Sex']){
+					if(nodes[edge_nrfrom[i]]['Sex']!=nodes[edge_nrto[i]]['Sex'] & nodes[edge_nrto[i]]['Sex'] != "Both"){
 						gen_warn_text = "Different sex between nodes " + edge_to[i] + " and " + edge_from[i];
 						data_Vue.warnings5.push(gen_warn_text);
 					}
@@ -542,7 +590,7 @@ function checkEverything(id){
 			for(var j=0; j < data_Vue.matrix[i].row.length; j++){
 				curMatVal = data_Vue.matrix[i].row[j].val;	
 					
-				gen_warn_text = data_Vue.traitsinfo[i]['Trait Name']+"-"+data_Vue.traitsinfo[j]['Trait Name']+":Please enter Phenotypic Correlation and must be a number between -1 and 1 ";
+				gen_warn_text = data_Vue.traitsinfo[i]['Trait Name']+"-"+data_Vue.traitsinfo[j]['Trait Name']+": Phenotypic Correlation must be between -1 and 1 ";
 
 				if (((!curMatVal & curMatVal == "" & curMatVal !="0") || curMatVal <-1 || curMatVal > 1 || isNaN(curMatVal)) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings.push(gen_warn_text);
@@ -562,7 +610,7 @@ function checkEverything(id){
 				for(var j=0; j < data_Vue.matrix2[i].row.length; j++){
 					curMatVal2 = data_Vue.matrix2[i].row[j].val;	
 
-					gen_warn_text = data_Vue.traitsinfo[i]['Trait Name']+"-"+data_Vue.traitsinfo[j]['Trait Name']+":Please enter Genetic Correlation and must be a number between -1 and 1 ";
+					gen_warn_text = data_Vue.traitsinfo[i]['Trait Name']+"-"+data_Vue.traitsinfo[j]['Trait Name']+": Genetic Correlation must be between -1 and 1 ";
 					
 					if (((!curMatVal2 & curMatVal2 == "" & curMatVal2 !="0") || curMatVal2 <-1 || curMatVal2 > 1 || isNaN(curMatVal2)) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
 						data_Vue.warnings.push(gen_warn_text);
@@ -646,6 +694,8 @@ function checkEverything(id){
 				else if ((pVar != null & pVar >= 0 & checkpVar == true & checkPospVar == true) & data_Vue.warnings.indexOf(gen_warn_text) > -1) {
 					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
 				}
+				
+
 			}
 			}             
 		}
@@ -675,7 +725,7 @@ function checkEverything(id){
 			data_Vue.warnings.push(gen_warn_text);
 			console.log('empty'+curInt);
 		}
-		else if((curInt != "" & curInt >= (-100) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
+		else if((curInt != "" & curInt >= (-100) & data_Vue.warnings.indexOf(gen_warn_text) > -1)){
 			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
 		}
 		

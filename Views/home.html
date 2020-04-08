@@ -1294,7 +1294,7 @@
 					<p> Copy Node : Select a Node -> Right Click.</p>					
 				</div> 
 				
-				<h4 style="color: red">Important: Please AVOID node names with : and _ . In particular avoid trailing numbers like ABC_1. Repeated nodes will use this syntax!</h4>
+
 				<div id="mynetwork_container" >
 					<div id="mynetwork_label">
 						<h4>Legends</h4><br>
@@ -1750,7 +1750,17 @@
 				<br>
 				<h3>Analyze Breeding Program with R</h3>
 				<p>Click on button 'Start R Simulation' to run R.</p>
-				<button onclick="runningR1(); " >Start R Simulation</button>
+				
+				<h4 style="color: red" v-if="warnings.length > 0"> Please check warnings before running the simulation!</h4>
+				<button v-if="isBrowserSafari !== true & warnings.length > 0" v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+				<button onclick="runningR1(); " v-if="warnings.length > 0">Start R Simulation (despite warnings!)</button>
+				<button onclick="runningR1(); " v-if="warnings.length == 0">Start R Simulation</button>
+				<br>
+				<br>
+				<p> Click here to estimate computing time / costs of your breeding program </p>
+				<button onclick="runningR2(); " v-if="warnings.length == 0">Estimate time/cost (in prep.)</button>
+				
+				<br>
 				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
 				<button onclick="ReloadSim(); " >Reload Old Results</button>	
 				<br>
@@ -1786,30 +1796,55 @@
 				<br>
 				<p class="boldText">Cohorts List : </p>
 				<div v-if="cohortsList.length >0" class="cohortListHead">
-				<table>
-					<thead>
-						<tr><th><div style="width:160px;"> Cohort Name </div></th>
-							<th>Nr. of Individuals </th>
-							<th>Time point </th>
-							<th>Total csts </th>
-							<th>Cost genotyping </th>
-							<th>Cost phenotyping </th>
-							<th>Cost housing </th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr v-for='(cohorts, index) in cohortsList' >
-							<td> <input v-model="cohorts['Cohort name']" style="border:0;width:175px;text-align:left;"></td>
-							<td> <input v-model="cohorts['Nr. of individuals']"> </td>
-							<td> <input v-model="cohorts['Time-point']"> </td>
-							<td> <input v-model="cohorts['Total costs']"> </td>
-							<td> <input v-model="cohorts['Cost genotyping']"> </td>
-							<td> <input v-model="cohorts['Cost phenotyping']"> </td>
-							<td> <input v-model="cohorts['Cost housing']"> </td>				
-						</tr>
-				</table>
-				<br>
+					<table>
+						<thead>
+							<tr><th><div style="width:160px;"> Cohort Name </div></th>
+								<th>Nr. of Individuals </th>
+								<th>Time point </th>
+								<th>Total csts </th>
+								<th>Cost genotyping </th>
+								<th>Cost phenotyping </th>
+								<th>Cost housing </th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr v-for='(cohorts, index) in cohortsList' >
+								<td> <input v-model="cohorts['Cohort name']" style="border:0;width:175px;text-align:left;"></td>
+								<td> <input v-model="cohorts['Nr. of individuals']"> </td>
+								<td> <input v-model="cohorts['Time-point']"> </td>
+								<td> <input v-model="cohorts['Total costs']"> </td>
+								<td> <input v-model="cohorts['Cost genotyping']"> </td>
+								<td> <input v-model="cohorts['Cost phenotyping']"> </td>
+								<td> <input v-model="cohorts['Cost housing']"> </td>				
+							</tr>
+					</table>
+
 				</div>
+				<br>
+				<br>
+				
+				<p class="boldText">Computing time estimates : </p>
+				<div v-if="cohortsTimeList.length >0" class="cohortListHead">
+					<table>
+						<thead>
+							<tr><th><div style="width:160px;"> Cohort Name </div></th>
+								<th>computing BVE </th>
+								<th>computing generation </th>
+								<th>computing TOTAL </th>
+
+							</tr>
+							</thead>
+							<tbody>
+							<tr v-for='(cohorts, index) in cohortsTimeList' >
+								<td> <input v-model="cohorts['Cohort name']" style="border:0;width:175px;text-align:left;"></td>
+								<td> <input v-model="cohorts['BVEtime']"> </td>
+								<td> <input v-model="cohorts['Gentime']"> </td>
+								<td> <input v-model="cohorts['Totaltime']"> </td>			
+							</tr>
+					</table>
+
+				</div>
+				
 				<br>
 				<br>
 				<p v-if="cohortsList.length >0" class="boldText"> Download CSV file: 
