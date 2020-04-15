@@ -64,10 +64,10 @@ for(project in 1:length(filename)){
       for(i in 1:nrow(coh)){
         ani <- NULL
         if(coh[i,3] != 0){
-          ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[7]][,as.numeric(coh[i,6]):(as.numeric(coh[i,6])+as.numeric(coh[i,3])-1), drop=FALSE])
+          ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[9]][,as.numeric(coh[i,6]):(as.numeric(coh[i,6])+as.numeric(coh[i,3])-1), drop=FALSE])
         }
         if(coh[i,4] != 0){
-          ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[8]][,as.numeric(coh[i,7]):(as.numeric(coh[i,7])+as.numeric(coh[i,4])-1), drop=FALSE])
+          ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[10]][,as.numeric(coh[i,7]):(as.numeric(coh[i,7])+as.numeric(coh[i,4])-1), drop=FALSE])
         }
         if(length(gMean[[ttnames[i]]][[as.character(ttrep[i])]])==0){
           gMean[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=rowMeans(ani))
@@ -84,10 +84,10 @@ for(project in 1:length(filename)){
     for(i in 1:nrow(coh)){
       ani <- NULL
       if(coh[i,3] != 0){
-        ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[7]][,as.numeric(coh[i,6]):(as.numeric(coh[i,6])+as.numeric(coh[i,3])-1), drop=FALSE])
+        ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[9]][,as.numeric(coh[i,6]):(as.numeric(coh[i,6])+as.numeric(coh[i,3])-1), drop=FALSE])
       }
       if(coh[i,4] != 0){
-        ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[8]][,as.numeric(coh[i,7]):(as.numeric(coh[i,7])+as.numeric(coh[i,4])-1), drop=FALSE])
+        ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[10]][,as.numeric(coh[i,7]):(as.numeric(coh[i,7])+as.numeric(coh[i,4])-1), drop=FALSE])
       }
       gMean[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=ani)
     }
@@ -109,7 +109,7 @@ result <- gMeanTotal
 #class(dat) <- "list"
 
 json <- as.character(toJSON(result))
-write.table(json, file=paste(path,user,"_","Compare_","gMeanGroup.json",sep=""), row.names=FALSE, col.names=FALSE, quote=FALSE)
+write.table(json, file=paste(path,user,"_","Compare_","pMeanGroup.json",sep=""), row.names=FALSE, col.names=FALSE, quote=FALSE)
 
 
 

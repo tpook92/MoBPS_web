@@ -18,6 +18,7 @@ filename <- unlist(strsplit(arg[2], split=","))
 gMeanTotal <- list()
 
 join_summary <- list()
+resultsTotal <- NULL
 for(project in 1:length(filename)){
   temp1 <- read_json(paste(path,user,"_",filename[project],"Summary.json",sep=""))
   for(index in 1:length(temp1)){
@@ -58,58 +59,60 @@ for(project in 1:length(filename)){
   avail <- suppressWarnings(unique(c(NA,as.numeric(filesnames)))[-1])
 
   if(length(avail)>1){
-    gMean <- list()
     for(index in avail){
-      load(paste(path,user,"_",filename[project], index, ".RData",sep=""))
-      for(i in 1:nrow(coh)){
-        ani <- NULL
-        if(coh[i,3] != 0){
-          ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[7]][,as.numeric(coh[i,6]):(as.numeric(coh[i,6])+as.numeric(coh[i,3])-1), drop=FALSE])
+      print(index)
+      load(paste(path,user,"_",filename, index, ".RData",sep=""))
+      ttkinship <- NULL
+      ncore <- min(10, nrow(coh))
+      doParallel::registerDoParallel(cores=ncore)
+      library(doParallel)
+      ttkinship <- foreach::foreach(rep=1:nrow(coh), .packages = "MoBPS", .combine = "rbind") %dopar% {
+        if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1){
+          out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 50)
+        }else{
+          out <- c(0,0.5)
         }
-        if(coh[i,4] != 0){
-          ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[8]][,as.numeric(coh[i,7]):(as.numeric(coh[i,7])+as.numeric(coh[i,4])-1), drop=FALSE])
-        }
-        if(length(gMean[[ttnames[i]]][[as.character(ttrep[i])]])==0){
-          gMean[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=rowMeans(ani))
-        } else{
-          gMean[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=cbind(gMean[[ttnames[i]]][[as.character(ttrep[i])]]$tval, rowMeans(ani)))
-        }
-
+        out
+      }
+      doParallel::stopImplicitCluster()
+      if(index==avail[1]){
+        ttkinship1 <- ttkinship / length(avail)
+      } else{
+        ttkinship1 <- ttkinship1 + ttkinship / length(avail)
       }
 
+
     }
+    ttkinship <- ttkinship1
 
   } else{
-    gMean <- list()
-    for(i in 1:nrow(coh)){
-      ani <- NULL
-      if(coh[i,3] != 0){
-        ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[7]][,as.numeric(coh[i,6]):(as.numeric(coh[i,6])+as.numeric(coh[i,3])-1), drop=FALSE])
+    ttkinship <- NULL
+    for(cc in 1:nrow(coh)){
+      print(cc)
+      if(as.numeric(coh[cc,3]) + as.numeric(coh[cc,4]) > 1){
+        ttkinship <- rbind(ttkinship, kinship.emp.fast(population=population, cohorts=coh[cc,1],ibd.obs = 100, hbd.obs = 25))
+      }else{
+        ttkinship <- rbind(ttkinship, c(0,0.5))
       }
-      if(coh[i,4] != 0){
-        ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[8]][,as.numeric(coh[i,7]):(as.numeric(coh[i,7])+as.numeric(coh[i,4])-1), drop=FALSE])
-      }
-      gMean[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=ani)
     }
   }
 
-  for(addon in 1:length(gMean)){
-    gMeanTotal[[length(gMeanTotal)+1]] <- gMean[[addon]]
-    names(gMeanTotal)[length(gMeanTotal)] <- paste0(filename[project],"_",  names(gMean)[addon])
-  }
+  result <- cbind(ttnames, ttrep, coh[,"time point"], round(ttkinship[,1]*2,digits=6), round(ttkinship[,2]*2-1, digits=6))
+
+  resultsTotal <- rbind(resultsTotal, result)
 }
 
 
 
 
 
-result <- gMeanTotal
+result <- resultsTotal
 
 #dat <- by(result, result[,1], t)
 #class(dat) <- "list"
 
 json <- as.character(toJSON(result))
-write.table(json, file=paste(path,user,"_","Compare_","gMeanGroup.json",sep=""), row.names=FALSE, col.names=FALSE, quote=FALSE)
+write.table(json, file=paste(path,user,"_","Compare_","RelGroup.json",sep=""), row.names=FALSE, col.names=FALSE, quote=FALSE)
 
 
 

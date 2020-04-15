@@ -4,32 +4,32 @@ function cpInfo () {
 	this['curUserGroup'] = '';
 }
 
-// returns an object with all parameters, we ned for plotting results:
+// returns an object with all parameters, we need for plotting results:
 function myPlottingPar(){
-	this['ResQTL_trait'] = "", 
-	this['ResQTL_qtl'] = "",
-	this['ResQTL_cohorts'] = [],
-	this['ResRel_cohorts'] = [],
-	this['ResRelbetweenC_cohort1'] = "",
-	this['ResRelbetweenC_cohort2'] = "",
-	this['ResgMean_cohorts'] = [],
-	this['ResgMean_pType'] = "By Repeats",
-	this['RespMean_cohorts'] = [],
-	this['RespMean_pType'] = "By Repeats",
-	this['ResRel_pType'] = "By Repeats",
-	this['ResAccBVE_cohorts'] = [],
-	this['ResAccBVE_pType'] = "By Repeats"
+	this['ResQTLGroup_trait'] = "", 
+	this['ResQTLGroup_qtl'] = "",
+	this['ResQTLGroup_cohorts'] = [],
+	this['ResRelGroup_cohorts'] = [],
+	this['ResRelbetweenCGroup_cohort1'] = "",
+	this['ResRelbetweenCGroup_cohort2'] = "",
+	this['ResgMeanGroup_cohorts'] = [],
+	this['ResgMeanGroup_pType'] = "By Repeats",
+	this['RespMeanGroup_cohorts'] = [],
+	this['RespMeanGroup_pType'] = "By Repeats",
+	this['ResRelGroup_pType'] = "By Repeats",
+	this['ResAccBVEGroup_cohorts'] = [],
+	this['ResAccBVEGroup_pType'] = "By Repeats"
 }
 
 // returns an object with all data for plotting results:
 function myPlottingData(){
-	this['ResQTL'] = "", 
-	this['ResRel'] = "",
-	this['ResRelbetweenC'] = "",
-	this['ResgMean'] = "",
-	this['Summary'] = "",
-	this['RespMean'] = "",
-	this['ResAccBVE'] = ""
+	this['ResQTLGroup'] = "", 
+	this['ResRelGroup'] = "",
+	this['ResRelbetweenCGroup'] = "",
+	this['ResgMeanGroup'] = "",
+	this['SummaryGroup'] = "",
+	this['RespMeanGroup'] = "",
+	this['ResAccBVEGroup'] = ""
 }
 
 
@@ -96,10 +96,13 @@ function getProjects(val) {
 	var cnt = compProjects.length;
 	var testthis = {};
 	
+	data_Vue.jsonDataList = [];
 	for (var j = 0; j < cnt; j++) {
 		var testthis = setJsondataList(compProjects[j]);	
 		data_Vue.jsonDataList.push(testthis);	
 	}
+
+	//data_Vue.traitsinfo = data_Vue.jsonDataList[0]["jsonData"]["Trait Info"];
 	//console.log(data_Vue.jsonDataList);
 }
 

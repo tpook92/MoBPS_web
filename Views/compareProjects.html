@@ -89,6 +89,35 @@
     	
 	        	<br>
 				
+
+					<h4>Results: Observed Phenotypes</h4>
+					<button onclick="RunResultpMeanGroup()" >Run Analysis</button>
+					<template v-if="plottingData.RespMeanGroup != ''">
+						Select plotting type:
+						<select v-model="plottingPar.RespMeanGroup_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }}
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible): 
+						<button onclick="plottingResultpMeanGroup()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.RespMeanGroup_cohorts" :searchable="true" style="width:800px"/>
+						<!--select v-model="plottingPar.RespMean_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.RespMeanGroup != ''" v-if="jsonDataList.length>0" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div v-for="(trait, index) in jsonDataList[0]['jsonData']['Trait Info']" v-bind:id="'RespMeanGroup_Div'+(index+1)">
+						</div>
+					</div>
+					<br>
+					<br>
+					
 					<h4>Results: True Breeding Values</h4>
 					<button onclick="RunResultgMeanGroup()" >Run Analysis</button>
 					<template v-if="plottingData.ResgMeanGroup != ''">
@@ -105,9 +134,119 @@
 							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
 							</option>
 						</select-->
-						<button onclick="plottingResultgMean()" >Plot Results</button>
+						<button onclick="plottingResultgMeanGroup()" >Plot Results</button>
 						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResgMeanGroup_cohorts" :searchable="true" style="width:800px"/>
 					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.ResgMeanGroup != ''" v-if="jsonDataList.length>0" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div v-for="(trait, index) in jsonDataList[0]['jsonData']['Trait Info']" v-bind:id="'ResgMeanGroup_Div'+(index+1)">
+						</div>
+					</div>
+					<br>
+					<br>
+					
+					<h4>Results: Accuracy of Breeding Value Estimation</h4>
+					<button onclick="RunResultAccBVEGroup()" >Run Analysis</button>
+
+					<template v-if="plottingData.ResAccBVEGroup != ''">
+						Select plotting type:
+						<select v-model="plottingPar.ResAccBVEGroup_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }}
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible):
+						<button onclick="plottingResultAccBVEGroup()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary_AccBVE" v-model="plottingPar.ResAccBVEGroup_cohorts" :searchable="true" style="width:800px"/>
+					</template>
+
+					<br>
+					<br>
+					
+					<div v-show="plottingData.ResAccBVEGroup != ''" v-if="jsonDataList.length>0" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div v-for="(trait, index) in jsonDataList[0]['jsonData'].selection_index" v-bind:id="'ResAccBVEGroup_Div'+(index+1)">
+						</div>
+					</div>
+					<br>
+					<br>
+
+					
+					<h4> Results: Relationship and Inbreeding within Cohorts </h4>
+					<button onclick="RunResultRelGroup()" >Run Analysis</button>
+					<template v-if="plottingData.ResRelGroup != ''">
+						Select plotting type:
+						<select v-model="plottingPar.ResRelGroup_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }} 
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible):
+						<!--select v-model="plottingPar.ResRel_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+						<button onclick="plottingResultRelGroup()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResRelGroup_cohorts" :searchable="true" style="width:800px"/>
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.ResRelGroup != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div id="ResRel_Div1">
+						</div>
+						<div id="ResRel_Div2">
+						</div>
+					</div>
+					<br>
+					<br>
+					
+					
+					<h4> Results: Major QTLs (Allele Frequency, exp./obs. Heterozygosity)</h4>
+					<button onclick="RunResultQTLGroup()" >Run Analysis</button>
+					<template v-if="plottingData.ResQTLGroup != ''">
+					
+						Select plotting type:
+						<select v-model="plottingPar.ResQTLGroup_pType" >
+							<option v-for="option in plottingType2" v-bind:value="option">
+							{{ option }} 
+							</option>
+						</select>
+						
+						Select Trait :
+						<select v-model="plottingPar.ResQTLGroup_trait">
+							<option v-if="option['Trait Major QTL'] > 0" v-for="(option, index) in jsonDataList[0]['jsonData'].traitsinfo" v-bind:value="index+1">
+							{{ option["Trait Name"] }} 
+							</option>
+						</select>
+						Select QTL :
+						<select v-if="plottingPar.ResQTLGroup_trait != ''" v-model="plottingPar.ResQTLGroup_qtl">
+							<option v-for="(option, index) in jsonDataList[0]['jsonData'].traitsinfo[plottingPar.ResQTL_trait -1]['Trait QTL Info']" v-bind:value="index">
+							{{ option['QTL ID'] }}  
+							</option>
+						</select>
+						<br>
+						Select Cohorts (multiple selection possible):
+						<!--select v-model="plottingPar.ResQTL_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+						<button onclick="plottingResultQTLGroup()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResQTLGroup_cohorts" :searchable="true" style="width:800px"/>
+					</template>
+					<br>
+					<br>
+					<div v-show="plottingData.ResQTLGroup != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+						<div id="ResQTL_Div1">
+						</div>
+						<div id="ResQTL_Div2">
+						</div>				
+						<div id="ResQTL_Div3">
+						</div>
+					</div>
 	</div>
 	</div>
 	</body>

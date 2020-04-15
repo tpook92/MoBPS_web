@@ -65,6 +65,7 @@ function myGeneral () {
 	this['advanced_culling'] = false;
 	this['advanced_sub'] = false;
 	this['advanced_eco'] = false;
+	this['advanced_box'] = false;
 	this['advanced_advanced'] = false;
 	this['advanced_user'] = false;
 //	this['Ensembl Filter'] = "";
@@ -167,7 +168,7 @@ function myArray(len){
 	return a;
 }
 
-// returns an object with all parameters, we ned for plotting results:
+// returns an object with all parameters, we need for plotting results:
 function myPlottingPar(){
 	this['ResQTL_trait'] = "", 
 	this['ResQTL_qtl'] = "",
@@ -1316,6 +1317,9 @@ function importNetwork_intern(inputData1) {
 	}
 	if(data_Vue.geninfo['advanced_eco']==undefined){
 		data_Vue.geninfo['advanced_eco'] = false;
+	}
+	if(data_Vue.geninfo['advanced_box']==undefined){
+		data_Vue.geninfo['advanced_box'] = false;
 	}
 	if(data_Vue.geninfo['advanced_advanced']==undefined){
 		data_Vue.geninfo['advanced_advanced'] = false;

@@ -330,6 +330,30 @@ app.post('/RsimQTL', function(request, response) {
 	});
 });
 
+app.post('/RsimQTL', function(request, response) {
+	
+	request.setTimeout(5*24*60*60*1000);
+
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_QTL.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.traitsinfo) + "'";
+	console.log(command);
+		
+	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
+		if(err){
+			console.log(err);
+			response.send(stderr);
+		}else{
+			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+ 'Compare_' + 'QTL.json';
+			fs.readFile(textfile, function(err, data){
+				if(err){
+					response.send('');
+				}else{
+					response.send(data);
+				}
+			});
+		}
+	});
+});
+
 // Run R simulation: Calculate Accuray of BVE Results
 app.post('/RsimAccBVE', function(request, response) {
 	
@@ -344,6 +368,30 @@ app.post('/RsimAccBVE', function(request, response) {
 			response.send(stderr);
 		}else{
 			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+request.body.filename + 'AccBVE.json';
+			fs.readFile(textfile, function(err, data){
+				if(err){
+					response.send('');
+				}else{
+					response.send(data);
+				}
+			});
+		}
+	});
+});
+
+app.post('/RsimAccBVEGroup', function(request, response) {
+	
+	request.setTimeout(5*24*60*60*1000);
+
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_AccBVE.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.sindex) + "'";
+	console.log(command);
+		
+	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
+		if(err){
+			console.log(err);
+			response.send(stderr);
+		}else{
+			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+ 'Compare_' + 'AccBVE.json';
 			fs.readFile(textfile, function(err, data){
 				if(err){
 					response.send('');
@@ -402,6 +450,32 @@ app.post('/RsimResult', function(request, response) {
 	});
 });
 
+// Run R simulation: Calculate Result Comparison
+app.post('/RsimResultGroup', function(request, response) {
+	console.log(request);
+	console.log(response);
+	request.setTimeout(5*24*60*60*1000);
+
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' "; // '" + JSON.stringify(request.body.cohorts) + "'";
+
+	console.log(command);
+		
+	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
+		if(err){
+			console.log(err);
+			response.send(stderr);
+		}else{
+			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_Compare_' + request.body.script+'.json';
+			fs.readFile(textfile, function(err, data){
+				if(err){
+					response.send('');
+				}else{
+					response.send(data);
+				}
+			});
+		}
+	});
+});
 
 // Get RData for download
 app.get('/Rdownload', function(request, res){	
@@ -585,6 +659,19 @@ app.post('/GenoUpload', function(req, res) {
 
 // Get Data for Plotting
 app.post('/JSON', function(request, response) {
+	//request.body.file
+	var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+request.body.file + '.json';
+	fs.readFile(textfile, function(err, data){
+		if(err){
+			response.send('');
+		}else{
+			response.send(data);
+		}
+	});
+});
+
+// Get Data for Plotting
+app.post('/JSONgroup', function(request, response) {
 	//request.body.file
 	var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+request.body.file + '.json';
 	fs.readFile(textfile, function(err, data){

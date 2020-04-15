@@ -304,6 +304,16 @@
 						</td>
 					</tr>
 					
+										
+					<tr v-if="geninfo['advanced']">
+						<td>Export/Import Box 
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with text box for import/export </span></span>
+						</td>
+						<td> 
+							<input type="checkbox" v-model="geninfo['advanced_box']">
+						</td>
+					</tr>
+					
 					<tr v-if="geninfo['advanced']">
 						<td>Advanced Edge/Node options
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
@@ -2089,7 +2099,7 @@
 			</div>
 			<div>
 			</div>
-			<div id="Export_Data_H3">
+			<div id="Export_Data_H3" v-if="geninfo['advanced'] && geninfo['advanced_box']">
 				<span class="tooltip">&#9432 <span class="tooltiptext"><p> Download JSON file to Desktop. </p>
 				<p> Display JSON data into this text area. </p></span></span>
 				<button id="export_button" onclick="downloadNetwork()" >Download Project</button>

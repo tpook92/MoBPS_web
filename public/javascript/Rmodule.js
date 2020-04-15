@@ -224,9 +224,13 @@ function runningR2(){
 
 //compareProjects to analyze in R 
 function analyzeR() {
-	data_Vue.plottingData = new myPlottingData();
 	var jsondataList = data_Vue.jsonDataList;
+	var plotinfo = data_Vue.plottingData;
+	var test = data_Vue
 	console.log(jsondataList);
+	console.log(plotinfo);
+	console.log(test);
+	writeSumGroup();
 }
 
 
@@ -374,6 +378,28 @@ function writeSum(){
 	});
 }
 
+function writeSumGroup(){
+	var file =  'Compare_Summary';
+	
+	$.ajax
+	({
+		type: "POST",
+		url: './JSONgroup',
+		data: {file : file},
+		success: function (data, msg) {
+			//console.log(data);
+			data_Vue.plottingData.Summary = JSON.parse(data);
+			data = data_Vue.plottingData.Summary;
+			data_Vue.Summary = Object.keys(data_Vue.plottingData.Summary).map(function(x){return({id: x, label: x+" ("+(data_Vue.plottingData.Summary[x].trep -1)+" Repeats)"})});
+		},
+		error: function(obj, msg, err) 
+		{
+			alert(err);
+		},
+		dataType: "text",
+	});
+}
+
 //*************************************************************************************************//
 //*********** Functions for plotting results after R Simulation ***********************************//
 // ---- Plotting observed Phenotypes Mean:
@@ -490,6 +516,47 @@ function RunResultpMean(){
 			if(data != ''){
 				//console.log(data);
 				data_Vue.plottingData.RespMean = JSON.parse(data);
+				//plottingResultgMean(JSON.parse(data));
+			}else{
+				alert("Failed to plot KS. Please run the Simulation first! here");
+			}
+		},
+		failure: function(msg) 
+		{
+			alert("Failed to plot KS. Please run the Simulation first!");
+		},
+		complete: function(obj, msg){
+			document.getElementById("runningDog").style.visibility = 'hidden';
+			//document.getElementById("runningDog").innerHTML = '';
+			//alert(msg);
+			//console.log(obj);
+		},
+		dataType: "text",
+	});
+}
+
+function RunResultpMeanGroup(){
+	var filename = data_Vue.compareProjects;
+	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
+	
+	$.ajax
+	({
+		type: "POST",
+		url: './RsimResultGroup',
+		data: {
+			filename : filename,
+			script: "pMeanGroup"
+			},
+		beforeSend: function() {
+			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for observed Phenotypes...';
+			document.getElementById("runningDog").style.visibility = 'visible';
+			//alert("Now Sending!");
+		},
+		success: function (data, msg) {
+			if(data != ''){
+				//console.log(data);
+				data_Vue.plottingData.RespMean = JSON.parse(data);
+				writeSumGroup();
 				//plottingResultgMean(JSON.parse(data));
 			}else{
 				alert("Failed to plot KS. Please run the Simulation first! here");
@@ -645,6 +712,97 @@ function plottingResultgMean(){
 	}
 }
 
+function plottingResultgMeanGroup(){
+	var data = data_Vue.plottingData.ResgMeanGroup;
+	var coh = data_Vue.plottingPar.ResgMeanGroup_cohorts;
+	var pType = data_Vue.plottingPar.ResgMeanGroup_pType;
+	
+	var data1 = [];
+	for(var i=0; i< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; i++){
+		data1.push([]);
+	}
+	
+	if(pType=="By Repeats"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each trait:
+			for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+				data1[j].push({
+					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
+					x : Object.keys(data[coh[i]]),
+					mode : 'scatter',
+					name : coh[i]
+				});	
+			}		
+		}
+		var xtitle = 'Repeats';
+	}
+	if(pType=="By Cohorts"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			var red = ((Math.floor(i/3)+1)*85)%255;
+			var green = ((Math.floor(i/6)+1)*85)%255;
+			var blue = ((i+1)*85)%255;
+			// each rep:
+			var ttimes = Object.keys(data[coh[i]]);
+			for(var k=0; k < ttimes.length; k++){
+				// eacht trait
+				for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+					data1[j].push({
+						y : data[coh[i]][ttimes[k]].tval[j],
+						name : coh[i]+'_'+ttimes[k],
+						marker : {color: "rgb("+red+","+green+","+blue+")"},
+						type: 'box',
+						boxpoints : 'Outliers',
+						boxmean : true
+					});	
+				}
+			}			
+		}
+		var xtitle = 'Cohorts (trailing numbers denote repeated cohorts)';
+	}
+	if(pType=="By Time"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each trait:
+			for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+				data1[j].push({
+					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
+					x : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))}),
+					mode : 'scatter',
+					name : coh[i]
+				});	
+			}		
+		}
+		var xtitle = 'Time in '+data_Vue.geninfo['Time Unit'];
+	}
+		
+	var titles = data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].map(function(x){return(x['Trait Name'])});
+	for(var i=0; i < data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; i++){
+		var layout = {
+			title : titles[i],
+			showlegend: pType != 'By Cohorts',
+			plot_bgcolor: '#FFFFFF',
+			xaxis: {
+				title: xtitle,
+				zeroline: false,
+				automargin: true
+			},
+			};
+		var config = {
+			scrollZoom: true,
+			toImageButtonOptions: {
+				format: 'png', // one of png, svg, jpeg, webp
+				filename: 'custom_image',
+				height: 750,
+				width: 1500,
+				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
+			}
+		};
+		Plotly.newPlot('ResgMeanGroup_Div'+(i+1), data1[i], layout, config);
+	}
+}
+
 function RunResultgMean(){
 	var filename = data_Vue.geninfo["Project Name"];
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
@@ -687,13 +845,15 @@ function RunResultgMean(){
 
 
 function RunResultgMeanGroup(){
+	
 	var filename = data_Vue.compareProjects;
+	
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
 	
 	$.ajax
 	({
 		type: "POST",
-		url: './RsimResult',
+		url: './RsimResultGroup',
 		data: {
 			filename : filename,
 			script: "gMeanGroup"
@@ -706,15 +866,16 @@ function RunResultgMeanGroup(){
 		success: function (data, msg) {
 			if(data != ''){
 				//console.log(data);
-				data_Vue.plottingData.ResgMean = JSON.parse(data);
+				data_Vue.plottingData.ResgMeanGroup = JSON.parse(data);
+				writeSumGroup();
 				//plottingResultgMean(JSON.parse(data));
 			}else{
-				alert("Failed to plot KS. Please run the Simulation first!");
+				alert("Failed to plot KS. Please run the Simulation first - Suc!");
 			}
 		},
 		failure: function(msg) 
 		{
-			alert("Failed to plot KS. Please run the Simulation first!");
+			alert("Failed to plot KS. Please run the Simulation first - Fail!");
 		},
 		complete: function(obj, msg){
 			document.getElementById("runningDog").style.visibility = 'hidden';
@@ -834,6 +995,47 @@ function RunResultRel(){
 			if(data != ''){
 				//console.log(data);
 				data_Vue.plottingData.ResRel = JSON.parse(data);
+				//plottingResultgMean(JSON.parse(data));
+			}else{
+				alert("Failed to plot KS. Please run the Simulation first!");
+			}
+		},
+		failure: function(msg) 
+		{
+			alert("Failed to plot KS. Please run the Simulation first!");
+		},
+		complete: function(obj, msg){
+			document.getElementById("runningDog").style.visibility = 'hidden';
+			//document.getElementById("runningDog").innerHTML = '';
+			//alert(msg);
+			//console.log(obj);
+		},
+		dataType: "text",
+	});
+}
+
+function RunResultRelGroup(){
+	var filename = data_Vue.compareProjects;
+	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
+	
+	$.ajax
+	({
+		type: "POST",
+		url: './RsimResultGroup',
+		data: {
+			filename : filename,
+			script: "RelGroup"
+			},
+		beforeSend: function() {
+			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for Relationship within Cohorts...';
+			document.getElementById("runningDog").style.visibility = 'visible';
+			//alert("Now Sending!");
+		},
+		success: function (data, msg) {
+			if(data != ''){
+				//console.log(data);
+				data_Vue.plottingData.ResRel = JSON.parse(data);
+				writeSumGroup();
 				//plottingResultgMean(JSON.parse(data));
 			}else{
 				alert("Failed to plot KS. Please run the Simulation first!");
@@ -1048,6 +1250,54 @@ function RunResultQTL(){
 			if(data != ''){
 				//console.log(data);
 				data_Vue.plottingData.ResQTL = JSON.parse(data);
+				//plottingResultQTL(JSON.parse(data));
+			}else{
+				alert("Failed to plot KS. Please run the Simulation first!");
+			}
+		},
+		failure: function(msg) 
+		{
+			alert("Failed to plot KS. Please run the Simulation first!");
+		},
+		complete: function(obj, msg){
+			document.getElementById("runningDog").style.visibility = 'hidden';
+			//document.getElementById("runningDog").innerHTML = '';
+			//alert(msg);
+			//console.log(obj);
+		},
+		dataType: "text",
+	});
+}
+
+function RunResultQTLGroup(){
+	var filename = data_Vue.compareProjects;
+	var qtl = 0;
+	for(var i=0; i< jsonDataList[0]['jsonData'].traitsinfo.length; i++){
+		qtl += jsonDataList[0]['jsonData'].traitsinfo[i]["Trait Major QTL"];
+	}
+	if(qtl == 0){
+		alert("There is no QTL to calculate results for.");
+		return;
+	}
+	
+	$.ajax
+	({
+		type: "POST",
+		url: './RsimQTLGroup',
+		data: {
+			filename : filename,
+			traitsinfo : jsonDataList[0]['jsonData'].traitsinfo
+			},
+		beforeSend: function() {
+			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for QTLs';
+			document.getElementById("runningDog").style.visibility = 'visible';
+			//alert("Now Sending!");
+		},
+		success: function (data, msg) {
+			if(data != ''){
+				//console.log(data);
+				data_Vue.plottingData.ResQTL = JSON.parse(data);
+				writeSumGroup();
 				//plottingResultQTL(JSON.parse(data));
 			}else{
 				alert("Failed to plot KS. Please run the Simulation first!");

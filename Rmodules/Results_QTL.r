@@ -40,7 +40,7 @@ for(nn in coh){
 filesnames <- dir(path)
 check_time <- file.info(paste0("Rmodules/UserScripts/", filesnames))
 original <- which(filesnames==paste0(user,"_",filename,".RData"))
-newer <- as.numeric(check_time[,4])>=as.numeric(check_time[original,4])
+newer <- as.numeric(check_time[,4])>=(as.numeric(check_time[original,4])-600)
 filesnames <- filesnames[newer]
 filesnames <- gsub(".RData","",filesnames)
 filesnames <- gsub(paste0(user,"_",filename), "", filesnames)
