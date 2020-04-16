@@ -83,14 +83,11 @@ function runningR(){
 
 //Running R with streaming
 function runningR1(){
-  
 	clearResult();
 	data_Vue.plottingData = new myPlottingData();
-	//var jsondata = JSON.stringify(exportNetwork());
-	var jsondata = data_Vue.compareProjects;
-	console.log(jsondata);
+	var jsondata = JSON.stringify(exportNetwork());
+	//console.log(jsondata);
 	//alert("Approx. simulation running time: " + Math.round(checkRunTime()/60*2.6*100)/100 + "minutes.");
-	
 	savedNodes = data_Vue.nodes.get();
 	var savedNodesLen = savedNodes.length;
 	var isFounder = "";
@@ -100,11 +97,9 @@ function runningR1(){
 			isFounder = "Found";
 		}
 	}
-
 	if(isFounder == ""){
 		alert("There is no Founder in the Project. Please add a Founder!");
 	}		
-
 	$.ajax
 	({
 		type: "POST",
@@ -123,21 +118,14 @@ function runningR1(){
 		},
 		success: function (data, msg) {
 			//console.log(data);
-
 			document.getElementById("Rout_Div").innerHTML = data;
-			
 			where = document.getElementById("Rout_Div").innerHTML.indexOf("Execution");
 			where2 = document.getElementById("Rout_Div").innerHTML.indexOf("exceeds your");
 			where3 = document.getElementById("Rout_Div").innerHTML.indexOf("run simulations");
-			
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/Error/g, "<span style=\"color:red\">Error</span>");
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/\n/g, "<br/>");
-			
-
-			
 			if(where == -1){
 				alert("Simulation Finished successfully!");
-
 			} else if(where3 > (-1)){
 				alert("This account has no permission to run simulations in R!")
 			} else if(where2> (-1)){
@@ -146,11 +134,9 @@ function runningR1(){
 				alert("Your Simulation failed! Check your inputs and potential warnings!");
 			}
 			data_Vue.runned = true;
-			
-
 			writeSum();
 		},
-		error: function(obj, msg, err) 
+		error: function(obj, msg, err)
 		{
 			alert("Simulation failed!");
 			alert(err);
