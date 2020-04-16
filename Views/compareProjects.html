@@ -9,13 +9,24 @@
 		
 	<head>
 		<title>MoBPS</title>
-		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
 		
+		<script src="https://unpkg.com/vue-slider"></script>
+			
+		<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
+    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
+		
 		<!-- for plotting graphs: -->
 		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+		<script type="text/javascript" src="https://visjs.github.io/vis-network/dist/vis-network.min.js" ></script>
+		<script type="text/javascript" src="https://visjs.github.io/vis-network/examples/network/exampleUtil.js"></script>
+		<link src="https://visjs.github.io/vis-network/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+		
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
 
 		<link rel="stylesheet" type="text/css" href="./styles/mobps.css">
 	
@@ -24,7 +35,7 @@
 		<script type="text/javascript" src="javascript/jQ2.js"></script>
 		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
 		<script type="text/javascript" src="javascript/jQ3.js"></script>
-	
+
 	</head>
 
 	<body onload="init();">		
@@ -41,24 +52,10 @@
 			<div style="overflow:auto;">	
 			<a>&nbsp;</a>
 			<a>&nbsp;</a>	
-				<a href="http://mobps.de/home" class="additional_link">Go back to MoBPS Home</a> 					
+				<a href="http://localhost:8080/home" class="additional_link">Go back to MoBPS Home</a> 					
 			</div>
 		</div>
 			
-		<div id="mySidebar" class="sidebar">
-			<div id="closeDiv">
-				<button onclick="closeNav()" class="closebtn"> Navigation Close </button>
-			</div>  
-				<a>&nbsp;</a>
-					<a href="#General_Info">General information</a>
-					<a href="#Phenotype_Info_Div">Phenotype information</a>
-					<a href="#Selectionindex_Div">Optional information</a>
-					<a href="#Breeding_Scheme">Breeding Scheme</a>
-					<a href="#Results_Div">R Simulation/ Results</a>
-					<a href="#Export_Data_H3">Export/ Import</a>
-					<a href="/logout"> User: {{user}} <br> Logout</a>
-					<a v-if="cpInfo['curUserGroup'] != 1" href="/Change_Password"> Change Password</a>
-			</div>
 
 			<div id="main">
 				<div id="openDiv">
@@ -71,7 +68,7 @@
 						<tr>
 						<td>
 						<h3>Select multiple projects to compare : {{compareProjects}}</h3><br>
-						<select id="thisArray" name="thisArray[]" multiple onChange="getProjects(this)" v-model="compareProjects" class="comparePSelect">
+						<select id="thisArray" name="thisArray[]" multiple onChange="getProjects(this);" v-model="compareProjects" class="comparePSelect">
 							<option value="">Choose Multiple Projects:</option>
 							<option v-for="option in database" v-bind:value="option">
 								{{ option }}
@@ -83,14 +80,30 @@
 				</div>
     	
 	        	<br>
-				<div v-if = "compareProjects" id="Results_Div">
-					<h3 id="RSim"></h3>
-					<h3>Analyze with R</h3>
-					<p>Click on button 'Analyze' to run R.</p>
-					<button onclick="analyzeR(); " >Analyze</button>				
-					<br>				
-				</div>						
-			</div>
+				
+					<h4>Results: Test</h4>
+					<button onclick="analyzeR()" >Test</button>
+					
+					<h4>Results: True Breeding Values</h4>
+					<button onclick="RunResultgMeanGroup()" >Run Analysis</button>
+					<template v-if="plottingData.ResgMeanGroup != ''">
+						Select plotting type:
+						<select v-model="plottingPar.ResgMeanGroup_pType" >
+							<option v-for="option in plottingType" v-bind:value="option">
+							{{ option }}
+							</option>
+						</select>
+						<br>
+						Select cohorts (multiple selection possible): 
+						<!--select v-model="plottingPar.ResgMean_cohorts" size="6" multiple>
+							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+							</option>
+						</select-->
+						<button onclick="plottingResultgMean()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResgMeanGroup_cohorts" :searchable="true" style="width:800px"/>
+					</template>
+	</div>
 	</div>
 	</body>
 

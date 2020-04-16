@@ -61,40 +61,48 @@
 		
 		<div id='mainDiv'>
 
-			<div id="Project_Bar">
-				<div style="overflow:auto;">
-					&nbsp;&nbsp;
-					<< {{geninfo['Project Name']}} >>
-					&nbsp;&nbsp;
-					<button class='bar_button' id="new_button" onclick="window.location.reload();">New Project</button> 
-					&nbsp;&nbsp;
-					<button class='bar_button' id="save_button" onclick="saveProject();">Save Project</button> 
-					&nbsp;&nbsp;
-					<button class='bar_button' onclick="saveProjectAs();">Copy Project</button> 
-					&nbsp;&nbsp;
-					<button class='bar_button' id="download_button" onclick="importNetwork()" >Import Project</button>
-					&nbsp;&nbsp;
-					<button class='bar_button' id="download_button" onclick="downloadNetwork()" >Export Project</button>
-					&nbsp;&nbsp;
-					<button class='bar_button' id="delete_button" onclick="deleteProject()" >Delete Project</button>
-					&nbsp;&nbsp;
-					<button v-if="isBrowserSafari !== true" class='bar_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
-					&nbsp;&nbsp;
-					<button v-if="isBrowserSafari !== true" class='bar_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a v-if="geninfo['curUserGroup'] == 4" href="http://mobps.de/compareProjects" class ="additional_link">MoBPS Compare Projects</a> 
-				</div>
+			<div id="mySidebar" class="sidebar">
+				 <div id="closeDiv">
+					<button onclick="closeNav()" class="closebtn"> Navigation Close </button>
+				</div>  
+				<a>&nbsp;</a>
+					<a href="#General_Info">General information</a>
+					<a href="#Phenotype_Info_Div">Phenotype information</a>
+					<a href="#Selectionindex_Div">Optional information</a>
+					<a href="#Breeding_Scheme">Breeding Scheme</a>
+					<a href="#Results_Div">R Simulation/ Results</a>
+					<a href="#Export_Data_H3">Export/ Import</a>
+					<a v-if="geninfo['curUserGroup'] != 1" href="/Change_Password"> Change Password</a>
+					<a href="/logout"> User: {{user}} <br> <br> Logout</a>
+			</div>			
+
+			<div class="navlinks" style="overflow:auto;">
+				<button onclick="openNav()" class="openbtn"> Navigation Open </button>  
+				<button class="invisible_button"></button>
+				<button class='bar_button' id="new_button" onclick="window.location.reload();">NEW PROJECT</button> 
+				<button class='bar_button' id="save_button" onclick="saveProject();">SAVE PROJECT</button> 
+				<button class='bar_button' onclick="saveProjectAs();">COPY PROJECT</button> 
+				<!-- <button class='bar_button' id="download_button" onclick="importNetwork()" >Import Project</button> -->
+				<input type="button" class="fileType" id="importProject" value="IMPORT PROJECT" class='bar_button' onclick="document.getElementById('input-file').click();importNetwork()" />
+				<input type="file" style="display:none;" id="input-file" name="file"/>
+				<button class='bar_button' id="download_button" onclick="downloadNetwork()" >EXPORT PROJECT</button>
+				<button class='bar_button' id="delete_button" onclick="deleteProject()" >DELETE PROJECT</button>
+				<button v-if="isBrowserSafari !== true" class='bar_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
+				<button v-if="isBrowserSafari !== true" class='bar_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+				&nbsp;
+				<a v-if="curUserGroup =='4'" href="http://localhost:8080/compareProjects"  class ="additional_link">MoBPS Compare Projects</a> 
 			</div>
+
 			<div id='SaveAs_Div'>
 				New Project Name: <input id="saveAs-name" placeholder="Type a name"/> <br><br>
 				<input type="button" value="save" id="SaveAs-saveButton" onclick="saveProject(document.getElementById('saveAs-name').value)" />
 				<input type="button" value="cancel" id="SaveAs-cancelButton" onclick="document.getElementById('SaveAs_Div').style.display = 'none'"/>
 			</div>
 
-
 			<div v-if="isBrowserSafari !== true" id="warnings_sum">
 				<h4 v-if="warnings.length > 0" style="color: red; font-style:italic;"> Attention, there are {{warnings.length}} warnings! R Simulation most likely cannot be run unless they are fixed.</h4>
 			</div>
+
 			<transition name="slide-generalInfo">
 				<div id ="warnings" v-show='show_warnings' >
 					<br>
@@ -139,30 +147,13 @@
 				</div>
 			</transition>
 			
-			<div id="mySidebar" class="sidebar">
-			<div id="closeDiv">
-				<button onclick="closeNav()" class="closebtn"> Navigation Close </button>
-			</div>  
-				<a>&nbsp;</a>
-					<a href="#General_Info">General information</a>
-					<a href="#Phenotype_Info_Div">Phenotype information</a>
-					<a href="#Selectionindex_Div">Optional information</a>
-					<a href="#Breeding_Scheme">Breeding Scheme</a>
-					<a href="#Results_Div">R Simulation/ Results</a>
-					<a href="#Export_Data_H3">Export/ Import</a>
-					<a href="/logout"> User: {{user}} <br> Logout</a>
-					<a v-if="geninfo['curUserGroup'] != 1" href="/Change_Password"> Change Password</a>
-			</div>
-
 		<div id="main">
-			<div id="openDiv">
-		  		<button onclick="openNav()" class="openbtn"> Navigation Open </button>  
-			</div>
-			
+
 			<div id="LoadJSON_Div" >
+			<h2>MoBPS <h3-1 v-if="geninfo['Project Name']"> {{geninfo['Project Name']}} </h3-1> </h2> 
+			
 			<br>
-			<br>
-			<h2>MoBPS Views/mobps_main</h2>
+
 			<h3>Load a new/existent project from your own database:</h3>
 			Project: 
 			<select id="Project_Name" onchange="loadData(value)" v-model="geninfo['Project Name']">
@@ -266,8 +257,6 @@
 						</td>
 					</tr>
 				
-				
-
 					<tr v-if="geninfo['advanced']">
 						<td>Culling Module 
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock the culling module to simulate the death of individuals. Death individuals can still be used for BVE but not for Reproduction</span></span>
@@ -560,13 +549,12 @@
 							<input type="value" v-model="geninfo['trait_rescaling']">
 						</td>
 					</tr>
-					
 
 				</table>
 				<br>
-
 				<br>
 			</div>
+
 			<div id="Phenotype_Info_Div" onchange="checkEverything(this.id)">
 				<h3 id="Phenotype_Info"> Phenotype Information
 					<span class="tooltip">&#9432 <span class="tooltiptext">Here you can design the traits you want to work with.</span></span>
@@ -574,19 +562,18 @@
 				
 				<button class="accordion"> Click here to read guildelines for Traits table, Upload Excel File, Correlation tables, SI, PC: </button>
 				<div class="guideline">
-					<p> Trait Table : 1. Drag and Drop facility is available for all the browser except Safari - select a trait and drag your mouse pad Up/Down and drop it to your desired place. </p>
-					<p> Trait Table : 2. After Drag and Drop of Traits - dynamically the Correlation matrices values, SI values , PC will be moved according to the Traits order. </p>
-					<p> Upload Excel : Please select the type of Excel file from the drop down box. For Genetic correlation - above the diagonal. For Residual correlation - below the diagonal. For both - the above and the below diagonal values should be filled in the selected file. Also set "1" to the diagonal elements. </p>
-					<p> Upload Excel : Please choose the Excel File according to the type of Correlation, then click "Import Table" to display the excel values to the related Correlation.</p> 
+					<p class="guidelines"> Trait Table: Drag and Drop facility is available for all the browser except Safari - select a trait and drag your mouse pad Up/Down and drop it to your desired place. </p>
+					<p class="guidelines">  &nbsp; &nbsp; -- After Drag and Drop of Traits - dynamically the Correlation matrices values, SI values , PC will be moved according to the Traits order. </p>
+					<p class="guidelines"> Upload Excel: Please select the type of Excel file from the drop down box. For Genetic correlation - above the diagonal. For Residual correlation - below the diagonal. For both - the above and the below diagonal values should be filled in the selected file. Also set "1" to the diagonal elements. </p>
+					<p class="guidelines"> &nbsp; &nbsp; -- Please choose the Excel File according to the type of Correlation, then click "Import Table" to display the excel values to the related Correlation.</p> 
 				</div>
 				
-				<button v-on:click="addPheno();"> Add new phenotype </button>
-				<button v-if="traitsinfo.length > 0" v-on:click='show_pheno_info = !show_pheno_info' >Show/Hide {{traitsinfo.length}} phenotypes</button>
-				<button v-if="traitsinfo.length > 0" v-on:click="show_QTL = !show_QTL"> Show/Hide QTLs</button>
-				<button v-if="traitsinfo.length > 1" v-on:click="show_matrix = !show_matrix"> Show/Hide residual correlation</button>
-				<button v-if="traitsinfo.length > 1" v-on:click="show_matrix2 = !show_matrix2"> Show/Hide genetic correlation</button>
+				<button class="sub_button" v-on:click="addPheno();"> Add new phenotype </button>
+				<button class="sub_button" v-if="traitsinfo.length > 0" v-on:click='show_pheno_info = !show_pheno_info' >Show/Hide {{traitsinfo.length}} phenotypes</button>
+				<button class="sub_button" v-if="traitsinfo.length > 0" v-on:click="show_QTL = !show_QTL"> Show/Hide QTLs</button>
+				<button class="sub_button" v-if="traitsinfo.length > 1" v-on:click="show_matrix = !show_matrix"> Show/Hide residual correlation</button>
+				<button class="sub_button" v-if="traitsinfo.length > 1" v-on:click="show_matrix2 = !show_matrix2"> Show/Hide genetic correlation</button>
 				<br>
-				
 				
 				<table class="drag_table" v-if="traitsinfo.length > 0 && show_pheno_info">
 					<thead>
@@ -632,7 +619,6 @@
 							</td>
 							<td>Show Cor</td>
 							<td></td> 
-							
 						</tr>
 					</thead>
 					<tbody v-if="isBrowserSafari === true ">
@@ -677,7 +663,7 @@
 								<input type="checkbox" v-model="show_matrix_element[index].show">
 							</td>
 							<td>
-								<button v-on:click="removePheno(index)">X</button>
+								<button class="sub_button" v-on:click="removePheno(index)">X</button>
 							</td>
 						</tr>
 					</tbody>
@@ -731,7 +717,7 @@
 								<input style="width:50px;" type="checkbox" v-model="show_matrix_element[index].show">
 							</td>
 							<td>
-								<button v-on:click="removePheno(index)">X</button>
+								<button class="sub_button" v-on:click="removePheno(index)">X</button>
 							</td>
 						</tr>
 					</template>
@@ -768,14 +754,13 @@
 									<input v-model="snp[key]" style="width:60px;" v-on:change="snp[key] = snp[key].replace(/,/g, '.')"> 
 								</td>
 								<td>
-									<button v-on:click="removeQTL(trait,snp)">X</button>
+									<button class="sub_button" v-on:click="removeQTL(trait,snp)">X</button>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</template>
-
-			<br>
+				<br>
 			<div id="corrDiv" style="display:none">
 				<button class="accordion" style="font-style:normal;font-size: 14px;"> Click here to Upload Excel file for Correlation:  <span class="tooltip">&#9432 <span class="tooltiptext">"Here you can import an Excel file with genetic correlations above the diagonal and residual correlations below the diagonal. Please set "1" to the diagonal elements. The first row and first column should be name of the Phenotype."</span></span> </button>
 				<div class="guideline">
@@ -796,27 +781,26 @@
 						<span class="tooltip">&#9432 <span class="tooltiptext">"Please choose an Excel file from desktop."</span></span>
 					</td> 
 					<td> <input id="excelToArray" type=file style="width:178px;" >
-					<button id="save_button" onclick="saveProject(geninfo['Project Name']);">Import Table</button></td>
+					<button class="sub_button" id="save_button" onclick="saveProject(geninfo['Project Name']);">Import Table</button></td>
 					</tr>
 				</table>
 				</div>	
 				</div>
 
-				<br>
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix">
 					<tr>
-						<td colspan="5" style="font-weight:bold;width:60px;padding:5px;text-align:left">Residual Correlation
+						<td colspan="5" class="corr_title" >Residual Correlation
 							<span class="tooltip">&#9432 <span class="tooltiptext">Make sure this matrix is positive definit. Otherwise we will project the matrix to the space of positive definit matrices.</span></span>
 						</td>
 					</tr>
 					<tr>
 						<td></td>
-						<td style="width:60px;padding:5px;" v-for="(row, rind) in matrix" v-if="show_matrix_element[rind].show">
+						<td class="corr_td" v-for="(row, rind) in matrix" v-if="show_matrix_element[rind].show">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
 					</tr>
 					<tr v-for='(row, rind) in matrix' v-if="show_matrix_element[rind].show">
-						<td style="padding:2px;">
+						<td class="corr_td">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
 						<td v-for="(cl, cind) in matrix" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
@@ -827,10 +811,10 @@
 						</td>
 					</tr>
 				</table>
-
+				
 				<table v-if="traitsinfo.length > 1 && show_matrix">
 				<tr>
-				<td>
+				<td class="sub_text">
 					Enter Phenotypic correlation instead of residual correlation
 					</td>
 					<td>
@@ -843,7 +827,7 @@
 				
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix2">
 					<tr>
-						<td colspan="5" style="font-weight:bold;width:60px;padding:5px;text-align:left">Genetic Correlation
+						<td colspan="5" class="corr_title">Genetic Correlation
 							<span class="tooltip">&#9432 <span class="tooltiptext">Make sure this matrix is positive definit. Otherwise we will project it so the space of positive definit matrices</span></span>
 						</td>
 					</tr>
@@ -851,12 +835,12 @@
 					<tr>
 						<td></td>
 						
-						<td style="width:60px;padding:5px;" v-for="(row, rind) in matrix2" v-if="show_matrix_element[rind].show">
+						<td class="corr_td" v-for="(row, rind) in matrix2" v-if="show_matrix_element[rind].show">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
 					</tr>
 					<tr v-for='(row, rind) in matrix2' v-if="show_matrix_element[rind].show">
-						<td style="padding:2px;">
+						<td class="corr_td">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
 						<td v-for="(cl, cind) in matrix2" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
@@ -868,7 +852,6 @@
 					</tr>
 				</table>
 				<br>
-				<br>
 			</div>
 			
 			<div id="Selectionindex_Div" onchange="checkEverything(this.id)">
@@ -876,8 +859,7 @@
 					<span class="tooltip">&#9432 <span class="tooltiptext">Create your own selection indexes in order to use it in the breeding scheme.</span></span>
 				</h3> 
 				<input id="newSI" placeholder="Type SI name" v-show="traitsinfo.length > 0">
-				<button v-on:click="addSI()" v-if="traitsinfo.length > 0"> Add new SI</button>
-				<br>
+				<button class="sub_button" v-on:click="addSI()" v-if="traitsinfo.length > 0"> Add new SI</button>
 				<br>
 				<template v-if="traitsinfo.length > 0">
 					<table class="trait_table">
@@ -912,7 +894,7 @@
 						</tbody>
 					</table>
 					<br>
-					<br>
+					
 					<table class="trait_table">
 						<thead>
 							<tr>
@@ -953,15 +935,15 @@
 						</tbody>
 					</table>
 					<br>
-					<br>
+					
 				</template>			
 				<h3 v-if="traitsinfo.length > 0">Creating own Phenotyping Classes (Optional)
 					<span class="tooltip">&#9432 <span class="tooltiptext">Phenotyping Classes can be attached to each cohort in the breeding scheme, indicating which phenotype is available in the respective cohort. </span></span>
 				</h3>
 				<input id="newPhenoC" placeholder="Type PhenoC name" v-show="traitsinfo.length > 0">
-				<button v-on:click="addPC()" v-if="traitsinfo.length > 0"> Add new PhenoC</button>
+				<button class="sub_button" v-on:click="addPC()" v-if="traitsinfo.length > 0"> Add new PhenoC</button>
 				<br>
-				<br>
+				
 				<template v-if="traitsinfo.length > 0">
 					<table class="trait_table">
 						<thead>
@@ -983,7 +965,7 @@
 								<td v-for="(key, ind) in Object.keys(si)" v-if="ind >0" >
 									<input v-model="si[key]" style="width:30px;" v-on:change="si[key] = si[key].replace(/,/g, '.')">								</td>
 								<td>
-									<button v-on:click="removePC(si, index)" v-if="index > 0">X</button>
+									<button class="sub_button" v-on:click="removePC(si, index)" v-if="index > 0">X</button>
 								</td>
 							</tr>
 						</tbody>
@@ -997,7 +979,17 @@
 					probability. In case of a genetic reason provide BV2. Values for each genomic value will be derived based on linear extension.</span></span>
 				</h3>
 				<table class="trait_table" v-if="geninfo['advanced'] && geninfo['advanced_culling']">
-					<tr>	
+					<tr>
+						<td>
+							<input id="newCullingClass" placeholder="Type a Culling Reason">
+						</td>
+
+						<td colspan="2" style="text-align:left;">
+							<button class="sub_button" for="newCullingClass" v-on:click="createCulling()"> Creating new Culling Reason </button>
+						</td>
+					</tr>	
+
+					<tr v-if="culling['culling_reasons'].length > 0">	
 						<td style="font-weight:bold">Culling reason	
 						</td>
 						<td style="padding:5px;">At age (in time unit)
@@ -1023,6 +1015,7 @@
 						</td>
 
 					</tr>
+					
 					<tr v-for="(vv, ind) in culling['culling_reasons']">
 						<td>
 							{{vv.Name}}  
@@ -1057,23 +1050,13 @@
 							<input v-model="vv.BV2" style="width:100px;"> 
 						</td>
 						<td>
-							<button v-on:click="removeCulling(vv, ind)">X</button>
+							<button class="sub_button" v-on:click="removeCulling(vv, ind)">X</button>
 						</td>
 					</tr>
-					<tr>
-						<td>
-							<input id="newCullingClass" placeholder="Type a Culling Reason">
-						</td>
-
-						<td colspan="2" style="text-align:left;">
-							<button for="newCullingClass" v-on:click="createCulling()"> Creating new Culling Reason </button>
-						</td>
-					</tr>	
-				</table>
+					</table>
 				
 				<br>
-				<br>
-				
+			
 				<h3 v-if="geninfo['advanced'] && geninfo['advanced_sub']"> Multiple Subpopulations
 					<span class="tooltip">&#9432 <span class="tooltiptext">Define allele frequencies for multiple subpopulations. 
 					Allele frequencies are drawn from a Beta(p,q) distribution.
@@ -1083,6 +1066,15 @@
 					This cannot replace the use of REAL genomic data or simulated data with population structure (this module is mostly intended for baseline testing).</span></span>
 				</h3>
 				<table v-if="geninfo['advanced'] && geninfo['advanced_sub']" class="trait_table">
+					<tr>
+						<td colspan="2" style="text-align:left;">
+							<input id="newSubpopulationClass" placeholder="Type a Subpopulation name">
+						</td>
+						<td colspan="2" style="text-align:left;">
+							<button class="sub_button" for="newSubpopulationClass" v-on:click="createSub()"> Creating new Subpopulation </button>
+						</td>
+					</tr>
+					
 					<tr>	
 						<td style="font-weight:bold">Subpopulation	
 						</td>
@@ -1144,14 +1136,7 @@
 							<button v-on:click="removeSub(vv, ind)">X</button>
 						</td>
 					</tr>
-					<tr>
-						<td colspan="2" style="text-align:left;">
-							<input id="newSubpopulationClass" placeholder="Type a Subpopulation name">
-						</td>
-						<td>
-							<button for="newSubpopulationClass" v-on:click="createSub()"> Creating new Subpopulation </button>
-						</td>
-					</tr>	
+						
 				</table>
 				
 				<template v-for="subpop in subpopulation['subpopulation_list']" v-if="subpop['fixed_freq'] > 0">
@@ -1197,10 +1182,7 @@
 					<span class="tooltip">&#9432 <span class="tooltiptext">Define your own economic parameters for the calculation of economic values in your breeding scheme. </span></span>
 				</h3>
 				<table v-if="geninfo['advanced'] && geninfo['advanced_eco']" id="general_Economy">
-					<colgroup>	
-						<col width="40%">
-						<col width="60%">
-					</colgroup>
+					
 					<tr>
 						<td>Fixed cost (&#8364;)
 							<span class="tooltip">&#9432 <span class="tooltiptext">Fixed costs of the breeding program</span></span>
@@ -1221,10 +1203,10 @@
 					</tr>
 					<tr style="height:15px"><td colspan=2></td></tr>
 					<tr>	
-						<td style="font-weight:bold">Housing/Field cost class	
+						<td class="corr_td">Housing/Field cost class	
 							<span class="tooltip">&#9432 <span class="tooltiptext">Type a name and then click on "Creating new HFC Class" to create your own classes of housing/field costs. These classes can then be assigned to each cohort in the breeding scheme. </span></span>
 						</td>
-						<td style="font-weight:bold">Housing/Field cost (&#8364;)</td>
+						<td class="corr_td">Housing/Field cost (&#8364;)</td>
 					</tr>
 					<tr v-for="(vv, ind) in economy['Animal Housing Costs']">
 						<td>
@@ -1232,7 +1214,7 @@
 						</td>
 						<td>
 							<input v-model="vv.Cost" style="width:100px;"> 
-							<button v-if="ind > 0" v-on:click="removeHCostClass(vv, ind)">X</button>
+							<button class="sub_button" v-if="ind > 0" v-on:click="removeHCostClass(vv, ind)">X</button>
 						</td>
 					</tr>
 
@@ -1241,7 +1223,7 @@
 							<input id="newHCostClass" placeholder="Type a HFC name">
 						</td>
 						<td colspan="2">
-							<button for="newHCostClass" v-on:click="createHCostClass()"> Creating new HFC Class </button>
+							<button class="sub_button" for="newHCostClass" v-on:click="createHCostClass()"> Creating new HFC Class </button>
 						</td>
 					</tr>					
 				</table>
@@ -1251,35 +1233,29 @@
 						<span class="tooltip">&#9432 <span class="tooltiptext">Variables generated here can be used as values for numerics in the graphical enviroment. This allows to directly change numeric values for multiple nodes. </span></span>
 					</h3> 
 					<input id="newVariable" placeholder="Type variable name">
-					<button for="newVariable" v-on:click="createVariable()"> Creating new Variable </button>
+					<button class="sub_button" for="newVariable" v-on:click="createVariable()"> Creating new Variable </button>
 					<br>
-						<table class="trait_table" v-if="individualsVar_options.length > 0" style="width:500px">  
-						<thead>
+						<table class="var_table" v-if="individualsVar_options.length > 0">  
 							<tr>
 								<td>Variable Name</td>
 								<td>Variable Value</td>
-								<td></td>
 							</tr>
-						</thead>
-						<tbody>
 							<tr v-for="vv in individualsVar_options">
 								<td>
 									{{vv.name}}  
 								</td>
 								<td>
-									<input v-model="vv.value" style="width:100px;" v-on:input="updateNodesVar(vv); updateEdgesVar(vv);"> 
+									<input v-model="vv.value" v-on:input="updateNodesVar(vv); updateEdgesVar(vv);"> 
 								</td>
 								<td>
-									<button v-on:click="removeVariable(vv)">X</button>
+									<button class="sub_button" v-on:click="removeVariable(vv)">X</button>
 								</td>
 							</tr>
-						</tbody>
 					</table>
 					<br>
 					</div>
 			</div>
 			<div id="Breeding_Scheme">
-				<br>
 				<br>
 				<h3> Breeding Scheme
 					<span class="tooltip">&#9432 <span class="tooltiptext">Draw your breeding scheme in the following interactive enviroment.</span></span>
@@ -1287,14 +1263,14 @@
 				
 				<button class="accordion"> Click here to read the guildelines for Breeding Scheme: </button>
 				<div class="guideline">
-					<p> Add a Node : Click Edit -> Add Node  -> Click in an empty space to place a new node.  </p>
-					<p> Edit a Node : Select a Node from the diagram -> Click Edit Node </p>
-					<p> Drag a Node : Add/Edit a Node or Edge -> Use grey area to drag the Node/Edge display box. </p>
-					<p> Doublic Click a Node/Edge : Display only box appears for double click a node or edge. Need to click Edit Node to update a node/edge.</p>
-					<p> Copy Node : Select a Node -> Right Click.</p>					
+					<p class="guidelines"> Add a Node : Click Edit -> Add Node  -> Click in an empty space to place a new node.  </p>
+					<p class="guidelines"> Edit a Node : Select a Node from the diagram -> Click Edit Node </p>
+					<p class="guidelines"> Drag a Node : Add/Edit a Node or Edge -> Use grey area to drag the Node/Edge display box. </p>
+					<p class="guidelines"> Doublic Click a Node/Edge : Display only box appears for double click a node or edge. Need to click Edit Node to update a node/edge.</p>
+					<p class="guidelines"> Copy Node : Select a Node -> Right Click.</p>					
 				</div> 
 				
-				<h4 style="color: red">Important: Please AVOID node names with : and _ . In particular avoid trailing numbers like ABC_1. Repeated nodes will use this syntax!</h4>
+
 				<div id="mynetwork_container" >
 					<div id="mynetwork_label">
 						<h4>Legends</h4><br>
@@ -1309,7 +1285,7 @@
 				</div>
 			</div>
 
-			<div id="node-popUp" onchange="checkEverything(this.id)">
+			<div id="node-popUp" onclick="checkEverything(this.id)">
 				<div id="node-popUpheader"> 
 					<h3> {{node_operation}} </h3> <h6> Drag Node in this Area! </h6> 
 					<h4> Node {{ active_node.id }}</h4> <h6> </h6>
@@ -1396,7 +1372,7 @@
 						</td>
 						<td> 
 							<select v-model="active_node.Sex">
-								<option v-for="option in Sex_options" v-bind:value="option">
+								<option v-for="option in Sex_options2" v-bind:value="option">
 								{{ option }}
 								</option>
 							</select>
@@ -1446,7 +1422,7 @@
 				<input class='button_type' type="button" value="save" id="node-saveButton" />
 				<input class='button_type' type="button" value="cancel" id="node-cancelButton" />
 			</div>
-			<div id="edge-popUp" onchange="checkEverything(this.id)">
+			<div id="edge-popUp" onclick="checkEverything(this.id)">
 				
 				<div id="edge-popUpheader"> 
 					<h3> {{edge_operation}} </h3><h6> Drag Edge in this Area! </h6><br>
@@ -1750,7 +1726,17 @@
 				<br>
 				<h3>Analyze Breeding Program with R</h3>
 				<p>Click on button 'Start R Simulation' to run R.</p>
-				<button onclick="runningR1(); " >Start R Simulation</button>
+				
+				<h4 style="color: red" v-if="warnings.length > 0"> Please check warnings before running the simulation!</h4>
+				<button v-if="isBrowserSafari !== true & warnings.length > 0" v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+				<button onclick="runningR1(); " v-if="warnings.length > 0">Start R Simulation (despite warnings!)</button>
+				<button onclick="runningR1(); " v-if="warnings.length == 0">Start R Simulation</button>
+				<br>
+				<br>
+				<p> Click here to estimate computing time / costs of your breeding program </p>
+				<button onclick="runningR2(); " v-if="warnings.length == 0">Estimate time/cost (in prep.)</button>
+				
+				<br>
 				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
 				<button onclick="ReloadSim(); " >Reload Old Results</button>	
 				<br>
@@ -1784,32 +1770,57 @@
 				</form>
 				
 				<br>
-				<p class="boldText">Cohorts List : </p>
+				<p v-if="cohortsList.length >0" class="boldText">Cohorts List : </p>
 				<div v-if="cohortsList.length >0" class="cohortListHead">
-				<table>
-					<thead>
-						<tr><th><div style="width:160px;"> Cohort Name </div></th>
-							<th>Nr. of Individuals </th>
-							<th>Time-Point </th>
-							<th>Total Costs </th>
-							<th>Cost G.typing </th>
-							<th>Cost P.typing </th>
-							<th>Cost Housing </th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr v-for='(cohorts, index) in cohortsList' >
-							<td> <input v-model="cohorts['Cohort name']" style="border:0;width:175px;text-align:left;"></td>
-							<td> <input v-model="cohorts['Nr. of individuals']"> </td>
-							<td> <input v-model="cohorts['Time-point']"> </td>
-							<td> <input v-model="cohorts['Total costs']"> </td>
-							<td> <input v-model="cohorts['Cost genotyping']"> </td>
-							<td> <input v-model="cohorts['Cost phenotyping']"> </td>
-							<td> <input v-model="cohorts['Cost housing']"> </td>				
-						</tr>
-				</table>
-				<br>
+					<table>
+						<thead>
+							<tr><th><div style="width:160px;"> Cohort Name </div></th>
+								<th>Nr. of Individuals </th>
+								<th>Time point </th>
+								<th>Total csts </th>
+								<th>Cost genotyping </th>
+								<th>Cost phenotyping </th>
+								<th>Cost housing </th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr v-for='(cohorts, index) in cohortsList' >
+								<td> <input v-model="cohorts['Cohort name']" style="border:0;width:175px;text-align:left;"></td>
+								<td> <input v-model="cohorts['Nr. of individuals']"> </td>
+								<td> <input v-model="cohorts['Time-point']"> </td>
+								<td> <input v-model="cohorts['Total costs']"> </td>
+								<td> <input v-model="cohorts['Cost genotyping']"> </td>
+								<td> <input v-model="cohorts['Cost phenotyping']"> </td>
+								<td> <input v-model="cohorts['Cost housing']"> </td>				
+							</tr>
+					</table>
+
 				</div>
+				<br>
+				<br>
+				
+				<p v-if="cohortsTimeList.length >0" class="boldText">Computing time estimates : </p>
+				<div v-if="cohortsTimeList.length >0" class="cohortListHead">
+					<table>
+						<thead>
+							<tr><th><div style="width:160px;"> Cohort Name </div></th>
+								<th>computing BVE </th>
+								<th>computing generation </th>
+								<th>computing TOTAL </th>
+
+							</tr>
+							</thead>
+							<tbody>
+							<tr v-for='(cohorts, index) in cohortsTimeList' >
+								<td> <input v-model="cohorts['Cohort name']" style="border:0;width:175px;text-align:left;"></td>
+								<td> <input v-model="cohorts['BVEtime']"> </td>
+								<td> <input v-model="cohorts['Gentime']"> </td>
+								<td> <input v-model="cohorts['Totaltime']"> </td>			
+							</tr>
+					</table>
+
+				</div>
+				
 				<br>
 				<br>
 				<p v-if="cohortsList.length >0" class="boldText"> Download CSV file: 
@@ -2057,10 +2068,10 @@
 			<div id="Export_Data_H3">
 				<span class="tooltip">&#9432 <span class="tooltiptext"><p> Download JSON file to Desktop. </p>
 				<p> Display JSON data into this text area. </p></span></span>
-				<button id="export_button" onclick="downloadNetwork()" >Download Project</button>
+				<button class="sub_button" id="export_button" onclick="downloadNetwork()" >Download Project</button>
 				<span class="tooltip">&#9432 <span class="tooltiptext"><p> This option can be used to manually export the JSON File in order to run the MoBPS R-package on one's own computer.</p>
 				<p> You might also paste a JSON File into this text area and import it for further processing. </p></span></span>
-				<button id="import_button" onclick="importNetwork()" >Import Data</button>
+				<button class="sub_button" id="import_button" onclick="importNetwork()" >Import Data</button>
 				<br>
 				<br>
 				<div>
@@ -2093,13 +2104,13 @@
 		function openNav() {
 		  document.getElementById("mySidebar").style.width = "250px";
 		  document.getElementById("main").style.marginLeft = "250px";
-		  document.getElementById("openDiv").style.display = "none";
+		 // document.getElementById("openDiv").style.display = "none";
 		}
 		
 		function closeNav() {
 		  document.getElementById("mySidebar").style.width = "0";
 		  document.getElementById("main").style.marginLeft= "0";
-		  document.getElementById("openDiv").style.display = "block";
+		//  document.getElementById("openDiv").style.display = "block";
 		}
 				
 	function action(hidden) {

@@ -167,7 +167,7 @@ function myArray(len){
 	return a;
 }
 
-// returns an object with all parameters, we ned for plotting results:
+// returns an object with all parameters, we need for plotting results:
 function myPlottingPar(){
 	this['ResQTL_trait'] = "", 
 	this['ResQTL_qtl'] = "",
@@ -241,7 +241,7 @@ var data_Vue = new Vue({
 		selection_index_scaling : [{'Name': 'Default Index', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}, {'Name': 'Non', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}],
 		phenotyping_class : [{'Name': 'Fully phenotyped', 'Cost of phenotyping': 0}, {'Name': 'Not phenotyped', 'Cost of phenotyping': 0}],
 		phenotype_options: ['Own phenotype', 'Avg. offspring phenotype', 'Mean own/offspring phenotype', 'Weighted own/offspring phenotype'],
-		show_warnings: false,
+		show_warnings: true,
 		warnings: [],
 		runned: false,
 		genetic_data:'Ens',
@@ -264,6 +264,7 @@ var data_Vue = new Vue({
 		isBrowserSafari:'',
 		isDraggableOption:'',
 		cohortsList :[],
+		cohortsTimeList : [],
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -272,7 +273,7 @@ var data_Vue = new Vue({
 		active_edge:  new myEdge(),
 		node_operation: '',
 		edge_operation: '',
-		Sex_options: ['Male', 'Female'],
+		Sex_options: ['Male', 'Female', 'Both', 'Indefinit'],
 		Sex_options2: ['Male', 'Female', 'Both'],
 		node_colors: {'Male':'#9acef4', 'Female':'#f29595', 'Both':'#ddd264'},
 		edge_colors: {'Selection':'#7bbb44', 'Reproduction':'#f5a623', 'Aging':'#dba59a', 'Combine':'#5a4f7c', 'Repeat':'#f14235', 'Split': '#94db8e', 'Cloning':'#aa76fd', 'Selfing':'#ff90b7', 'DH-Production':'#aa76fd'},
@@ -1258,23 +1259,38 @@ function downloadNetwork(){
 }
 
 
-
-// function to import Data from OutputArea:
-
+// function to import file from local drive and display in the UI.
 function importNetwork() {
-	var exportArea = document.getElementById('OutputArea');
-	var inputValue = exportArea.value;
-	if(inputValue == ''){
-		alert("Nothing to import. Please paste the JSON file into the text area.");
-		return;
-	}
-	var inputData = JSON.parse(inputValue);
-	
-	importNetwork_intern(inputData);
+
+	var localDrivetoUI = document.getElementById('input-file');
+
+		if(localDrivetoUI) {
+			console.log(localDrivetoUI);
+			localDrivetoUI.addEventListener('change', getJSONFromDrive, false);
+		}
+
 	data_Vue.project_saved = false;
 	showCorrDiv("true");
 	
 }
+
+function getJSONFromDrive(event) {
+		const input = event.target;
+  		if ('files' in input && input.files.length > 0) {
+				//console.log (input.files[0]);
+	
+			 var reader = new FileReader();
+			    reader.onload = function(){
+			      var text = reader.result;
+				
+				var inputData = JSON.parse(text);	
+				importNetwork_intern(inputData);	
+			    };
+
+	    	reader.readAsText(input.files[0]);
+	  };
+ }
+
 
 function importNetwork_intern(inputData1) {
 	data_Vue.active_edge = new myEdge();
@@ -1399,6 +1415,7 @@ function importNetwork_intern(inputData1) {
 		data_Vue.matrix2 = [];		
 	}
 	loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
+	loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
 	
 	draw();
 	console.log("Loading Data successful.");
@@ -1422,6 +1439,22 @@ function loadCohortInfoFromServer(name) {
 				data_Vue.cohortsList = csvToJSON(data);
 				console.log(data_Vue.cohortsList);
 				return data_Vue.cohortsList;
+				}
+			}		
+	})
+}
+
+//function to Load Coghort information from Server
+function loadCohortTimeInfoFromServer(name) {
+	$.ajax
+	({
+		type: "GET",
+		url: '/getCohortTimeInfo',
+		success: function (data) {
+			if (data != '') {
+				data_Vue.cohortsTimeList = csvToJSON(data);
+				console.log(data_Vue.cohortsTimeList);
+				return data_Vue.cohortsTimeList;
 				}
 			}		
 	})
@@ -1765,12 +1798,23 @@ function addNode_extern(data) {
 }
 
 function saveNodeData(data, callback) {
+
+	
 	var old_id = data.id;
+
 	data = data_Vue.active_node;
+	
+	change_id = data.id;
+	change_id = change_id.replace("_","-");
+	data.id = change_id;
+	
 	//data.label = data.id;
 	var myInd = JSON.stringify(data['Number of Individuals']).replace(/\"/g, "");
 	//data.label = data.id+'\n'+myInd;
 	data.label = data.id+" ("+myInd+")";
+	if(data.Founder == "Yes"){
+		data.label = data.label + " *F"
+	}
 	data.color = data_Vue.node_color;
 	data.title = data_Vue.node_title;
 	if(data['Sex'] != "Both"){
@@ -1867,6 +1911,7 @@ function saveNodeData(data, callback) {
 		clearNodePopUp();
 		callback(data);
 	}
+	
 }
 
 function editEdgeWithoutDrag(data, callback) {
