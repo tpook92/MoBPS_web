@@ -2,7 +2,6 @@
 body {
 	line-height: 1.5;
 	background-color:#f2f2f2;
-	
 }
 
 h3 {
@@ -142,17 +141,9 @@ h6 {
 	font-size: 14pt;
 }
 
-.bar_button {
-	background-color: #8B9DC3;
-	font-size: 11pt;
-	padding: 3px 5px;
-	font-weight: bold;
-	color: darkblue;
-}
-
 .invisible_button {
   visibility: hidden;
-  width:120px;
+  width:90px;
   background-color: #8B9DC3;
 }
 
@@ -164,10 +155,11 @@ h6 {
 .navlinks .fileType {
 	background-color: #8B9DC3;
 	padding-bottom: 20px;
-	color: darkblue;
-	font-size: 11pt;
+	color: white;
+	font-size: 13pt;
 	padding: 3px 5px;
 	font-weight: bold;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	border:2px;	
 }
 
@@ -183,7 +175,6 @@ h6 {
 	padding: 3px 5px;
 	font-weight: bold;
 }
-
 #Navigator_Orig {
 	background-color: rgba(208,218,240, 0.5);
 	position:fixed;
@@ -334,6 +325,7 @@ li a:hover:not(.active) {
 	color:darkblue;
 }
 
+
 .drag_table {
 	background-color: #f0f0f0;
 	border-collapse: collapse;
@@ -455,7 +447,6 @@ li a:hover:not(.active) {
 	background-color: #f0f0f0;
 }
 
-
 /********* Some tooltip styles for additional info on hover ********************/
 /* Tooltip container */
 .tooltip {
@@ -522,7 +513,7 @@ button {
   text-align: center;
   text-decoration: none;
   outline: none;
-  color: darkblue;
+  color: white;
   background-color: #99c2ff;
   border: none;
   border-radius: 5px;
@@ -531,7 +522,7 @@ button {
 
 button:hover {
 	font-style:oblique;
-	}
+}
 
 button:active {
   background-color: green;
@@ -545,7 +536,6 @@ button[disabled]{
   color: #666666;
 }
 
-
 .sub_button {
 	background-color: #8B9DC3;
 	font-size: 8pt;
@@ -554,12 +544,13 @@ button[disabled]{
 	color: darkblue
 }
 
+
 /******* Network Styles *********************/
 #mynetwork_container {
 	position:relative;
 	width: 1500px;
 	height: 800px;
-	border: 1px solid lightgray;
+	border: 1px solid #4f567c;
 }
 #mynetwork_label {
 	float:left;
@@ -573,9 +564,9 @@ button[disabled]{
 #mynetwork {
 	float:left;
 	position:relative;
-	width: 1363px;
+	width: 1360px;
 	height: 798px;
-	border: 1px solid #4f567c;
+	border: 1px solid lightgray ;
 }
 #node-popUp {
 	display:none;
@@ -693,18 +684,35 @@ table.saveTable input[type=text]{
 	border: 2px solid lightblue;
 }
 
+
 .bar_button {
 	background-color: #8B9DC3;
-	font-size: 11pt;
+	font-size: 13pt;
 	padding: 3px 5px;
 	font-weight: bold;
-	color: darkblue;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	color: white;
 }
 
 .bar_button:hover {
     text-decoration:underline;
+	color: darkblue;
 }
- 
+
+.showhide_button {
+	background-color: #8B9DC3;
+	font-size: 10pt;
+	padding: 3px 3px;
+	font-weight: bold;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	color: white;
+}
+
+.showhide_button:hover {
+    text-decoration:underline;
+	color: darkblue;
+}
+
 /** by default, Mozilla add red color box-shadow when the input field is invalid. Same doesn't effect other browsers. So removing. **/
 input:invalid {
     box-shadow: none;
@@ -763,11 +771,12 @@ transition: all 0.5s ease; */
 .sidebar a {
   padding: 15px 15px 15px 32px;
   text-decoration: none;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
   color:  darkblue;
   display: block;
   transition: 0.3s;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .sidebar a:hover {
@@ -780,10 +789,11 @@ transition: all 0.5s ease; */
   top: 15px;
   right: 25px;
   font-size: 15px;
-  margin-left: 50px;
+  margin-left: 20px;
   color: white;
   border: none;
   background-color: #5394ed;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .sidebar .closebtn:hover {
@@ -793,10 +803,11 @@ transition: all 0.5s ease; */
 .additional_link {
 	background-color: #5394ed;
 	text-decoration: none;
-	font-size: 18px;
+	font-size: 16px;
 	text-align: center;
-  	padding: 4px 12px; 
+  	padding: 2px 4px; 
 	font-weight: bold;  
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	color:  white;
 }
 
@@ -805,6 +816,7 @@ transition: all 0.5s ease; */
 	font-style:italic;
 	font-family: verdana, arial, sans-serif;
 	margin-left:20px;
+	background-color: #f2f2f2;
 }
 
 .sidebar .closebtn:hover {
@@ -822,6 +834,7 @@ transition: all 0.5s ease; */
   cursor: pointer;
   color: white;
   border: none;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .openbtn:hover {
@@ -859,7 +872,7 @@ transition: all 0.5s ease; */
 
 /* Breeding Scheme Node and Edge guidelines */
 .accordion {
-  background-color: white;
+  background-color: #f2f2f2;
   color: #444;
   cursor: pointer;
   text-align: left;
@@ -873,7 +886,7 @@ transition: all 0.5s ease; */
 }
 
 .guideline {
-  background-color: white;
+  background-color: #f2f2f2;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
