@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-
+	<meta charset="utf-8"/><title>MoBPS Login User Interface</title>
+	<link rel="stylesheet" type="text/css" href="./styles/menu_pages.css">
 </head>
 
-<meta charset="utf-8"/><title>MoBPS User Interface</title>
-<link rel="stylesheet" type="text/css" href="./styles/menu_pages.css">
 <body>
 
-
-  <section class="container">
-	<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:652px;height:128px;">	<header> MoBPS </header>
-    <div class="topnav">
-      <a href="http://www.mobps.de/">MoBPS Home</a> 
-      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
-      <a href="https://www.uni-goettingen.de/de/publikationen/93141.html" target="_blank">Publications</a>
-	  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
-	  <a onclick="func('intro');">Introduction to MoBPS </a>
-	  <a onclick="func('faq');">FAQ  </a>
-	  <a onclick="func('history');">Version history </a>
-	  <a onclick="func('agb');">AGB</a>
-	</div>
-	
+  <div id ="container">
+	<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:552px;height:120px;">	
+		<header> MoBPS </header>
+	    <div class="topnav">
+	      <a href="http://www.mobps.de/">MoBPS Home</a> 
+	      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
+	      <a href="https://www.uni-goettingen.de/de/publikationen/93141.html" target="_blank">Publications</a>
+		  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
+		  <a onclick="func('intro');">Introduction to MoBPS </a>
+		  <a onclick="func('faq');">FAQ  </a>
+		  <a onclick="func('history');">Version history </a>
+		  <a onclick="func('agb');">AGB</a>
+		</div>
+		
 		<div class="login-form">
-		<h1> MoBPS Login View </h1>
+		<h1> User Login </h1>
 		<form action="auth" id = "loginForm" method="POST">
 			<input type="text" name="username" id = "username" placeholder="Username" required>
 			<input type="password" name="password" id="password" placeholder="Password" required>
@@ -34,19 +33,18 @@
 		</div>
 	</section>	
 	
-	<footer class="footer-distributed">
-		<div class="footer-left">
-		<p></p><br>
-		<p>CONTACT: </p> <br>
-		<p></p><br>
-		<p>Torsten Pook </p><br>
-		<p>Department of Animal Breeding and Genetics</p>
-		<p>Albrecht-Thaer-Weg 3</p><br>
-		<p>37075 Goettingen</p><br>
-		<p>torsten.pook (at) uni-goettingen.de</p><br>
-		<p></p>
-	</div> 
-	</footer>
+	<footer id ="footer">
+		CONTACT:  <br>
+		<br>
+		Torsten Pook <br>
+		Department of Animal Breeding and Genetics<br>
+		Albrecht-Thaer-Weg 3<br>
+		37075 Goettingen<br>
+		torsten.pook (at) uni-goettingen.de<br>
+	</footer> 	
+	</body>
+	
+	
 	<script type="text/javascript" src="javascript/menu_pages.js"></script>
 
 	<script type="text/javascript">
@@ -57,5 +55,5 @@
 	   }  
 	</script>
 	
-</body>
+
 </html>
