@@ -85,12 +85,12 @@
 				<!-- <button class='bar_button' id="download_button" onclick="importNetwork()" >Import Project</button> -->
 				<input type="button" class="fileType" id="importProject" value="IMPORT" class='bar_button' onclick="document.getElementById('input-file').click();importNetwork()" />
 				<input type="file" style="display:none;" id="input-file" name="file"/>
-				<button class='bar_button' id="download_button" onclick="downloadNetwor()" >EXPORT</button>
+				<button class='bar_button' id="download_button" onclick="downloadNetwork()" >EXPORT</button>
 				<button class='bar_button' id="delete_button" onclick="deleteProject()" >DELETE</button>
 				<button v-if="isBrowserSafari !== true" class='showhide_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
 				<button v-if="isBrowserSafari !== true" class='showhide_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 				&nbsp;
-				<a v-if="curUserGroup =='4'" href="http://localhost:8080/compareProjects"  class ="additional_link">Compare Projects</a> 
+				<a href="http://mobps.js/compareProjects"  class ="additional_link">Compare Projects</a> 
 			</div>
 			<div id='SaveAs_Div'>
 				New Project Name: <input id="saveAs-name" placeholder="Type a name"/> <br><br>
@@ -155,9 +155,15 @@
 			<br>
 			<h3>Load a new/existent project from your own database:</h3>
 			Project: 
-			<select id="Project_Name" onchange="loadData(value)" v-model="geninfo['Project Name']">
+			<select id="Project_Name" onchange="loadData(value)" v-model="geninfo['Project Name']" v-if="database2.length==0">
 				<option value="Create_New_123456YYYY">New Project</option>
 				<option v-for="option in database" v-bind:value="option">
+					{{ option }}
+				</option>
+			</select>
+			<select id="Project_Name" onchange="loadData(value)" v-model="geninfo['Project Name']" v-if="database2.length!=0">
+				<option value="Create_New_123456YYYY">New Project</option>
+				<option v-for="option in database2" v-bind:value="option">
 					{{ option }}
 				</option>
 			</select>
@@ -171,6 +177,17 @@
 				</template>
 			</select>
 			<br>
+			
+			Filter Projects for Keyword:
+			<td>
+				<input placeholder="Type in filter criterion" v-model="filter">
+			</td>
+			<td>
+				<button class="sub_button" v-on:click="FilterDatabase();"> Apply Filter </button>
+			</td>
+
+			<br>
+			
 			Exemplary Templates:
 			<select onchange="loadTemplate(value)" >
 				<option value="Create_New_12345XXX"></option>
@@ -839,8 +856,6 @@
 					</tr>
 					<br>
 				</table>
-
-				
 				<table class="corr_table" v-if="traitsinfo.length > 1 && show_matrix2">
 					<tr>
 						<td colspan="5" class="corr_title">Genetic Correlation
@@ -1814,7 +1829,7 @@
 				</div>
 				<br>
 
-			<!--	</div> -->
+				</div>
 				<br>
 				<br>
 				
@@ -2085,7 +2100,7 @@
 			</div>
 			<div>
 			</div>
-			<div id="Export_Data_H3" v-if="geninfo['advanced'] && geninfo['advanced_box']">
+			<div id="Export_Data_H3">
 				<span class="tooltip">&#9432 <span class="tooltiptext"><p> Download JSON file to Desktop. </p>
 				<p> Display JSON data into this text area. </p></span></span>
 				<button class="sub_button" id="export_button" onclick="downloadNetwork()" >Download Project</button>

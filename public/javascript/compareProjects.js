@@ -2,7 +2,6 @@ Vue.component('treeselect', VueTreeselect.Treeselect);
 
 function cpInfo () {
 	this['curUserGroup'] = '';
-	this['jsonDataList'] = [];
 }
 
 // returns an object with all parameters, we need for plotting results:
@@ -52,9 +51,8 @@ var data_Vue = new Vue({
 		isBrowserSafari:'',
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
 		plottingType2: ["By Repeats", "By Time"],
-		Summary: [],		
-	}
-	
+		Summary: [],
+		}
 })
 
 function init() {
@@ -83,7 +81,6 @@ function isSafari() {
 
 function getProjects(val) {
  	var len = val.options.length;
-
 	var compProjects = [];	
   	for (var i = 0; i < len; i++) {
 	    opt = val.options[i];
@@ -92,47 +89,46 @@ function getProjects(val) {
 		  compProjects.push(pro);
 	    }
 	  }
-	
-	var cnt = compProjects.length;
-	var testthis = {};
-	data_Vue.cpInfo['jsonDataList'] = [];
-	data_Vue.jsonDataList = [];
-	for (var j = 0; j < cnt; j++) {
-		var testthis = setJsondataList(compProjects[j]);	
-		data_Vue.jsonDataList.push(testthis);	
-		data_Vue.cpInfo['jsonDataList'].push(testthis);
-	}
 
-	console.log(data_Vue.cpInfo);
-	console.log(data_Vue.jsonDataList);
+	data_Vue.compareProjects = compProjects;
+	
+	jsonListofProjects(data_Vue.compareProjects);
+	
 }
 
+function jsonListofProjects (plist) {
+	var arr = [];
+	
+	var jsonRequests  = function(jsonIndex) {
+	  if (plist.length == jsonIndex) {
+	    console.log("jsonList Success", arr);
+	    return;
+	  }
 
-function setJsondataList(project_name) {	
+ 	 var project_name = plist[jsonIndex];
 
-	var thisObject = {};
-
-	  $.ajax
-		({
+ 		 $.ajax({
 			type: "POST",
 			url: '/loadproject',
 			data: {name : project_name},
-			success: function (data, msg) {
-				if(data != ''){
-					thisObject.project_name = data[0].name;
-					thisObject.jsonData = data[0].json;
-				}else{
-					alert("Loading Data failed. Contact administrator. "+msg);
-				}
-			},
-			failure: function(msg) 
-			{
-				alert("Loading Data failed! Contact administrator. "+msg);
-			},
-		});
-		
-	return thisObject;
-};
+			    success: function(data) {
+			      arr.push(data[0].json);
+			    },
+		    error: function() {
+		      arr.push({});
+		      console.error("jsonList Error", "plist", arguments);
+		    },
+		    complete: function() {
+		      jsonRequests(++jsonIndex);
+		    }
+		  });
+		};
+
+jsonRequests(0);
+
+data_Vue.jsonDataList = arr;
+//console.log(data_Vue.jsonDataList);
+}
 
 
 //************* warn the user about unsaved changes, when leaving:
