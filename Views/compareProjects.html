@@ -57,13 +57,12 @@
 	</div>
 		
 	<div id='compareProjectDiv'>
-		<div id="Project_Bar">	
+		<div id="Project_Bar">
 			<a>&nbsp;</a>
-				<a href="http://mobps.de/home" class="additional_link">Go back to MoBPS Home</a> 
+				<a href="http://localhost:8080/home" class="additional_link">Go back to MoBPS Home</a> 
 			<a>&nbsp;</a>					
 			</div>
-		</div>
-			
+
 
 			<div id="main">
 				
@@ -79,16 +78,13 @@
 							<option v-for="option in database" v-bind:value="option">
 								{{ option }}
 							</option>
-						</select>
+						</select>	
 						</td>
 						</tr>
 					</table>
 				</div>
     	
 	        	<br>
-				
-				
-				
 					<h4>Results: Observed Phenotypes</h4>
 					<button onclick="RunResultpMeanGroup()" >Run Analysis</button>
 					<br>
@@ -112,7 +108,7 @@
 					<br>
 					<br>
 					<div v-show="plottingData.RespMeanGroup != ''" v-if="jsonDataList.length>0" style="resize: both; overflow: scroll;" class="RSim_Div">
-						<div v-for="(trait, index) in jsonDataList[0]['jsonData']['Trait Info']" v-bind:id="'RespMeanGroup_Div'+(index+1)">
+						<div v-for="(trait, index) in jsonDataList[0]['Trait Info']" v-bind:id="'RespMeanGroup_Div'+(index+1)">
 						</div>
 					</div>
 					<br>
@@ -141,7 +137,7 @@
 					<br>
 					<br>
 					<div v-show="plottingData.ResgMeanGroup != ''" v-if="jsonDataList.length>0" style="resize: both; overflow: scroll;" class="RSim_Div">
-						<div v-for="(trait, index) in jsonDataList[0]['jsonData']['Trait Info']" v-bind:id="'ResgMeanGroup_Div'+(index+1)">
+						<div v-for="(trait, index) in jsonDataList[0]['Trait Info']" v-bind:id="'ResgMeanGroup_Div'+(index+1)">
 						</div>
 					</div>
 					<br>
@@ -167,7 +163,7 @@
 					<br>
 					
 					<div v-show="plottingData.ResAccBVEGroup != ''" v-if="jsonDataList.length>0" style="resize: both; overflow: scroll;" class="RSim_Div">
-						<div v-for="(trait, index) in jsonDataList[0]['jsonData']['Selection Index']" v-bind:id="'ResAccBVEGroup_Div'+(index+1)">
+						<div v-for="(trait, index) in jsonDataList[0]['Selection Index']" v-bind:id="'ResAccBVEGroup_Div'+(index+1)">
 						</div>
 					</div>
 					<br>
@@ -226,7 +222,7 @@
 						</select>
 						Select QTL :
 						<select v-if="plottingPar.ResQTLGroup_trait != ''" v-model="plottingPar.ResQTLGroup_qtl">
-							<option v-for="(option, index) in jsonDataList[0]['jsonData']['Trait Info'][plottingPar.ResQTLGroup_trait -1]['Trait QTL Info']" v-bind:value="index">
+							<option v-for="(option, index) in jsonDataList[0]['Trait Info'][plottingPar.ResQTLGroup_trait -1]['Trait QTL Info']" v-bind:value="index">
 							{{ option['QTL ID'] }}  
 							</option>
 						</select>
@@ -259,6 +255,5 @@
 	<script type="text/javascript" src="javascript/compareProjects.js"></script>
 	<script type="text/javascript" src="javascript/Rmodule.js"></script>
 	
-
 </html>
 
