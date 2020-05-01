@@ -9,6 +9,7 @@
 		
 	<head>
 		<title>MoBPS</title>
+		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
@@ -56,21 +57,18 @@
 	</div>
 		
 	<div id='compareProjectDiv'>
-		<div id="Project_Bar">
-			<div style="overflow:auto;">	
+		<div id="Project_Bar">	
 			<a>&nbsp;</a>
-			<a>&nbsp;</a>	
-				<a href="http://mobps.de/home" class="additional_link">Go back to MoBPS Home</a> 					
+				<a href="http://mobps.de/home" class="additional_link">Go back to MoBPS Home</a> 
+			<a>&nbsp;</a>					
 			</div>
 		</div>
 			
 
 			<div id="main">
-				<div id="openDiv">
-			  		<button onclick="openNav()" class="openbtn"> Navigation Open </button>  
-				</div>
 				
 				<div id="LoadJSON_Div" >
+					<br>
 					<h2>MoBPS Compare Projects </h2>
 					<table>
 						<tr>
@@ -89,9 +87,11 @@
     	
 	        	<br>
 				
-
+				
+				
 					<h4>Results: Observed Phenotypes</h4>
 					<button onclick="RunResultpMeanGroup()" >Run Analysis</button>
+					<br>
 					<template v-if="plottingData.RespMeanGroup != ''">
 						Select plotting type:
 						<select v-model="plottingPar.RespMeanGroup_pType" >
@@ -101,13 +101,13 @@
 						</select>
 						<br>
 						Select cohorts (multiple selection possible): 
-						<button onclick="plottingResultpMeanGroup()" >Plot Results</button>
-						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.RespMeanGroup_cohorts" :searchable="true" style="width:800px"/>
-						<!--select v-model="plottingPar.RespMean_cohorts" size="6" multiple>
+						<!--select v-model="plottingPar.ResgMean_cohorts" size="6" multiple>
 							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
 							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
 							</option>
 						</select-->
+						<button onclick="plottingResultpMeanGroup()" >Plot Results</button>
+						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.RespMeanGroup_cohorts" :searchable="true" style="width:800px"/>
 					</template>
 					<br>
 					<br>
@@ -120,6 +120,7 @@
 					
 					<h4>Results: True Breeding Values</h4>
 					<button onclick="RunResultgMeanGroup()" >Run Analysis</button>
+					<br>
 					<template v-if="plottingData.ResgMeanGroup != ''">
 						Select plotting type:
 						<select v-model="plottingPar.ResgMeanGroup_pType" >
@@ -148,7 +149,7 @@
 					
 					<h4>Results: Accuracy of Breeding Value Estimation</h4>
 					<button onclick="RunResultAccBVEGroup()" >Run Analysis</button>
-
+					<br>
 					<template v-if="plottingData.ResAccBVEGroup != ''">
 						Select plotting type:
 						<select v-model="plottingPar.ResAccBVEGroup_pType" >
@@ -166,7 +167,7 @@
 					<br>
 					
 					<div v-show="plottingData.ResAccBVEGroup != ''" v-if="jsonDataList.length>0" style="resize: both; overflow: scroll;" class="RSim_Div">
-						<div v-for="(trait, index) in jsonDataList[0]['jsonData'].selection_index" v-bind:id="'ResAccBVEGroup_Div'+(index+1)">
+						<div v-for="(trait, index) in jsonDataList[0]['jsonData']['Selection Index']" v-bind:id="'ResAccBVEGroup_Div'+(index+1)">
 						</div>
 					</div>
 					<br>
@@ -175,6 +176,7 @@
 					
 					<h4> Results: Relationship and Inbreeding within Cohorts </h4>
 					<button onclick="RunResultRelGroup()" >Run Analysis</button>
+					<br>
 					<template v-if="plottingData.ResRelGroup != ''">
 						Select plotting type:
 						<select v-model="plottingPar.ResRelGroup_pType" >
@@ -206,6 +208,7 @@
 					
 					<h4> Results: Major QTLs (Allele Frequency, exp./obs. Heterozygosity)</h4>
 					<button onclick="RunResultQTLGroup()" >Run Analysis</button>
+					<br>
 					<template v-if="plottingData.ResQTLGroup != ''">
 					
 						Select plotting type:
@@ -217,13 +220,13 @@
 						
 						Select Trait :
 						<select v-model="plottingPar.ResQTLGroup_trait">
-							<option v-if="option['Trait Major QTL'] > 0" v-for="(option, index) in jsonDataList[0]['jsonData'].traitsinfo" v-bind:value="index+1">
+							<option v-if="option['Trait Major QTL'] > 0" v-for="(option, index) in jsonDataList[0]['jsonData']['Trait Info']" v-bind:value="index+1">
 							{{ option["Trait Name"] }} 
 							</option>
 						</select>
 						Select QTL :
 						<select v-if="plottingPar.ResQTLGroup_trait != ''" v-model="plottingPar.ResQTLGroup_qtl">
-							<option v-for="(option, index) in jsonDataList[0]['jsonData'].traitsinfo[plottingPar.ResQTL_trait -1]['Trait QTL Info']" v-bind:value="index">
+							<option v-for="(option, index) in jsonDataList[0]['jsonData']['Trait Info'][plottingPar.ResQTLGroup_trait -1]['Trait QTL Info']" v-bind:value="index">
 							{{ option['QTL ID'] }}  
 							</option>
 						</select>
@@ -256,22 +259,6 @@
 	<script type="text/javascript" src="javascript/compareProjects.js"></script>
 	<script type="text/javascript" src="javascript/Rmodule.js"></script>
 	
-	
-	<!-- Navigation Menu related -->
-	<script type="text/javascript">
-		function openNav() {
-		  document.getElementById("mySidebar").style.width = "250px";
-		  document.getElementById("main").style.marginLeft = "250px";
-		  document.getElementById("openDiv").style.display = "none";
-		}
-		
-		function closeNav() {
-		  document.getElementById("mySidebar").style.width = "0";
-		  document.getElementById("main").style.marginLeft= "0";
-		  document.getElementById("openDiv").style.display = "block";
-		}			
-	
-	</script>		
 
 </html>
 

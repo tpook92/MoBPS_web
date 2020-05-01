@@ -93,20 +93,48 @@ function getProjects(val) {
 
 	data_Vue.compareProjects = compProjects;
 
-	var cnt = compProjects.length;
-	var testthis = {};
-	
-	data_Vue.jsonDataList = [];
-	for (var j = 0; j < cnt; j++) {
-		var testthis = setJsondataList(compProjects[j]);	
-		data_Vue.jsonDataList.push(testthis);	
-	}
+	data_Vue.compareProjects = compProjects;
 
+	jsonListofProjects(data_Vue.compareProjects);
+	
 	//data_Vue.traitsinfo = data_Vue.jsonDataList[0]["jsonData"]["Trait Info"];
 	//console.log(data_Vue.jsonDataList);
 }
 
 
+function jsonListofProjects (plist) {
+	var arr = [];
+
+	var jsonRequests  = function(jsonIndex) {
+		 if (plist.length == jsonIndex) {
+			console.log("jsonList Success", arr);
+			return;
+		}
+		  
+		var project_name = plist[jsonIndex];
+		 
+		 $.ajax({
+			type: "POST",
+			url: '/loadproject',
+			data: {name : project_name},
+								success: function(data) {
+					arr.push(data[0].json);
+			},
+			 error: function() {
+				arr.push({});
+				console.error("jsonList Error", "plist", arguments);
+			},
+			complete: function() {
+				jsonRequests(++jsonIndex);
+			}
+		});
+	};
+
+jsonRequests(0);
+
+data_Vue.jsonDataList = arr;
+//console.log(data_Vue.jsonDataList);
+}
 function setJsondataList(project_name) {	
 
 	var thisObject = {};

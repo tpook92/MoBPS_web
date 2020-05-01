@@ -9,7 +9,7 @@ path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle,Simple_Cattle2")
-# arg <- c("Torsten", "Simple_Cattle_LowSelection,Simple_Cattle_Default,Simple_Cattle_Fat")
+# arg <- c("Torsten", "123Simple_Cattle,456Simple_Cattle")
 user <- arg[1]
 #filename <- arg[2:length(arg)]
 filename <- unlist(strsplit(arg[2], split=","))
@@ -36,14 +36,17 @@ for(project in 1:length(filename)){
   coh <- get.cohorts(population, extended=TRUE)
   ttnames <- NULL
   ttrep <- NULL
+  tttime <- NULL
   for(nn in coh[,1]){
     nn_s <- strsplit(nn, "_")[[1]]
     if(!is.na(as.numeric(nn_s[length(nn_s)]))){
       ttnames <- c(ttnames, paste(nn_s[-length(nn_s)],collapse="_" ))
       ttrep <- c(ttrep, as.numeric(nn_s[length(nn_s)]))
+      tttime <- c(tttime, as.numeric(get.time.point(population, cohorts=nn)[1]))
     }else{
       ttnames <- c(ttnames, nn)
       ttrep <- c(ttrep, 0)
+      tttime <- c(tttime, as.numeric(get.time.point(population, cohorts=nn)[1]))
     }
   }
 
@@ -73,7 +76,7 @@ for(project in 1:length(filename)){
         if(!("try-error" %in% is(check)) & check == TRUE){
           for(qtl in 1:length(trait[[tr]][["Trait QTL Info"]])){
             snp <-  population$info$real.bv.add[[tr]][qtl,]
-            ttfreq <- analyze.population(population, snp[2], snp[1], cohorts=coh)
+            ttfreq <- analyze.population(population, snp[2], snp[1], cohorts=coh[,1])
             freq <- (ttfreq[3,]+ttfreq[2,]/2)/colSums(ttfreq)
             oH <-  ttfreq[2,]/colSums(ttfreq)
             eH <- 2*freq*(1-freq)
@@ -119,7 +122,7 @@ for(project in 1:length(filename)){
       if(!("try-error" %in% is(check)) & check == TRUE){
         for(qtl in 1:length(trait[[tr]][["Trait QTL Info"]])){
           snp <-  population$info$real.bv.add[[tr]][qtl,]
-          ttfreq <- analyze.population(population, snp[2], snp[1], cohorts=coh)
+          ttfreq <- analyze.population(population, snp[2], snp[1], cohorts=coh[,1])
           freq <- (ttfreq[3,]+ttfreq[2,]/2)/colSums(ttfreq)
           oH <-  ttfreq[2,]/colSums(ttfreq)
           eH <- 2*freq*(1-freq)
@@ -130,10 +133,40 @@ for(project in 1:length(filename)){
     }
   }
 
-  for(addon in 1:length(result)){
-    resultTotal[[length(resultTotal)+1]] <- result[[addon]]
-    names(resultTotal)[length(resultTotal)] <- paste0(filename[project],"_",  names(result)[addon])
+  for(index in 1:length(result)){
+    for(tt in 1:length(result[[index]])){
+      if(length(result[[index]])>0){
+        names(result[[index]][[tt]]) <- paste0(filename[project], "_", names(result[[index]][[tt]]))
+        for(pp in 1:length(result[[index]][[tt]])){
+          result[[index]][[tt]][[pp]][1,] <- paste0(filename[project], "_", result[[index]][[tt]][[pp]][1,])
+        }
+      }
+
+
+    }
+
   }
+
+  if(project==1){
+    resultTotal <- result
+  } else{
+    for(index in 1:length(result)){
+      for(tt in 1:length(result[[index]])){
+        if(length(result[[index]])>0){
+
+          for(ss in 1:length(result[[index]][[tt]])){
+            resultTotal[[index]][[tt]][[length(resultTotal[[index]][[tt]])+1]] <- result[[index]][[tt]][[ss]]
+          }
+
+        }
+
+
+      }
+
+    }
+
+  }
+
 }
 
 

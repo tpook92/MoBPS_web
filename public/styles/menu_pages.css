@@ -1,28 +1,37 @@
-body { 
+* {
+	margin:0;
+	padding:0;	
+}
+
+html, body { 
   background-color: #d0daf0; 
-  margin-left :10%;
-  margin-left :10%;
+  margin-left :3%;
+  height:100px;
 }
 
 .bg-img {
   background-image: url("../desktop/univ_images/image1.png");
  }
 
-h1 {font-size:14px; }
+h2 {font-size:11px; }
   
-.container {
-  position: absolute;
-  background-color: #d0daf0;
-  width:80%;
-}
-
-.container {
-	width: 80%;
-	height: 200px;
+#container {
+	position: absolute;
+    background-color: #d0daf0;
+	min-height: 90px;
 	margin: auto;
 	padding: 10px;
 	cursor: pointer;
 } 
+
+#footer {
+	background-color:gray;
+	position: relative;
+	height: 30px;
+	margin-top:-50px;
+	clear: both;
+}
+
 
 /* The navbar */
 .topnav {
@@ -58,9 +67,9 @@ header {
 }
 	
 .login-form {
-	width: 20%;
-	height:100%;
-	margin-top: 50px;
+	width: 25%;
+	height:460px;
+	margin-top: 15px;
 	float: left;
 	font-family: Tahoma, Geneva, sans-serif;
 }
@@ -113,56 +122,15 @@ h6 {
 }
 	
 	
-footer{
-	position: fixed;
-	bottom: 0;
-}
- 
-@media (max-height:800px){
-	footer { position: static; }
-	header { padding-top:40px; }
-}
- 
- 
-.footer-distributed{
+#footer {
 	background-color: gray;
-	box-sizing: border-box;
-	width: 80%;
+	font: bold 11px sans-serif;
 	text-align: left;
-	font: bold 16px sans-serif;
-}
- 
-.footer-distributed .footer-left{
-	display: inline-block;
-	vertical-align: top;
-} 
- 
-
-.footer-distributed .footer-left{
-	width: 35%;
-	margin-left:8%;
-}
- 
- 
-.footer-distributed .footer-left p{
-	display: inline-block;
+	position: relative;
+	height:90px;
+	padding-top: 5px;
+	padding-left: 3px;
+	clear: both;
 	color: white;
-	font-size:10px;
-	vertical-align: middle;
-	margin-left:30px;
-	margin:0;
-}
-   
-@media (max-width: 880px) { 
-	.footer-distributed .footer-left{
-		display: block;
-		width: 100%;
-		margin-bottom: 40px;
-		text-align: center;
-	}
- 
-	.footer-distributed .footer-center i{
-		margin-left: 0;
-	}
 }
 	

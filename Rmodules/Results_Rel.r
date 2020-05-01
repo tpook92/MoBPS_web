@@ -8,7 +8,7 @@ library("jsonlite")
 path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
-# arg <- c("Torsten", "IMAGE_del_conservation")
+# arg <- c("Torsten", "Simple_Cattle_Default")
 user <- arg[1]
 filename <- arg[2]
 
@@ -49,7 +49,7 @@ if(length(avail)>1){
     library(doParallel)
     ttkinship <- foreach::foreach(rep=1:nrow(coh), .packages = "MoBPS", .combine = "rbind") %dopar% {
       if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1){
-        out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 50)
+        out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 25)
       }else{
         out <- c(0,0.5)
       }
@@ -68,14 +68,20 @@ if(length(avail)>1){
 
 } else{
   ttkinship <- NULL
-  for(cc in 1:nrow(coh)){
-    print(cc)
-    if(as.numeric(coh[cc,3]) + as.numeric(coh[cc,4]) > 1){
-      ttkinship <- rbind(ttkinship, kinship.emp.fast(population=population, cohorts=coh[cc,1],ibd.obs = 100, hbd.obs = 25))
+
+  ncore <- min(10, nrow(coh))
+  doParallel::registerDoParallel(cores=ncore)
+  library(doParallel)
+  ttkinship <- foreach::foreach(rep=1:nrow(coh), .packages = "MoBPS", .combine = "rbind") %dopar% {
+    if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1){
+      out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 25)
     }else{
-      ttkinship <- rbind(ttkinship, c(0,0.5))
+      out <- c(0,0.5)
     }
+    out
   }
+  doParallel::stopImplicitCluster()
+
 }
 
 

@@ -234,6 +234,8 @@ function analyzeR() {
 }
 
 
+
+
 function ReloadSim(){
 	var filename = data_Vue.geninfo["Project Name"];
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
@@ -555,7 +557,7 @@ function RunResultpMeanGroup(){
 		success: function (data, msg) {
 			if(data != ''){
 				//console.log(data);
-				data_Vue.plottingData.RespMean = JSON.parse(data);
+				data_Vue.plottingData.RespMeanGroup = JSON.parse(data);
 				writeSumGroup();
 				//plottingResultgMean(JSON.parse(data));
 			}else{
@@ -712,6 +714,98 @@ function plottingResultgMean(){
 	}
 }
 
+function plottingResultpMeanGroup(){
+	var data = data_Vue.plottingData.RespMeanGroup;
+	var coh = data_Vue.plottingPar.RespMeanGroup_cohorts;
+	var pType = data_Vue.plottingPar.RespMeanGroup_pType;
+	
+	var data1 = [];
+	for(var i=0; i< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; i++){
+		data1.push([]);
+	}
+	
+	if(pType=="By Repeats"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each trait:
+			for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+				data1[j].push({
+					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
+					x : Object.keys(data[coh[i]]),
+					mode : 'scatter',
+					name : coh[i]
+				});	
+			}		
+		}
+		var xtitle = 'Repeats';
+	}
+	if(pType=="By Cohorts"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			var red = ((Math.floor(i/3)+1)*85)%255;
+			var green = ((Math.floor(i/6)+1)*85)%255;
+			var blue = ((i+1)*85)%255;
+			// each rep:
+			var ttimes = Object.keys(data[coh[i]]);
+			for(var k=0; k < ttimes.length; k++){
+				// eacht trait
+				for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+					data1[j].push({
+						y : data[coh[i]][ttimes[k]].tval[j],
+						name : coh[i]+'_'+ttimes[k],
+						marker : {color: "rgb("+red+","+green+","+blue+")"},
+						type: 'box',
+						boxpoints : 'Outliers',
+						boxmean : true
+					});	
+				}
+			}			
+		}
+		var xtitle = 'Cohorts (trailing numbers denote repeated cohorts)';
+	}
+	if(pType=="By Time"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each trait:
+			for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+				data1[j].push({
+					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
+					x : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))}),
+					mode : 'scatter',
+					name : coh[i]
+				});	
+			}		
+		}
+		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["jsonData"]["Genomic Info"]['Time Unit'];
+	}
+		
+	var titles = data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].map(function(x){return(x['Trait Name'])});
+	for(var i=0; i < data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; i++){
+		var layout = {
+			title : titles[i],
+			showlegend: pType != 'By Cohorts',
+			plot_bgcolor: '#FFFFFF',
+			xaxis: {
+				title: xtitle,
+				zeroline: false,
+				automargin: true
+			},
+			};
+		var config = {
+			scrollZoom: true,
+			toImageButtonOptions: {
+				format: 'png', // one of png, svg, jpeg, webp
+				filename: 'custom_image',
+				height: 750,
+				width: 1500,
+				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
+			}
+		};
+		Plotly.newPlot('RespMeanGroup_Div'+(i+1), data1[i], layout, config);
+	}
+}
+
+
 function plottingResultgMeanGroup(){
 	var data = data_Vue.plottingData.ResgMeanGroup;
 	var coh = data_Vue.plottingPar.ResgMeanGroup_cohorts;
@@ -774,7 +868,7 @@ function plottingResultgMeanGroup(){
 				});	
 			}		
 		}
-		var xtitle = 'Time in '+data_Vue.geninfo['Time Unit'];
+		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["jsonData"]["Genomic Info"]['Time Unit'];
 	}
 		
 	var titles = data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].map(function(x){return(x['Trait Name'])});
@@ -974,6 +1068,94 @@ function plottingResultRel(){
 	}
 }
 
+
+function plottingResultRelGroup(){
+	var data = data_Vue.plottingData.ResRelGroup;
+	var coh = data_Vue.plottingPar.ResRelGroup_cohorts;
+	var pType = data_Vue.plottingPar.ResRelGroup_pType;
+	var data1 = [[],[]];// Relationship and Inbreeding
+
+	if(pType=="By Repeats"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each value:
+			for(var j=0; j< data1.length; j++){
+				data1[j].push({
+					y : data[coh[i]][3+j],
+					x : data[coh[i]][1],
+					mode : 'scatter',
+					name : coh[i]
+				});	
+			}		
+		}
+		var xtitle = 'Repeats';
+	}
+	if(pType=="By Cohorts"){
+		var data1 = [[{}],[{}]];// Relationship and Inbreeding
+		// each cohort
+		for(var j=0; j< data1.length; j++){
+			data1[j][0].y = [];
+			data1[j][0].x = [];
+			data1[j][0].type = "bar";
+			for(var i=0; i < coh.length; i++){
+				var red = ((Math.floor(i/3)+1)*85)%255;
+				var green = ((Math.floor(i/6)+1)*85)%255;
+				var blue = ((i+1)*85)%255;
+				// each value
+				var ttimes = data[coh[i]][1];
+				for(var k=0; k< ttimes.length; k++){
+					data1[j][0].y.push(Number(data[coh[i]][3+j][k]));
+					data1[j][0].x.push(coh[i] +'_'+ ttimes[k]);
+				}
+							
+			}
+		}
+		//console.log(data1);
+		var xtitle = 'Cohorts (trailing numbers denote repeated cohorts)';
+	}
+	if(pType=="By Time"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each value:
+			for(var j=0; j< data1.length; j++){
+				data1[j].push({
+					y : data[coh[i]][3+j],
+					x : data[coh[i]][2],
+					mode : 'scatter',
+					name : coh[i]
+				});	
+			}		
+		}
+		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["jsonData"]["Genomic Info"]['Time Unit'];
+	}
+		
+	var titles = ["Average Relationship within Cohorts", "Average Inbreeding within Cohorts"];
+	for(var i=0; i < data1.length; i++){
+		var layout = {
+			title : titles[i],
+			showlegend: pType != 'By Cohorts',
+			plot_bgcolor: '#FFFFFF',
+			xaxis: {
+				title: xtitle,
+				zeroline: false,
+				automargin: true
+			},
+			};
+		var config = {
+			scrollZoom: true,
+			toImageButtonOptions: {
+				format: 'png', // one of png, svg, jpeg, webp
+				filename: 'custom_image',
+				height: 750,
+				width: 1500,
+				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
+			}
+		};
+		Plotly.newPlot('ResRel_Div'+(i+1), data1[i], layout, config);
+	}
+}
+
+
 function RunResultRel(){
 	var filename = data_Vue.geninfo["Project Name"];
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
@@ -1034,7 +1216,7 @@ function RunResultRelGroup(){
 		success: function (data, msg) {
 			if(data != ''){
 				//console.log(data);
-				data_Vue.plottingData.ResRel = JSON.parse(data);
+				data_Vue.plottingData.ResRelGroup = JSON.parse(data);
 				writeSumGroup();
 				//plottingResultgMean(JSON.parse(data));
 			}else{
@@ -1222,6 +1404,97 @@ function plottingResultQTL(){
 
 }
 
+
+// ---- Plotting QTL:
+function plottingResultQTLGroup(){
+	var data1 = [[],[],[]];
+	var trait = data_Vue.plottingPar.ResQTLGroup_trait-1;
+	var qtl = data_Vue.plottingPar.ResQTLGroup_qtl;
+	var coh = data_Vue.plottingPar.ResQTLGroup_cohorts;
+	var pType = data_Vue.plottingPar.ResQTLGroup_pType;
+	
+	var data = data_Vue.plottingData.ResQTLGroup[data_Vue.jsonDataList[0]['jsonData']['Trait Info'][trait]['Trait Name']][qtl];
+	
+	if(pType=="By Repeats"){
+		for(var i=0; i < coh.length; i++){
+			// allele frequency:
+			data1[0].push({
+				y : data[coh[i]][2],
+				x : data[coh[i]][1],
+				mode : 'scatter',
+				name : coh[i]
+			});	
+			// observed He:
+			data1[1].push({
+				y : data[coh[i]][3],
+				x : data[coh[i]][1],
+				mode : 'scatter',
+				name : coh[i]
+			});	
+			// expected He:
+			data1[2].push({
+				y : data[coh[i]][4],
+				x : data[coh[i]][1],
+				mode : 'scatter',
+				name : coh[i]
+			});			
+		}
+
+	}
+	if(pType=="By Time"){
+		for(var i=0; i < coh.length; i++){
+			// allele frequency:
+			data1[0].push({
+				y : data[coh[i]][2],
+				x : data[coh[i]][5],
+				mode : 'scatter',
+				name : coh[i]
+			});	
+			// observed He:
+			data1[1].push({
+				y : data[coh[i]][3],
+				x : data[coh[i]][5],
+				mode : 'scatter',
+				name : coh[i]
+			});	
+			// expected He:
+			data1[2].push({
+				y : data[coh[i]][4],
+				x : data[coh[i]][5],
+				mode : 'scatter',
+				name : coh[i]
+			});			
+		}
+	}
+	
+	var titles = ["Allele Frequency (A)", "Observed Heterozygosity", "Expected Heterozygosity"];
+	for(var i=0; i < 3; i++){
+		var layout = {
+			title : titles[i],
+			showlegend: true,
+			plot_bgcolor: '#FFFFFF',
+			xaxis: {
+				title: 'Repeats',
+				zeroline: false,
+				automargin: true
+			},
+		};
+		var config = {
+			scrollZoom: true,
+			toImageButtonOptions: {
+				format: 'png', // one of png, svg, jpeg, webp
+				filename: 'custom_image',
+				height: 750,
+				width: 1500,
+				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
+			}
+		};
+		Plotly.newPlot('ResQTL_Div'+(i+1), data1[i], layout, config);
+	}
+
+}
+
+
 function RunResultQTL(){
 	var filename = data_Vue.geninfo["Project Name"];
 	var qtl = 0;
@@ -1272,8 +1545,8 @@ function RunResultQTL(){
 function RunResultQTLGroup(){
 	var filename = data_Vue.compareProjects;
 	var qtl = 0;
-	for(var i=0; i< jsonDataList[0]['jsonData'].traitsinfo.length; i++){
-		qtl += jsonDataList[0]['jsonData'].traitsinfo[i]["Trait Major QTL"];
+	for(var i=0; i< data_Vue.jsonDataList[0]['jsonData']['Trait Info'].length; i++){
+		qtl += data_Vue.jsonDataList[0]['jsonData']['Trait Info'][i]["Trait Major QTL"];
 	}
 	if(qtl == 0){
 		alert("There is no QTL to calculate results for.");
@@ -1286,7 +1559,7 @@ function RunResultQTLGroup(){
 		url: './RsimQTLGroup',
 		data: {
 			filename : filename,
-			traitsinfo : jsonDataList[0]['jsonData'].traitsinfo
+			traitsinfo : data_Vue.jsonDataList[0]['jsonData']['Trait Info']
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for QTLs';
@@ -1296,16 +1569,16 @@ function RunResultQTLGroup(){
 		success: function (data, msg) {
 			if(data != ''){
 				//console.log(data);
-				data_Vue.plottingData.ResQTL = JSON.parse(data);
+				data_Vue.plottingData.ResQTLGroup = JSON.parse(data);
 				writeSumGroup();
 				//plottingResultQTL(JSON.parse(data));
 			}else{
-				alert("Failed to plot KS. Please run the Simulation first!");
+				alert("Failed to plot KS. Please run the Simulation first1!");
 			}
 		},
 		failure: function(msg) 
 		{
-			alert("Failed to plot KS. Please run the Simulation first!");
+			alert("Failed to plot KS. Please run the Simulation first2!");
 		},
 		complete: function(obj, msg){
 			document.getElementById("runningDog").style.visibility = 'hidden';
@@ -1414,6 +1687,103 @@ function plottingResultAccBVE(){
 }
 
 
+// ---- Plotting Accuracy of Breeding Value Estimation:
+function plottingResultAccBVEGroup(){
+	var data = data_Vue.plottingData.ResAccBVEGroup;
+	var coh = data_Vue.plottingPar.ResAccBVEGroup_cohorts;
+	var pType = data_Vue.plottingPar.ResAccBVEGroup_pType;
+	var sindex = data_Vue.jsonDataList[0]['jsonData']["Selection Index"];
+	var data1 = [];
+	for(var i=0;i < sindex.length; i++){
+		data1.push([]);
+	} 
+
+	if(pType=="By Repeats"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each value:
+			for(var j=0; j< data1.length; j++){
+				data1[j].push({
+					y : Object.values(data[coh[i]]).map(function(x){return(Number(x.tval[j]))}),
+					x : Object.keys(data[coh[i]]),
+					mode : 'scatter',
+					name : coh[i]
+				});	
+			}		
+		}
+		var xtitle = 'Repeats';
+	}
+	if(pType=="By Cohorts"){
+		var data1 = [];
+		for(var i=0;i < sindex.length; i++){
+			data1.push([{}]);
+		} // Relationship and Inbreeding
+		// each cohort
+		for(var j=0; j< data1.length; j++){
+			data1[j][0].y = [];
+			data1[j][0].x = [];
+			data1[j][0].type = "bar";
+			for(var i=0; i < coh.length; i++){
+				// each value
+				var ttimes = Object.keys(data[coh[i]]);
+				for(var k=0; k< ttimes.length; k++){
+					data1[j][0].y.push(Number(Object.values(data[coh[i]])[k].tval[j]));
+					data1[j][0].x.push(coh[i] + "_"+ ttimes[k]);
+				}
+							
+			}
+		}
+		//console.log(data1);
+		var xtitle = 'Cohorts (trailing numbers denote repeated cohorts)';
+	}
+	if(pType=="By Time"){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each value:
+			for(var j=0; j< data1.length; j++){
+				data1[j].push({
+					y : Object.values(data[coh[i]]).map(function(x){return(Number(x.tval[j]))}),
+					x : Object.values(data[coh[i]]).map(function(x){return(x.ttime[0])}),
+					mode : 'scatter',
+					name : coh[i]
+				});	
+			}		
+		}
+		var xtitle = 'Time in '+data_Vue.geninfo['Time Unit'];
+	}
+		
+	var titles = sindex.map(function(x){return(x['Name'])});
+	for(var i=0; i < data1.length; i++){
+		var layout = {
+			title : titles[i],
+			showlegend: pType != 'By Cohorts',
+			plot_bgcolor: '#FFFFFF',
+			xaxis: {
+				title: xtitle,
+				zeroline: false,
+				automargin: true
+			},
+			yaxis: {
+				title: "Correlation of True BV and EBV/Phenotype",
+				zeroline: false,
+				automargin: true
+			},
+			};
+		var config = {
+			scrollZoom: true,
+			toImageButtonOptions: {
+				format: 'png', // one of png, svg, jpeg, webp
+				filename: 'custom_image',
+				height: 750,
+				width: 1500,
+				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
+			}
+		};
+		Plotly.newPlot('ResAccBVEGroup_Div'+(i+1), data1[i], layout, config);
+	}
+}
+
+
 function RunResultAccBVE(){
 	var filename = data_Vue.geninfo["Project Name"];
 	
@@ -1445,6 +1815,50 @@ function RunResultAccBVE(){
 		failure: function(msg) 
 		{
 			alert("Failed to plot KS. Please run the Simulation first!");
+		},
+		complete: function(obj, msg){
+			document.getElementById("runningDog").style.visibility = 'hidden';
+			//document.getElementById("runningDog").innerHTML = '';
+			//alert(msg);
+			//console.log(obj);
+		},
+		dataType: "text",
+	});
+}
+
+function RunResultAccBVEGroup(){
+	
+	var filename = data_Vue.compareProjects;
+	
+	$.ajax
+	({
+		type: "POST",
+		url: './RsimAccBVEGroup',
+		data: {
+			filename : filename,
+			sindex : data_Vue.jsonDataList[0].jsonData["Selection Index"]
+			},
+		beforeSend: function() {
+			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for Accuracy of Breeding Value Estimations...';
+			document.getElementById("runningDog").style.visibility = 'visible';
+			//alert("Now Sending!");
+		},
+		success: function (data, msg) {
+			if(data != ''){
+				//console.log(data);
+				
+				data_Vue.plottingData.ResAccBVEGroup = JSON.parse(data);
+				writeSumGroup();
+				data_Vue.Summary_AccBVE = data_Vue.Summary.filter(function(x){
+					return(data_Vue.plottingData.ResAccBVEGroup[x.id][0].tval != "NA");
+				});
+			}else{
+				alert("Failed to plot KS. Please run the Simulation first1!");
+			}
+		},
+		failure: function(msg) 
+		{
+			alert("Failed to plot KS. Please run the Simulation first2!");
 		},
 		complete: function(obj, msg){
 			document.getElementById("runningDog").style.visibility = 'hidden';

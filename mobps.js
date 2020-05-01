@@ -330,11 +330,11 @@ app.post('/RsimQTL', function(request, response) {
 	});
 });
 
-app.post('/RsimQTL', function(request, response) {
+app.post('/RsimQTLGroup', function(request, response) {
 	
 	request.setTimeout(5*24*60*60*1000);
 
-	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_QTL.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.traitsinfo) + "'";
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_QTLGroup.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.traitsinfo) + "'";
 	console.log(command);
 		
 	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
@@ -342,7 +342,7 @@ app.post('/RsimQTL', function(request, response) {
 			console.log(err);
 			response.send(stderr);
 		}else{
-			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+ 'Compare_' + 'QTL.json';
+			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+ 'Compare_' + 'QTLGroup.json';
 			fs.readFile(textfile, function(err, data){
 				if(err){
 					response.send('');
@@ -383,7 +383,7 @@ app.post('/RsimAccBVEGroup', function(request, response) {
 	
 	request.setTimeout(5*24*60*60*1000);
 
-	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_AccBVE.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.sindex) + "'";
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_AccBVEGroup.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.sindex) + "'";
 	console.log(command);
 		
 	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
@@ -391,7 +391,7 @@ app.post('/RsimAccBVEGroup', function(request, response) {
 			console.log(err);
 			response.send(stderr);
 		}else{
-			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+ 'Compare_' + 'AccBVE.json';
+			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+ 'Compare_' + 'AccBVEGroup.json';
 			fs.readFile(textfile, function(err, data){
 				if(err){
 					response.send('');

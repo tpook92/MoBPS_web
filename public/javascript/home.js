@@ -248,6 +248,8 @@ var data_Vue = new Vue({
 		genetic_data:'Ens',
 		user:'',
 		database:[],
+		database2:[],
+		filter: [],
 		versions:[],
 		template_database:[],
 		project_saved: "",
@@ -790,6 +792,18 @@ var data_Vue = new Vue({
 			this.show_matrix_element.push({show:true});
 			if (len > 1) { showCorrDiv("true"); }						
 		},
+		
+		FilterDatabase: function(){
+			var database2 = [];
+			var f = this.filter;
+			for(var i=0; i < this.database.length; i++){
+				if(this.database[i].indexOf(f)>=0){
+					database2.push(this.database[i]);
+				}
+			}
+			this.database2 = database2;
+		},
+
 		// remove clicked Phenotype
 		removePheno: function(ind){
 			var len = this.traitsinfo.length;
@@ -1261,22 +1275,36 @@ function downloadNetwork(){
 
 
 
-// function to import Data from OutputArea:
-
+// function to import file from local drive and display in the UI.
 function importNetwork() {
-	var exportArea = document.getElementById('OutputArea');
-	var inputValue = exportArea.value;
-	if(inputValue == ''){
-		alert("Nothing to import. Please paste the JSON file into the text area.");
-		return;
-	}
-	var inputData = JSON.parse(inputValue);
-	
-	importNetwork_intern(inputData);
+	var localDrivetoUI = document.getElementById('input-file');
+
+		if(localDrivetoUI) {
+			console.log(localDrivetoUI);
+			localDrivetoUI.addEventListener('change', getJSONFromDrive, false);
+		}	
 	data_Vue.project_saved = false;
 	showCorrDiv("true");
 	
 }
+
+function getJSONFromDrive(event) {
+		const input = event.target;
+  		if ('files' in input && input.files.length > 0) {
+				//console.log (input.files[0]);
+
+			 var reader = new FileReader();
+			    reader.onload = function(){
+			      var text = reader.result;
+
+				var inputData = JSON.parse(text);	
+				importNetwork_intern(inputData);	
+			    };
+
+	    	reader.readAsText(input.files[0]);
+	  };
+ }
+ 
 
 function importNetwork_intern(inputData1) {
 	data_Vue.active_edge = new myEdge();
@@ -1413,6 +1441,23 @@ function importNetwork_intern(inputData1) {
 	
 }
 
+//function to Load Coghort information from Server
+function loadCohortTimeInfoFromServer(name) {
+	$.ajax
+	({
+		type: "GET",
+		url: '/getCohortTimeInfo',
+		success: function (data) {
+			if (data != '') {
+				data_Vue.cohortsTimeList = csvToJSON(data);
+				console.log(data_Vue.cohortsTimeList);
+				return data_Vue.cohortsTimeList;
+				}
+			}		
+	})
+}
+
+
 function resizeExportArea() {
 	exportArea.style.height = (1 + exportArea.scrollHeight) + "px";
 }
@@ -1512,6 +1557,18 @@ function postProject(name, url, jsondata){
 		},
 	});			
 }
+
+function FilterDatabase(){
+	var database2 = [];
+	var f = data_Vue.filter;
+	for(var i=0; i < data_Vue.database.length; i++){
+		if(data_Vue.database[i].indexOf(f)>=0){
+			database2.push(data_Vue.database[i]);
+		}
+	}
+	data_Vue.database2 = database2;
+}
+
 
 function saveProject(name) {
 	if(!name){

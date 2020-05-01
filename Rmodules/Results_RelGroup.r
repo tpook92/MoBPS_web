@@ -9,7 +9,7 @@ path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle,Simple_Cattle2")
-# arg <- c("Torsten", "Simple_Cattle_LowSelection,Simple_Cattle_Default,Simple_Cattle_Fat")
+# arg <- c("Torsten", "123Simple_Cattle,456Simple_Cattle")
 user <- arg[1]
 #filename <- arg[2:length(arg)]
 filename <- unlist(strsplit(arg[2], split=","))
@@ -87,17 +87,23 @@ for(project in 1:length(filename)){
 
   } else{
     ttkinship <- NULL
-    for(cc in 1:nrow(coh)){
-      print(cc)
-      if(as.numeric(coh[cc,3]) + as.numeric(coh[cc,4]) > 1){
-        ttkinship <- rbind(ttkinship, kinship.emp.fast(population=population, cohorts=coh[cc,1],ibd.obs = 100, hbd.obs = 25))
+
+    ncore <- min(10, nrow(coh))
+    doParallel::registerDoParallel(cores=ncore)
+    library(doParallel)
+    ttkinship <- foreach::foreach(rep=1:nrow(coh), .packages = "MoBPS", .combine = "rbind") %dopar% {
+      if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1){
+        out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 25)
       }else{
-        ttkinship <- rbind(ttkinship, c(0,0.5))
+        out <- c(0,0.5)
       }
+      out
     }
+    doParallel::stopImplicitCluster()
+
   }
 
-  result <- cbind(ttnames, ttrep, coh[,"time point"], round(ttkinship[,1]*2,digits=6), round(ttkinship[,2]*2-1, digits=6))
+  result <- cbind(paste0(filename[project], "_", ttnames), ttrep, coh[,"time point"], round(ttkinship[,1]*2,digits=6), round(ttkinship[,2]*2-1, digits=6))
 
   resultsTotal <- rbind(resultsTotal, result)
 }
@@ -111,7 +117,11 @@ result <- resultsTotal
 #dat <- by(result, result[,1], t)
 #class(dat) <- "list"
 
-json <- as.character(toJSON(result))
+dat <- by(result, result[,1], t)
+class(dat) <- "list"
+
+json <- as.character(toJSON(dat))
+
 write.table(json, file=paste(path,user,"_","Compare_","RelGroup.json",sep=""), row.names=FALSE, col.names=FALSE, quote=FALSE)
 
 
