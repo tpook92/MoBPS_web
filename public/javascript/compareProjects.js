@@ -135,31 +135,6 @@ jsonRequests(0);
 data_Vue.jsonDataList = arr;
 //console.log(data_Vue.jsonDataList);
 }
-function setJsondataList(project_name) {	
-
-	var thisObject = {};
-
-	  $.ajax
-		({
-			type: "POST",
-			url: '/loadproject',
-			data: {name : project_name},
-			success: function (data, msg) {
-				if(data != ''){
-					thisObject.project_name = data[0].name;
-					thisObject.jsonData = data[0].json;
-				}else{
-					alert("Loading Data failed. Contact administrator. "+msg);
-				}
-			},
-			failure: function(msg) 
-			{
-				alert("Loading Data failed! Contact administrator. "+msg);
-			},
-		});
-		
-	return thisObject;
-};
 
 
 //************* warn the user about unsaved changes, when leaving:

@@ -720,7 +720,7 @@ function plottingResultpMeanGroup(){
 	var pType = data_Vue.plottingPar.RespMeanGroup_pType;
 	
 	var data1 = [];
-	for(var i=0; i< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; i++){
+	for(var i=0; i< data_Vue.jsonDataList[0]["Trait Info"].length; i++){
 		data1.push([]);
 	}
 	
@@ -728,7 +728,7 @@ function plottingResultpMeanGroup(){
 		// each cohort
 		for(var i=0; i < coh.length; i++){
 			// each trait:
-			for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+			for(var j=0; j< data_Vue.jsonDataList[0]["Trait Info"].length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
 					x : Object.keys(data[coh[i]]),
@@ -749,7 +749,7 @@ function plottingResultpMeanGroup(){
 			var ttimes = Object.keys(data[coh[i]]);
 			for(var k=0; k < ttimes.length; k++){
 				// eacht trait
-				for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+				for(var j=0; j< data_Vue.jsonDataList[0]["Trait Info"].length; j++){
 					data1[j].push({
 						y : data[coh[i]][ttimes[k]].tval[j],
 						name : coh[i]+'_'+ttimes[k],
@@ -767,7 +767,7 @@ function plottingResultpMeanGroup(){
 		// each cohort
 		for(var i=0; i < coh.length; i++){
 			// each trait:
-			for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+			for(var j=0; j< data_Vue.jsonDataList[0]["Trait Info"].length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
 					x : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))}),
@@ -776,11 +776,11 @@ function plottingResultpMeanGroup(){
 				});	
 			}		
 		}
-		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["jsonData"]["Genomic Info"]['Time Unit'];
+		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["Genomic Info"]['Time Unit'];
 	}
 		
-	var titles = data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].map(function(x){return(x['Trait Name'])});
-	for(var i=0; i < data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; i++){
+	var titles = data_Vue.jsonDataList[0]["Trait Info"].map(function(x){return(x['Trait Name'])});
+	for(var i=0; i < data_Vue.jsonDataList[0]["Trait Info"].length; i++){
 		var layout = {
 			title : titles[i],
 			showlegend: pType != 'By Cohorts',
@@ -812,7 +812,7 @@ function plottingResultgMeanGroup(){
 	var pType = data_Vue.plottingPar.ResgMeanGroup_pType;
 	
 	var data1 = [];
-	for(var i=0; i< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; i++){
+	for(var i=0; i< data_Vue.jsonDataList[0]["Trait Info"].length; i++){
 		data1.push([]);
 	}
 	
@@ -820,7 +820,7 @@ function plottingResultgMeanGroup(){
 		// each cohort
 		for(var i=0; i < coh.length; i++){
 			// each trait:
-			for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+			for(var j=0; j< data_Vue.jsonDataList[0]["Trait Info"].length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
 					x : Object.keys(data[coh[i]]),
@@ -841,7 +841,7 @@ function plottingResultgMeanGroup(){
 			var ttimes = Object.keys(data[coh[i]]);
 			for(var k=0; k < ttimes.length; k++){
 				// eacht trait
-				for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+				for(var j=0; j< data_Vue.jsonDataList[0]["Trait Info"].length; j++){
 					data1[j].push({
 						y : data[coh[i]][ttimes[k]].tval[j],
 						name : coh[i]+'_'+ttimes[k],
@@ -859,7 +859,7 @@ function plottingResultgMeanGroup(){
 		// each cohort
 		for(var i=0; i < coh.length; i++){
 			// each trait:
-			for(var j=0; j< data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; j++){
+			for(var j=0; j< data_Vue.jsonDataList[0]["Trait Info"].length; j++){
 				data1[j].push({
 					y : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))}),
 					x : Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))}),
@@ -868,11 +868,11 @@ function plottingResultgMeanGroup(){
 				});	
 			}		
 		}
-		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["jsonData"]["Genomic Info"]['Time Unit'];
+		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["Genomic Info"]['Time Unit'];
 	}
 		
-	var titles = data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].map(function(x){return(x['Trait Name'])});
-	for(var i=0; i < data_Vue.jsonDataList[0]["jsonData"]["Trait Info"].length; i++){
+	var titles = data_Vue.jsonDataList[0]["Trait Info"].map(function(x){return(x['Trait Name'])});
+	for(var i=0; i < data_Vue.jsonDataList[0]["Trait Info"].length; i++){
 		var layout = {
 			title : titles[i],
 			showlegend: pType != 'By Cohorts',
@@ -1126,7 +1126,7 @@ function plottingResultRelGroup(){
 				});	
 			}		
 		}
-		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["jsonData"]["Genomic Info"]['Time Unit'];
+		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["Genomic Info"]['Time Unit'];
 	}
 		
 	var titles = ["Average Relationship within Cohorts", "Average Inbreeding within Cohorts"];
@@ -1413,7 +1413,7 @@ function plottingResultQTLGroup(){
 	var coh = data_Vue.plottingPar.ResQTLGroup_cohorts;
 	var pType = data_Vue.plottingPar.ResQTLGroup_pType;
 	
-	var data = data_Vue.plottingData.ResQTLGroup[data_Vue.jsonDataList[0]['jsonData']['Trait Info'][trait]['Trait Name']][qtl];
+	var data = data_Vue.plottingData.ResQTLGroup[data_Vue.jsonDataList[0]['Trait Info'][trait]['Trait Name']][qtl];
 	
 	if(pType=="By Repeats"){
 		for(var i=0; i < coh.length; i++){
@@ -1545,8 +1545,8 @@ function RunResultQTL(){
 function RunResultQTLGroup(){
 	var filename = data_Vue.compareProjects;
 	var qtl = 0;
-	for(var i=0; i< data_Vue.jsonDataList[0]['jsonData']['Trait Info'].length; i++){
-		qtl += data_Vue.jsonDataList[0]['jsonData']['Trait Info'][i]["Trait Major QTL"];
+	for(var i=0; i< data_Vue.jsonDataList[0]['Trait Info'].length; i++){
+		qtl += data_Vue.jsonDataList[0]['Trait Info'][i]["Trait Major QTL"];
 	}
 	if(qtl == 0){
 		alert("There is no QTL to calculate results for.");
@@ -1559,7 +1559,7 @@ function RunResultQTLGroup(){
 		url: './RsimQTLGroup',
 		data: {
 			filename : filename,
-			traitsinfo : data_Vue.jsonDataList[0]['jsonData']['Trait Info']
+			traitsinfo : data_Vue.jsonDataList[0]['Trait Info']
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for QTLs';
@@ -1692,7 +1692,7 @@ function plottingResultAccBVEGroup(){
 	var data = data_Vue.plottingData.ResAccBVEGroup;
 	var coh = data_Vue.plottingPar.ResAccBVEGroup_cohorts;
 	var pType = data_Vue.plottingPar.ResAccBVEGroup_pType;
-	var sindex = data_Vue.jsonDataList[0]['jsonData']["Selection Index"];
+	var sindex = data_Vue.jsonDataList[0]["Selection Index"];
 	var data1 = [];
 	for(var i=0;i < sindex.length; i++){
 		data1.push([]);
@@ -1836,7 +1836,7 @@ function RunResultAccBVEGroup(){
 		url: './RsimAccBVEGroup',
 		data: {
 			filename : filename,
-			sindex : data_Vue.jsonDataList[0].jsonData["Selection Index"]
+			sindex : data_Vue.jsonDataList[0]["Selection Index"]
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for Accuracy of Breeding Value Estimations...';
