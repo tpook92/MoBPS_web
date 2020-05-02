@@ -51,9 +51,8 @@ var data_Vue = new Vue({
 		isBrowserSafari:'',
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
 		plottingType2: ["By Repeats", "By Time"],
-		Summary: [],		
-	}
-	
+		Summary: [],
+		}
 })
 
 function init() {
@@ -92,43 +91,38 @@ function getProjects(val) {
 	  }
 
 	data_Vue.compareProjects = compProjects;
-
-	data_Vue.compareProjects = compProjects;
-
+	
 	jsonListofProjects(data_Vue.compareProjects);
 	
-	//data_Vue.traitsinfo = data_Vue.jsonDataList[0]["jsonData"]["Trait Info"];
-	//console.log(data_Vue.jsonDataList);
 }
-
 
 function jsonListofProjects (plist) {
 	var arr = [];
-
+	
 	var jsonRequests  = function(jsonIndex) {
-		 if (plist.length == jsonIndex) {
-			console.log("jsonList Success", arr);
-			return;
-		}
-		  
-		var project_name = plist[jsonIndex];
-		 
-		 $.ajax({
+	  if (plist.length == jsonIndex) {
+	    console.log("jsonList Success", arr);
+	    return;
+	  }
+
+ 	 var project_name = plist[jsonIndex];
+
+ 		 $.ajax({
 			type: "POST",
 			url: '/loadproject',
 			data: {name : project_name},
-								success: function(data) {
-					arr.push(data[0].json);
-			},
-			 error: function() {
-				arr.push({});
-				console.error("jsonList Error", "plist", arguments);
-			},
-			complete: function() {
-				jsonRequests(++jsonIndex);
-			}
-		});
-	};
+			    success: function(data) {
+			      arr.push(data[0].json);
+			    },
+		    error: function() {
+		      arr.push({});
+		      console.error("jsonList Error", "plist", arguments);
+		    },
+		    complete: function() {
+		      jsonRequests(++jsonIndex);
+		    }
+		  });
+		};
 
 jsonRequests(0);
 
