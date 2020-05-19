@@ -867,7 +867,7 @@ var data_Vue = new Vue({
 			});
 			if(items.length >= 1){
 				for(ii=0; ii < items.length; ii++){
-					this.nodes.update({id: items[ii], 'Number of Individuals': wert, title: items[ii]+':'+wert+' Ind'});
+					this.nodes.update({id: items[ii], 'Number of Individuals': wert, title: items[ii]+':'+wert+' Ind', label: items[ii]+'(:'+wert+')'});
 				}
 				//network.setData({nodes: this.nodes, edges: this.edges});
 			}
@@ -1283,6 +1283,22 @@ function importNetwork() {
 			console.log(localDrivetoUI);
 			localDrivetoUI.addEventListener('change', getJSONFromDrive, false);
 		}	
+	data_Vue.project_saved = false;
+	showCorrDiv("true");
+	
+}
+
+
+function importNetwork_fromBox() {
+	var exportArea = document.getElementById('OutputArea');
+	var inputValue = exportArea.value;
+	if(inputValue == ''){
+		alert("Nothing to import. Please paste the JSON file into the text area.");
+		return;
+	}
+	var inputData = JSON.parse(inputValue);
+	
+	importNetwork_intern(inputData);
 	data_Vue.project_saved = false;
 	showCorrDiv("true");
 	

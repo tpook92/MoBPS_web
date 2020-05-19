@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-
-	<meta charset="utf-8"/><title>MoBPS Login User Interface</title>
+	
+	<meta charset="utf-8"/><title>MoBPS User Interface</title>
 	<link rel="stylesheet" type="text/css" href="./styles/menu_pages.css">
 </head>
 
-<meta charset="utf-8"/><title>MoBPS User Interface</title>
-<link rel="stylesheet" type="text/css" href="./styles/menu_pages.css">
+
 <body>
 
-
-  <div id ="container">
-	<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:552px;height:120px;">	
-		<header> MoBPS </header>
+  	<section class="container">
+		<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:652px;height:128px;">	<header> MoBPS Login </header>
 	    <div class="topnav">
 	      <a href="http://www.mobps.de/">MoBPS Home</a> 
 	      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
@@ -25,28 +22,33 @@
 		  <a onclick="func('agb');">AGB</a>
 		</div>
 		
+		<br>
+		
 		<div class="login-form">
-		<h1> User Login </h1>
-		<form action="auth" id = "loginForm" method="POST">
-			<input type="text" name="username" id = "username" placeholder="Username" required>
-			<input type="password" name="password" id="password" placeholder="Password" required>
-			<input type="submit" value="Login">		
-
-		</form>		
+			<form action="auth" id = "loginForm" method="POST">
+			    <label for="username">User Name</label>
+				<input type="text" name="username" id = "username" placeholder="Username" required>
+				<label for="password">Password</label>
+				<input type="password" name="password" id="password" placeholder="Password" required>
+				<input type="submit" value="Login">		
+			</form>		
+			<br>
 			<input type="button"  class="guestLogin"  value="Guest Login" onClick="guestLogin();">	
 		</div>
 	</section>	
 	
-	<footer id ="footer">
-		CONTACT:  <br>
-		<br>
-		Torsten Pook <br>
-		Department of Animal Breeding and Genetics<br>
-		Albrecht-Thaer-Weg 3<br>
-		37075 Goettingen<br>
-		torsten.pook (at) uni-goettingen.de<br>
-	</footer> 	
-	</body>
+	<footer class="footer-distributed">
+		<div class="footer-left">
+		<p>CONTACT: </p> <br>
+		<p></p><br>
+		<p>Torsten Pook </p><br>
+		<p>Department of Animal Breeding and Genetics</p>
+		<p>Albrecht-Thaer-Weg 3</p><br>
+		<p>37075 Goettingen</p><br>
+		<p>torsten.pook (at) uni-goettingen.de</p><br>
+		<p></p>
+	</div> 
+	</footer>
 	
 	<script type="text/javascript" src="javascript/menu_pages.js"></script>
 
@@ -58,4 +60,5 @@
 	   }  
 	</script>
 	
+</body>
 </html>
