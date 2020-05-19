@@ -24,7 +24,7 @@ arg <- commandArgs(TRUE)
 
 
 dat <- try(fromJSON(arg[2], simplifyVector=FALSE))
-# dat <- jsonlite::read_json(path="/home/nha/PigCross.json")
+# dat <- jsonlite::read_json(path="Rmodules/UserScripts/Torsten_Rinderbeispiel_v3_2020-05-13_17:05.json")
 if("try-error" %in% is(dat)){
   print(dat)
   stop("Cannot Read JSON file!")

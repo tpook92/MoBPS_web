@@ -86,7 +86,12 @@
     	
 	        	<br>
 				
-				
+					<td>Maximum number of repeats to analyze:
+						<span class="tooltip">&#9432 <span class="tooltiptext">Test</span></span>
+					</td>
+					<td>
+						<input placeholder="Type a name" v-model="plottingData.max_rep">
+					</td>
 				
 					<h4>Results: Observed Phenotypes</h4>
 					<button onclick="RunResultpMeanGroup()" >Run Analysis</button>
@@ -174,6 +179,14 @@
 
 					
 					<h4> Results: Relationship and Inbreeding within Cohorts </h4>
+					
+					<td>Only consider cohorts named:
+						<span class="tooltip">&#9432 <span class="tooltiptext">Test</span></span>
+					</td>
+					<td>
+						<input placeholder="Type a name" v-model="plottingData.consider_cohort">
+					</td>
+					
 					<button onclick="RunResultRelGroup()" >Run Analysis</button>
 					<br>
 					<template v-if="plottingData.ResRelGroup != ''">

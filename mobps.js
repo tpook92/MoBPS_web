@@ -456,7 +456,7 @@ app.post('/RsimResultGroup', function(request, response) {
 	console.log(response);
 	request.setTimeout(5*24*60*60*1000);
 
-	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' "; // '" + JSON.stringify(request.body.cohorts) + "'";
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' " + " '"+ request.body.consider_cohort +"' " + " '"+ request.body.max_rep +"' "  ; // '" + JSON.stringify(request.body.cohorts) + "'";
 
 	console.log(command);
 		

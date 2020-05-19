@@ -1198,6 +1198,8 @@ function RunResultRel(){
 
 function RunResultRelGroup(){
 	var filename = data_Vue.compareProjects;
+	var consider_cohort = data_Vue.plottingData.consider_cohort;
+	var max_rep = data_Vue.plottingData.max_rep;
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
 	
 	$.ajax
@@ -1206,6 +1208,8 @@ function RunResultRelGroup(){
 		url: './RsimResultGroup',
 		data: {
 			filename : filename,
+			consider_cohort : consider_cohort,
+			max_rep : max_rep,
 			script: "RelGroup"
 			},
 		beforeSend: function() {

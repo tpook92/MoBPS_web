@@ -7,12 +7,22 @@ library("jsonlite")
 
 path <- "./Rmodules/UserScripts/"
 
+# 	var command = "nohup R --file=Rmodules/Results_RelGroup.r --args 'Torsten' 'Rinderbeispiel_v3,Rinderbeispiel_v3_BVE' 'calf+' '1';
+
 arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle,Simple_Cattle2")
 # arg <- c("Torsten", "123Simple_Cattle,456Simple_Cattle")
+# arg <- c("Torsten", "Rinderbeispiel_v3,Rinderbeispiel_v3_BVE", "ab", 1)
 user <- arg[1]
 #filename <- arg[2:length(arg)]
 filename <- unlist(strsplit(arg[2], split=","))
+filter <- arg[3]
+if(is.na(filter)){
+  filter <- ""
+}
+max_rep <- as.numeric(arg[4])
+
+save(file="test.RData", list=c("arg"))
 #cohorts <- fromJSON(arg[3])
 
 gMeanTotal <- list()
@@ -58,22 +68,27 @@ for(project in 1:length(filename)){
 
   avail <- suppressWarnings(unique(c(NA,as.numeric(filesnames)))[-1])
 
+  if(!is.na(max_rep) && max_rep<length(avail)){
+    avail <- sample(avail, max_rep)
+  }
   if(length(avail)>1){
     for(index in avail){
       print(index)
-      load(paste(path,user,"_",filename, index, ".RData",sep=""))
+      load(paste(path,user,"_",filename[project], index, ".RData",sep=""))
       ttkinship <- NULL
       ncore <- min(10, nrow(coh))
       doParallel::registerDoParallel(cores=ncore)
       library(doParallel)
       ttkinship <- foreach::foreach(rep=1:nrow(coh), .packages = "MoBPS", .combine = "rbind") %dopar% {
-        if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1){
+        if((as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1)&& (nchar(filter)<3 || ttnames[rep]==filter)){
           out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 50)
         }else{
           out <- c(0,0.5)
         }
         out
       }
+
+
       doParallel::stopImplicitCluster()
       if(index==avail[1]){
         ttkinship1 <- ttkinship / length(avail)
@@ -92,7 +107,7 @@ for(project in 1:length(filename)){
     doParallel::registerDoParallel(cores=ncore)
     library(doParallel)
     ttkinship <- foreach::foreach(rep=1:nrow(coh), .packages = "MoBPS", .combine = "rbind") %dopar% {
-      if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1){
+      if((as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1) && (nchar(filter)<3 || ttnames[rep]==filter)){
         out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 25)
       }else{
         out <- c(0,0.5)
