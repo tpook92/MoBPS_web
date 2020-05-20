@@ -229,7 +229,7 @@ var data_Vue = new Vue({
 		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Other'],
 		Time_Unit_options: ['Years', 'Month', 'Weeks', 'Days'],
 		true_false_options: ['TRUE', 'FALSE'],
-		w_options: ['Per Unit', 'Per Phenotypic SD', 'Per Breeding Value SD'],
+		w_options: ['Per Unit', 'Per Phenotypic SD', 'Per Breeding Value SD', 'Per Genomic Value SD'],
 		show_info:'',
 		show_chromo_info: true,
 		show_pheno_info: true,

@@ -11,6 +11,11 @@ arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle_Default")
 user <- arg[1]
 filename <- arg[2]
+filter <- arg[3]
+if(is.na(filter)){
+  filter <- ""
+}
+
 
 load(paste(path,user,"_",filename,".RData",sep=""))
 # Rel
@@ -48,7 +53,7 @@ if(length(avail)>1){
     doParallel::registerDoParallel(cores=ncore)
     library(doParallel)
     ttkinship <- foreach::foreach(rep=1:nrow(coh), .packages = "MoBPS", .combine = "rbind") %dopar% {
-      if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1){
+      if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1 && (nchar(filter)<3 || ttnames[rep]==filter)){
         out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 25)
       }else{
         out <- c(0,0.5)
@@ -73,7 +78,7 @@ if(length(avail)>1){
   doParallel::registerDoParallel(cores=ncore)
   library(doParallel)
   ttkinship <- foreach::foreach(rep=1:nrow(coh), .packages = "MoBPS", .combine = "rbind") %dopar% {
-    if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1){
+    if(as.numeric(coh[rep,3]) + as.numeric(coh[rep,4]) > 1 && (nchar(filter)<3 || ttnames[rep]==filter)){
       out <- kinship.emp.fast(population=population, cohorts=coh[rep,1],ibd.obs = 100, hbd.obs = 25)
     }else{
       out <- c(0,0.5)

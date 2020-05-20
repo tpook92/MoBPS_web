@@ -539,6 +539,7 @@ function RunResultpMean(){
 
 function RunResultpMeanGroup(){
 	var filename = data_Vue.compareProjects;
+	var max_rep = data_Vue.plottingData.max_rep;
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
 	
 	$.ajax
@@ -547,7 +548,8 @@ function RunResultpMeanGroup(){
 		url: './RsimResultGroup',
 		data: {
 			filename : filename,
-			script: "pMeanGroup"
+			script: "pMeanGroup",
+			max_rep : max_rep
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for observed Phenotypes...';
@@ -941,6 +943,7 @@ function RunResultgMean(){
 function RunResultgMeanGroup(){
 	
 	var filename = data_Vue.compareProjects;
+	var max_rep = data_Vue.plottingData.max_rep;
 	
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
 	
@@ -950,7 +953,8 @@ function RunResultgMeanGroup(){
 		url: './RsimResultGroup',
 		data: {
 			filename : filename,
-			script: "gMeanGroup"
+			script: "gMeanGroup",
+			max_rep : max_rep
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for genomic breeding values...';
@@ -1158,6 +1162,7 @@ function plottingResultRelGroup(){
 
 function RunResultRel(){
 	var filename = data_Vue.geninfo["Project Name"];
+	var consider_cohort = data_Vue.plottingData.consider_cohort;
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
 	
 	$.ajax
@@ -1166,7 +1171,8 @@ function RunResultRel(){
 		url: './RsimResult',
 		data: {
 			filename : filename,
-			script: "Rel"
+			script: "Rel",
+			consider_cohort : consider_cohort
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for Relationship within Cohorts...';
@@ -1548,6 +1554,7 @@ function RunResultQTL(){
 
 function RunResultQTLGroup(){
 	var filename = data_Vue.compareProjects;
+	var max_rep = data_Vue.plottingData.max_rep;
 	var qtl = 0;
 	for(var i=0; i< data_Vue.jsonDataList[0]['Trait Info'].length; i++){
 		qtl += data_Vue.jsonDataList[0]['Trait Info'][i]["Trait Major QTL"];
@@ -1563,7 +1570,8 @@ function RunResultQTLGroup(){
 		url: './RsimQTLGroup',
 		data: {
 			filename : filename,
-			traitsinfo : data_Vue.jsonDataList[0]['Trait Info']
+			traitsinfo : data_Vue.jsonDataList[0]['Trait Info'],
+			max_rep : max_rep
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for QTLs';
@@ -1833,6 +1841,7 @@ function RunResultAccBVE(){
 function RunResultAccBVEGroup(){
 	
 	var filename = data_Vue.compareProjects;
+	var max_rep = data_Vue.plottingData.max_rep;
 	
 	$.ajax
 	({
@@ -1840,7 +1849,8 @@ function RunResultAccBVEGroup(){
 		url: './RsimAccBVEGroup',
 		data: {
 			filename : filename,
-			sindex : data_Vue.jsonDataList[0]["Selection Index"]
+			sindex : data_Vue.jsonDataList[0]["Selection Index"],
+			max_rep : max_rep
 			},
 		beforeSend: function() {
 			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for Accuracy of Breeding Value Estimations...';

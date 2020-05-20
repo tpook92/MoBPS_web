@@ -18,6 +18,8 @@ sindex <- fromJSON(arg[3], simplifyVector=FALSE)
 
 sindex <- matrix(unlist(sindex), nrow=length(sindex), byrow=TRUE)
 
+max_rep <- as.numeric(arg[4])
+
 gMeanTotal <- list()
 
 join_summary <- list()
@@ -61,6 +63,10 @@ for(project in 1:length(filename)){
   filesnames <- gsub(paste0(user,"_",filename[project]), "", filesnames)
 
   avail <- suppressWarnings(unique(c(NA,as.numeric(filesnames)))[-1])
+
+  if(!is.na(max_rep) && max_rep<length(avail)){
+    avail <- sample(avail, max_rep)
+  }
 
   if(length(avail)>1){
     Acc <- list()

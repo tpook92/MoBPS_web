@@ -16,6 +16,8 @@ filename <- unlist(strsplit(arg[2], split=","))
 #cohorts <- fromJSON(arg[3])
 trait <- fromJSON(arg[3], simplifyVector=FALSE)
 
+max_rep <- as.numeric(arg[4])
+
 resultTotal <- list()
 
 join_summary <- list()
@@ -60,6 +62,10 @@ for(project in 1:length(filename)){
   filesnames <- gsub(paste0(user,"_",filename[project]), "", filesnames)
 
   avail <- suppressWarnings(unique(c(NA,as.numeric(filesnames)))[-1])
+
+  if(!is.na(max_rep) && max_rep<length(avail)){
+    avail <- sample(avail, max_rep)
+  }
 
   result <- list()
   if(length(avail)>1){

@@ -334,7 +334,7 @@ app.post('/RsimQTLGroup', function(request, response) {
 	
 	request.setTimeout(5*24*60*60*1000);
 
-	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_QTLGroup.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.traitsinfo) + "'";
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_QTLGroup.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.traitsinfo) + "'" + " '"+ request.body.max_rep +"' ";
 	console.log(command);
 		
 	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
@@ -383,7 +383,7 @@ app.post('/RsimAccBVEGroup', function(request, response) {
 	
 	request.setTimeout(5*24*60*60*1000);
 
-	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_AccBVEGroup.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.sindex) + "'";
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results_AccBVEGroup.r') + " --args "+request.session.username+ " '"+ request.body.filename + "' '"+ JSON.stringify(request.body.sindex) + "'" + " '"+ request.body.max_rep +"' ";
 	console.log(command);
 		
 	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
@@ -429,7 +429,7 @@ app.post('/RsimResult', function(request, response) {
 	console.log(response);
 	request.setTimeout(5*24*60*60*1000);
 
-	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' "; // '" + JSON.stringify(request.body.cohorts) + "'";
+	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' " + " '"+ request.body.consider_cohort +"' "; // '" + JSON.stringify(request.body.cohorts) + "'";
 
 	console.log(command);
 		

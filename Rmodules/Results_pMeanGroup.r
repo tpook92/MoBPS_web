@@ -15,6 +15,8 @@ user <- arg[1]
 filename <- unlist(strsplit(arg[2], split=","))
 #cohorts <- fromJSON(arg[3])
 
+max_rep <- as.numeric(arg[3])
+
 gMeanTotal <- list()
 
 join_summary <- list()
@@ -56,6 +58,11 @@ for(project in 1:length(filename)){
   filesnames <- gsub(paste0(user,"_",filename[project]), "", filesnames)
 
   avail <- suppressWarnings(unique(c(NA,as.numeric(filesnames)))[-1])
+
+  if(!is.na(max_rep) && max_rep<length(avail)){
+    avail <- sample(avail, max_rep)
+  }
+
 
   if(length(avail)>1){
     gMean <- list()

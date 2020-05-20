@@ -728,7 +728,7 @@
 							<td style="width:1%;padding-right:9px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
 								<input class="phenoSmall" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['dominant_qtl']"  class="no-spinners" step=1> 
 							</td>
-							<<td style="width:1%;padding-right:13px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
+							<td style="width:1%;padding-right:13px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
 								<input class="phenoSmall" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['qualitative_qtl']" class="no-spinners" step=1> 
 							</td>
 							<td style="width:1%;padding-right:16px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
@@ -1996,7 +1996,15 @@
 					<br>
 
 					<h4> Results: Relationship and Inbreeding within Cohorts </h4>
-					<button v-if="plottingData.ResRel == ''" onclick="RunResultRel()" >Run Analysis</button>
+					
+					<td>Only consider cohorts named:
+						<span class="tooltip">&#9432 <span class="tooltiptext">Test</span></span>
+					</td>
+					<td>
+						<input placeholder="Type a name" v-model="plottingData.consider_cohort">
+					</td>
+					
+					<button onclick="RunResultRel()" >Run Analysis</button>
 					<template v-if="plottingData.ResRel != ''">
 						Select plotting type:
 						<select v-model="plottingPar.ResRel_pType" >

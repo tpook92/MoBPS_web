@@ -57,6 +57,10 @@ for(project in 1:length(filename)){
 
   avail <- suppressWarnings(unique(c(NA,as.numeric(filesnames)))[-1])
 
+  if(!is.na(max_rep) && max_rep<length(avail)){
+    avail <- sample(avail, max_rep)
+  }
+
   if(length(avail)>1){
     gMean <- list()
     for(index in avail){
