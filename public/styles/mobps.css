@@ -16,13 +16,6 @@ h2 {
 	color:darkblue;
 }
 
-h3-1 {
-	font-size:16pt;
-	color:darkblue;
-	font-weight:bold;
-	margin-left:30px;
-}
-
 h4 {
 	font-size:12pt;
 	font-style: italic;
@@ -34,7 +27,7 @@ h5 {
 }
 
 h6 {
-	font-size:11pt;
+	font-size:12pt;
 	font-style: italic;
 	text-align: right;
 	color: #5394ed;
@@ -63,14 +56,6 @@ h6 {
 	padding-left:10px;
 	position:absolute;
 	left: 10px;
-}
-
-.container {
-  display: inline-block;
-  cursor: pointer;
-  float: left;
-  left: 5px;
-  top: 0px;
 }
 
 .container {
@@ -107,7 +92,7 @@ h6 {
 }
 
 #Project_Bar {
-	background-color: #d0daf0;
+	background-color: #4A5289;
 	position:fixed;
 	left:0px;
 	top:0px;
@@ -144,51 +129,44 @@ h6 {
 .invisible_button {
   visibility: hidden;
   width:90px;
-  background-color: #8B9DC3;
+  background-color: #4A5289;
 }
 
 .navlinks {
-  background-color:#8B9DC3;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 80px;
+  background-color:#4A5289;
+}
+
+.navlinks_old {
+  background-color:#4A5289;
   padding-bottom: 20px;
+  padding-top: 10px;
 }
 
 .navlinks .fileType {
-	background-color: #8B9DC3;
+	background-color: #4A5289;
 	padding-bottom: 20px;
 	color: white;
-	font-size: 13pt;
-	padding: 3px 5px;
+	font-size: 15pt;
+	padding: 3px 10px;
 	font-weight: bold;
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	border:2px;	
 }
 
 .navlinks .fileType:hover {
-  color:  darkblue;
+  color:  white;
   font-style:oblique;
   text-decoration:underline;
 }
 
-.compare_bar_button {
-	background-color: green;
-	font-size: 10pt;
-	padding: 3px 5px;
-	font-weight: bold;
-}
-#Navigator_Orig {
-	background-color: rgba(208,218,240, 0.5);
-	position:fixed;
-	left:0px;
-	top:50px;
-	width:300px;
-	margin: 0px;
-	padding: 0px;
-	padding-right:0px;
-	z-index: 600;
-}
-
 #Navigator {
-	background-color: rgba(208,218,240, 0.5);
+	background-color:#4A5289;
 	position:fixed;
 	left:0px;
 	top:50px;
@@ -229,7 +207,7 @@ ul {
   padding: 0;
   top: 50px;
   width: 300px;
-  background-color: rgba(208,218,240, 0.95);
+  background-color:#4A5289;
   height: 100%; 
   position: fixed;
   overflow-y: auto;
@@ -252,123 +230,10 @@ li a:hover:not(.active) {
   color: white;
 }
 
-#geninfo_table {
-	position:relative;
-	width: 800px;
-	border: 1px solid #4f567c;
-}
-
-#chrom_table {
-	background-color: #f0f0f0;
-	border-collapse: collapse;
-	text-align: center;
-}
-
-#chrom_table td {
-	padding: 5px;
-}
-
-.trait_table {
-	background-color: #f0f0f0;
-	border-collapse: collapse;
-	text-align: center;
-	max-width: 70%;
-}
-
-.trait_table td {
-	padding:5px;
-	height:20px;
-	font-size:10pt;
-	font-weight:bold;
-}
-
-.var_table {
-	background-color: #f0f0f0;
-	border-collapse: collapse;
-	text-align: center;
-	width: 400px;
-}
-
-.var_table td {
-	padding:5px;
-	font-size:11pt;
-	font-weight:bold;
-}
-
-.corr_title {
-    font-weight:bold;
-    width:60px;
-    font-size:14pt;
-    color:darkblue;
-    padding:5px;
-    text-align:left;	
-}
-
-.corr_td {
-	padding:5px;
-	height:20px;
-	width:60px;
-	font-size:11pt;
-	font-weight:bold;
-}
-
-.corr_td2 {
-	padding:1px;
-	height:11px;
-	width:60px;
-	font-size:11pt;
-	font-weight:bold;
-}
-
-.sub_text {
-	font-size:12pt;
-	color:darkblue;
-}
-
-
-.drag_table {
-	background-color: #f0f0f0;
-	border-collapse: collapse;
-	text-align: center;
-	width:700px;
-	table-layout: fixed;
-}
-
-.drag_table td {
-	padding:5px;
-	height:20px;
-  	width: 60px;
-	font-size:9pt;
-	font-weight:bold;
-}
-
-
-.corr_table {
-	background-color: #f0f0f0;
-	border-collapse: collapse;
-	text-align: center;
-	max-width:800px;
-}
-
-.trait_table td {
-	padding:5px;
-	height:20px;
-}
-
-#generalInfo {
-	position:fixed; 
-	padding: 20px ;
-	z-index:200; 
-	right:0vw; 
-	top:0vw; 
-	width:20%; 
-	height:100%; 
-	background-color:rgba(233,243,255, 0.5);
-}
-
 #warnings {
+	margin-top:180px;
 	position:fixed; 
-	padding: 20px ;
+	padding: 10px ;
 	z-index:201; 
 	right:0vw; 
 	top:0vw; 
@@ -378,11 +243,12 @@ li a:hover:not(.active) {
 }
 
 #warnings_sum {
+	margin-top:35px;
 	position:fixed; 
-	padding: 0 20px ;
+	padding: 0 10px ;
 	z-index:250; 
 	right:0vw; 
-	top:50px; 
+	top:80px; 
 	width:20%; 
 	height:10%; 
 	background-color: rgba(0, 0, 0, 0);
@@ -508,16 +374,17 @@ li a:hover:not(.active) {
 button {
   display: inline-block;
   padding: 2px 5px;
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: bold;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   outline: none;
   color: white;
-  background-color: #99c2ff;
+  background-color: #5394ed;
   border: none;
   border-radius: 5px;
-  box-shadow: 0 2px #999;
+  box-shadow: 0 2px #4A5289;
 }
 
 button:hover {
@@ -538,10 +405,371 @@ button[disabled]{
 
 .sub_button {
 	background-color: #8B9DC3;
-	font-size: 8pt;
+	font-size: 10pt;
 	padding: 2px 4px;
 	font-weight: bold;
 	color: darkblue
+}
+
+#main {
+  margin-top: 80px;
+  margin-left: 10px;
+  padding: 12px;
+}
+
+#load_table{
+	position:relative;
+	width: 900px;
+	border: 0px solid lightblue;
+}
+
+#load_table td {
+	padding-left: 5px;	padding-bottom: 5px;
+	padding-right: 0px;
+	padding-top: 0px;
+	font-size:14pt;
+}
+
+#load_table input[type=text]{
+	font-size:14pt;
+	height: 22px;
+    border: 2px solid lightblue;  
+}
+
+#load_table select{
+  height: 30px;
+  font-size:14pt;
+  border: 2px solid lightblue;  
+}
+
+#generalInfo {
+	position:fixed; 
+	padding: 20px ;
+	z-index:200; 
+	right:0vw; 
+	top:0vw; 
+	width:20%; 
+	height:100%; 
+	background-color:rgba(233,243,255, 0.5);
+}
+
+
+#geninfo_table {
+	position:relative;
+	width: 800px;
+	border: 1px solid darkblue;
+}
+
+#geninfo_table td {
+	padding-left: 10px;
+	padding-bottom: 7px;
+	padding-right: 0px;
+	padding-top: 5px;
+	font-size:14pt;
+}
+
+#geninfo_table input[type=text]{
+	font-size:12pt;
+    width: 60%;
+	height: 28px;
+    padding: 0px 0px;
+    margin: 0px 0px;
+    border: 2px solid lightblue;  
+}
+
+#geninfo_table input[type=file]{
+	font-size:11pt;
+	height: 22px;
+    border: 0px solid lightblue;  
+}
+
+#geninfo_table input[type=value]{
+	font-size:12pt;
+    width: 40%;
+	height: 22px;
+    padding: 0px 0px;
+    margin: 0px 0px;
+    border: 2px solid lightblue;  
+}
+
+#geninfo_table select{
+  width: 50%;
+  height: 30px;
+  font-size:12pt;
+  border: 2px solid lightblue;  
+}
+
+
+#geninfo_table input[type=checkbox] {
+		position: relative;
+	    cursor: pointer;
+	  	-webkit-appearance: none;
+  		-moz-appearance: none;
+}
+
+#geninfo_table  input[type=checkbox]:before {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 15px;
+         height: 15px;
+         top: 0;
+         left: 0;
+         background-color:darkgray;
+}
+
+#geninfo_table input[type=checkbox]:checked:before {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 15px;
+         height: 15px;
+         top: 0;
+         left: 0;
+         background-color:#1E80EF;
+}
+
+#geninfo_table input[type=checkbox]:checked:after {
+         content: "";
+         display: block;
+         width: 4px;
+         height: 8px;
+         border: solid white;
+         border-width: 0 2px 2px 0;
+         -webkit-transform: rotate(45deg);
+         -ms-transform: rotate(45deg);
+         transform: rotate(45deg);
+         position: absolute;
+         top: 2px;
+         left: 6px;
+}
+
+#geninfo_table input[type='radio'] {
+  display: none;
+}
+
+#geninfo_table label:before {
+  content: " ";
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  margin: 0 5px 0 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 11px;
+  border: 2px solid darkgray;
+  background-color: transparent;
+}
+
+#geninfo_table input[type='radio']:checked+label:before {
+  position: relative;
+  border: 2px solid darkgray;
+  border-radius: 11px;
+  width: 15px;
+  height: 15px;
+  top: 3px;
+  content: " ";
+  display: inline-block;
+  background-color: #1E80EF;
+}
+
+#chrom_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+}
+
+#chrom_table td {
+	padding: 5px;
+}
+
+.trait_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	max-width: 70%;
+}
+
+.trait_table td {
+	padding:5px;
+	height:20px;
+	font-size:11pt;
+	font-weight:bold;
+}
+
+.var_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	width: 400px;
+}
+
+.var_table td {
+	padding:5px;
+	font-size:11pt;
+	font-weight:bold;
+}
+
+.var_table input[type=value]{
+	font-size:14pt;
+    width: 80px;
+	height: 28px;
+    border: 2px solid lightblue;  
+}
+
+.culling_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	max-width: 70%;
+}
+
+.culling_table td {
+	padding:5px;
+	height:20px;
+	font-size:14pt;
+	font-weight:bold;
+}
+
+.culling_table input[type=text]{
+	font-size:12pt;
+    width: 80px;
+	height: 28px;
+    border: 2px solid lightblue;  
+}
+
+#culling_table select{
+  height: 28px;
+  font-size:12pt;
+  border: 2px solid lightblue;  
+}
+
+.sub_text {
+	font-size:12pt;
+	color:darkblue;
+}
+
+
+.drag_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	width:700px;
+	table-layout: fixed;
+}
+
+.drag_table td {
+	padding:5px;
+	height:20px;
+  	width: 60px;
+	font-size:10pt;
+	font-weight:bold;
+}
+
+
+.corr_title {
+    font-weight:bold;
+    width:60px;
+    font-size:14pt;
+    color:darkblue;
+    padding:5px;
+    text-align:left;	
+}
+
+.corr_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	max-width:800px;
+}
+
+.corr_td {
+	padding:5px;
+	height:20px;
+	width:60px;
+	font-size:11pt;
+	font-weight:bold;
+}
+
+.trait_table td {
+	padding:5px;
+	height:20px;
+}
+
+.phenoMedium {
+	width:80px;
+	font-size:10pt;
+	height:18px;
+	border:2px solid lightblue;
+	padding-left:1px;
+}
+
+.phenoSmall {
+	width:50px;
+	font-size:10pt;
+	height:18px;
+	border:2px solid lightblue;
+	padding-left:0px;
+}
+
+.phenoNumber input[type=number]{
+	margin-top:0px;
+	margin-bottom:0px;
+	font-size:12pt;
+	height: 18px;
+    border: 2px solid lightblue;  
+}
+
+.phenoCheck {
+	width:50px;
+	font-size:10pt;
+	height:18px;
+	border:2px solid #1E80EF;
+	padding-left:0px;
+}
+
+.phenoTransfo {
+	width:200px;
+	font-size:10pt;
+	height:18px;
+	border:2px solid lightblue;
+}
+
+.numberStyle{
+	font-size:12pt;
+	height: 18px;
+    border: 2px solid lightblue;  
+}
+
+
+input[type=text]{
+	margin-top:0px;
+	margin-bottom:0px;
+	font-size:12pt;
+	height: 25px;
+    border: 2px solid lightblue;  
+}
+
+input[type=value]{
+	margin-top:0px;
+	margin-bottom:0px;
+	font-size:12pt;
+	height: 25px;
+    border: 2px solid lightblue;  
+}
+
+input[type=number]{
+	margin-top:0px;
+	margin-bottom:0px;
+	font-size:12pt;
+	height: 25px;
+    border: 2px solid lightblue;  
+}
+
+select{
+  height: 30px;
+  font-size:12pt;
+  border: 2px solid lightblue;  
 }
 
 
@@ -552,6 +780,7 @@ button[disabled]{
 	height: 800px;
 	border: 1px solid #4f567c;
 }
+
 #mynetwork_label {
 	float:left;
 	position:relative;
@@ -568,6 +797,7 @@ button[disabled]{
 	height: 798px;
 	border: 1px solid lightgray ;
 }
+
 #node-popUp {
 	display:none;
 	position:fixed;
@@ -622,31 +852,14 @@ button[disabled]{
 }
 
 
-/*** for login user details ***/
-#displayUserlogin { 
-	position:fixed;
-	background-color: none;
-	top: 750px;
-	left:2.5%;
-	width:9%;
-}
-
-#displayText {
-    display: block;
-    color: green;
-    font-family: verdana, arial, sans-serif;
-    font-weight: bold;
-    font-size : 12px;
-    text-decoration: none;
-}
-
 /*** Save and Save As submit ***/
 
 /****** nice styles for our buttons :) ******/
 input[type=submit]  {
   display: inline-block;
   padding: 2px 5px;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -656,6 +869,8 @@ input[type=submit]  {
   border: none;
   border-radius: 5px;
   box-shadow: 0 2px #999;
+  width: 100px;
+  height: 30px;
 }
 
 input[type=submit]:hover {background-color: #032236}
@@ -666,29 +881,10 @@ input[type=submit]:active {
   transform: translateY(4px);
 }
 
-table.saveTable {
-	margin:0px;
-	font-size: 11px;
-	text-align: center;
-	color: green;
-	border-width: 1px;
-}
-
-table.saveTable tr:hover td {
-	}
-
-
-table.saveTable input[type=text]{
-	width: 200px;
-	text-align: center;
-	border: 2px solid lightblue;
-}
-
-
 .bar_button {
-	background-color: #8B9DC3;
-	font-size: 13pt;
-	padding: 3px 5px;
+	background-color: #4A5289;
+	font-size: 15pt;
+	padding: 3px 10px;
 	font-weight: bold;
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	color: white;
@@ -696,12 +892,12 @@ table.saveTable input[type=text]{
 
 .bar_button:hover {
     text-decoration:underline;
-	color: darkblue;
+	color: white;
 }
 
 .showhide_button {
-	background-color: #8B9DC3;
-	font-size: 10pt;
+	background-color: #4A5289;
+	font-size: 12pt;
 	padding: 3px 3px;
 	font-weight: bold;
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -710,7 +906,7 @@ table.saveTable input[type=text]{
 
 .showhide_button:hover {
     text-decoration:underline;
-	color: darkblue;
+	color: white;
 }
 
 
@@ -718,12 +914,6 @@ table.saveTable input[type=text]{
 input:invalid {
     box-shadow: none;
 }
-
-/**
-table.trait_table input[type=Number]{
-	box-shadow:none;
-}
-*/
 
 .excel_table {
 	background-color: #f0f0f0;
@@ -735,7 +925,7 @@ table.trait_table input[type=Number]{
 .button_type {
   display: inline-block;
   padding: 2px 5px;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -743,7 +933,7 @@ table.trait_table input[type=Number]{
   background-color:  #66a3ff;
   border: none;
   border-radius: 5px;
-  box-shadow: 0 2px #999;
+  box-shadow: 0 2px #4A5289;
 }
 
 
@@ -753,11 +943,11 @@ table.trait_table input[type=Number]{
   width: 0;
   position: fixed;
   z-index: 1;
-  top: 8px;
+  top: 60px;
   left: 0;
   bottom:0;
   right:0;
-  background-color:#8B9DC3;
+  background-color:#4A5289;
  /* background-color: #d0daf0; */
   overflow-x: hidden;
   transition: 0.5s;
@@ -774,7 +964,7 @@ transition: all 0.5s ease; */
   text-decoration: none;
   font-size: 16px;
   font-weight: bold;
-  color:  darkblue;
+  color:  white;
   display: block;
   transition: 0.3s;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -782,15 +972,19 @@ transition: all 0.5s ease; */
 }
 
 .sidebar a:hover {
-  color:  darkblue;
+  color:  white;
   font-style:oblique;
 }
 
 .sidebar .closebtn {
   position: absolute;
-  top: 15px;
+  top: 20px;
   right: 25px;
-  font-size: 15px;
+  padding-bottom:10px;
+  padding-left:5px;
+  padding-top:5px;
+  padding-right:10px;
+  font-size: 18px;
   margin-left: 20px;
   color: white;
   border: none;
@@ -806,19 +1000,23 @@ transition: all 0.5s ease; */
 .additional_link {
 	background-color: #5394ed;
 	text-decoration: none;
-	font-size: 16px;
+	font-size: 18px;
 	text-align: center;
-  	padding: 2px 4px; 
+	padding-top: 5px;
+	padding-bottom:10px;
+	padding-left:10px;
+	padding-right:10px;
 	font-weight: bold;  
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	color:  white;
 }
 
 .guidelines {
-	font-size:8pt;
+	font-size:10pt;
 	font-style:italic;
 	font-family: verdana, arial, sans-serif;
 	margin-left:20px;
+	width:65%;
 	background-color: #f2f2f2;
 }
 
@@ -833,7 +1031,12 @@ transition: all 0.5s ease; */
 .openbtn {
   background-color: #5394ed;
   margin-top : 20px;
-  font-size: 15px;
+  margin-left:20px;
+  padding-bottom:10px;
+  padding-top:10px;
+  padding-left:10px;
+  padding-right:10px;
+  font-size: 18px;
   cursor: pointer;
   color: white;
   border: none;
@@ -842,12 +1045,6 @@ transition: all 0.5s ease; */
 
 .openbtn:hover {
   background-color: #444;
-}
-
-#main {
-  margin-top: 30px;
-  margin-left: 10px;
-  padding: 12px;
 }
 
 @media screen and (max-height: 450px) {
@@ -879,9 +1076,10 @@ transition: all 0.5s ease; */
   color: #444;
   cursor: pointer;
   text-align: left;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   font-style: italic;
+  margin-bottom:5px;
 }
 
 .active, .accordion:hover {
@@ -922,23 +1120,14 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
   background-color: #486F88;
   border: none;
   border-radius: 5px;
-  box-shadow: 0 2px #999;
+  box-shadow: 0 2px #4A5289;
 }
 
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-		width:800px;
-		height:800px;
-    body {
-        color: #90f;
-    }
-}
- 
 
 /* compareProject additional style */
 .comparePSelect {
     padding:9px;
-	font-size: 14px;
+	font-size: 20px;
     margin-top:5px;
  	width: 300px;
 	height: 400px;
@@ -952,6 +1141,5 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
     display: inline-block;
     -webkit-appearance:none; 
     cursor:pointer;
-    border: 2px solid lightblue;
+    border: 2px solid darkblue;
 }
-   
