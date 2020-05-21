@@ -77,7 +77,7 @@
 			</div>			
 
 			<div class="navlinks" >
-				<button onclick="openNav()" id="openB" class="openbtn"> Navigation Open </button>  
+				<button onclick="openNav()" id="openB" class="openbtn"> Navigation Open </button> 
 				<button class="invisible_button"></button>
 				<button class='bar_button' id="new_button" onclick="window.location.reload();">NEW</button> 
 				<button class='bar_button' id="save_button" onclick="saveProject();">SAVE</button> 
@@ -87,8 +87,8 @@
 				<input type="file" style="display:none;" id="input-file" name="file"/>
 				<button class='bar_button' id="download_button" onclick="downloadNetwork()" >EXPORT</button>
 				<button class='bar_button' id="delete_button" onclick="deleteProject()" >DELETE</button>
-				<button v-if="isBrowserSafari !== true" class='showhide_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
-				<button v-if="isBrowserSafari !== true" class='showhide_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+				<button class='showhide_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
+				<button class='showhide_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 				&nbsp;
 				<a href="http://mobps.de/compareProjects"  class ="additional_link">Compare Projects</a> 
 			</div>
@@ -99,7 +99,7 @@
 			</div>
 
 
-			<div v-if="isBrowserSafari !== true" id="warnings_sum">
+			<div id="warnings_sum">
 				<h4 v-if="warnings.length > 0" style="color: red; font-style:italic;"> Attention, there are {{warnings.length}} warnings! R Simulation most likely cannot be run unless they are fixed.</h4>
 			</div>
 			<transition name="slide-generalInfo">
@@ -149,7 +149,9 @@
 			<h2 v-if="geninfo['Project Name'] == '' " > MoBPS </h2>
 			<br>
 			<h3>Load a new/existent project from your own database:</h3>
+
 			<br>
+			
 				<table id="load_table">
 					<tr>
 						<td> Project: 
@@ -165,7 +167,7 @@
 								{{ option }}
 							</option>
 						</select>
-										
+
 						&nbsp;&nbsp; Version: 
 						<select id="Version" onchange="loadVersion(value)">
 							<option value="recent">(most recent)</option>
@@ -177,7 +179,6 @@
 						</select>
 						</td>
 					</tr>
-
 					<tr>
 						<td>
 						Filter Projects for Keyword: 
@@ -199,9 +200,9 @@
 						</td>
 					</tr>
 				</table>
-				
-				<br>
-							
+
+				<br>		
+			
 			<h3 v-if="curUserGroup =='4'"> You are assigned to User Class Admin. 
 				This enables you to use 20 Cores and maximum run time of 120 hours 
 			</h3>
@@ -490,7 +491,6 @@
 					
 					<tr v-if="geninfo['advanced'] && geninfo['advanced_test']">
 						<td class="boldText">Advanced Test-mode:	</td>
-
 					</tr>
 					
 					<tr v-if="geninfo['advanced'] && geninfo['advanced_test']">
@@ -651,55 +651,9 @@
 							
 						</tr>
 					</thead>
-					<tbody v-if="isBrowserSafari === true ">
-						<tr v-for='(trait, index) in traitsinfo' >
-							<td>
-								<input v-model="trait['Trait Name']" style="width:80px;font-size:12pt;height:25px;border:2px solid lightblue;"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Unit']" style="width:80px;font-size:12pt;height:25px;border:2px solid lightblue;"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Mean']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Std Deviation']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
-							</td>
-							<td>
-								<input v-model="trait['Trait Heritability']" max=1 min=0 style="width:50px;" class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:50px;" class="no-spinners" step=1> 
-							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
-								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['dominant_qtl']"  class="no-spinners" step=1> 
-							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
-								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['qualitative_qtl']" class="no-spinners" step=1> 
-							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
-								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['quantitative_qtl']"  class="no-spinners" step=1> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Major QTL']" style="width:50px;" type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Value per Unit']" style="width:50px;" type="Number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
-							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
-								<input v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['trafo']" style="width:200px;"> 
-							</td>
-							<td>
-								<input type="checkbox" v-model="show_matrix_element[index].show">
-							</td>
-							<td>
-								<button class="sub_button" v-on:click="removePheno(index)">X</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+					</table>
 				
-				<table v-if ="isDraggableOption ==='' && isBrowserSafari !== true && traitsinfo.length > 0 && show_pheno_info">			
+				<table v-if ="traitsinfo.length > 0 && show_pheno_info">			
 					<draggable :list="traitsinfo" 
 					class="dragArea"
 					:move="moveMatrix"
@@ -799,7 +753,7 @@
 					<tr>
 					<td>Select the type of Excel File:
 						<span class="tooltip">&#9432 <span class="tooltiptext">"Please select an Excel file of genetic correlations or residual correlations or both."</span></span>
-					</td> 
+					</td>
 					 <td> 
 						<select v-model="geninfo.Excel_File">  
 							<option v-for="option in Excel_File_options" v-bind:value="option">
@@ -838,7 +792,7 @@
 						<td v-for="(cl, cind) in matrix" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
 							<input v-model="matrix[rind].row[cind].val" style="width:40px;font-size:11pt;font-weight:bold;height:18px;border:2px solid lightblue;" v-if="rind > cind" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix[rind].row[cind].val = matrix[rind].row[cind].val.replace(/,/g, '.')">  
 							<template v-if="rind <= cind">
-								{{ matrix[cind].row[rind].val }}   
+								{{ matrix[cind].row[rind].val }}
 							</template>
 						</td>
 					</tr>
@@ -886,6 +840,7 @@
 			</div>
 			
 			<br>
+			
 			<div id="Selectionindex_Div" onchange="checkEverything(this.id)">
 				<h3 v-if="traitsinfo.length > 0">Creating own Selection Indexes (Optional)
 					<span class="tooltip">&#9432 <span class="tooltiptext">Create your own selection indexes in order to use it in the breeding scheme.</span></span>
@@ -967,8 +922,7 @@
 					</table>
 					<br>
 					<br>
-				</template>		
-					
+				</template>			
 				<h3 v-if="traitsinfo.length > 0">Creating own Phenotyping Classes (Optional)
 					<span class="tooltip">&#9432 <span class="tooltiptext">Phenotyping Classes can be attached to each cohort in the breeding scheme, indicating which phenotype is available in the respective cohort. </span></span>
 				</h3>
@@ -1760,7 +1714,7 @@
 				<p>Click on button 'Start R Simulation' to run R.</p>
 				
 				<h4 style="color: red" v-if="warnings.length > 0"> Please check warnings before running the simulation!</h4>
-				<button v-if="isBrowserSafari !== true & warnings.length > 0" v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+				<button v-if="warnings.length > 0" v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 				<button style="font-size:22px;" onclick="runningR1(); " v-if="warnings.length > 0">Start R Simulation (despite warnings!)</button>
 				<button style="font-size:22px;" onclick="runningR1(); " v-if="warnings.length == 0">Start R Simulation</button>
 				<br>
@@ -1996,7 +1950,15 @@
 					<br>
 
 					<h4> Results: Relationship and Inbreeding within Cohorts </h4>
-					<button v-if="plottingData.ResRel == ''" onclick="RunResultRel()" >Run Analysis</button>
+					
+					<td>Only consider cohorts named:
+						<span class="tooltip">&#9432 <span class="tooltiptext">Test</span></span>
+					</td>
+					<td>
+						<input placeholder="Type a name" v-model="plottingData.consider_cohort">
+					</td>
+					
+					<button onclick="RunResultRel()" >Run Analysis</button>
 					<template v-if="plottingData.ResRel != ''">
 						Select plotting type:
 						<select v-model="plottingPar.ResRel_pType" >
@@ -2141,16 +2103,17 @@
 		  document.getElementById("mySidebar").style.width = "225px";
 		  document.getElementById("main").style.marginLeft = "225px";
 		 // document.getElementById("openDiv").style.display = "none";
-		document.getElementById('openB').style.visibility = 'hidden';
-		document.getElementById('closeB').style.visibility = 'visible';
+		  document.getElementById('openB').style.visibility = 'hidden';
+		  document.getElementById('closeB').style.visibility = 'visible';
+
 		}
 		
 		function closeNav() {
 		  document.getElementById("mySidebar").style.width = "0";
 		  document.getElementById("main").style.marginLeft= "0";
 		 // document.getElementById("openDiv").style.display = "block";
-	document.getElementById('openB').style.visibility = 'visible';
-	document.getElementById('closeB').style.visibility = 'hidden';
+		  document.getElementById('openB').style.visibility = 'visible';
+		  document.getElementById('closeB').style.visibility = 'hidden';
 		}
 				
 	function action(hidden) {
