@@ -8,11 +8,11 @@ library("jsonlite")
 path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
-# arg <- c("Torsten", "Simple_Cattle_Default")
+# arg <- c("Torsten", "123Simple_Cattle",1)
 user <- arg[1]
 filename <- arg[2]
 filter <- arg[3]
-if(is.na(filter)){
+if(is.na(filter) || filter == "undefined"){
   filter <- ""
 }
 

@@ -9,11 +9,13 @@ path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle,Simple_Cattle2")
-# arg <- c("Torsten", "Simple_Cattle_Fat,Simple_Cattle_Default")
+# arg <- c("Torsten", "Base-line,ssBLUP_BVE,pedigree_BVE,Short_GInterval,Low_SelectionIntensity,Change_IndexWeigths", "undefined", 1)
 user <- arg[1]
 #filename <- arg[2:length(arg)]
 filename <- unlist(strsplit(arg[2], split=","))
 #cohorts <- fromJSON(arg[3])
+
+max_rep <- as.numeric(arg[4])
 
 gMeanTotal <- list()
 
@@ -28,6 +30,7 @@ for(project in 1:length(filename)){
 
 write_json(join_summary, path=paste0(path,user,"_Compare_Summary.json"))
 
+t <- 0
 for(project in 1:length(filename)){
   load(paste(path,user,"_",filename[project],".RData",sep=""))
   # Rel
@@ -80,7 +83,8 @@ for(project in 1:length(filename)){
         }
 
       }
-
+      t <- t + 1
+      save(file="compare_stand.RData", list=c("t"))
     }
 
   } else{
@@ -95,6 +99,8 @@ for(project in 1:length(filename)){
       }
       gMean[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=ani)
     }
+    t <- t + 1
+    save(file="compare_stand.RData", list=c("t"))
   }
 
   for(addon in 1:length(gMean)){

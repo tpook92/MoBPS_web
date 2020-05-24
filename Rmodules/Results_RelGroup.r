@@ -12,12 +12,12 @@ path <- "./Rmodules/UserScripts/"
 arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle,Simple_Cattle2")
 # arg <- c("Torsten", "123Simple_Cattle,456Simple_Cattle")
-# arg <- c("Torsten", "Rinderbeispiel_v3,Rinderbeispiel_v3_BVE", "ab", 1)
+# arg <- c("Torsten", "Base-line,ssBLUP_BVE,pedigree_BVE,Short_GInterval,Low_SelectionIntensity,Change_IndexWeigths", "calf+", 1)
 user <- arg[1]
 #filename <- arg[2:length(arg)]
 filename <- unlist(strsplit(arg[2], split=","))
 filter <- arg[3]
-if(is.na(filter)){
+if(is.na(filter) || filter == "undefined"){
   filter <- ""
 }
 max_rep <- as.numeric(arg[4])
@@ -39,6 +39,7 @@ for(project in 1:length(filename)){
 
 write_json(join_summary, path=paste0(path,user,"_Compare_Summary.json"))
 
+ttttt <- 0
 for(project in 1:length(filename)){
   load(paste(path,user,"_",filename[project],".RData",sep=""))
   # Rel
@@ -96,6 +97,8 @@ for(project in 1:length(filename)){
         ttkinship1 <- ttkinship1 + ttkinship / length(avail)
       }
 
+      ttttt <- ttttt + 1
+      save(file="compare_stand.RData", list=c("ttttt"))
 
     }
     ttkinship <- ttkinship1
@@ -115,6 +118,8 @@ for(project in 1:length(filename)){
       out
     }
     doParallel::stopImplicitCluster()
+    ttttt <- ttttt + 1
+    save(file="compare_stand.RData", list=c("ttttt"))
 
   }
 

@@ -87,8 +87,8 @@
 				<input type="file" style="display:none;" id="input-file" name="file"/>
 				<button class='bar_button' id="download_button" onclick="downloadNetwork()" >EXPORT</button>
 				<button class='bar_button' id="delete_button" onclick="deleteProject()" >DELETE</button>
-				<button v-if="isBrowserSafari !== true" class='showhide_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
-				<button v-if="isBrowserSafari !== true" class='showhide_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+				<button class='showhide_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
+				<button class='showhide_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 				&nbsp;
 				<a href="http://mobps.de/compareProjects"  class ="additional_link">Compare Projects</a> 
 			</div>
@@ -99,7 +99,7 @@
 			</div>
 
 
-			<div v-if="isBrowserSafari !== true" id="warnings_sum">
+			<div id="warnings_sum">
 				<h4 v-if="warnings.length > 0" style="color: red; font-style:italic;"> Attention, there are {{warnings.length}} warnings! R Simulation most likely cannot be run unless they are fixed.</h4>
 			</div>
 			<transition name="slide-generalInfo">
@@ -334,6 +334,99 @@
 						</td>
 					</tr>
 					<tr>
+					
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced'] ">
+							<td>Share genotyped
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_geno']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>Max offspring
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_off']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>OGC
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_ogc']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>Selection ratio
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_ratio']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>Threshold selection
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_thres']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>Advanced input phenotype
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_pheno']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>Skip BVE
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_skip']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>Calculate reliability
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_reli']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>Use last available
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_last']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td>Delete data
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_del']">
+							</td>
+						</tr>
+					<tr>
+					
+					
 						<td>Species
 							<span class="tooltip">&#9432 <span class="tooltiptext">Select the species. This will unlock the correct Ensembl Datasets etc. Use a template to start with already entered somewhat realistic values.</span></span>
 						</td>
@@ -651,55 +744,9 @@
 							
 						</tr>
 					</thead>
-					<tbody v-if="isBrowserSafari === true ">
-						<tr v-for='(trait, index) in traitsinfo' >
-							<td>
-								<input v-model="trait['Trait Name']" style="width:80px;font-size:12pt;height:25px;border:2px solid lightblue;"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Unit']" style="width:80px;font-size:12pt;height:25px;border:2px solid lightblue;"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Mean']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Std Deviation']" style="width:50px;" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
-							</td>
-							<td>
-								<input v-model="trait['Trait Heritability']" max=1 min=0 style="width:50px;" class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Number of Polygenic Loci']" style="width:50px;" class="no-spinners" step=1> 
-							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
-								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['dominant_qtl']"  class="no-spinners" step=1> 
-							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
-								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['qualitative_qtl']" class="no-spinners" step=1> 
-							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
-								<input style="width:50px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['quantitative_qtl']"  class="no-spinners" step=1> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Major QTL']" style="width:50px;" type="Number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
-							</td>
-							<td>
-								<input v-model="trait['Trait Value per Unit']" style="width:50px;" type="Number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
-							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
-								<input v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['trafo']" style="width:200px;"> 
-							</td>
-							<td>
-								<input type="checkbox" v-model="show_matrix_element[index].show">
-							</td>
-							<td>
-								<button class="sub_button" v-on:click="removePheno(index)"> X </button>
-							</td>
-						</tr>
-					</tbody>
 				</table>
 				
-				<table v-if ="isDraggableOption ==='' && isBrowserSafari !== true && traitsinfo.length > 0 && show_pheno_info">			
+				<table v-if = "traitsinfo.length > 0 && show_pheno_info">			
 					<draggable :list="traitsinfo" 
 					class="dragArea"
 					:move="moveMatrix"
@@ -1434,11 +1481,19 @@
 							</select>
 						</td>
 					</tr>
-					<tr v-if="geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-if="geninfo['advanced'] && geninfo['advanced_advanced'] && geninfo['advanced_advanced_geno']">
 						<td>Proportion of genotyped individuals
 							<span class="tooltip">&#9432 <span class="tooltiptext">Select the share of genotyped individuals. Mostly relevant for the use of single-step and economic calculations.</span></span>
 						</td>
 						<td> <input placeholder="Type a number" type="number" max=1 min=0 step=0.001 v-model="active_node['Proportion of genotyped individuals']"> </td>
+					</tr>
+					
+					<tr v-if="geninfo['advanced'] && geninfo['advanced_advanced'] && geninfo['advanced_advanced_del']">
+						<td> Delete cohort information
+							<span class="tooltip">&#9432 <span class="tooltiptext">Setting this will automatically delete recombination history etc. of the cohort to reduce file size.</span></span>
+						</td>
+													
+						<td> <input type="checkbox" v-model="active_node['delete_info']"> </td>
 					</tr>
 					<!--tr>
 						<td>Include in Plot </td> 
@@ -1496,13 +1551,13 @@
 						</td>
 						<td><input style="width:40px;border:2px solid lightblue;font-size:12pt;height:22px;" id="time_n" list="indVar" onchange="updateVar('Time Needed', value)" placeholder="Type a number" min="0" max="10000" step="1" v-model="active_edge['Time Needed']"> {{geninfo['Time Unit']}}</td>
 					</tr>	
-					<tr v-show="geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-show="geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_last']">
 						<td>Use last available
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will use the last repeat available from that node - not necessary the node from the same repeat</span></span>
 						</td>		
 						<td><input type="checkbox" v-model="active_edge['last_available']"> </td>
 					</tr>
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ogc']">
 						<td>OGC
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use optimum genetic contribution according to Meuwissen 1996 to determine how often each individual is used for reproduction.</span></span>
 						</td>
@@ -1513,19 +1568,19 @@
 						<td><input placeholder="Type in the target increase in inbreeding. Use 0 to minimize." v-model="active_edge['ogc_aCa']"></td>
 					</tr>	
 
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_off']">
 						<td>Maximal # offspring
 							<span class="tooltip">&#9432 <span class="tooltiptext">Maximum number of offspring each individual from the parent node is allowed to have.</span></span>
 						</td>
 						<td><input placeholder="Type a number or Inf" v-model="active_edge['Max Offspring']"></td>
 					</tr>	
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ratio']">
 						<td>Selection ratio
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to use some individuals more frequently for reproduction. A value of 2 will lead to the individual will the highest genomic value to be used twice as often as the worst individual.</span></span>
 						</td>
 						<td><input placeholder="Type a number (if nothing enter all individuals are picked equally)" v-model="active_edge['selection_ratio']"></td>
 					</tr>	
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ratio']">
 						<td>Selection ratio type
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to use some individuals more frequently for reproduction. A value of 2 will lead to the individual will the highest genomic value to be used twice as often as the worst individual.</span></span>
 						</td>
@@ -1536,7 +1591,7 @@
 								</option>
 							</select>
 						</td>					</tr>	
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] && (geninfo['advanced_advanced_ogc'] ||  geninfo['advanced_advanced_ratio'])">
 						<td>Index for Selection ratio / OGC
 							<span class="tooltip">&#9432 <span class="tooltiptext">Select the index used for the selection ratio or OGC. </span></span>
 						</td>
@@ -1641,7 +1696,7 @@
 						</td>
 					</tr>
 					
-					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_thres']">
 						<td>Threshold for selection
 							<span class="tooltip">&#9432 <span class="tooltiptext">Calculate reliability of BVE according to vanRaden 2008</span></span>
 						</td>		
@@ -1649,7 +1704,7 @@
 					</tr>
 					
 					
-					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_thres']">
 						<td>Threshold sign
 							<span class="tooltip">&#9432 <span class="tooltiptext"> Only keep individuals with higher/lower/eval estimated breeding value</span></span>
 						</td>		
@@ -1662,21 +1717,21 @@
 						</td>
 					</tr>
 					
-					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_reli']">
 						<td>Calculate reliability
 							<span class="tooltip">&#9432 <span class="tooltiptext">Calculate reliability of BVE according to vanRaden 2008</span></span>
 						</td>		
 						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['reliability']"> </td>
 					</tr>
 					
-					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type']=='BVE' & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_skip']">
 						<td> Skip traits with no index weight
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will lead to not performing BVE that are not assign with any weight (=0) in the selection index.</span></span>
 						</td>		
 						<td><input type="checkbox" false-value="No" true-value="Yes" v-model="active_edge['skip']"> </td>
 					</tr>
 					
-					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced']">
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_pheno']">
 						<td>Input Phenotype
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use the avg. phenotype of the offspring as the phenotype of the individuals in the parent node. Make sure there are offspring! (use of time needed!)</span></span>
 						</td>
@@ -1760,7 +1815,7 @@
 				<p>Click on button 'Start R Simulation' to run R.</p>
 				
 				<h4 style="color: red" v-if="warnings.length > 0"> Please check warnings before running the simulation!</h4>
-				<button v-if="isBrowserSafari !== true & warnings.length > 0" v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
+				<button v-if="warnings.length > 0" v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 				<button style="font-size:22px;" onclick="runningR1(); " v-if="warnings.length > 0">Start R Simulation (despite warnings!)</button>
 				<button style="font-size:22px;" onclick="runningR1(); " v-if="warnings.length == 0">Start R Simulation</button>
 				<br>

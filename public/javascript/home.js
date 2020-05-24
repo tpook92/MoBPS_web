@@ -68,6 +68,16 @@ function myGeneral () {
 	this['advanced_box'] = false;
 	this['advanced_advanced'] = false;
 	this['advanced_user'] = false;
+	this['advanced_advanced_geno'] = false; 
+	this['advanced_advanced_off'] = false; 
+	this['advanced_advanced_ogc'] = false; 
+	this['advanced_advanced_ratio'] = false; 
+	this['advanced_advanced_thres'] = false; 
+	this['advanced_advanced_pheno'] = false; 
+	this['advanced_advanced_skip'] = false; 
+	this['advanced_advanced_reli'] = false; 
+	this['advanced_advanced_last'] = false; 
+	this['advanced_advanced_del'] = false; 
 //	this['Ensembl Filter'] = "";
 //	this['Ensembl Filter Values'] = "";
 	this['Number of Chromosomes'] = '';
@@ -1370,6 +1380,37 @@ function importNetwork_intern(inputData1) {
 	}
 	if(data_Vue.geninfo['advanced_user']==undefined){
 		data_Vue.geninfo['advanced_user'] = false;
+	}
+	
+	if(data_Vue.geninfo['advanced_advanced_geno']==undefined){
+		data_Vue.geninfo['advanced_advanced_geno'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_off']==undefined){
+		data_Vue.geninfo['advanced_advanced_off'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_ogc']==undefined){
+		data_Vue.geninfo['advanced_advanced_ogc'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_ratio']==undefined){
+		data_Vue.geninfo['advanced_advanced_ratio'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_thres']==undefined){
+		data_Vue.geninfo['advanced_advanced_thres'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_pheno']==undefined){
+		data_Vue.geninfo['advanced_advanced_pheno'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_skip']==undefined){
+		data_Vue.geninfo['advanced_advanced_skip'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_reli']==undefined){
+		data_Vue.geninfo['advanced_advanced_reli'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_last']==undefined){
+		data_Vue.geninfo['advanced_advanced_last'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_del']==undefined){
+		data_Vue.geninfo['advanced_advanced_del'] = false;
 	}
 
 	data_Vue.traitsinfo = inputData['Trait Info'] ? inputData['Trait Info'] : [];

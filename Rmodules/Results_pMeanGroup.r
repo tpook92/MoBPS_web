@@ -15,7 +15,7 @@ user <- arg[1]
 filename <- unlist(strsplit(arg[2], split=","))
 #cohorts <- fromJSON(arg[3])
 
-max_rep <- as.numeric(arg[3])
+max_rep <- as.numeric(arg[4])
 
 gMeanTotal <- list()
 
