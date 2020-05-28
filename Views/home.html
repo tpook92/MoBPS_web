@@ -8,7 +8,7 @@
 	</script>
 		
 	<head>
-		<title>MoBPS</title>
+		<title>MoBPS (v1.5.10)</title>
 		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
@@ -215,6 +215,17 @@
 			<h3 v-if="curUserGroup =='1'"> You are assigned to User Class Test. 
 				It is not possible to use our backend-server for simulation. To simulate download the json-file run via json.simulation() in R.	</h3>
 			
+			<button class="accordion"> Click here to basic guildelines on the use of the MoBPS web-interface </button>
+				<div class="guideline">
+					<p class="guidelines"> Enter your breeding program in the following modules. </p>
+					<p class="guidelines"> &#9432 - buttons indicate additional information when hovering over.</p>
+					<p class="guidelines"> In case our server resources are not enough for you please press the Export button</p>
+					<p class="guidelines"> You can run simulation on your own device in R via: json.simulation("FILENAME.json")</p>
+					<p class="guidelines"> Basic tutorials are in preparation and can be found at: https://www.youtube.com/channel/UC4LDcBka39NidOF1y_65FFw</p>
+					<br>
+					<p class="guidelines"> For advanced questions contact me (Torsten Pook / torsten.pook@uni-goettingen.de)</p>
+				</div>
+					
 			</div>
 			
 			
@@ -336,91 +347,100 @@
 					<tr>
 					
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced'] ">
-							<td>Share genotyped
+							<td  style="text-indent:20px;">Share genotyped
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_geno']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>Max offspring
+							<td style="text-indent:20px;">Max offspring
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_off']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>OGC
+							<td style="text-indent:20px;">Avoid Half/Fullsib matings
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_mating']">
+							</td>
+						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td style="text-indent:20px;">OGC
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							</td>
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_ogc']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>Selection ratio
+							<td style="text-indent:20px;">Selection ratio
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_ratio']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>Threshold selection
+							<td style="text-indent:20px;">Threshold selection
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_thres']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>Advanced input phenotype
+							<td style="text-indent:20px;">Advanced input phenotype
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_pheno']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>Skip BVE
+							<td style="text-indent:20px;">Skip BVE
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_skip']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>Calculate reliability
+							<td style="text-indent:20px;">Calculate reliability
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_reli']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>Use last available
+							<td style="text-indent:20px;">Use last available
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_last']">
 							</td>
 						</tr>
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
-							<td>Delete data
+							<td style="text-indent:20px;">Delete data
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
 							</td>
-							<td> 
+							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_del']">
 							</td>
 						</tr>
@@ -683,10 +703,12 @@
 				
 				<button class="accordion"> Click here to read guildelines for Traits table, Upload Excel File, Correlation tables, SI, PC: </button>
 				<div class="guideline">
-					<p class="guidelines"> Trait Table: Drag and Drop facility is available for all the browser except Safari - select a trait and drag your mouse pad Up/Down and drop it to your desired place. </p>
-					<p class="guidelines">  &nbsp; &nbsp; -- After Drag and Drop of Traits - dynamically the Correlation matrices values, SI values , PC will be moved according to the Traits order. </p>
-					<p class="guidelines"> Upload Excel: Please select the type of Excel file from the drop down box. For Genetic correlation - above the diagonal. For Residual correlation - below the diagonal. For both - the above and the below diagonal values should be filled in the selected file. Also set "1" to the diagonal elements. </p>
-					<p class="guidelines"> &nbsp; &nbsp; -- Please choose the Excel File according to the type of Correlation, then click "Import Table" to display the excel values to the related Correlation.</p> 
+					<p class="guidelines"> Press the "Add new phenotype" - button to add additional traits. </p>
+					<p class="guidelines"> Order of traits can be changed via Drag and Drop features</p>
+					<p class="guidelines"> In case Genetic/Residual correlation is not positive definit all negative eigenvectors are removed.</p>
+					<p class="guidelines"> Structure of a potential Excel file: </p>
+					<p class="guidelines"> &nbsp; &nbsp; -- Genetic correlation - above the diagonal.</p>
+					<p class="guidelines"> &nbsp; &nbsp; -- Residual correlation - below the diagonal. </p>
 				</div>
 				
 				<button class="sub_button" v-on:click="addPheno();"> Add new phenotype </button>
@@ -935,9 +957,15 @@
 			<br>
 			
 			<div id="Selectionindex_Div" onchange="checkEverything(this.id)">
-				<h3 v-if="traitsinfo.length > 0">Creating own Selection Indexes (Optional)
-					<span class="tooltip">&#9432 <span class="tooltiptext">Create your own selection indexes in order to use it in the breeding scheme.</span></span>
-				</h3> 
+				<h3 v-if="traitsinfo.length > 0">Creating own Selection Indexes	</h3> 
+				
+				<button v-if="traitsinfo.length > 0" class="accordion"> Click here to read the guildelines for Selection Indexes: </button>
+				<div class="guideline">
+					<p class="guidelines"> Create your own selection indexes.  </p>
+					<p class="guidelines"> Selection Indexes can be used in all edges in which individuals are selected.  </p>
+					<p class="guidelines"> Values from which to select later (usually breeding values / phenotypes) are scaled before applying the selection index </p>
+					<p class="guidelines"> Scaling can be performed per phenotypic, genomic or breeding value variance of the group of individuals to select from!</p>								
+				</div> 
 				<input id="newSI" type="text" placeholder="Type SI name" v-show="traitsinfo.length > 0">
 				<button class="sub_button" v-on:click="addSI()" v-if="traitsinfo.length > 0"> Add new SI</button>
 				<br>
@@ -1017,8 +1045,14 @@
 					<br>
 				</template>			
 				<h3 v-if="traitsinfo.length > 0">Creating own Phenotyping Classes (Optional)
-					<span class="tooltip">&#9432 <span class="tooltiptext">Phenotyping Classes can be attached to each cohort in the breeding scheme, indicating which phenotype is available in the respective cohort. </span></span>
 				</h3>
+				
+				<button v-if="traitsinfo.length > 0" class="accordion"> Click here to read the guildelines for Phenotyping Classes: </button>
+				<div class="guideline">
+					<p class="guidelines"> Create your own phenotyping classes.  </p>
+					<p class="guidelines"> Only numeric values are allowed with number indicating the number of INDEPENDENT! observations collected. </p>
+					<p class="guidelines"> Phenotyping classes are attributes that can be assigned to nodes in the breeding scheme.</p>								
+				</div> 
 				<input id="newPhenoC" type="text" placeholder="Type PhenoC name" v-show="traitsinfo.length > 0">
 				<button class="sub_button" v-on:click="addPC()" v-if="traitsinfo.length > 0"> Add new PhenoC</button>
 
@@ -1057,6 +1091,17 @@
 					Individuals with BV1 (in the index selected) will die with probability 'Share death at BV1'. In case of no underlying genomics all individuals will die with this 
 					probability. In case of a genetic reason provide BV2. Values for each genomic value will be derived based on linear extension.</span></span>
 				</h3>
+				
+				<button v-if="geninfo['advanced'] && geninfo['advanced_culling']" class="accordion"> Click here to read the guildelines for the Culling module: </button>
+				<div class="guideline">
+					<p class="guidelines"> Create your own culling reasons.  </p>
+					<p class="guidelines"> Parameters are chosen according the culling module in breeding.diploid(). </p>
+					<p class="guidelines"> Death individuals can still be used for BVE but not for reproduction.</p>		
+					<p class="guidelines"> Individuals with BV1 (in the index selected) will die with probability 'Share death at BV1'. </p>
+					<p class="guidelines"> In case of no underlying genomics all individuals will die with this probability </p>
+					<p class="guidelines"> In case of a genetic reason provide BV2. Values for each genomic value will be derived based on linear extension. </p>						
+				</div> 
+				
 				<table class="culling_table" v-if="geninfo['advanced'] && geninfo['advanced_culling']">
 					<tr>
 						<td colspan="2" >
@@ -1137,13 +1182,18 @@
 				<br>
 				
 				<h3 v-if="geninfo['advanced'] && geninfo['advanced_sub']"> Multiple Subpopulations
-					<span class="tooltip">&#9432 <span class="tooltiptext">Define allele frequencies for multiple subpopulations. 
-					Allele frequencies are drawn from a Beta(p,q) distribution.
-					To model different levels of diversity use Share of fixated markers.
-					A population with less diversity should have more fixated markers.
-					More similar population should be fixated in the same direction for often. 
-					This cannot replace the use of REAL genomic data or simulated data with population structure (this module is mostly intended for baseline testing).</span></span>
 				</h3>
+				
+				<button v-if="geninfo['advanced'] && geninfo['advanced_sub']" class="accordion"> Click here to read the guildelines for Subpopulations: </button>
+				<div class="guideline">
+					<p class="guidelines"> Create your own subpopulation.  </p>
+					<p class="guidelines"> Each founder node of the breeding scheme can be assign to a subpopulation. </p>
+					<p class="guidelines"> Allele frequencies will be calculated based on all cohorts of the given subpopulation with imported genotypes.</p>	
+					<p class="guidelines"> Otherwise: Each subpopulation has independently sampled allele frequencies from a Beta(p,q)-distribution.</p>		
+					<p class="guidelines"> To model different level of diversity controll the share of fixated markers.</p>	
+					<p class="guidelines"> In case of different mean trait values additional QTL effects are put on fixated markers.</p>						
+				</div> 
+				
 				<table v-if="geninfo['advanced'] && geninfo['advanced_sub']" class="trait_table">
 					<tr>
 						<td colspan="2" style="text-align:left;">
@@ -1256,9 +1306,17 @@
 				<br>
 				<br>
 				
-				<h3 v-if="geninfo['advanced'] && geninfo['advanced_eco']">General Economy Parameters (Optional)
-					<span class="tooltip">&#9432 <span class="tooltiptext">Define your own economic parameters for the calculation of economic values in your breeding scheme. </span></span>
+				<h3 v-if="geninfo['advanced'] && geninfo['advanced_eco']">General Economy Parameters
 				</h3>
+				
+				<button v-if="geninfo['advanced'] && geninfo['advanced_eco']" class="accordion"> Click here to read the guildelines for the Economy module: </button>
+				<div class="guideline">
+					<p class="guidelines"> Assign costs to basic breeding actions.  </p>
+					<p class="guidelines"> Fixed costs are assumed to happen at time 0. </p>
+					<p class="guidelines"> Interest is applied on all cost types.</p>
+					<p class="guidelines"> Housing classes can be selected for all nodes of the breeding scheme.</p>						
+				</div> 
+				
 				<table v-if="geninfo['advanced'] && geninfo['advanced_eco']" id="general_Economy">
 					<tr>
 						<td>Fixed cost (&#8364;)
@@ -1309,6 +1367,14 @@
 					<h3> Declaring own variables (Optional)	
 						<span class="tooltip">&#9432 <span class="tooltiptext">Variables generated here can be used as values for numerics in the graphical enviroment. This allows to directly change numeric values for multiple nodes. </span></span>
 					</h3> 
+					
+					<button class="accordion"> Click here to read guildelines for declaring own variables </button>
+					<div class="guideline">
+						<p class="guidelines"> Declared variables can be used as input for nodes/edges of the breeding scheme. </p>
+						<p class="guidelines"> Just enter the variable name instead of the intended value</p>
+						<p class="guidelines"> This is mainly independent for different simulations that chase cohort size for multiple cohorts</p>
+					</div>
+				
 					<input id="newVariable" type="text" placeholder="Type variable name">
 					<button class="sub_button" for="newVariable" v-on:click="createVariable()"> Creating new Variable </button>
 					<br>
@@ -1336,12 +1402,11 @@
 			<div id="Breeding_Scheme">
 				<br>
 				<br>
-				<h3> Breeding Scheme
-					<span class="tooltip">&#9432 <span class="tooltiptext">Draw your breeding scheme in the following interactive enviroment.</span></span>
-				</h3> 
+				<h3> Breeding Scheme </h3> 
 				
 				<button class="accordion"> Click here to read the guildelines for Breeding Scheme: </button>
 				<div class="guideline">
+					<p class="guidelines"> Draw your breeding scheme in the following interactive environment.  </p>
 					<p class="guidelines"> Add a Node : Click Edit -> Add Node  -> Click in an empty space to place a new node.  </p>
 					<p class="guidelines"> Edit a Node : Select a Node from the diagram -> Click Edit Node </p>
 					<p class="guidelines"> Drag a Node : Add/Edit a Node or Edge -> Use grey area to drag the Node/Edge display box. </p>
@@ -1545,7 +1610,7 @@
 							</datalist>
 						</td>
 					</tr>
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production','Aging', 'Selection', 'Split','Combine'].indexOf(active_edge['Breeding Type']) >= 0 ">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production','Semen-collection', 'Aging', 'Selection', 'Split','Combine'].indexOf(active_edge['Breeding Type']) >= 0 ">
 						<td>Time needed
 							<span class="tooltip">&#9432 <span class="tooltiptext">Provide the time this breeding action takes. Reproduction currently needs at least one time unit.</span></span>
 						</td>
@@ -1557,30 +1622,45 @@
 						</td>		
 						<td><input type="checkbox" v-model="active_edge['last_available']"> </td>
 					</tr>
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ogc']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ogc']">
 						<td>OGC
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use optimum genetic contribution according to Meuwissen 1996 to determine how often each individual is used for reproduction.</span></span>
 						</td>
 						<td><input type="checkbox" false-value="No" true-value="Yes"  v-model="active_edge['OGC']"></td>
 					</tr>	
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['OGC']=='Yes'">
+					
+					<tr v-if="['Reproduction'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_mating']">
+						<td>Avoid full-sib matings
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activate this to not use full-sibling pairs for reproduction.</span></span>
+						</td>
+						<td><input type="checkbox" v-model="active_edge['full_sib']"></td>
+					</tr>
+					
+					<tr v-if="['Reproduction'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_mating']">
+						<td>Avoid half-sib matings
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activate this to not use half-sibling pairs for reproduction.</span></span>
+						</td>
+						<td><input type="checkbox" v-model="active_edge['half_sib']"></td>
+					</tr>
+					
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['OGC']=='Yes'">
 						<td>Maximum increase of inbreeding </td>
 						<td><input placeholder="Type in the target increase in inbreeding. Use 0 to minimize." v-model="active_edge['ogc_aCa']"></td>
 					</tr>	
 
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_off']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_off']">
 						<td>Maximal # offspring
 							<span class="tooltip">&#9432 <span class="tooltiptext">Maximum number of offspring each individual from the parent node is allowed to have.</span></span>
 						</td>
 						<td><input placeholder="Type a number or Inf" v-model="active_edge['Max Offspring']"></td>
 					</tr>	
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ratio']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ratio']">
 						<td>Selection ratio
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to use some individuals more frequently for reproduction. A value of 2 will lead to the individual will the highest genomic value to be used twice as often as the worst individual.</span></span>
 						</td>
 						<td><input placeholder="Type a number (if nothing enter all individuals are picked equally)" v-model="active_edge['selection_ratio']"></td>
 					</tr>	
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ratio']">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ratio']">
 						<td>Selection ratio type
 							<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to use some individuals more frequently for reproduction. A value of 2 will lead to the individual will the highest genomic value to be used twice as often as the worst individual.</span></span>
 						</td>
@@ -1591,7 +1671,7 @@
 								</option>
 							</select>
 						</td>					</tr>	
-					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] && (geninfo['advanced_advanced_ogc'] ||  geninfo['advanced_advanced_ratio'])">
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] && (geninfo['advanced_advanced_ogc'] ||  geninfo['advanced_advanced_ratio'])">
 						<td>Index for Selection ratio / OGC
 							<span class="tooltip">&#9432 <span class="tooltiptext">Select the index used for the selection ratio or OGC. </span></span>
 						</td>

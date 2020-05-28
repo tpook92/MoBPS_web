@@ -69,6 +69,7 @@ function myGeneral () {
 	this['advanced_advanced'] = false;
 	this['advanced_user'] = false;
 	this['advanced_advanced_geno'] = false; 
+	this['advanced_advanced_mating'] = false; 
 	this['advanced_advanced_off'] = false; 
 	this['advanced_advanced_ogc'] = false; 
 	this['advanced_advanced_ratio'] = false; 
@@ -236,7 +237,7 @@ var data_Vue = new Vue({
 		
 		show_geninfo: false,
 		show_menu: false,
-		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Other'],
+		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Salmon', 'Other'],
 		Time_Unit_options: ['Years', 'Month', 'Weeks', 'Days'],
 		true_false_options: ['TRUE', 'FALSE'],
 		w_options: ['Per Unit', 'Per Phenotypic SD', 'Per Breeding Value SD', 'Per Genomic Value SD'],
@@ -289,7 +290,9 @@ var data_Vue = new Vue({
 		Sex_options: ['Male', 'Female', 'Both', 'Indefinit'],
 		Sex_options2: ['Male', 'Female', 'Both'],
 		node_colors: {'Male':'#9acef4', 'Female':'#f29595', 'Both':'#ddd264'},
-		edge_colors: {'Selection':'#7bbb44', 'Reproduction':'#f5a623', 'Aging':'#dba59a', 'Combine':'#5a4f7c', 'Repeat':'#f14235', 'Split': '#94db8e', 'Cloning':'#aa76fd', 'Selfing':'#ff90b7', 'DH-Production':'#aa76fd'},
+		edge_colors: {'Selection':'#7bbb44', 'Reproduction':'#f5a623', 'Aging':'#dba59a', 'Combine':'#5a4f7c', 'Repeat':'#f14235',
+							'Split': '#94db8e', 'Cloning':'#9932CC', 'Selfing':'#ff90b7', 'DH-Production':'#aa76fd',
+							'Semen-collection': '#483D8B'},
 		counter_pheno: 0,
 		counter_qtl:0,
 		counter_qtl_sub:0,
@@ -301,7 +304,7 @@ var data_Vue = new Vue({
 		threshold_options: [">", "=", "<", ">=", "<="],
 		list_cohorts: [],		
 		Genotype_generation_options: ["Upload Genotypes", "Random-sampling", "Fully-homozygous", "Fully-heterozygous", "All-B-Allele", "All-A-Allele"],
-		Breedingtype_options: ['Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production'],
+		Breedingtype_options: ['Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'],
 		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
 		BVEMethod_options: ['Direct Mixed-Model', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
@@ -341,6 +344,10 @@ var data_Vue = new Vue({
 				{Dataset: "placeholder", Filter:"placeholder", Value: "Affy GeneChip500K"},
 				{Dataset: "placeholder", Filter:"placeholder", Value: "Illumina_1M-duo"},
 				{Dataset: "placeholder", Filter:"placeholder", Value: "Illumina_HumanHap550"}],
+			Salmon: [
+				{Dataset: "", Filter:"variation_set_name", Value: "96k_AtlanticSalmon_male_Tsai"},
+				{Dataset: "", Filter:"variation_set_name", Value: "96k_AtlanticSalmon_female_Tsai"},
+			],
 			Other: [{Dataset: "", Filter:"variation_set_name", Value: ""}],
 		},
 	},
@@ -1390,6 +1397,9 @@ function importNetwork_intern(inputData1) {
 	}
 	if(data_Vue.geninfo['advanced_advanced_ogc']==undefined){
 		data_Vue.geninfo['advanced_advanced_ogc'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_mating']==undefined){
+		data_Vue.geninfo['advanced_advanced_mating'] = false;
 	}
 	if(data_Vue.geninfo['advanced_advanced_ratio']==undefined){
 		data_Vue.geninfo['advanced_advanced_ratio'] = false;
