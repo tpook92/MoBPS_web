@@ -215,15 +215,20 @@
 			<h3 v-if="curUserGroup =='1'"> You are assigned to User Class Test. 
 				It is not possible to use our backend-server for simulation. To simulate download the json-file run via json.simulation() in R.	</h3>
 			
-			<button class="accordion"> Click here to basic guildelines on the use of the MoBPS web-interface </button>
+			<button class="accordion"> Click here to show some basic guildelines on the use of the MoBPS web-interface </button>
 				<div class="guideline">
 					<p class="guidelines"> Enter your breeding program in the following modules. </p>
 					<p class="guidelines"> &#9432 - buttons indicate additional information when hovering over.</p>
+					<p class="guidelines"> Use the navigation bar to jump between modules, change your password, etc.</p>
+					<br>
 					<p class="guidelines"> In case our server resources are not enough for you please press the Export button</p>
 					<p class="guidelines"> You can run simulation on your own device in R via: json.simulation("FILENAME.json")</p>
+					<p class="guidelines"> Script with uploaded genotype / maps will only run on our server!</p>
+					<p class="guidelines"> We are happy to help you set up your own MoBPS web-server!</p>
+					<br>
 					<p class="guidelines"> Basic tutorials are in preparation and can be found at: https://www.youtube.com/channel/UC4LDcBka39NidOF1y_65FFw</p>
 					<br>
-					<p class="guidelines"> For advanced questions contact me (Torsten Pook / torsten.pook@uni-goettingen.de)</p>
+					<p class="guidelines"> For advanced questions, bug reports, potentially collaborations  contact me! (Torsten Pook / torsten.pook@uni-goettingen.de)</p>
 				</div>
 					
 			</div>
@@ -232,6 +237,16 @@
 			<div id="General_Info" v-on:click="show_info ='general'" onchange="checkEverything(this.id)">
 				<br>
 				<h3> General Information</h3> 
+				
+				<button class="accordion"> Click here to read guidelines for the General information </button>
+					<div class="guideline">
+						<p class="guidelines"> In this module you can enter basic information on the species you are working on </p>
+						<p class="guidelines"> You can selected from provided maps (via Ensembl / MoBPSmaps) or upload you own .map-file (columns: </p>
+						<p class="guidelines"> Columns for a customize upload are: Chromosome, SNP-name, physical position in base-pairs, position in Morgan (if NA -> bp / 100.000.000), allele frequency (optional)</p>
+						<p class="guidelines"> Most additional modules on default are hidden! Press Advanced settings to unlock more complicated options </p>
+					</div>
+					
+			</div>
 				<table id="geninfo_table">
 					<colgroup>
 						<col width="40%">
