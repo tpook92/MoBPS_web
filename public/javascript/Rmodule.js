@@ -474,15 +474,29 @@ function plottingResultpMean(){
 	var titles = data_Vue.traitsinfo.map(function(x){return(x['Trait Name'])});
 	for(var i=0; i < data_Vue.traitsinfo.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },			
 			showlegend: pType != 'By Cohorts',
-			plot_bgcolor: '#FFFFFF',
-			xaxis: {
-				title: xtitle,
+			plot_bgcolor: '#FFFFFF',			
+			
+			xaxis: { 
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
-			},
+				},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 			};
+		
 		var config = {
 			scrollZoom: true,
 			toImageButtonOptions: {
@@ -693,14 +707,27 @@ function plottingResultgMean(){
 	var titles = data_Vue.traitsinfo.map(function(x){return(x['Trait Name'])});
 	for(var i=0; i < data_Vue.traitsinfo.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
+
 			showlegend: pType != 'By Cohorts',
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: xtitle,
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 			};
 		var config = {
 			scrollZoom: true,
@@ -1049,14 +1076,26 @@ function plottingResultRel(){
 	var titles = ["Average Relationship within Cohorts", "Average Inbreeding within Cohorts"];
 	for(var i=0; i < data1.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: pType != 'By Cohorts',
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: xtitle,
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 			};
 		var config = {
 			scrollZoom: true,
@@ -1279,7 +1318,7 @@ function plottingResultRelbetweenC(){
 			filename: 'custom_image',
 			height: 750,
 			width: 1500,
-			scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
+			scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor			
 		}
 	};
 	Plotly.newPlot('ResRelbetweenC_Div1', data1, layout, config);
@@ -1390,14 +1429,26 @@ function plottingResultQTL(){
 	var titles = ["Allele Frequency (A)", "Observed Heterozygosity", "Expected Heterozygosity"];
 	for(var i=0; i < 3; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: true,
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: 'Repeats',
+				//title: 'Repeats',
+				title: { text:'Repeats', font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 		};
 		var config = {
 			scrollZoom: true,
@@ -1670,18 +1721,29 @@ function plottingResultAccBVE(){
 	var titles = sindex.map(function(x){return(x['Name'])});
 	for(var i=0; i < data1.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: pType != 'By Cohorts',
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: xtitle,
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
 			yaxis: {
-				title: "Correlation of True BV and EBV/Phenotype",
+				//title: "Correlation of True BV and EBV/Phenotype",
+				title: { text:"Correlation of True BV and EBV/Phenotype", font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
+			},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 			},
 			};
 		var config = {

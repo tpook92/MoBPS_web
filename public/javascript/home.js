@@ -1785,6 +1785,11 @@ function draw() {
 		nodes: {
 			shape: 'box',
 			shapeProperties: {borderRadius: 0},
+			font: {
+			      size: 23,
+			      family: 'arialblack',
+			      weight:'bold',			
+			    },
 		},
 		interaction: {
 			hover: true,
