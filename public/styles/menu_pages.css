@@ -1,28 +1,37 @@
 body { 
   background-color: #d0daf0; 
   margin-left :10%;
-  margin-left :10%;
 }
-
-.bg-img {
-  background-image: url("../desktop/univ_images/image1.png");
- }
 
 h1 {font-size:14px; }
   
 .container {
-  position: absolute;
-  background-color: #d0daf0;
-  width:80%;
-}
-
-.container {
-	width: 80%;
+  	position: absolute;
+  	background-color: #d0daf0;
+  	width:80%;
 	height: 200px;
 	margin: auto;
 	padding: 10px;
 	cursor: pointer;
-} 
+}
+
+.header_image1 {
+  	-moz-box-sizing: border-box;
+   	box-sizing: border-box;
+   	display: inline-block;
+  	min-width: 100px;
+   	width: 18%;
+  	background-color: #d0daf0;
+ }
+
+.header_image2 {	
+   	float: right;
+   	min-width: 100px;
+   	width: 10%;
+  	background-color: #d0daf0;
+	padding-right:200px;
+	padding-bottom:10px;
+ }
 
  
 /* The navbar */
@@ -58,6 +67,7 @@ header {
 	font-size: 16pt;
 	font-weight:bold;
 	text-align:right;
+	padding-right:500px;
 }
 
 .login-form {
@@ -77,7 +87,6 @@ header {
 }
 
 .login-form input[type="password"],
-
 .login-form input[type="text"] {
 	width: 80%;
 	padding: 15px;
@@ -115,43 +124,51 @@ header {
   box-shadow: 0 2px #999;
 }
 
-	
-footer{
+.footer {
 	position: fixed;
-	bottom: 0;
+   	left: 0;
+   	bottom: 0;
+  	width: 100%;
+	height:22%;
+   	background-color: gray;
+   	color: white;
+   	text-align: center;
 }
- 
 
-.footer-distributed{
-	background-color: gray;
-	box-sizing: border-box;
-	width: 80%;
-	height:9%;
+ .f1,
+ .f2,
+ .f3,
+ .f4,
+ .f5 {
+  	-moz-box-sizing: border-box;
+   	box-sizing: border-box;
+   	display: inline-block;
+   	text-align: none;
+   	font-size: 14px;
+   	padding: 0 3%;
+   	min-width: 100px;
+   	width: 18%;
+	background: gray;
+ }
+
+.f1 {
+    text-align: left;
+	font-size: 18px;
+  }
+
+.f2, .f5 {
+    text-align: left;
+	font-size: 15px;
+  }
+
+.textDiv {
+	width:280px;
+	height:20px;
+	font-size: 15px;
 	text-align: left;
-	font: bold 11px sans-serif;
+	padding-bottom:5px;
 }
- 
 
-.footer-distributed .footer-left{
-	width: 35%;
-	margin-left:2%;
-}
- 
-.footer-distributed .footer-left p{
-	display: inline-block;
-	color: white;
-	font-size:11px;
-	vertical-align: middle;
-	margin-left:10px;
-	margin:0;
-}
-   
-@media (max-width: 880px) { 
-	.footer-distributed .footer-left{
-		display: block;
-		width: 100%;
-		margin-bottom: 5px;
-		text-align: center;
-	}
- 
+.tinyheight {
+	height:5px;
 }
