@@ -1,14 +1,19 @@
 body { 
   background-color: #d0daf0; 
-  margin-left :10%;
+  margin-left :7%;
 }
+h2 {font-size:12px; }
 
-h1 {font-size:14px; }
-  
+h3 {font-size:13px; }
+
+h4 {font-size:14px; }
+
+p {font-size:12px; }
+
 .container {
   	position: absolute;
   	background-color: #d0daf0;
-  	width:80%;
+  	width:85%;
 	height: 200px;
 	margin: auto;
 	padding: 10px;
@@ -29,7 +34,7 @@ h1 {font-size:14px; }
    	min-width: 100px;
    	width: 10%;
   	background-color: #d0daf0;
-	padding-right:200px;
+	padding-right:60px;
 	padding-bottom:10px;
  }
 
@@ -47,7 +52,7 @@ h1 {font-size:14px; }
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-  font-size: 17px;
+  font-size: 15px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-weight:bold;
 }
@@ -64,10 +69,10 @@ h1 {font-size:14px; }
 }
 
 header {
-	font-size: 16pt;
+	font-size: 13pt;
 	font-weight:bold;
-	text-align:right;
-	padding-right:500px;
+	text-align:left;
+	padding-top:10px;
 }
 
 .login-form {
@@ -76,13 +81,13 @@ header {
 	margin-top: 50px;
 	float: left;
 	font-family: britanica;
-	font-size: 17px;
+	font-size: 13px;
 }
 
 .login-form h1 {
 	text-align: left;
 	color: #4d4d4d;
-	font-size: 24px;
+	font-size: 13px;
 	padding: 20px 0 20px 0;
 }
 
@@ -93,7 +98,7 @@ header {
 	border: 1px solid darkblue;
 	margin-bottom: 15px;
 	box-sizing:border-box;
-	font-size: 17px;
+	font-size: 13px;
     border-radius: 4px;
 }
 
@@ -106,13 +111,13 @@ header {
 	cursor: pointer;
 	font-weight: bold;
 	color: #ffffff;
-	font-size: 17px;
+	font-size: 13px;
 }
 		
 .guestLogin {
   padding: 15px;
   width:80%;
-  font-size: 15px;
+  font-size: 13px;
   font-weight:bold;
   cursor: pointer;
   text-align: center;
@@ -125,11 +130,11 @@ header {
 }
 
 .footer {
-	position: fixed;
+	position: absolute;
    	left: 0;
-   	bottom: 0;
+   	bottom: 0px;
   	width: 100%;
-	height:22%;
+	height:18%;
    	background-color: gray;
    	color: white;
    	text-align: center;
@@ -140,33 +145,27 @@ header {
  .f3,
  .f4,
  .f5 {
-  	-moz-box-sizing: border-box;
-   	box-sizing: border-box;
    	display: inline-block;
-   	text-align: none;
-   	font-size: 14px;
-   	padding: 0 3%;
-   	min-width: 100px;
+   	font-size: 11px;
    	width: 18%;
 	background: gray;
  }
 
 .f1 {
     text-align: left;
-	font-size: 18px;
+	font-size: 12px;
   }
 
 .f2, .f5 {
     text-align: left;
-	font-size: 15px;
+	font-size: 11px;
   }
 
 .textDiv {
-	width:280px;
-	height:20px;
-	font-size: 15px;
+	width:250px;
+	height:30px;
+	font-size: 11px;
 	text-align: left;
-	padding-bottom:5px;
 }
 
 .tinyheight {
