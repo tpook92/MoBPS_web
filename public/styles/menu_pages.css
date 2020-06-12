@@ -2,9 +2,13 @@ body {
   background-color: #d0daf0; 
   margin-left :7%;
 }
+
 h2 {font-size:12px; }
 
-h3 {font-size:13px; }
+h3 {
+	font-size:13pt;
+	font-family: verdana, arial, sans-serif;
+}
 
 h4 {font-size:14px; }
 
@@ -13,8 +17,8 @@ p {font-size:12px; }
 .container {
   	position: absolute;
   	background-color: #d0daf0;
-  	width:85%;
-	height: 200px;
+  	width:90%;
+	height: 150px;
 	margin: auto;
 	padding: 10px;
 	cursor: pointer;
@@ -32,9 +36,9 @@ p {font-size:12px; }
 .header_image2 {	
    	float: right;
    	min-width: 100px;
-   	width: 10%;
+   	width: 20%;
   	background-color: #d0daf0;
-	padding-right:60px;
+	padding-right:80px;
 	padding-bottom:10px;
  }
 
@@ -42,8 +46,11 @@ p {font-size:12px; }
 /* The navbar */
 .topnav {
   overflow: hidden;
+  width: 100%;
   background-color: #4A5289;
 }
+
+
 
 /* Navbar links */
 .topnav a {
@@ -81,13 +88,13 @@ header {
 	margin-top: 50px;
 	float: left;
 	font-family: britanica;
-	font-size: 13px;
+	font-size: 14px;
 }
 
 .login-form h1 {
 	text-align: left;
 	color: #4d4d4d;
-	font-size: 13px;
+	font-size: 14px;
 	padding: 20px 0 20px 0;
 }
 
@@ -98,7 +105,7 @@ header {
 	border: 1px solid darkblue;
 	margin-bottom: 15px;
 	box-sizing:border-box;
-	font-size: 13px;
+	font-size: 14px;
     border-radius: 4px;
 }
 
@@ -117,7 +124,7 @@ header {
 .guestLogin {
   padding: 15px;
   width:80%;
-  font-size: 13px;
+  font-size: 14px;
   font-weight:bold;
   cursor: pointer;
   text-align: center;
@@ -134,7 +141,7 @@ header {
    	left: 0;
    	bottom: 0px;
   	width: 100%;
-	height:18%;
+	height:25%;
    	background-color: gray;
    	color: white;
    	text-align: center;
@@ -146,7 +153,7 @@ header {
  .f4,
  .f5 {
    	display: inline-block;
-   	font-size: 11px;
+   	font-size: 12px;
    	width: 18%;
 	background: gray;
  }
@@ -158,16 +165,57 @@ header {
 
 .f2, .f5 {
     text-align: left;
-	font-size: 11px;
+	font-size: 12px;
   }
 
 .textDiv {
-	width:250px;
+	width:200px;
 	height:30px;
-	font-size: 11px;
+	font-size: 12px;
 	text-align: left;
 }
 
 .tinyheight {
 	height:5px;
 }
+
+/* intro page */
+header {
+	margin-top:20px;
+	font-size:15pt;
+	font-family: verdana, arial, sans-serif;
+	color:darkblue;
+}
+#wrapper {
+    width: 85%;
+    overflow: auto;
+}
+#paragraph {
+	padding-top:20px;
+	padding-left:20px;
+	padding-right:100px;
+	padding-bottom:20px;
+    float: left;
+    width: 500px;
+	line-height: 1.5;
+	font-size:11pt;
+	font-family: verdana, arial, sans-serif;
+}
+#image {
+	float: left;
+    width: 300px;
+}
+
+#para {
+	padding-top:0px;
+	padding-left:20px;
+	padding-right:600px;
+	padding-bottom:20px;
+    float: left;
+    width: 75%;
+	line-height: 1.5;
+	font-size:12pt;
+	font-family: verdana, arial, sans-serif;
+}
+
+
