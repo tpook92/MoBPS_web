@@ -30,6 +30,7 @@ for(project in 1:length(filename)){
 
 write_json(join_summary, path=paste0(path,user,"_Compare_Summary.json"))
 
+ttttt <- 0
 for(project in 1:length(filename)){
   load(paste(path,user,"_",filename[project],".RData",sep=""))
   # Rel
@@ -83,8 +84,11 @@ for(project in 1:length(filename)){
         }
 
       }
-
+      ttttt <- ttttt + 1
+      save(file="compare_stand.RData", list=c("ttttt"))
     }
+
+
 
   } else{
     gMean <- list()
@@ -104,6 +108,9 @@ for(project in 1:length(filename)){
     gMeanTotal[[length(gMeanTotal)+1]] <- gMean[[addon]]
     names(gMeanTotal)[length(gMeanTotal)] <- paste0(filename[project],"_",  names(gMean)[addon])
   }
+
+  ttttt <- ttttt + 1
+  save(file="compare_stand.RData", list=c("ttttt"))
 }
 
 

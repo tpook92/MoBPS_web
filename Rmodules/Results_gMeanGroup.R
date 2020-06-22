@@ -30,7 +30,7 @@ for(project in 1:length(filename)){
 
 write_json(join_summary, path=paste0(path,user,"_Compare_Summary.json"))
 
-t <- 0
+ttttt <- 0
 for(project in 1:length(filename)){
   load(paste(path,user,"_",filename[project],".RData",sep=""))
   # Rel
@@ -83,8 +83,8 @@ for(project in 1:length(filename)){
         }
 
       }
-      t <- t + 1
-      save(file="compare_stand.RData", list=c("t"))
+      ttttt <- ttttt + 1
+      save(file="compare_stand.RData", list=c("ttttt"))
     }
 
   } else{
@@ -99,8 +99,8 @@ for(project in 1:length(filename)){
       }
       gMean[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=ani)
     }
-    t <- t + 1
-    save(file="compare_stand.RData", list=c("t"))
+    ttttt <- ttttt + 1
+    save(file="compare_stand.RData", list=c("ttttt"))
   }
 
   for(addon in 1:length(gMean)){

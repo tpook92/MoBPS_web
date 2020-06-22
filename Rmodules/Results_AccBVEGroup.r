@@ -35,6 +35,7 @@ write_json(join_summary, path=paste0(path,user,"_Compare_Summary.json"))
 
 AccTotal <- list()
 
+ttttt <- 0
 for(project in 1:length(filename)){
   load(paste(path,user,"_",filename[project],".RData",sep=""))
   # Rel
@@ -101,6 +102,8 @@ for(project in 1:length(filename)){
 
       }
 
+      ttttt <- ttttt + 1
+      save(file="compare_stand.RData", list=c("ttttt"))
     }
 
   } else{
@@ -128,7 +131,10 @@ for(project in 1:length(filename)){
       }
       Acc[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=corr)
     }
+    ttttt <- ttttt + 1
+    save(file="compare_stand.RData", list=c("ttttt"))
   }
+
 
   for(addon in 1:length(Acc)){
     AccTotal[[length(AccTotal)+1]] <- Acc[[addon]]

@@ -241,7 +241,7 @@
 				<button class="accordion"> Click here to read guidelines for the General information </button>
 					<div class="guideline">
 						<p class="guidelines"> In this module you can enter basic information on the species you are working on </p>
-						<p class="guidelines"> You can selected from provided maps (via Ensembl / MoBPSmaps) or upload you own .map-file (columns: </p>
+						<p class="guidelines"> You can selected from provided maps (via Ensembl / MoBPSmaps) or upload you own .map-file: </p>
 						<p class="guidelines"> Columns for a customize upload are: Chromosome, SNP-name, physical position in base-pairs, position in Morgan (if NA -> bp / 100.000.000), allele frequency (optional)</p>
 						<p class="guidelines"> Most additional modules on default are hidden! Press Advanced settings to unlock more complicated options </p>
 					</div>
@@ -296,7 +296,7 @@
 					
 					<tr v-if="geninfo['advanced']">
 						<td>Complex Trait architecture
-							<span class="tooltip">&#9432 <span class="tooltiptext"> Activating this will unlock use of dominate and epistatic trait architectures.</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext"> Activating this will unlock use of dominant and epistatic trait architectures.</span></span>
 						</td>
 						<td> 
 							<input type="checkbox" v-model="geninfo['advanced_trait']">
@@ -334,7 +334,7 @@
 					
 					<tr v-if="geninfo['advanced']">
 						<td>Population History 
-							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with additional features for the simulation of thousands of generation</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with additional features for the simulation of thousands of generations</span></span>
 						</td>
 						<td> 
 							<input type="checkbox" v-model="geninfo['advanced_history']">
@@ -344,7 +344,7 @@
 										
 					<tr v-if="geninfo['advanced']">
 						<td>Export/Import Box 
-							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with text box for import/export </span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with a text box for import/export </span></span>
 						</td>
 						<td> 
 							<input type="checkbox" v-model="geninfo['advanced_box']">
@@ -353,7 +353,7 @@
 					
 					<tr v-if="geninfo['advanced']">
 						<td>Advanced Edge/Node options
-							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges </span></span>
 						</td>
 						<td> 
 							<input type="checkbox"  v-model="geninfo['advanced_advanced']">
@@ -363,7 +363,7 @@
 					
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced'] ">
 							<td  style="text-indent:20px;">Share genotyped
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges </span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_geno']">
@@ -372,7 +372,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Max offspring
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_off']">
@@ -381,7 +381,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Avoid Half/Fullsib matings
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_mating']">
@@ -390,7 +390,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">OGC
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_ogc']">
@@ -399,7 +399,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Selection ratio
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_ratio']">
@@ -408,7 +408,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Threshold selection
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_thres']">
@@ -417,7 +417,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Advanced input phenotype
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_pheno']">
@@ -426,7 +426,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Skip BVE
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges </span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_skip']">
@@ -435,7 +435,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Calculate reliability
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_reli']">
@@ -444,7 +444,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Use last available
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_last']">
@@ -453,7 +453,7 @@
 						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
 							<td style="text-indent:20px;">Delete data
-								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges (share genotyped, selection options etc.)</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
 							</td>
 							<td style="text-indent:20px;"> 
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_del']">
@@ -516,7 +516,7 @@
 					</tr>	
 					<tr v-if="genetic_data == 'Ens'">
 						<td>Max. Number of SNPs 	
-							<span class="tooltip">&#9432 <span class="tooltiptext">Only a subsample of the Ensembl dataset is used to save computing time. If nothing is enter use the full dataset.</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Only a subsample of the Ensembl dataset is used to save computing time. If nothing / non-numeric value is entered use the full dataset.</span></span>
 						</td>
 						<td v-if="geninfo.Species != ''">
 							<input placeholder="Type a number" type="text" v-model="geninfo['Max Number of SNPs']">
@@ -535,7 +535,7 @@
 					</tr>  -->
 					<tr v-if="geninfo['Use Ensembl Map'] =='No' && geninfo['Use Own Map'] =='Yes'">
 						<td>Upload Map File
-							<span class="tooltip">&#9432 <span class="tooltiptext">Currently only .vcf .map and .RData-files are supported. Adding more is no problem. Contact Torsten if required.</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Currently only .vcf .map and .RData-files are supported. Contact Torsten (torsten.pook (at) uni-goettingen.de) to add additional maps.</span></span>
 						</td>
 						<td>
 							<form id='MapUpload' target="print_popup" action='/MapUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800'); setMapPath();">
@@ -645,7 +645,7 @@
 					</tr>
 					<tr v-show="geninfo['advanced'] && geninfo['advanced_parallel']">
 						<td>Number of Simulations 
-							<span class="tooltip">&#9432 <span class="tooltiptext">Number of simulations of the breeding program you what to perform. This will massively increase run-time but also reduce variance of results.</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Number of simulations of the breeding program you want to perform. This will massively increase run-time but also reduce variance of results.</span></span>
 						</td>
 						<td>
 							<input type="value" v-model="geninfo['number-simulations']">
@@ -744,13 +744,16 @@
 								<span class="tooltip">&#9432 <span class="tooltiptext">Optional. Unit of measurement for the trait.</span></span>
 							</td>
 							<td>Pheno. Mean
-								<span class="tooltip">&#9432 <span class="tooltiptext">The avg. Founder individual will have this mean. To have subpopulations with different mean use the Subpopulation module.</span></span>
+								<span class="tooltip">&#9432 <span class="tooltiptext">The avg. Founder individual will have this mean. To have subpopulations with different means use the Subpopulation module.</span></span>
 							</td>
 							<td>Pheno. SD
 								<span class="tooltip">&#9432 <span class="tooltiptext">Trait variance for the group of all founders will be scaled accordingly. Residual variance is assumed to be fixed over all generations.</span></span>
 							</td>
 							<td>Heritability
 								<span class="tooltip">&#9432 <span class="tooltiptext">Heritability of the trait.</span></span>
+							</td>
+							<td  v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">Repeatability
+								<span class="tooltip">&#9432 <span class="tooltiptext">Repeatability of the trait (If empty will be equal to heritability - independent observations).</span></span>
 							</td>
 							<td v-if = "geninfo['advanced']==false || geninfo['advanced_trait']==false"># Polygenic Loci
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. To simulate non-additive QTL effect activate the advanced setting Complex Trait architecture.</span></span>
@@ -805,6 +808,9 @@
 							</td>
 							<td style="width:1%;padding-right:19px;">
 								<input class="phenoSmall" v-model="trait['Trait Heritability']" max=1 min=0 class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
+							</td>
+							<td style="width:1%;padding-right:19px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true">
+								<input class="phenoSmall"  v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true" v-model="trait['Trait Repeatability']" max=1 min=0 class="no-spinners" step=0.0001 v-on:change="trait['Trait Repeatability'] = trait['Trait Repeatability'].replace(/,/g, '.')"> 
 							</td>
 							<td style="width:1%;padding-right:15px;">
 								<input class="phenoSmall" v-model="trait['Trait Number of Polygenic Loci']" class="no-spinners" step=1> 
@@ -1222,10 +1228,10 @@
 						<td style="font-weight:bold">Subpopulation	
 						</td>
 						<td style="padding:5px;">Sampled allele frequency (p)
-							<span class="tooltip">&#9432 <span class="tooltiptext">Allele frequencies are drawn from a Beta (p,q)</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Allele frequencies are drawn from a Beta (p,q) - distribution </span></span>
 						</td>
 						<td style="padding:5px;">Sampled allele frequency (q)
-							<span class="tooltip">&#9432 <span class="tooltiptext">Allele frequencies are drawn from a Beta (p,q)</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Allele frequencies are drawn from a Beta (p,q) - distribution </span></span>
 						</td>
 						<td style="padding:5px;">Share of fixated markers in A
 											<span class="tooltip">&#9432 <span class="tooltiptext">Define allele frequencies for multiple subpopulations. 
@@ -1347,7 +1353,7 @@
 					</tr>
 					<tr>
 						<td>Genotyping cost per individual (&#8364;)
-							<span class="tooltip">&#9432 <span class="tooltiptext">Genotyping costs per individual. Currently one of genotyping with a single array supported possible. Modes with different chips and marker densities are coming.</span></span>
+							<span class="tooltip">&#9432 <span class="tooltiptext">Genotyping costs per individual. Currently only genotyping with a single array  is supported. Modes with different chips and marker densities are coming.</span></span>
 						</td>
 						<td><input type="value" placeholder="Type a number" v-model="economy['Genotyping Cost']"></td>
 					</tr>
@@ -1363,14 +1369,14 @@
 							{{vv.Name}}  
 						</td>
 						<td>
-							<input v-model="vv.Cost" style="width:100px;"> 
+							<input type="value" v-model="vv.Cost" style="width:100px;"> 
 							<button class="sub_button" v-if="ind > 0" v-on:click="removeHCostClass(vv, ind)">X</button>
 						</td>
 					</tr>
 
 					<tr>
 						<td>
-							<input id="newHCostClass" placeholder="Type a HFC name">
+							<input type="text" id="newHCostClass" placeholder="Type a HFC name">
 						</td>
 						<td colspan="2">
 							<button class="sub_button" for="newHCostClass" v-on:click="createHCostClass()"> Creating new HFC Class </button>
@@ -1419,13 +1425,19 @@
 				<br>
 				<h3> Breeding Scheme </h3> 
 				
+				<p style="float:left; width:380px; fontsize:13px;"> Expand flash enviroment : <span class="tooltip">&#9432 <span class="tooltiptext"> Please click this button to have bigger breeding scheme diagram and save the project to rearrange nodes and edges.</span></span>
+					<input type="checkbox" id="bigFontNode" v-model="geninfo['bigFontNode']" style="cursor: pointer;width: 40px; height: 20px;" onclick="networkBoxChange()">
+				</p>
+				<br>
+				
+				
 				<button class="accordion"> Click here to read the guildelines for Breeding Scheme: </button>
 				<div class="guideline">
 					<p class="guidelines"> Draw your breeding scheme in the following interactive environment.  </p>
 					<p class="guidelines"> Add a Node : Click Edit -> Add Node  -> Click in an empty space to place a new node.  </p>
 					<p class="guidelines"> Edit a Node : Select a Node from the diagram -> Click Edit Node </p>
 					<p class="guidelines"> Drag a Node : Add/Edit a Node or Edge -> Use grey area to drag the Node/Edge display box. </p>
-					<p class="guidelines"> Doublic Click a Node/Edge : Display only box appears for double click a node or edge. Need to click Edit Node to update a node/edge.</p>
+					<p class="guidelines"> Double-Click a Node/Edge : Display-only box appears for a node or edge. Need to click Edit Node to edit the node/edge.</p>
 					<p class="guidelines"> Copy Node : Select a Node -> Right Click.</p>									
 				</div> 
 				
@@ -1940,11 +1952,11 @@
 				
 				<br>
 				<p v-if="cohortsList.length >0" class="boldText">  Download Rdata : 
-					<span class="tooltip">&#9432 <span class="tooltiptext"> Download the output of the simulation as Rdata file to save it on you own computer or use it for further analysis in R. </span></span> &nbsp;&nbsp;
+					<span class="tooltip">&#9432 <span class="tooltiptext"> Download the output of the simulation as Rdata file to save it on your own machine or use it for further analysis in R. </span></span> &nbsp;&nbsp;
 					<a v-if="filename" href="/Rdownload"> {{geninfo['Project Name']}}.RData </a> 
 				</p>
 				<br>
-				<p>Attention: The actual breeding program must match the uploaded R results, otherwise plot functions will not work.</p>
+				<p>Attention: The actual breeding program must match the uploaded R results, otherwise plotting functions will not work.</p>
 				<form id='ResultUpload' target="print_popup" action='/ResultUpload' method='post' encType='multipart/form-data' onsubmit="window.open('about:blank','print_popup','width=1000,height=800')">
 					<input type='file' name='ResultFile' id='ResultFile'>
 					<!--input type='submit' value='Load Results'-->
@@ -1956,24 +1968,24 @@
 				<div v-if="cohortsList.length >0" class="cohortListHead">
 					<table>
 						<thead>
-							<tr><th><div style="width:160px;"> Cohort Name </div></th>
-								<th>Nr. of Individuals </th>
-								<th>Time point </th>
-								<th>Total csts </th>
-								<th>Cost genotyping </th>
-								<th>Cost phenotyping </th>
-								<th>Cost housing </th>
+								<tr><th class="boldText" style="width:160px;"> Cohort Name </th>
+								<th class="boldText">Nr. of Individuals </th>
+								<th class="boldText">Time point </th>
+								<th class="boldText">Total csts </th>
+								<th class="boldText">Cost genotyping </th>
+								<th class="boldText">Cost phenotyping </th>
+								<th class="boldText">Cost housing </th>
 							</tr>
 							</thead>
 							<tbody>
 							<tr v-for='(cohorts, index) in cohortsList' >
-								<td> <input v-model="cohorts['Cohort name']" style="border:0;width:175px;text-align:left;"></td>
-								<td> <input v-model="cohorts['Nr. of individuals']"> </td>
-								<td> <input v-model="cohorts['Time-point']"> </td>
-								<td> <input v-model="cohorts['Total costs']"> </td>
-								<td> <input v-model="cohorts['Cost genotyping']"> </td>
-								<td> <input v-model="cohorts['Cost phenotyping']"> </td>
-								<td> <input v-model="cohorts['Cost housing']"> </td>				
+								<td style="border:0;width:160px;text-align:left;"> {{cohortsList[index]['Cohort name']}} </td>
+								<td> {{cohortsList[index]['Nr. of individuals']}} </td>
+								<td> {{cohortsList[index]['Time-point']}} </td>
+								<td> {{cohortsList[index]['Total costs']}} </td>
+								<td> {{cohortsList[index]['Cost genotyping']}} </td>
+								<td> {{cohortsList[index]['Cost phenotyping']}} </td>
+								<td> {{cohortsList[index]['Cost housing']}} </td>			
 							</tr>
 					</table>
 
@@ -2063,6 +2075,11 @@
 					</div>					
 					<br>
 					<br>
+					
+					<td>Display 95% Confidence Intervals </td> 
+					<td>
+						<input type="checkbox" v-model="plottingData.confidence">
+					</td>
 					
 					<h4>Results: Observed Phenotypes</h4>
 					<button v-if="plottingData.RespMean == ''" onclick="RunResultpMean()" >Run Analysis</button>
@@ -2359,6 +2376,17 @@
 		        o.style.height = "1px";
 		        o.style.height = (25+o.scrollHeight)+"px";
 		    }
+			
+		function networkBoxChange() {
+			if (document.getElementById("bigFontNode").checked == true) {
+			    document.getElementById("mynetwork_container").style.height = "1000px";
+			document.getElementById("mynetwork").style.height = "995px";
+			} 
+			else {
+			   document.getElementById("mynetwork_container").style.height = "800px";
+			   document.getElementById("mynetwork").style.height = "798px";
+			    }
+		}
 
 	</script>		
 

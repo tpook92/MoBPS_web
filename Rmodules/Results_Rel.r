@@ -45,6 +45,9 @@ filesnames <- gsub(paste0(user,"_",filename), "", filesnames)
 avail <- suppressWarnings(unique(c(NA,as.numeric(filesnames)))[-1])
 
 if(length(avail)>1){
+  varkinship1 <- NULL
+  varinbreed1 <- NULL
+
   for(index in avail){
     print(index)
     load(paste(path,user,"_",filename, index, ".RData",sep=""))
@@ -61,10 +64,15 @@ if(length(avail)>1){
       out
     }
     doParallel::stopImplicitCluster()
+
     if(index==avail[1]){
       ttkinship1 <- ttkinship / length(avail)
+      varkinship1 <- ttkinship[,1]
+      varinbreed1 <- ttkinship[,2]
     } else{
       ttkinship1 <- ttkinship1 + ttkinship / length(avail)
+      varkinship1 <- cbind(varkinship1, ttkinship[,1])
+      varinbreed1 <- cbind(varinbreed1, ttkinship[,2])
     }
 
 
@@ -89,8 +97,16 @@ if(length(avail)>1){
 
 }
 
+if(length(varkinship1)==0){
+  sdkin <- sdinb <- rep(0, length(ttrep))
+} else{
+  sdkin <- sqrt(diag(var(t(varkinship1)))) / sqrt(length(avail))
+  sdinb <- sqrt(diag(var(t(varinbreed1)))) / sqrt(length(avail))
+}
 
-result <- cbind(ttnames, ttrep, coh[,"time point"], round(ttkinship[,1]*2,digits=6), round(ttkinship[,2]*2-1, digits=6))
+result <- cbind(paste0(filename[project], "_", ttnames), ttrep, coh[,"time point"], round(ttkinship[,1]*2,digits=6), round(ttkinship[,2]*2-1, digits=6), sdkin, sdinb)
+
+colnames(result) <- c("names", "ttrep", "tttime", "kin", "inb", "sdkin", "sdinb")
 
 dat <- by(result, result[,1], t)
 class(dat) <- "list"

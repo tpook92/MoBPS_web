@@ -1,35 +1,56 @@
 body { 
   background-color: #d0daf0; 
-  margin-left :10%;
-  margin-left :10%;
+  margin-left :7%;
 }
 
-.bg-img {
-  background-image: url("../desktop/univ_images/image1.png");
- }
+h2 {font-size:12px; }
 
-h1 {font-size:14px; }
-  
-.container {
-  position: absolute;
-  background-color: #d0daf0;
-  width:80%;
+h3 {
+	font-size:13pt;
+	font-family: verdana, arial, sans-serif;
 }
 
+h4 {font-size:14px; }
+
+p {font-size:12px; }
+
 .container {
-	width: 80%;
-	height: 200px;
+  	position: absolute;
+  	background-color: #d0daf0;
+  	width:90%;
+	height: 150px;
 	margin: auto;
 	padding: 10px;
 	cursor: pointer;
-} 
+}
+
+.header_image1 {
+  	-moz-box-sizing: border-box;
+   	box-sizing: border-box;
+   	display: inline-block;
+  	min-width: 100px;
+   	width: 18%;
+  	background-color: #d0daf0;
+ }
+
+.header_image2 {	
+   	float: right;
+   	min-width: 100px;
+   	width: 20%;
+  	background-color: #d0daf0;
+	padding-right:80px;
+	padding-bottom:10px;
+ }
 
  
 /* The navbar */
 .topnav {
   overflow: hidden;
+  width: 100%;
   background-color: #4A5289;
 }
+
+
 
 /* Navbar links */
 .topnav a {
@@ -38,7 +59,7 @@ h1 {font-size:14px; }
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-  font-size: 17px;
+  font-size: 15px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-weight:bold;
 }
@@ -55,9 +76,10 @@ h1 {font-size:14px; }
 }
 
 header {
-	font-size: 16pt;
+	font-size: 13pt;
 	font-weight:bold;
-	text-align:right;
+	text-align:left;
+	padding-top:10px;
 }
 
 .login-form {
@@ -66,25 +88,24 @@ header {
 	margin-top: 50px;
 	float: left;
 	font-family: britanica;
-	font-size: 17px;
+	font-size: 14px;
 }
 
 .login-form h1 {
 	text-align: left;
 	color: #4d4d4d;
-	font-size: 24px;
+	font-size: 14px;
 	padding: 20px 0 20px 0;
 }
 
 .login-form input[type="password"],
-
 .login-form input[type="text"] {
 	width: 80%;
 	padding: 15px;
 	border: 1px solid darkblue;
 	margin-bottom: 15px;
 	box-sizing:border-box;
-	font-size: 17px;
+	font-size: 14px;
     border-radius: 4px;
 }
 
@@ -97,13 +118,13 @@ header {
 	cursor: pointer;
 	font-weight: bold;
 	color: #ffffff;
-	font-size: 17px;
+	font-size: 13px;
 }
 		
 .guestLogin {
   padding: 15px;
   width:80%;
-  font-size: 15px;
+  font-size: 14px;
   font-weight:bold;
   cursor: pointer;
   text-align: center;
@@ -115,43 +136,84 @@ header {
   box-shadow: 0 2px #999;
 }
 
-	
-footer{
-	position: fixed;
-	bottom: 0;
+.footer {
+	position: absolute;
+   	left: 0;
+   	bottom: 0px;
+  	width: 100%;
+	height:25%;
+   	background-color: gray;
+   	color: white;
+   	text-align: center;
 }
- 
 
-.footer-distributed{
-	background-color: gray;
-	box-sizing: border-box;
-	width: 80%;
-	height:9%;
+ .f1,
+ .f2,
+ .f3,
+ .f4,
+ .f5 {
+   	display: inline-block;
+   	font-size: 12px;
+   	width: 18%;
+	background: gray;
+ }
+
+.f1 {
+    text-align: left;
+	font-size: 12px;
+  }
+
+.f2, .f5 {
+    text-align: left;
+	font-size: 12px;
+  }
+
+.textDiv {
+	width:200px;
+	height:30px;
+	font-size: 12px;
 	text-align: left;
-	font: bold 11px sans-serif;
 }
- 
 
-.footer-distributed .footer-left{
-	width: 35%;
-	margin-left:2%;
+.tinyheight {
+	height:5px;
 }
- 
-.footer-distributed .footer-left p{
-	display: inline-block;
-	color: white;
-	font-size:11px;
-	vertical-align: middle;
-	margin-left:10px;
-	margin:0;
+
+/* intro page */
+header {
+	margin-top:20px;
+	font-size:15pt;
+	font-family: verdana, arial, sans-serif;
+	color:darkblue;
 }
-   
-@media (max-width: 880px) { 
-	.footer-distributed .footer-left{
-		display: block;
-		width: 100%;
-		margin-bottom: 5px;
-		text-align: center;
-	}
- 
+#wrapper {
+    width: 85%;
+    overflow: auto;
+}
+#paragraph {
+	padding-top:20px;
+	padding-left:20px;
+	padding-right:100px;
+	padding-bottom:20px;
+    float: left;
+    width: 500px;
+	line-height: 1.5;
+	font-size:11pt;
+	font-family: verdana, arial, sans-serif;
+}
+#image {
+	float: left;
+    width: 300px;
+}
+
+#para {
+	padding-top:0px;
+	padding-left:20px;
+	padding-right:600px;
+	padding-bottom:20px;
+    float: left;
+    width: 75%;
+	line-height: 1.5;
+	font-size:12pt;
+	font-family: verdana, arial, sans-serif;
 }

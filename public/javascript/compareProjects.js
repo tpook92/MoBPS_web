@@ -29,7 +29,8 @@ function myPlottingData(){
 	this['ResgMeanGroup'] = "",
 	this['SummaryGroup'] = "",
 	this['RespMeanGroup'] = "",
-	this['ResAccBVEGroup'] = ""
+	this['ResAccBVEGroup'] = "",
+	this['confidence'] = false
 }
 
 

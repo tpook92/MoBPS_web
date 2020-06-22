@@ -410,9 +410,25 @@ function plottingResultpMean(){
 	var coh = data_Vue.plottingPar.RespMean_cohorts;
 	var pType = data_Vue.plottingPar.RespMean_pType;
 	
+	var d3colors = Plotly.d3.scale.category10();
+	var confidence = data_Vue.plottingData.confidence; 
+	function hexToRgb(hex) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
+				
 	var data1 = [];
 	for(var i=0; i< data_Vue.traitsinfo.length; i++){
 		data1.push([]);
+	}
+	
+	var data2 = [];
+	for(var i=0; i< data_Vue.traitsinfo.length; i++){
+		data2.push([]);
 	}
 	
 	if(pType=="By Repeats"){
@@ -469,19 +485,76 @@ function plottingResultpMean(){
 		}
 		var xtitle = 'Time in '+data_Vue.geninfo['Time Unit'];
 	}
-		
+	
+	if(pType!="By Cohorts" & confidence){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each trait:
+			for(var j=0; j< data_Vue.traitsinfo.length; j++){
+			
+				if(pType=="By Time"){
+					temp1 = Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))});
+				} else{
+					temp1 = Object.keys(data[coh[i]]);
+				}
+
+				for(var p=temp1.length;p>0; p--){
+					temp1.push(temp1[p-1]);
+				}
+				
+				
+				temp2 = Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))});
+				temp3 = Object.values(data[coh[i]]).map(function(x){return(math.sqrt(math.var(x.tval[j])) / math.sqrt(x.tval[j].length))});
+				for(var p = 0 ; p < temp2.length; p++){
+					temp2[p] = temp2[p] + 1.96 * temp3[p];
+				}
+				for(var p = temp2.length ; p >0; p--){
+					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
+				}
+
+				color_start = d3colors(i);
+				color_rgb = hexToRgb(color_start); 
+				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
+				data2[j].push({
+					y : Object.values(temp2),
+					x : temp1,
+					type : 'scatter',
+					name : coh[i],
+					showlegend: false,
+					line: {color: "transparent"},
+					fill: "tozerox",
+					fillcolor: color_hex
+					
+				});		
+			}
+		}
+	}
+	
 	//console.log(data);
 	var titles = data_Vue.traitsinfo.map(function(x){return(x['Trait Name'])});
 	for(var i=0; i < data_Vue.traitsinfo.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },	
 			showlegend: pType != 'By Cohorts',
-			plot_bgcolor: '#FFFFFF',
-			xaxis: {
-				title: xtitle,
+			plot_bgcolor: '#FFFFFF',			
+
+			xaxis: { 
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
-			},
+				},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 			};
 		var config = {
 			scrollZoom: true,
@@ -493,7 +566,15 @@ function plottingResultpMean(){
 				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
 			}
 		};
-		Plotly.newPlot('RespMean_Div'+(i+1), data1[i], layout, config);
+		
+		data_plot = data1[i]; 
+		if(pType != "By Cohorts" & confidence){
+			for(var p = 0; p < data2[i].length; p++){
+				data_plot.push(data2[i][p]);
+			}
+		}
+		
+		Plotly.newPlot('RespMean_Div'+(i+1), data_plot, layout, config);
 	}
 }
 
@@ -629,11 +710,27 @@ function plottingResultgMean(){
 	var data = data_Vue.plottingData.ResgMean;
 	var coh = data_Vue.plottingPar.ResgMean_cohorts;
 	var pType = data_Vue.plottingPar.ResgMean_pType;
-	
+	var d3colors = Plotly.d3.scale.category10();
+	var confidence = data_Vue.plottingData.confidence; 
+	function hexToRgb(hex) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
+				
 	var data1 = [];
 	for(var i=0; i< data_Vue.traitsinfo.length; i++){
 		data1.push([]);
 	}
+	
+	var data2 = [];
+	for(var i=0; i< data_Vue.traitsinfo.length; i++){
+		data2.push([]);
+	}
+	
 	
 	if(pType=="By Repeats"){
 		// each cohort
@@ -650,6 +747,10 @@ function plottingResultgMean(){
 		}
 		var xtitle = 'Repeats';
 	}
+	
+	
+
+	
 	if(pType=="By Cohorts"){
 		// each cohort
 		for(var i=0; i < coh.length; i++){
@@ -690,17 +791,72 @@ function plottingResultgMean(){
 		var xtitle = 'Time in '+data_Vue.geninfo['Time Unit'];
 	}
 		
+	if(pType!="By Cohorts" & confidence){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each trait:
+			for(var j=0; j< data_Vue.traitsinfo.length; j++){
+			
+				if(pType=="By Time"){
+					temp1 = Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))});
+				} else{
+					temp1 = Object.keys(data[coh[i]]);
+				}
+
+				for(var p=temp1.length;p>0; p--){
+					temp1.push(temp1[p-1]);
+				}
+				
+				
+				temp2 = Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))});
+				temp3 = Object.values(data[coh[i]]).map(function(x){return(math.sqrt(math.var(x.tval[j])) / math.sqrt(x.tval[j].length))});
+				for(var p = 0 ; p < temp2.length; p++){
+					temp2[p] = temp2[p] + 1.96 * temp3[p];
+				}
+				for(var p = temp2.length ; p >0; p--){
+					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
+				}
+
+				color_start = d3colors(i);
+				color_rgb = hexToRgb(color_start); 
+				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
+				data2[j].push({
+					y : Object.values(temp2),
+					x : temp1,
+					type : 'scatter',
+					name : coh[i],
+					showlegend: false,
+					line: {color: "transparent"},
+					fill: "tozerox",
+					fillcolor: color_hex
+					
+				});		
+			}
+		}
+	}
 	var titles = data_Vue.traitsinfo.map(function(x){return(x['Trait Name'])});
 	for(var i=0; i < data_Vue.traitsinfo.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: pType != 'By Cohorts',
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: xtitle,
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+			},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 			};
 		var config = {
 			scrollZoom: true,
@@ -712,19 +868,46 @@ function plottingResultgMean(){
 				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
 			}
 		};
-		Plotly.newPlot('ResgMean_Div'+(i+1), data1[i], layout, config);
+		
+		data_plot = data1[i]; 
+		if(pType != "By Cohorts" & confidence){
+			for(var p = 0; p < data2[i].length; p++){
+				data_plot.push(data2[i][p]);
+			}
+		}
+				
+		Plotly.newPlot('ResgMean_Div'+(i+1),  data_plot, layout, config);	
+		
 	}
 }
+
 
 function plottingResultpMeanGroup(){
 	var data = data_Vue.plottingData.RespMeanGroup;
 	var coh = data_Vue.plottingPar.RespMeanGroup_cohorts;
 	var pType = data_Vue.plottingPar.RespMeanGroup_pType;
 	
+	var d3colors = Plotly.d3.scale.category10();
+	var confidence = data_Vue.plottingData.confidence; 
+	function hexToRgb(hex) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
+	
 	var data1 = [];
 	for(var i=0; i< data_Vue.jsonDataList[0]["Trait Info"].length; i++){
 		data1.push([]);
 	}
+	
+	var data2 = [];
+	for(var i=0; i< data_Vue.jsonDataList[0]["Trait Info"].length; i++){
+		data2.push([]);
+	}
+	
 	
 	if(pType=="By Repeats"){
 		// each cohort
@@ -780,18 +963,75 @@ function plottingResultpMeanGroup(){
 		}
 		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["Genomic Info"]['Time Unit'];
 	}
-		
+	
+	if(pType!="By Cohorts" & confidence){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each trait:
+			for(var j=0; j< data_Vue.jsonDataList[0]["Trait Info"].length; j++){
+			
+				if(pType=="By Time"){
+					temp1 = Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))});
+				} else{
+					temp1 = Object.keys(data[coh[i]]);
+				}
+
+				for(var p=temp1.length;p>0; p--){
+					temp1.push(temp1[p-1]);
+				}
+				
+				
+				temp2 = Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))});
+				temp3 = Object.values(data[coh[i]]).map(function(x){return(math.sqrt(math.var(x.tval[j])) / math.sqrt(x.tval[j].length))});
+				for(var p = 0 ; p < temp2.length; p++){
+					temp2[p] = temp2[p] + 1.96 * temp3[p];
+				}
+				for(var p = temp2.length ; p >0; p--){
+					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
+				}
+
+				color_start = d3colors(i);
+				color_rgb = hexToRgb(color_start); 
+				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
+				data2[j].push({
+					y : Object.values(temp2),
+					x : temp1,
+					type : 'scatter',
+					name : coh[i],
+					showlegend: false,
+					line: {color: "transparent"},
+					fill: "tozerox",
+					fillcolor: color_hex
+					
+				});		
+			}
+		}
+	}
+	
 	var titles = data_Vue.jsonDataList[0]["Trait Info"].map(function(x){return(x['Trait Name'])});
 	for(var i=0; i < data_Vue.jsonDataList[0]["Trait Info"].length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },	
 			showlegend: pType != 'By Cohorts',
-			plot_bgcolor: '#FFFFFF',
-			xaxis: {
-				title: xtitle,
+			plot_bgcolor: '#FFFFFF',			
+
+			xaxis: { 
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
-			},
+				},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 			};
 		var config = {
 			scrollZoom: true,
@@ -803,7 +1043,15 @@ function plottingResultpMeanGroup(){
 				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
 			}
 		};
-		Plotly.newPlot('RespMeanGroup_Div'+(i+1), data1[i], layout, config);
+		
+		data_plot = data1[i]; 
+		if(pType != "By Cohorts" & confidence){
+			for(var p = 0; p < data2[i].length; p++){
+				data_plot.push(data2[i][p]);
+			}
+		}
+		
+		Plotly.newPlot('RespMeanGroup_Div'+(i+1), data_plot, layout, config);
 	}
 }
 
@@ -813,9 +1061,25 @@ function plottingResultgMeanGroup(){
 	var coh = data_Vue.plottingPar.ResgMeanGroup_cohorts;
 	var pType = data_Vue.plottingPar.ResgMeanGroup_pType;
 	
+	var d3colors = Plotly.d3.scale.category10();
+	var confidence = data_Vue.plottingData.confidence; 
+	function hexToRgb(hex) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
+	
 	var data1 = [];
 	for(var i=0; i< data_Vue.jsonDataList[0]["Trait Info"].length; i++){
 		data1.push([]);
+	}
+	
+	var data2 = [];
+	for(var i=0; i< data_Vue.jsonDataList[0]["Trait Info"].length; i++){
+		data2.push([]);
 	}
 	
 	if(pType=="By Repeats"){
@@ -833,6 +1097,7 @@ function plottingResultgMeanGroup(){
 		}
 		var xtitle = 'Repeats';
 	}
+	
 	if(pType=="By Cohorts"){
 		// each cohort
 		for(var i=0; i < coh.length; i++){
@@ -872,18 +1137,74 @@ function plottingResultgMeanGroup(){
 		}
 		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["Genomic Info"]['Time Unit'];
 	}
+	
+	if(pType!="By Cohorts" & confidence){
+		// each cohort
+		for(var i=0; i < coh.length; i++){
+			// each trait:
+			for(var j=0; j< data_Vue.jsonDataList[0]["Trait Info"].length; j++){
+			
+				if(pType=="By Time"){
+					temp1 = Object.values(data[coh[i]]).map(function(x){return(math.mean(x.ttime[0]))});
+				} else{
+					temp1 = Object.keys(data[coh[i]]);
+				}
+
+				for(var p=temp1.length;p>0; p--){
+					temp1.push(temp1[p-1]);
+				}
+				
+				
+				temp2 = Object.values(data[coh[i]]).map(function(x){return(math.mean(x.tval[j]))});
+				temp3 = Object.values(data[coh[i]]).map(function(x){return(math.sqrt(math.var(x.tval[j])) / math.sqrt(x.tval[j].length))});
+				for(var p = 0 ; p < temp2.length; p++){
+					temp2[p] = temp2[p] + 1.96 * temp3[p];
+				}
+				for(var p = temp2.length ; p >0; p--){
+					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
+				}
+
+				color_start = d3colors(i);
+				color_rgb = hexToRgb(color_start); 
+				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
+				data2[j].push({
+					y : Object.values(temp2),
+					x : temp1,
+					type : 'scatter',
+					name : coh[i],
+					showlegend: false,
+					line: {color: "transparent"},
+					fill: "tozerox",
+					fillcolor: color_hex
+					
+				});		
+			}
+		}
+	}
 		
 	var titles = data_Vue.jsonDataList[0]["Trait Info"].map(function(x){return(x['Trait Name'])});
 	for(var i=0; i < data_Vue.jsonDataList[0]["Trait Info"].length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: pType != 'By Cohorts',
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: xtitle,
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+			},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 			};
 		var config = {
 			scrollZoom: true,
@@ -895,7 +1216,15 @@ function plottingResultgMeanGroup(){
 				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
 			}
 		};
-		Plotly.newPlot('ResgMeanGroup_Div'+(i+1), data1[i], layout, config);
+		
+		data_plot = data1[i]; 
+		if(pType != "By Cohorts" & confidence){
+			for(var p = 0; p < data2[i].length; p++){
+				data_plot.push(data2[i][p]);
+			}
+		}
+				
+		Plotly.newPlot('ResgMeanGroup_Div'+(i+1),  data_plot, layout, config);
 	}
 }
 
@@ -991,6 +1320,18 @@ function plottingResultRel(){
 	var coh = data_Vue.plottingPar.ResRel_cohorts;
 	var pType = data_Vue.plottingPar.ResRel_pType;
 	var data1 = [[],[]];// Relationship and Inbreeding
+	var data2 = [[],[]];// Relationship and Inbreeding
+	
+	var d3colors = Plotly.d3.scale.category10();
+	var confidence = data_Vue.plottingData.confidence; 
+	function hexToRgb(hex) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
 
 	if(pType=="By Repeats"){
 		// each cohort
@@ -1046,17 +1387,86 @@ function plottingResultRel(){
 		var xtitle = 'Time in '+data_Vue.geninfo['Time Unit'];
 	}
 		
+	if(pType!="By Cohorts" & confidence){
+		for(var i=0; i < coh.length; i++){
+			// each value:
+			for(var j=0; j< data1.length; j++){
+				
+				var temp1 = []; 
+				
+				
+				for(var p = 0 ; p < data[coh[i]][1].length ; p++){
+					if(pType=="By Time"){
+						temp1.push(data[coh[i]][2][p]);
+					} else{
+						temp1.push(data[coh[i]][1][p]);
+					}
+				}
+
+				
+				for(var p=temp1.length;p>0; p--){
+					temp1.push(temp1[p-1]);
+				}
+				
+				var temp2 = [];
+				var temp2t = [];
+				var temp3 = [];
+				
+				for(var p = 0 ; p < data[coh[i]][1].length ; p++){
+					temp2t.push(data[coh[i]][3+j][p])
+					temp3.push(data[coh[i]][5+j][p])
+				}
+				
+				
+				for(var p = 0 ; p < temp3.length; p++){
+					temp2.push(temp2t[p]*1 + 1.96 * temp3[p]);
+				}
+				for(var p = temp3.length ; p >0; p--){
+					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
+				}
+				
+				color_start = d3colors(i);
+				color_rgb = hexToRgb(color_start); 
+				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
+				
+				data2[j].push({
+					y : temp2,
+					x : temp1,
+					mode : 'scatter',
+					name : coh[i],
+					showlegend: false,
+					line: {color: "transparent"},
+					fill: "tozerox",
+					fillcolor: color_hex
+				});	
+			}		
+		}
+	}
+	
 	var titles = ["Average Relationship within Cohorts", "Average Inbreeding within Cohorts"];
 	for(var i=0; i < data1.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: pType != 'By Cohorts',
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: xtitle,
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+			},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+			},
+				
 			};
 		var config = {
 			scrollZoom: true,
@@ -1068,7 +1478,14 @@ function plottingResultRel(){
 				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
 			}
 		};
-		Plotly.newPlot('ResRel_Div'+(i+1), data1[i], layout, config);
+		
+		data_plot = data1[i]; 
+		if(pType!="By Cohorts" & confidence){
+			for(var p = 0; p < data2[i].length; p++){
+				data_plot.push(data2[i][p]);
+			}
+		}
+		Plotly.newPlot('ResRel_Div'+(i+1), data_plot, layout, config);
 	}
 }
 
@@ -1078,7 +1495,19 @@ function plottingResultRelGroup(){
 	var coh = data_Vue.plottingPar.ResRelGroup_cohorts;
 	var pType = data_Vue.plottingPar.ResRelGroup_pType;
 	var data1 = [[],[]];// Relationship and Inbreeding
-
+	var data2 = [[],[]];// Relationship and Inbreeding
+	
+	var d3colors = Plotly.d3.scale.category10();
+	var confidence = data_Vue.plottingData.confidence; 
+	function hexToRgb(hex) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
+	
 	if(pType=="By Repeats"){
 		// each cohort
 		for(var i=0; i < coh.length; i++){
@@ -1132,18 +1561,86 @@ function plottingResultRelGroup(){
 		}
 		var xtitle = 'Time in '+ data_Vue.jsonDataList[0]["Genomic Info"]['Time Unit'];
 	}
+	
+	if(pType!="By Cohorts" & confidence){
+		for(var i=0; i < coh.length; i++){
+			// each value:
+			for(var j=0; j< data1.length; j++){
+				
+				var temp1 = []; 
+				
+				
+				for(var p = 0 ; p < data[coh[i]][1].length ; p++){
+					if(pType=="By Time"){
+						temp1.push(data[coh[i]][2][p]);
+					} else{
+						temp1.push(data[coh[i]][1][p]);
+					}
+				}
+
+				
+				for(var p=temp1.length;p>0; p--){
+					temp1.push(temp1[p-1]);
+				}
+				
+				var temp2 = [];
+				var temp2t = [];
+				var temp3 = [];
+				
+				for(var p = 0 ; p < data[coh[i]][1].length ; p++){
+					temp2t.push(data[coh[i]][3+j][p])
+					temp3.push(data[coh[i]][5+j][p])
+				}
+				
+				
+				for(var p = 0 ; p < temp3.length; p++){
+					temp2.push(temp2t[p]*1 + 1.96 * temp3[p] );
+				}
+				for(var p = temp3.length ; p >0; p--){
+					temp2.push(temp2[p-1]-3.92 * temp3[p-1]  );
+				}
+				
+				color_start = d3colors(i);
+				color_rgb = hexToRgb(color_start); 
+				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
+				
+				data2[j].push({
+					y : temp2,
+					x : temp1,
+					mode : 'scatter',
+					name : coh[i],
+					showlegend: false,
+					line: {color: "transparent"},
+					fill: "tozerox",
+					fillcolor: color_hex
+				});	
+			}		
+		}
+	}
 		
 	var titles = ["Average Relationship within Cohorts", "Average Inbreeding within Cohorts"];
 	for(var i=0; i < data1.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: pType != 'By Cohorts',
-			plot_bgcolor: '#FFFFFF',
-			xaxis: {
-				title: xtitle,
+			plot_bgcolor: '#FFFFFF',			
+			xaxis: { 
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
-			},
+				},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
+				},
 			};
 		var config = {
 			scrollZoom: true,
@@ -1155,7 +1652,14 @@ function plottingResultRelGroup(){
 				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
 			}
 		};
-		Plotly.newPlot('ResRel_Div'+(i+1), data1[i], layout, config);
+		
+		data_plot = data1[i]; 
+		if(pType!="By Cohorts" & confidence){
+			for(var p = 0; p < data2[i].length; p++){
+				data_plot.push(data2[i][p]);
+			}
+		}
+		Plotly.newPlot('ResRel_Div'+(i+1), data_plot, layout, config);
 	}
 }
 
@@ -1390,13 +1894,25 @@ function plottingResultQTL(){
 	var titles = ["Allele Frequency (A)", "Observed Heterozygosity", "Expected Heterozygosity"];
 	for(var i=0; i < 3; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: true,
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: 'Repeats',
+				//title: 'Repeats',
+				title: { text:'Repeats', font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
+			},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+			},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 			},
 		};
 		var config = {
@@ -1480,13 +1996,25 @@ function plottingResultQTLGroup(){
 	var titles = ["Allele Frequency (A)", "Observed Heterozygosity", "Expected Heterozygosity"];
 	for(var i=0; i < 3; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: true,
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: 'Repeats',
+				//title: 'Repeats',
+				title: { text:'Repeats', font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
+			},
+			yaxis: {
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+			},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 			},
 		};
 		var config = {
@@ -1670,18 +2198,30 @@ function plottingResultAccBVE(){
 	var titles = sindex.map(function(x){return(x['Name'])});
 	for(var i=0; i < data1.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: pType != 'By Cohorts',
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: xtitle,
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
 			yaxis: {
-				title: "Correlation of True BV and EBV/Phenotype",
+				//title: "Correlation of True BV and EBV/Phenotype",
+				title: { text:"Cor. True BV and EBV/Phenotype", font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				
 				zeroline: false,
 				automargin: true
+			},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 			},
 			};
 		var config = {
@@ -1767,18 +2307,30 @@ function plottingResultAccBVEGroup(){
 	var titles = sindex.map(function(x){return(x['Name'])});
 	for(var i=0; i < data1.length; i++){
 		var layout = {
-			title : titles[i],
+			//title : titles[i],
+			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
 			showlegend: pType != 'By Cohorts',
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
-				title: xtitle,
+				//title: xtitle,
+				title: { text:xtitle, font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				zeroline: false,
 				automargin: true
 			},
 			yaxis: {
-				title: "Correlation of True BV and EBV/Phenotype",
+				//title: "Correlation of True BV and EBV/Phenotype",
+				title: { text:"Cor. True BV and EBV/Phenotype", font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				
 				zeroline: false,
 				automargin: true
+			},
+			legend: {
+    				x: 1,
+				y: 1,
+				traceorder: 'normal',
+				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 			},
 			};
 		var config = {

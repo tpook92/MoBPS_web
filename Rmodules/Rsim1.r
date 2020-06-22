@@ -24,7 +24,7 @@ arg <- commandArgs(TRUE)
 
 
 dat <- try(fromJSON(arg[2], simplifyVector=FALSE))
-# dat <- jsonlite::read_json(path="Rmodules/UserScripts/Torsten_Rinderbeispiel_v3_2020-05-13_17:05.json")
+# dat <- jsonlite::read_json(path="Rmodules/UserScripts/Torsten_Simple_Cattle_2020-06-09_14:33.json")
 if("try-error" %in% is(dat)){
   print(dat)
   stop("Cannot Read JSON file!")
@@ -94,24 +94,25 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
     stop(paste0("Simulation exceeds ", "your available ressources"))
   }
 
+  library(doParallel)
   doParallel::registerDoParallel(cores=ncore)
   if(length(as.numeric(dat$'Genomic Info'$'number-simulations'))==1){
     sims <- as.numeric(dat$'Genomic Info'$'number-simulations')
   } else{
     sims <- 1
   }
-  library(doParallel)
   cat("\n\n\n\n\n")
   trash <- foreach::foreach(rep=1:sims, .packages = "MoBPS") %dopar% {
-
     if(rep==1){
       verbose <- TRUE
+      log <- NULL
     } else{
       verbose <- FALSE
+      log <- FALSE
     }
     t1 <- Sys.time()
     cat(paste0("Start simulation number ", rep, "\n"))
-    population <- try(MoBPS::json.simulation(total=dat, verbose=verbose))
+    population <- try(MoBPS::json.simulation(total=dat, verbose=verbose, log = log))
     if("try-error" %in% is(population)){
       print(population)
       stop("Cannot Simulate Project!")
@@ -126,8 +127,8 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
     cat(paste0("Simulation took ", round(as.numeric(t2)-as.numeric(t1), digit=3), " seconds.\n"))
   }
   load(paste(fname, ".RData",sep=""))
-
   doParallel::stopImplicitCluster()
+
 } else{
   t1 <- Sys.time()
   population <- try(json.simulation(total=dat))

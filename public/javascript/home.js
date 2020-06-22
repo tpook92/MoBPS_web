@@ -100,6 +100,7 @@ function myTrait (ind){
 	this['Trait Mean'] = 100,
 	this['Trait Std Deviation'] = 10,
 	this['Trait Heritability'] = 0.3,
+	this['Trait Repeatability'] = 0,
 	this['Trait Number of Polygenic Loci'] = 1000,
 	this['dominant_qtl'] = 0,
 	this['qualitative_qtl'] = 0,
@@ -204,7 +205,8 @@ function myPlottingData(){
 	this['ResgMean'] = "",
 	this['Summary'] = "",
 	this['RespMean'] = "",
-	this['ResAccBVE'] = ""
+	this['ResAccBVE'] = "",
+	this['confidence'] = false
 }
 
 
@@ -1422,6 +1424,10 @@ function importNetwork_intern(inputData1) {
 	if(data_Vue.geninfo['advanced_advanced_del']==undefined){
 		data_Vue.geninfo['advanced_advanced_del'] = false;
 	}
+	
+	if(data_Vue.plottingData.confidence==undefined){
+		data_Vue.plottingData.confidence = false;
+	}
 
 	data_Vue.traitsinfo = inputData['Trait Info'] ? inputData['Trait Info'] : [];
 	data_Vue.selection_index = inputData['Selection Index'];
@@ -1506,22 +1512,6 @@ function importNetwork_intern(inputData1) {
 	data_Vue.project_saved = true;
 	showCorrDiv("true");
 	
-}
-
-//function to Load Coghort information from Server
-function loadCohortTimeInfoFromServer(name) {
-	$.ajax
-	({
-		type: "GET",
-		url: '/getCohortTimeInfo',
-		success: function (data) {
-			if (data != '') {
-				data_Vue.cohortsTimeList = csvToJSON(data);
-				console.log(data_Vue.cohortsTimeList);
-				return data_Vue.cohortsTimeList;
-				}
-			}		
-	})
 }
 
 
@@ -1785,6 +1775,11 @@ function draw() {
 		nodes: {
 			shape: 'box',
 			shapeProperties: {borderRadius: 0},
+			font: {
+			     size: 23,
+			     family: 'arialblack',
+			     weight:'bold',			
+			 },
 		},
 		interaction: {
 			hover: true,
