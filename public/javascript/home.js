@@ -1514,7 +1514,6 @@ function importNetwork_intern(inputData1) {
 	
 }
 
-
 function resizeExportArea() {
 	exportArea.style.height = (1 + exportArea.scrollHeight) + "px";
 }
@@ -1777,8 +1776,6 @@ function draw() {
 			shapeProperties: {borderRadius: 0},
 			font: {
 			     size: 23,
-			     family: 'arialblack',
-			     weight:'bold',			
 			 },
 		},
 		interaction: {
