@@ -2,6 +2,9 @@
 body {
 	line-height: 1.5;
 	background-color:#f2f2f2;
+	font-size:12pt;
+	font-family: cambria;
+	padding-bottom:2px;
 }
 
 h3 {
@@ -22,7 +25,7 @@ h4 {
 }
 
 h5 {
-	font-size:14pt;
+	font-size:13pt;
 	font-weight: bold;
 }
 
@@ -55,7 +58,6 @@ h6 {
 #mainDiv #compareProjectDiv{
 	padding-left:10px;
 	position:absolute;
-	left: 10px;
 }
 
 .container {
@@ -104,7 +106,7 @@ h6 {
 	padding-bottom:10px;
 	padding-right:30px;
 	z-index:550;
-	font-size: 14pt;
+	font-size: 13pt;
 	font-weight:bold;
 	color: red;
 }
@@ -116,19 +118,19 @@ h6 {
 	left:25%;
 	z-index:299;
 	width:500px;
-	height:200px;
+	height:140px;
 	background-color: #f9f9f9;
 	border-style:solid;
 	border-width:3px;
 	border-color: #5394ed;
 	padding:30px;
 	text-align: center;
-	font-size: 14pt;
+	font-size: 15pt;
 }
 
 .invisible_button {
   visibility: hidden;
-  width:90px;
+  width:60px;
   background-color: #4A5289;
 }
 
@@ -138,7 +140,7 @@ h6 {
   left: 0;
   z-index: 9999;
   width: 100%;
-  height: 80px;
+  height: 65px;
   background-color:#4A5289;
 }
 
@@ -152,8 +154,8 @@ h6 {
 	background-color: #4A5289;
 	padding-bottom: 20px;
 	color: white;
-	font-size: 15pt;
-	padding: 3px 10px;
+	font-size: 13pt;
+	padding: 6px 16px;
 	font-weight: bold;
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	border:2px;	
@@ -201,7 +203,7 @@ h6 {
 
 ul {
   list-style-type: none;
-  font-size:13pt;
+  font-size:12pt;
   font-weight:bold;
   margin: 0;
   padding: 0;
@@ -293,8 +295,9 @@ li a:hover:not(.active) {
 
 .RSim_Div {
 	position:relative;
-	width: 800px;
+	width: 1500px;
 	border: 1px solid #4f567c;
+	height:750px;
 }
 
 #Rout_Div {
@@ -374,7 +377,7 @@ li a:hover:not(.active) {
 button {
   display: inline-block;
   padding: 2px 5px;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: bold;
   cursor: pointer;
   text-align: center;
@@ -427,19 +430,20 @@ button[disabled]{
 	padding-left: 5px;	padding-bottom: 5px;
 	padding-right: 0px;
 	padding-top: 0px;
-	font-size:14pt;
+    font-size: 12px;
 }
 
 #load_table input[type=text]{
-	font-size:14pt;
-	height: 22px;
+	font-size:12pt;
+	height: 25px;
     border: 2px solid lightblue;  
 }
 
 #load_table select{
-  height: 30px;
-  font-size:14pt;
+  height: 25px;
+  font-size:12pt;
   border: 2px solid lightblue;  
+  font-family:cambria;
 }
 
 #generalInfo {
@@ -462,42 +466,48 @@ button[disabled]{
 
 #geninfo_table td {
 	padding-left: 10px;
-	padding-bottom: 7px;
+	padding-bottom: 4px;
 	padding-right: 0px;
-	padding-top: 5px;
-	font-size:14pt;
+	padding-top: 4px;
+	font-size:12pt;
+	font-family:cambria;
 }
 
 #geninfo_table input[type=text]{
 	font-size:12pt;
     width: 60%;
-	height: 28px;
+	height: 25px;
     padding: 0px 0px;
     margin: 0px 0px;
-    border: 2px solid lightblue;  
+    border: 2px solid lightblue;
+	font-family:cambria;  
 }
 
 #geninfo_table input[type=file]{
 	font-size:11pt;
-	height: 22px;
-    border: 0px solid lightblue;  
+	height: 25px;
+    border: 0px solid lightblue;
+	font-family:cambria;  
 }
 
 #geninfo_table input[type=value]{
 	font-size:12pt;
     width: 40%;
-	height: 22px;
+	height: 25px;
     padding: 0px 0px;
     margin: 0px 0px;
-    border: 2px solid lightblue;  
+    border: 2px solid lightblue;
+	font-family:cambria;  
 }
 
 #geninfo_table select{
   width: 50%;
   height: 30px;
   font-size:12pt;
-  border: 2px solid lightblue;  
+  border: 2px solid lightblue;
+  font-family:cambria;  
 }
+
 
 
 #geninfo_table input[type=checkbox] {
@@ -513,9 +523,9 @@ button[disabled]{
          position: absolute;
          width: 15px;
          height: 15px;
-         top: 0;
-         left: 0;
          background-color:darkgray;
+		 margin: 0 auto;
+		font-family:cambria;
 }
 
 #geninfo_table input[type=checkbox]:checked:before {
@@ -524,9 +534,8 @@ button[disabled]{
          position: absolute;
          width: 15px;
          height: 15px;
-         top: 0;
-         left: 0;
          background-color:#1E80EF;
+		  font-family:cambria;
 }
 
 #geninfo_table input[type=checkbox]:checked:after {
@@ -534,14 +543,15 @@ button[disabled]{
          display: block;
          width: 4px;
          height: 8px;
-         border: solid white;
+         border: solid darkblue;
          border-width: 0 2px 2px 0;
          -webkit-transform: rotate(45deg);
          -ms-transform: rotate(45deg);
          transform: rotate(45deg);
          position: absolute;
-         top: 2px;
+         top: 0px;
          left: 6px;
+		 font-family:cambria;
 }
 
 #geninfo_table input[type='radio'] {
@@ -552,13 +562,14 @@ button[disabled]{
   content: " ";
   display: inline-block;
   position: relative;
-  top: 3px;
-  margin: 0 5px 0 0;
+  top: 2px;
+  margin: 0 2px 0 0;
   width: 15px;
   height: 15px;
   border-radius: 11px;
   border: 2px solid darkgray;
   background-color: transparent;
+  font-family:cambria;
 }
 
 #geninfo_table input[type='radio']:checked+label:before {
@@ -571,6 +582,7 @@ button[disabled]{
   content: " ";
   display: inline-block;
   background-color: #1E80EF;
+  font-family:cambria;
 }
 
 #chrom_table {
@@ -581,6 +593,7 @@ button[disabled]{
 
 #chrom_table td {
 	padding: 5px;
+	font-family:cambria;
 }
 
 .trait_table {
@@ -595,6 +608,15 @@ button[disabled]{
 	height:20px;
 	font-size:11pt;
 	font-weight:bold;
+	font-family:cambria;
+}
+
+.trait_table input[type=value]{
+	font-size:11pt;
+    width: 80px;
+	height: 28px;
+    border: 2px solid lightblue;  
+	font-family:cambria;
 }
 
 .var_table {
@@ -608,13 +630,15 @@ button[disabled]{
 	padding:5px;
 	font-size:11pt;
 	font-weight:bold;
+	font-family:cambria;
 }
 
 .var_table input[type=value]{
-	font-size:14pt;
+	font-size:11pt;
     width: 80px;
 	height: 28px;
     border: 2px solid lightblue;  
+	font-family:cambria;
 }
 
 .culling_table {
@@ -627,21 +651,24 @@ button[disabled]{
 .culling_table td {
 	padding:5px;
 	height:20px;
-	font-size:14pt;
+	font-size:11pt;
 	font-weight:bold;
+	font-family:cambria;
 }
 
 .culling_table input[type=text]{
-	font-size:12pt;
+	font-size:11pt;
     width: 80px;
-	height: 28px;
+	height: 25px;
     border: 2px solid lightblue;  
+	font-family:cambria;
 }
 
 #culling_table select{
-  height: 28px;
-  font-size:12pt;
-  border: 2px solid lightblue;  
+  height: 25px;
+  font-size:11pt;
+  border: 2px solid lightblue;
+  font-family:cambria;
 }
 
 .sub_text {
@@ -662,15 +689,25 @@ button[disabled]{
 	padding:5px;
 	height:20px;
   	width: 60px;
-	font-size:10pt;
+	font-size:8pt;
+	font-family:cambria;
 	font-weight:bold;
+}
+
+.drag_table input[type=number]{
+	margin-top:0px;
+	margin-bottom:0px;
+	font-size:8pt;
+	height: 25px;
+    border: 2px solid red;  
+	font-family:cambria;
 }
 
 
 .corr_title {
     font-weight:bold;
     width:60px;
-    font-size:14pt;
+    font-size:12pt;
     color:darkblue;
     padding:5px;
     text-align:left;	
@@ -680,6 +717,7 @@ button[disabled]{
 	background-color: #f0f0f0;
 	border-collapse: collapse;
 	text-align: center;
+	font-size:10pt;
 	max-width:800px;
 }
 
@@ -687,13 +725,15 @@ button[disabled]{
 	padding:5px;
 	height:20px;
 	width:60px;
-	font-size:11pt;
+	font-size:10pt;
 	font-weight:bold;
+	font-family:cambria;
 }
 
 .trait_table td {
 	padding:5px;
 	height:20px;
+	font-family:cambria;
 }
 
 .phenoMedium {
@@ -712,12 +752,13 @@ button[disabled]{
 	padding-left:0px;
 }
 
-.phenoNumber input[type=number]{
-	margin-top:0px;
-	margin-bottom:0px;
-	font-size:12pt;
-	height: 18px;
-    border: 2px solid lightblue;  
+.phenoNumber {
+	margin-top:30px;
+	margin-bottom:30px;
+	font-size:10pt;
+	height:10px;
+	width:50px;
+    border: 2px solid red;    
 }
 
 .phenoCheck {
@@ -806,8 +847,8 @@ select{
 	bottom:0%;
 	right:25%;
 	z-index:700;
-	width:600px;
-	height:500px;
+	width:500px;
+	height:400px;
 	background-color: #f9f9f9;
 	border-style:solid;
 	border-width:3px;
@@ -858,7 +899,7 @@ select{
 input[type=submit]  {
   display: inline-block;
   padding: 2px 5px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   cursor: pointer;
   text-align: center;
@@ -871,6 +912,7 @@ input[type=submit]  {
   box-shadow: 0 2px #999;
   width: 100px;
   height: 30px;
+   font-family:cambria;
 }
 
 input[type=submit]:hover {background-color: #032236}
@@ -883,8 +925,8 @@ input[type=submit]:active {
 
 .bar_button {
 	background-color: #4A5289;
-	font-size: 15pt;
-	padding: 3px 10px;
+	font-size: 13pt;
+	padding: 2px 8px;
 	font-weight: bold;
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	color: white;
@@ -897,7 +939,7 @@ input[type=submit]:active {
 
 .showhide_button {
 	background-color: #4A5289;
-	font-size: 12pt;
+	font-size: 10pt;
 	padding: 3px 3px;
 	font-weight: bold;
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -925,7 +967,7 @@ input:invalid {
 .button_type {
   display: inline-block;
   padding: 2px 5px;
-  font-size: 20px;
+  font-size: 15pt;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -934,6 +976,7 @@ input:invalid {
   border: none;
   border-radius: 5px;
   box-shadow: 0 2px #4A5289;
+  font-family:cambria;
 }
 
 
@@ -962,7 +1005,7 @@ transition: all 0.5s ease; */
 .sidebar a {
   padding: 15px 15px 15px 32px;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color:  white;
   display: block;
@@ -978,13 +1021,13 @@ transition: all 0.5s ease; */
 
 .sidebar .closebtn {
   position: absolute;
-  top: 20px;
+  top: 10px;
   right: 25px;
   padding-bottom:10px;
   padding-left:5px;
   padding-top:5px;
   padding-right:10px;
-  font-size: 18px;
+  font-size: 15px;
   margin-left: 20px;
   color: white;
   border: none;
@@ -1000,7 +1043,7 @@ transition: all 0.5s ease; */
 .additional_link {
 	background-color: #5394ed;
 	text-decoration: none;
-	font-size: 18px;
+	font-size: 15px;
 	text-align: center;
 	padding-top: 5px;
 	padding-bottom:10px;
@@ -1012,7 +1055,7 @@ transition: all 0.5s ease; */
 }
 
 .guidelines {
-	font-size:10pt;
+	font-size:9pt;
 	font-style:italic;
 	font-family: verdana, arial, sans-serif;
 	margin-left:20px;
@@ -1030,13 +1073,13 @@ transition: all 0.5s ease; */
 
 .openbtn {
   background-color: #5394ed;
-  margin-top : 20px;
+  margin-top : 15px;
   margin-left:20px;
   padding-bottom:10px;
   padding-top:10px;
   padding-left:10px;
   padding-right:10px;
-  font-size: 18px;
+  font-size: 15px;
   cursor: pointer;
   color: white;
   border: none;
@@ -1076,7 +1119,7 @@ transition: all 0.5s ease; */
   color: #444;
   cursor: pointer;
   text-align: left;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   font-style: italic;
   margin-bottom:5px;
@@ -1110,7 +1153,7 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
 .trait_move_button {
   display: none;
   margin-top:5px;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
   text-align: center;
   width:100%;
@@ -1127,7 +1170,7 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
 /* compareProject additional style */
 .comparePSelect {
     padding:9px;
-	font-size: 20px;
+	font-size: 15px;
     margin-top:5px;
  	width: 300px;
 	height: 400px;
@@ -1143,3 +1186,44 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
     cursor:pointer;
     border: 2px solid darkblue;
 }
+
+.cohortsList  {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 55%;
+  border: 1px solid darkblue;
+  font-size: 11px;
+  font-family: verdana, arial, sans-serif;
+}
+
+.cohortsList th {
+  text-align: left;
+  padding: 8px;
+}
+
+.cohortsList td {
+  text-align: left;
+  padding-left: 15px;
+}
+
+.cohortsList tr:nth-child(even){background-color: lightgrey}
+
+.cohortsListTime  {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 40%;
+  border: 1px solid darkblue;
+  font-size: 11px;
+  font-family: verdana, arial, sans-serif;
+}
+
+.cohortsListTime th {
+  text-align: left;  
+}
+
+.cohortsListTime td {
+  text-align: left;
+  padding-left: 12px;
+}
+
+.cohortsListTime tr:nth-child(even){background-color: lightgrey}

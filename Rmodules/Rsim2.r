@@ -55,7 +55,12 @@ write_json(dat, path=paste(fname, "_", paste0(substr(Sys.time(), start=1, stop=1
     stop("Cannot Simulate Project!")
   }
 
-  write.csv(file=paste0(fname, "_time.csv"), population[[2]], row.names = FALSE, quote=FALSE)
+  time_file <- population[[2]]
+  time_file_temp <- as.matrix(time_file[,2:4])
+  storage.mode(time_file_temp) <- "numeric"
+  time_file <- rbind(c("TOTAL", colSums(time_file_temp)),time_file)
+
+  write.csv(file=paste0(fname, "_time.csv"), time_file, row.names = FALSE, quote=FALSE)
   write.csv(file=paste0(fname, ".csv"), population[[1]], row.names = FALSE, quote=FALSE)
 
   t2 <- Sys.time()

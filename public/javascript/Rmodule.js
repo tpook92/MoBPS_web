@@ -120,7 +120,8 @@ function runningR1(){
 			//console.log(data);
 			document.getElementById("Rout_Div").innerHTML = data;
 			where = document.getElementById("Rout_Div").innerHTML.indexOf("Execution");
-			where2 = document.getElementById("Rout_Div").innerHTML.indexOf("exceeds your");
+			where2 = document.getElementById("Rout_Div").innerHTML.indexOf("exceeds your ava");
+			where4 = document.getElementById("Rout_Div").innerHTML.indexOf("exceeds your limits");
 			where3 = document.getElementById("Rout_Div").innerHTML.indexOf("run simulations");
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/Error/g, "<span style=\"color:red\">Error</span>");
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/\n/g, "<br/>");
@@ -130,10 +131,16 @@ function runningR1(){
 				alert("This account has no permission to run simulations in R!")
 			} else if(where2> (-1)){
 				alert("Limited of cores exceeded! Adapt parallel computing settings!")
+			} else if(where4> (-1)){
+				alert("Expected run-time exceedes for limit! Check your input or ask for more computing resources (torsten.pook(at)uni-goettingen.de)!")
 			} else{
 				alert("Your Simulation failed! Check your inputs and potential warnings!");
 			}
 			data_Vue.runned = true;
+			
+			loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
+			loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
+	
 			writeSum();
 		},
 		error: function(obj, msg, err)
@@ -205,6 +212,10 @@ function runningR2(){
 				alert("Your Simulation failed! Check your inputs and potential warnings!");
 			}
 			data_Vue.runned = true;
+			
+			loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
+			loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
+			
 			writeSum();
 		},
 		error: function(obj, msg, err)
@@ -512,6 +523,11 @@ function plottingResultpMean(){
 					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
 				}
 
+				temp1.unshift(temp1[0])
+				temp2.unshift(temp2[0]-1.96 * temp3[p])
+				temp1.push(temp1[0])
+				temp2.push(temp2[0])
+				
 				color_start = d3colors(i);
 				color_rgb = hexToRgb(color_start); 
 				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
@@ -817,6 +833,11 @@ function plottingResultgMean(){
 					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
 				}
 
+				temp1.unshift(temp1[0])
+				temp2.unshift(temp2[0]-1.96 * temp3[p])
+				temp1.push(temp1[0])
+				temp2.push(temp2[0])
+				
 				color_start = d3colors(i);
 				color_rgb = hexToRgb(color_start); 
 				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
@@ -990,6 +1011,11 @@ function plottingResultpMeanGroup(){
 					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
 				}
 
+				temp1.unshift(temp1[0])
+				temp2.unshift(temp2[0]-1.96 * temp3[p])
+				temp1.push(temp1[0])
+				temp2.push(temp2[0])
+				
 				color_start = d3colors(i);
 				color_rgb = hexToRgb(color_start); 
 				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
@@ -1164,6 +1190,11 @@ function plottingResultgMeanGroup(){
 					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
 				}
 
+				temp1.unshift(temp1[0])
+				temp2.unshift(temp2[0]-1.96 * temp3[p])
+				temp1.push(temp1[0])
+				temp2.push(temp2[0])
+				
 				color_start = d3colors(i);
 				color_rgb = hexToRgb(color_start); 
 				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
@@ -1425,6 +1456,12 @@ function plottingResultRel(){
 					temp2.push(temp2[p-1]-3.92 * temp3[p-1]);
 				}
 				
+				
+				temp1.unshift(temp1[0])
+				temp2.unshift(temp2[0]-1.96 * temp3[p])
+				temp1.push(temp1[0])
+				temp2.push(temp2[0])
+				
 				color_start = d3colors(i);
 				color_rgb = hexToRgb(color_start); 
 				color_hex = "rgba(" + color_rgb["r"] +"," + color_rgb["g"] +"," +color_rgb["b"]+ ", 0.2)";
@@ -1599,6 +1636,11 @@ function plottingResultRelGroup(){
 				for(var p = temp3.length ; p >0; p--){
 					temp2.push(temp2[p-1]-3.92 * temp3[p-1]  );
 				}
+				
+				temp1.unshift(temp1[0])
+				temp2.unshift(temp2[0]-1.96 * temp3[p])
+				temp1.push(temp1[0])
+				temp2.push(temp2[0])
 				
 				color_start = d3colors(i);
 				color_rgb = hexToRgb(color_start); 

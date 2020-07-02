@@ -47,6 +47,18 @@ if(file.exists(fileSum)){
 
 write_json(dat, path=paste(fname, "_", paste0(substr(Sys.time(), start=1, stop=10), "_", substr(Sys.time(), start=12, stop=16)),".json",sep=""), auto_unbox =TRUE)
 
+
+if(dat$'Class'==2){
+  time.check <- TRUE
+  time.max <- 4 * 60 * 60
+} else if(dat$'Class'==3){
+  time.check <- TRUE
+  time.max <- 48 * 60 * 60
+} else if(dat$'Class'==4){
+  time.check <- TRUE
+  time.max <- 120 * 60 * 60
+}
+
 if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advanced_parallel'){
 
   ## Perform phasing
@@ -83,6 +95,9 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
       pcore <- as.numeric(dat$'Genomic Info'$'number-simulations-core')
     }
   }
+  if(ncore>5 && dat$'Class'<4){
+    ncore <- 5
+  }
 
   if(dat$'Class'==1){
     stop(paste0("No permission to run ", "simulations in R!"))
@@ -93,6 +108,7 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
   } else if(dat$'Class'==4 && (ncore*pcore) > 20){
     stop(paste0("Simulation exceeds ", "your available ressources"))
   }
+
 
   library(doParallel)
   doParallel::registerDoParallel(cores=ncore)
@@ -105,14 +121,15 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
   trash <- foreach::foreach(rep=1:sims, .packages = "MoBPS") %dopar% {
     if(rep==1){
       verbose <- TRUE
-      log <- NULL
+      log <- paste0(fname, ".log")
     } else{
       verbose <- FALSE
       log <- FALSE
     }
     t1 <- Sys.time()
     cat(paste0("Start simulation number ", rep, "\n"))
-    population <- try(MoBPS::json.simulation(total=dat, verbose=verbose, log = log))
+    population <- try(MoBPS::json.simulation(total=dat, verbose=verbose, log = log,
+                                             time.check = time.check, time.max = time.max))
     if("try-error" %in% is(population)){
       print(population)
       stop("Cannot Simulate Project!")
@@ -121,6 +138,15 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
     if(rep==1){
       save(population, file=paste(fname, ".RData",sep=""))
       write.csv(file=paste0(fname, ".csv"), population$info$cost.data, row.names = FALSE, quote=FALSE)
+
+      if(length(population$info$expected.time)>0){
+        time_file <- population$info$expected.time
+        time_file_temp <- as.matrix(time_file[,2:4])
+        storage.mode(time_file_temp) <- "numeric"
+        time_file <- rbind(c("TOTAL", colSums(time_file_temp)), as.matrix(time_file))
+        write.csv(file=paste0(fname, "_time.csv"), time_file, row.names = FALSE, quote=FALSE)
+      }
+
     }
     save(population, file=paste(fname, rep, ".RData",sep=""))
     cat(paste0("Finished simulation number ", rep,".\n"))
@@ -130,8 +156,14 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
   doParallel::stopImplicitCluster()
 
 } else{
+
+  if(dat$'Class'==1){
+    stop(paste0("No permission to run ", "simulations in R!"))
+  }
+
   t1 <- Sys.time()
-  population <- try(json.simulation(total=dat))
+  population <- try(json.simulation(total=dat, log =paste0(fname, ".log"),
+                                    time.check = time.check, time.max = time.max))
   if("try-error" %in% is(population)){
     print(population)
     stop("Cannot Simulate Project!")
@@ -140,6 +172,15 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
   save(population, file=paste(fname, ".RData",sep=""))
 
   write.csv(file=paste0(fname, ".csv"), population$info$cost.data, row.names = FALSE, quote=FALSE)
+
+  if(length(population$info$expected.time)>0){
+    time_file <- population$info$expected.time
+    time_file_temp <- as.matrix(time_file[,2:4])
+    storage.mode(time_file_temp) <- "numeric"
+    time_file <- rbind(c("TOTAL", colSums(time_file_temp)), as.matrix(time_file))
+    write.csv(file=paste0(fname, "_time.csv"), time_file, row.names = FALSE, quote=FALSE)
+  }
+
 
   t2 <- Sys.time()
   cat(paste0("Finished simulation.\n"))

@@ -8,7 +8,7 @@ library("jsonlite")
 path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
-# arg <- c("Torsten", "123Simple_Cattle",1)
+# arg <- c("Torsten", "Simple_Cattle",1)
 user <- arg[1]
 filename <- arg[2]
 filter <- arg[3]
@@ -44,9 +44,11 @@ filesnames <- gsub(paste0(user,"_",filename), "", filesnames)
 
 avail <- suppressWarnings(unique(c(NA,as.numeric(filesnames)))[-1])
 
+varkinship1 <- NULL
+varinbreed1 <- NULL
+
 if(length(avail)>1){
-  varkinship1 <- NULL
-  varinbreed1 <- NULL
+
 
   for(index in avail){
     print(index)
@@ -104,7 +106,7 @@ if(length(varkinship1)==0){
   sdinb <- sqrt(diag(var(t(varinbreed1)))) / sqrt(length(avail))
 }
 
-result <- cbind(paste0(filename[project], "_", ttnames), ttrep, coh[,"time point"], round(ttkinship[,1]*2,digits=6), round(ttkinship[,2]*2-1, digits=6), sdkin, sdinb)
+result <- cbind(ttnames, ttrep, coh[,"time point"], round(ttkinship[,1]*2,digits=6), round(ttkinship[,2]*2-1, digits=6), sdkin, sdinb)
 
 colnames(result) <- c("names", "ttrep", "tttime", "kin", "inb", "sdkin", "sdinb")
 

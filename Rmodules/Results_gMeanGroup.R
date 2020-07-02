@@ -9,7 +9,7 @@ path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
 # arg <- c("Torsten", "Simple_Cattle,Simple_Cattle2")
-# arg <- c("Torsten", "Base-line,ssBLUP_BVE,pedigree_BVE,Short_GInterval,Low_SelectionIntensity,Change_IndexWeigths", "undefined", 1)
+# arg <- c("Torsten", "Base-line,ssBLUP_BVE,pedigree_BVE,Low_SelectionIntensity,Change_IndexWeights", "undefined", 100)
 user <- arg[1]
 #filename <- arg[2:length(arg)]
 filename <- unlist(strsplit(arg[2], split=","))
@@ -83,6 +83,7 @@ for(project in 1:length(filename)){
         }
 
       }
+      print(ttttt)
       ttttt <- ttttt + 1
       save(file="compare_stand.RData", list=c("ttttt"))
     }

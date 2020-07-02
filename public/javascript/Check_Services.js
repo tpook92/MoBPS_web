@@ -115,6 +115,12 @@ function checkEverything(id){
 			}
 			}
 		}
+		
+		gen_warn_text = "You are not allowed to run more than 5 simulations in parallel";
+		if(data_Vue.geninfo['number-simulations-parallel']!= undefined & data_Vue.geninfo['number-simulations-parallel']!="" & data_Vue.geninfo['number-simulations-parallel'] > 5){
+			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
+		}
+		
 		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}             
@@ -147,17 +153,13 @@ function checkEverything(id){
 				if(!data_Vue.traitsinfo[i]['Trait Name']  & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 					}
-				else if (data_Vue.traitsinfo[i]['Trait Name'] != "" & data_Vue.warnings2.indexOf(gen_warn_text) > -1){               
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
-				}	
+	
 				
 				gen_warn_text = "No phenotypic mean provided for phenotype "+(i+1);
 				if((!data_Vue.traitsinfo[i]['Trait Mean'] || isNaN(data_Vue.traitsinfo[i]['Trait Mean'])) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if (data_Vue.traitsinfo[i]['Trait Mean'] != "" & isNaN(data_Vue.traitsinfo[i]['Trait Mean']) == false & data_Vue.warnings2.indexOf(gen_warn_text) > -1){               
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
-				}	
+
 
 				gen_warn_text = "No phenotypic standard deviation provided for phenotype "+(i+1);
 				thisStdDev = data_Vue.traitsinfo[i]['Trait Std Deviation'];
@@ -165,68 +167,60 @@ function checkEverything(id){
 				if ((!thisStdDev || isNaN(thisStdDev) || thisStdDev < 0)  & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((thisStdDev != "" & thisStdDev >=0) & isNaN(thisStdDev) == false & data_Vue.warnings2.indexOf(gen_warn_text) > -1) {
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1); 
-				}	
+
 		
 				gen_warn_text = "Heritability for phenotype"+(i+1)+" must be between 0 and 1";
 				if((!data_Vue.traitsinfo[i]['Trait Heritability'] || data_Vue.traitsinfo[i]['Trait Heritability'] < 0 ||  data_Vue.traitsinfo[i]['Trait Heritability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((data_Vue.traitsinfo[i]['Trait Heritability'] != "" & data_Vue.traitsinfo[i]['Trait Heritability'] >= 0 & data_Vue.traitsinfo[i]['Trait Heritability'] <= 1) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){  
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
-				}
 
+
+				gen_warn_text = "Repeatability for phenotype"+(i+1)+" must be between Heritability and 1";
+				if(data_Vue.geninfo.advanced_trait & (data_Vue.traitsinfo[i]['Trait Repeatability'] != undefined || data_Vue.traitsinfo[i]['Trait Repeatability'] != "" || data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
+				}
+				
+				gen_warn_text = "Repeatability set to Heritability"; 
+				if(data_Vue.geninfo.advanced_trait & (data_Vue.traitsinfo[i]['Trait Repeatability'] != undefined || data_Vue.traitsinfo[i]['Trait Repeatability'] != "" || data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings2.push(gen_warn_text);
+				}
+				
 				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].dominant_qtl);
 				gen_warn_text = "Number of dominant QTL not provided for phenotype"+(i+1)
-				if(data_Vue.geninfo.advanced_trait & (!data_Vue.traitsinfo[i].dominant_qtl || data_Vue.traitsinfo[i].dominant_qtl < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+				if(data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((data_Vue.traitsinfo[i].dominant_qtl != "" & data_Vue.traitsinfo[i].dominant_qtl > 0 & checkPoly == true) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
-				}
+
 				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].qualitative_qtl);
 				gen_warn_text = "Number of qualitative epistatic QTL not provided for phenotype"+(i+1)
-				if(data_Vue.geninfo.advanced_trait&(!data_Vue.traitsinfo[i].qualitative_qtl || data_Vue.traitsinfo[i].qualitative_qtl < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+				if(data_Vue.geninfo.advanced_trait &  checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((data_Vue.traitsinfo[i].qualitative_qtl != "" & data_Vue.traitsinfo[i].qualitative_qtl > 0 & checkPoly == true) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
-				}
+
 				
 				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].quantitative_qtl);
 				gen_warn_text = "Number of quantitative epistatic QTL not provided for phenotype"+(i+1)
-				if((data_Vue.geninfo.advanced_trait & !data_Vue.traitsinfo[i].quantitative_qtl || data_Vue.traitsinfo[i].quantitative_qtl < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+				if((data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1)) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((data_Vue.traitsinfo[i].quantitative_qtl != "" & data_Vue.traitsinfo[i].quantitative_qtl > 0 & checkPoly == true) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
-				}
+
 				
 				checkPoly = isPositiveInt(data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci']);
 				gen_warn_text = "Number of purely additive QTL not provided for phenotype"+(i+1)
-				if((!data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] || data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] < 0 || checkPoly == false) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+				if(checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if ((data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] != "" & data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci'] > 0 & checkPoly == true) & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
-				}
-				
+
 				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Value per Unit and must be in number.";
 				if((data_Vue.traitsinfo[i]['Trait Value per Unit'] == "" & data_Vue.traitsinfo[i]['Trait Value per Unit']  != "0") & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
-				else if (data_Vue.traitsinfo[i]['Trait Value per Unit'] != "" & data_Vue.warnings2.indexOf(gen_warn_text) > -1){   
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
-				}
+
 								
 				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Major QTL and must be in positive number or can be zero. ";
 				thisMajorQTL = data_Vue.traitsinfo[i]['Trait Major QTL']
 				if(thisMajorQTL < 0 & data_Vue.warnings2.indexOf(gen_warn_text) ==-1){  
 					data_Vue.warnings2.push(gen_warn_text);
-				}
-				else if(thisMajorQTL >= 0 & data_Vue.warnings2.indexOf(gen_warn_text) > -1){  
-					data_Vue.warnings2.splice(data_Vue.warnings2.indexOf(gen_warn_text),1);
 				}
 
 				var qtlCnt = data_Vue.traitsinfo[i]['Trait Major QTL'];
@@ -484,6 +478,14 @@ function checkEverything(id){
 						gen_warn_text = "Individual numbers for Splitting node "+ node_name[i] +" do not add up";
 						data_Vue.warnings5.push(gen_warn_text);	
 					}
+				}
+			}
+			
+			
+			for(var j=0; j < edges.length; j++){
+				if(edges[j]['Selection Type'] =="BVE" && (edges[j]['Cohorts used in BVE'] != undefined && edges[j]['Cohorts used in BVE'] != "Manual select")){
+					gen_warn_text = "It's highly suggested to use Manual Select to selected cohorts used for BVE (Revisit Edge between: " + edges[j]['from'] + " and " + edges[j]['to'] +")";
+					data_Vue.warnings5.push(gen_warn_text);	
 				}
 			}
 			

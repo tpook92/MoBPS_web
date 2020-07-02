@@ -100,7 +100,7 @@ function myTrait (ind){
 	this['Trait Mean'] = 100,
 	this['Trait Std Deviation'] = 10,
 	this['Trait Heritability'] = 0.3,
-	this['Trait Repeatability'] = 0,
+	this['Trait Repeatability'] = "",
 	this['Trait Number of Polygenic Loci'] = 1000,
 	this['dominant_qtl'] = 0,
 	this['qualitative_qtl'] = 0,
@@ -1514,7 +1514,6 @@ function importNetwork_intern(inputData1) {
 	
 }
 
-
 function resizeExportArea() {
 	exportArea.style.height = (1 + exportArea.scrollHeight) + "px";
 }
@@ -1776,9 +1775,7 @@ function draw() {
 			shape: 'box',
 			shapeProperties: {borderRadius: 0},
 			font: {
-			     size: 23,
-			     family: 'arialblack',
-			     weight:'bold',			
+			     size: 23,		
 			 },
 		},
 		interaction: {
