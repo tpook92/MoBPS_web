@@ -123,6 +123,8 @@ function runningR1(){
 			where2 = document.getElementById("Rout_Div").innerHTML.indexOf("exceeds your ava");
 			where4 = document.getElementById("Rout_Div").innerHTML.indexOf("exceeds your limits");
 			where3 = document.getElementById("Rout_Div").innerHTML.indexOf("run simulations");
+			where5 = document.getElementById("Rout_Div").innerHTML.indexOf("Session time-out");
+
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/Error/g, "<span style=\"color:red\">Error</span>");
 			document.getElementById("Rout_Div").innerHTML = document.getElementById("Rout_Div").innerHTML.replace(/\n/g, "<br/>");
 			if(where == -1){
@@ -133,6 +135,8 @@ function runningR1(){
 				alert("Limited of cores exceeded! Adapt parallel computing settings!")
 			} else if(where4> (-1)){
 				alert("Expected run-time exceedes for limit! Check your input or ask for more computing resources (torsten.pook(at)uni-goettingen.de)!")
+			} else if(where5> (-1)){
+				alert("Your session has timed-out! You need to re-login!")
 			} else{
 				alert("Your Simulation failed! Check your inputs and potential warnings!");
 			}
@@ -244,6 +248,15 @@ function analyzeR() {
 	writeSumGroup();
 }
 
+
+
+function storetemp(){
+		
+	$.post('/compareswitch', function(dat){
+	});
+		
+
+}
 
 
 
@@ -390,6 +403,8 @@ function writeSum(){
 		dataType: "text",
 	});
 }
+
+
 
 function writeSumGroup(){
 	var file =  'Compare_Summary';
@@ -594,6 +609,7 @@ function plottingResultpMean(){
 	}
 }
 
+
 function RunResultpMean(){
 	var filename = data_Vue.geninfo["Project Name"];
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
@@ -612,13 +628,20 @@ function RunResultpMean(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
+			
+			try{
+				if(data != ''){
 				//console.log(data);
 				data_Vue.plottingData.RespMean = JSON.parse(data);
 				//plottingResultgMean(JSON.parse(data));
-			}else{
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first! here");
 			}
+
+
+			
 		},
 		failure: function(msg) 
 		{
@@ -654,14 +677,19 @@ function RunResultpMeanGroup(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
+			
+			try{
+				if(data != ''){
 				//console.log(data);
 				data_Vue.plottingData.RespMeanGroup = JSON.parse(data);
 				writeSumGroup();
 				//plottingResultgMean(JSON.parse(data));
-			}else{
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first! here");
 			}
+			
 		},
 		failure: function(msg) 
 		{
@@ -720,6 +748,9 @@ function RunDataPreparation(){
 		dataType: "text",
 	});
 }
+
+
+
 
 // ---- Plotting genotypic Mean:
 function plottingResultgMean(){
@@ -1277,13 +1308,16 @@ function RunResultgMean(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				data_Vue.plottingData.ResgMean = JSON.parse(data);
-				//plottingResultgMean(JSON.parse(data));
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.ResgMean = JSON.parse(data);
+					//plottingResultgMean(JSON.parse(data));
+				}
+			} catch(err){
 				alert("Failed to plot KS. Please run the Simulation first!");
 			}
+			
 		},
 		failure: function(msg) 
 		{
@@ -1322,12 +1356,15 @@ function RunResultgMeanGroup(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				data_Vue.plottingData.ResgMeanGroup = JSON.parse(data);
-				writeSumGroup();
-				//plottingResultgMean(JSON.parse(data));
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.ResgMeanGroup = JSON.parse(data);
+					writeSumGroup();
+					//plottingResultgMean(JSON.parse(data));
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first - Suc!");
 			}
 		},
@@ -1726,11 +1763,14 @@ function RunResultRel(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				data_Vue.plottingData.ResRel = JSON.parse(data);
-				//plottingResultgMean(JSON.parse(data));
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.ResRel = JSON.parse(data);
+					//plottingResultgMean(JSON.parse(data));
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first!");
 			}
 		},
@@ -1770,12 +1810,15 @@ function RunResultRelGroup(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				data_Vue.plottingData.ResRelGroup = JSON.parse(data);
-				writeSumGroup();
-				//plottingResultgMean(JSON.parse(data));
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.ResRelGroup = JSON.parse(data);
+					writeSumGroup();
+					//plottingResultgMean(JSON.parse(data));
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first!");
 			}
 		},
@@ -1849,11 +1892,14 @@ function RunResultRelbetweenC(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				data_Vue.plottingData.ResRelbetweenC = JSON.parse(data);
-				//plottingResultgMean(JSON.parse(data));
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.ResRelbetweenC = JSON.parse(data);
+					//plottingResultgMean(JSON.parse(data));
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first!");
 			}
 		},
@@ -2100,11 +2146,14 @@ function RunResultQTL(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				data_Vue.plottingData.ResQTL = JSON.parse(data);
-				//plottingResultQTL(JSON.parse(data));
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.ResQTL = JSON.parse(data);
+					//plottingResultQTL(JSON.parse(data));
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first!");
 			}
 		},
@@ -2149,12 +2198,15 @@ function RunResultQTLGroup(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				data_Vue.plottingData.ResQTLGroup = JSON.parse(data);
-				writeSumGroup();
-				//plottingResultQTL(JSON.parse(data));
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.ResQTLGroup = JSON.parse(data);
+					writeSumGroup();
+					//plottingResultQTL(JSON.parse(data));
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first1!");
 			}
 		},
@@ -2407,14 +2459,17 @@ function RunResultAccBVE(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				data_Vue.plottingData.ResAccBVE = JSON.parse(data);
-				data_Vue.Summary_AccBVE = data_Vue.Summary.filter(function(x){
-					return(data_Vue.plottingData.ResAccBVE[x.id][0].tval != "NA");
-				});
-				//plottingResultQTL(JSON.parse(data));
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.ResAccBVE = JSON.parse(data);
+					data_Vue.Summary_AccBVE = data_Vue.Summary.filter(function(x){
+						return(data_Vue.plottingData.ResAccBVE[x.id][0].tval != "NA");
+					});
+					//plottingResultQTL(JSON.parse(data));
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first!");
 			}
 		},
@@ -2452,15 +2507,18 @@ function RunResultAccBVEGroup(){
 			//alert("Now Sending!");
 		},
 		success: function (data, msg) {
-			if(data != ''){
-				//console.log(data);
-				
-				data_Vue.plottingData.ResAccBVEGroup = JSON.parse(data);
-				writeSumGroup();
-				data_Vue.Summary_AccBVE = data_Vue.Summary.filter(function(x){
-					return(data_Vue.plottingData.ResAccBVEGroup[x.id][0].tval != "NA");
-				});
-			}else{
+			try{
+				if(data != ''){
+					//console.log(data);
+					
+					data_Vue.plottingData.ResAccBVEGroup = JSON.parse(data);
+					writeSumGroup();
+					data_Vue.Summary_AccBVE = data_Vue.Summary.filter(function(x){
+						return(data_Vue.plottingData.ResAccBVEGroup[x.id][0].tval != "NA");
+					});
+				}
+			}
+			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first1!");
 			}
 		},

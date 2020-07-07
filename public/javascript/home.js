@@ -2081,6 +2081,7 @@ function init() {
 //******************* If the User take data from database, then load them here **********/
 function updateUser(){
 	$.get('/user', function(dat){
+		console.log(dat)
 		data_Vue.user = dat.username;
 		data_Vue.curUserGroup = dat.usergroup;
 		data_Vue.geninfo['curUserGroup'] = dat.usergroup;
@@ -2124,6 +2125,14 @@ function loadData(ind){
 					}
 					document.getElementById("Version").value = "recent";
 					data_Vue.project_saved = true;
+					
+					checkEverything(id="General_Info")
+					checkEverything(id="Phenotype_Info_Div")
+					checkEverything(id="Selectionindex_Div")
+					checkEverything(id="Variables_Info")
+					checkEverything(id="edge-popUp")
+					checkEverything(id="node-popUp")
+					
 				}else{
 					alert("Loading Data failed. Contact administrator.");
 				}

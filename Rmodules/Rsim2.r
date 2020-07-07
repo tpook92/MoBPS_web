@@ -38,14 +38,38 @@ if("try-error" %in% is(fname)){
 
 fname <- paste(path, arg[1],"_",fname, sep="")
 
-fileSum  <- paste(fname,"Summary.json",sep="")
-if(file.exists(fileSum)){
-  file.remove(fileSum)
+write_json(dat, path=paste(fname, "_", paste0(substr(Sys.time(), start=1, stop=10), "_", substr(Sys.time(), start=12, stop=16)),".json",sep=""), auto_unbox =TRUE)
+
+
+if(arg[1]=="undefined"){
+  stop(paste0("Session ", "time-out! Please relog! "))
 }
 
 
+fileSum  <- paste(fname,"Summary.json",sep="")
+#if(file.exists(fileSum)){
+#  file.remove(fileSum)
+#}
 
-write_json(dat, path=paste(fname, "_", paste0(substr(Sys.time(), start=1, stop=10), "_", substr(Sys.time(), start=12, stop=16)),".json",sep=""), auto_unbox =TRUE)
+memory_max <- 5000
+if(dat$'Class'==2){
+  time.check <- TRUE
+  time.max <- 4 * 60 * 60
+  memory_max <- 20000
+} else if(dat$'Class'==3){
+  time.check <- TRUE
+  time.max <- 48 * 60 * 60
+  memory_max <- 30000
+} else if(dat$'Class'==4){
+  time.check <- TRUE
+  time.max <- 120 * 60 * 60
+  memory_max <- 40000
+}
+
+memory_limit(memory_max)
+
+
+
 
 
   t1 <- Sys.time()
@@ -60,6 +84,7 @@ write_json(dat, path=paste(fname, "_", paste0(substr(Sys.time(), start=1, stop=1
   storage.mode(time_file_temp) <- "numeric"
   time_file <- rbind(c("TOTAL", colSums(time_file_temp)),time_file)
 
+  colnames(time_file) <- c("Cohort name", "BVEtime", "Gentime", "Totaltime")
   write.csv(file=paste0(fname, "_time.csv"), time_file, row.names = FALSE, quote=FALSE)
   write.csv(file=paste0(fname, ".csv"), population[[1]], row.names = FALSE, quote=FALSE)
 

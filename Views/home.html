@@ -8,7 +8,7 @@
 	</script>
 		
 	<head>
-		<title>MoBPS (v1.5.18)</title>
+		<title>MoBPS (v1.5.25)</title>
 		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
@@ -91,7 +91,9 @@
 				<button class='showhide_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
 				<button class='showhide_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 				&nbsp;
-				<a href="http://mobps.de/compareProjects"  class ="additional_link">Compare Projects</a> 
+				<a href="http://mobps.de/compareProjects"  class ="additional_link" onclick=updateUser()> Compare Projects</a> 
+
+
 			</div>
 			<div id='SaveAs_Div'>
 				New Project Name: <input id="saveAs-name" type="text" placeholder="Type a name"/> <br><br>
@@ -205,13 +207,13 @@
 				<br>		
 			
 			<h3 v-if="curUserGroup =='4'"> You are assigned to User Class Admin. 
-				This enables you to use 20 Cores and maximum run time of 120 hours 
+				This enables you to use 20 Cores, 40 GB Max-Memory and maximum run time of 120 hours 
 			</h3>
 			<h3 v-if="curUserGroup =='3'"> You are assigned to User Class Professional. 
-				This enables you to use 5 Cores and maximum run time of 48 hours 
+				This enables you to use 5 Cores, 30 GB Max-Memory and maximum run time of 48 hours 
 			</h3>
 			<h3 v-if="curUserGroup =='2'"> You are assigned to User Class Student. 
-				This enables you to use 5 Cores and maximum run time of 4 hour 
+				This enables you to use 5 Cores, 20 GB Max-Memory and maximum run time of 4 hour 
 			</h3>
 			<h3 v-if="curUserGroup =='1'"> You are assigned to User Class Test. 
 				It is not possible to use our backend-server for simulation. To simulate download the json-file run via json.simulation() in R.	</h3>
@@ -1975,7 +1977,7 @@
 				<br>
 				<br>
 				<p> Click here to estimate computing time / costs of your breeding program </p>
-				<button onclick="runningR2(); " v-if="warnings.length == 0">Estimate time/cost (in prep.)</button>
+				<button onclick="runningR2(); " v-if="warnings.length == 0">Estimate time/cost</button>
 
 				<br>
 				<p>Or click here to restore the latest R result that you have already generated for the breeding program {{geninfo['Project Name']}}.</p>
@@ -2009,66 +2011,12 @@
 					<!--input type='submit' value='Load Results'-->
 					<button onclick="UploadSim();">Load Results</button>
 				</form>
-				
-				<br>
-				<p v-if="cohortsList.length >0" class="boldText">Cohorts List : </p>
-				<div v-if="cohortsList.length >0">
-					<table class="cohortsList">
-							<tr>
-								<th> Cohort Name </th>
-								<th>Nr. of Individuals </th>
-								<th>Time point </th>
-								<th>Total costs </th>
-								<th>Cost genotyping </th>
-								<th>Cost phenotyping </th>
-								<th>Cost housing </th>
-							</tr>
-							
-							<tr v-for='(cohorts, index) in cohortsList' >
-								<td> {{cohortsList[index]['Cohort name']}} </td>
-								<td> {{cohortsList[index]['Nr. of individuals']}} </td>
-								<td> {{cohortsList[index]['Time-point']}} </td>
-								<td> {{cohortsList[index]['Total costs']}} </td>
-								<td> {{cohortsList[index]['Cost genotyping']}} </td>
-								<td> {{cohortsList[index]['Cost phenotyping']}} </td>
-								<td> {{cohortsList[index]['Cost housing']}} </td>			
-							</tr>
-					</table>
+			
 
-				</div>
 
 			</div>
-				<br>
 
-				<p v-if="cohortsList.length >0" class="boldText"> Download Cohorts List: 
-					<span class="tooltip">&#9432 <span class="tooltiptext"> Download CSV file containing cohort names, number of individuals, time-point of generation, total costs, genotyping costs, cost phenotyping and  housing costs.</span></span>&nbsp; 
-					<a v-if="filename" href="/Exceldownload"> Download {{geninfo['Project Name']}}.csv </a> 
-				</p>
-				<br>	
-				
-				
-				<p v-if="cohortsTimeList.length >0" class="boldText">Computing time estimates : </p>
-				<div v-if="cohortsTimeList.length >0">
-					<table class="cohortsListTime">
-							<tr>
-								<th>Cohort Name </th>
-								<th>BVE Time </th>
-								<th>Generation Time </th>
-								<th>TOTAL Time </th>
 
-							</tr>
-
-							<tr v-for='(cohorts, index) in cohortsTimeList' >
-								<td> {{cohortsTimeList[index]['Cohort name']}} </td>
-								<td> {{cohortsTimeList[index]['BVEtime']}} </td>
-								<td> {{cohortsTimeList[index]['Gentime']}} </td>
-								<td> {{cohortsTimeList[index]['Totaltime']}} </td>			
-		
-							</tr>
-					</table>
-
-				</div>
-				
 				
 				
 				<br>
@@ -2325,6 +2273,67 @@
 						<div id="ResQTL_Div3">
 						</div>
 					</div>
+					
+				
+				<br>
+				<p v-if="cohortsList.length >0" class="boldText">Cohorts List : </p>
+				
+				<div v-if="cohortsList.length >0">
+					<table class="cohortsList">
+							<tr>
+								<th> Cohort Name </th>
+								<th>Nr. of Individuals </th>
+								<th>Time point </th>
+								<th>Total costs </th>
+								<th>Cost genotyping </th>
+								<th>Cost phenotyping </th>
+								<th>Cost housing </th>
+							</tr>
+							
+							<tr v-for='(cohorts, index) in cohortsList' >
+								<td> {{cohortsList[index]['Cohort name']}} </td>
+								<td> {{cohortsList[index]['Nr. of individuals']}} </td>
+								<td> {{cohortsList[index]['Time-point']}} </td>
+								<td> {{cohortsList[index]['Total costs']}} </td>
+								<td> {{cohortsList[index]['Cost genotyping']}} </td>
+								<td> {{cohortsList[index]['Cost phenotyping']}} </td>
+								<td> {{cohortsList[index]['Cost housing']}} </td>			
+							</tr>
+					</table>
+
+				</div>
+				
+				<p v-if="cohortsList.length >0" class="boldText"> Download Cohorts List: 
+					<span class="tooltip">&#9432 <span class="tooltiptext"> Download CSV file containing cohort names, number of individuals, time-point of generation, total costs, genotyping costs, cost phenotyping and  housing costs.</span></span>&nbsp; 
+					<a v-if="filename" href="/Exceldownload"> Download {{geninfo['Project Name']}}.csv </a> 
+				</p>
+				<br>	
+				
+				
+				<p v-if="cohortsTimeList.length >0" class="boldText">Computing time estimates : </p>
+				<div v-if="cohortsTimeList.length >0">
+					<table class="cohortsListTime">
+							<tr>
+								<th>Cohort Name </th>
+								<th>BVE Time </th>
+								<th>Generation Time </th>
+								<th>TOTAL Time </th>
+
+							</tr>
+
+							<tr v-for='(cohorts, index) in cohortsTimeList' >
+								<td> {{cohortsTimeList[index]['Cohort name']}} </td>
+								<td> {{cohortsTimeList[index]['BVEtime']}} </td>
+								<td> {{cohortsTimeList[index]['Gentime']}} </td>
+								<td> {{cohortsTimeList[index]['Totaltime']}} </td>			
+		
+							</tr>
+					</table>
+
+				</div>
+				
+				
+				
 				</div>
 				<br>
 				<br>
@@ -2449,6 +2458,7 @@
 			   document.getElementById("mynetwork").style.height = "798px";
 			    }
 		}
+
 
 	</script>		
 

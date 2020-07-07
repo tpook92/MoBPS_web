@@ -11,51 +11,41 @@ function checkEverything(id){
 		gen_warn_text = "Please specify a Project Name.";
 		if(!data_Vue.geninfo['Project Name'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings1.push(gen_warn_text);
-		}else if(data_Vue.geninfo['Project Name'] != "" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-        	}
+		}
 			
 		gen_warn_text = "Please specify a Species.";
 		if(!data_Vue.geninfo['Species'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings1.push(gen_warn_text);
-		}else if(data_Vue.geninfo['Species'] != "" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-        	}
+		}
 						
 		gen_warn_text = "Please specify Time Unit.";
 		if(!data_Vue.geninfo['Time Unit'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings1.push(gen_warn_text);
-		}else if(data_Vue.geninfo['Time Unit'] != "" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-            	}			
+		}			
 		
-		gen_warn_textEns = "Please specify an Ensembl Dataset.";
-		if ((data_Vue.genetic_data == "Ens" & !data_Vue.geninfo['Ensembl Dataset'] & data_Vue.warnings1.indexOf(gen_warn_textEns) == -1)){
-			data_Vue.warnings1.push(gen_warn_textEns);
-		}else if(data_Vue.genetic_data == "Ens" & data_Vue.geninfo['Ensembl Dataset'] != "" & data_Vue.warnings1.indexOf(gen_warn_textEns) > -1) {
-                	data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_textEns),1);
+		
+		gen_warn_text = "Ensembl Dataset not available for Species 'Other'";
+		if(data_Vue.genetic_data =="Ens" & data_Vue.geninfo['Species'] =="Other"){
+			data_Vue.warnings1.push(gen_warn_text);
+		} else{
+			gen_warn_textEns = "Please specify an Ensembl Dataset.";
+			if ((data_Vue.genetic_data == "Ens" & !data_Vue.geninfo['Ensembl Dataset'] & data_Vue.warnings1.indexOf(gen_warn_textEns) == -1)){
+				data_Vue.warnings1.push(gen_warn_textEns);
+			}
 		}
-		else if (data_Vue.genetic_data != "Ens" & data_Vue.warnings1.indexOf(gen_warn_textEns) > -1){
-			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_textEns),1);
-		}      
+		
+    
 
 		gen_warn_textSNP = "Please specify Max.Number of SNPs. SNPs are in positive integer";
 		checkPosSNP = isPositiveInt(data_Vue.geninfo['Max Number of SNPs']);
 		if (data_Vue.genetic_data == "Ens" & (isNaN(data_Vue.geninfo['Max Number of SNPs']) || data_Vue.geninfo['Max Number of SNPs'] < 0  || (data_Vue.geninfo['Max Number of SNPs'] != "" & checkPosSNP == false )) & data_Vue.warnings1.indexOf(gen_warn_textSNP) == -1){
 			data_Vue.warnings1.push(gen_warn_textSNP);
-		}else if((data_Vue.geninfo['Max Number of SNPs'] == "" || (data_Vue.geninfo['Max Number of SNPs'] >=0 & checkPosSNP == true)) & data_Vue.warnings1.indexOf(gen_warn_textSNP) > -1) {
-                	data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_textSNP),1);
-            	}
-		else if (data_Vue.genetic_data != "Ens" & data_Vue.warnings1.indexOf(gen_warn_textSNP) > -1){
-			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_textSNP),1);
-		}   	
+		}	
 			
 		gen_warn_text = "Please upload Own Map.";
 		if ((data_Vue.genetic_data == "Own" & !data_Vue.geninfo['Own Map Path']) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings1.push(gen_warn_text);
-            	}else if(data_Vue.geninfo['Own Map Path'] != "Own" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-		}
+        }
             
 		gen_warn_text = "Please enter number of Chromosomes. Chromosomes are in positive integer.";			
 		checkCus = isPositiveInteger(data_Vue.geninfo['Number of Chromosomes']) ? "true" : "false";
@@ -66,13 +56,6 @@ function checkEverything(id){
 		else if ((data_Vue.genetic_data == "Cus" & (data_Vue.geninfo['Number of Chromosomes'] != "" & (checkNumeric == "false") || checkCus == "false")) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings1.push(gen_warn_text);
 		}
-		else if ((data_Vue.genetic_data == "Cus" & data_Vue.geninfo['Number of Chromosomes'] != "" & checkCus == "true") & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-		}                            
-		else if (data_Vue.genetic_data != "Cus" & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-		}                  
-
 
 
 
@@ -85,34 +68,23 @@ function checkEverything(id){
 
 			if(data_Vue.geninfo["Chromosomes Info"][0].Length * data_Vue.geninfo["Chromosomes Info"][0].MD >= 1000000){
 				data_Vue.warnings1.push(gen_warn_text);
-			} else{
-				data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-			}	
+			} 
 			
 			for (i=0; i<thisChromoNum; i++) {
-			gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes Length and must be in number.";
-			if((!data_Vue.geninfo['Chromosomes Info'][i]['Length'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Length']) || data_Vue.geninfo['Chromosomes Info'][i]['Length'] < 0 ) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings1.push(gen_warn_text);
-			}
-			else if((data_Vue.geninfo['Chromosomes Info'][i]['Length'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['Length'] > 0 ) & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
-				data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-			}
+				gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes Length and must be in number.";
+				if((!data_Vue.geninfo['Chromosomes Info'][i]['Length'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Length']) || data_Vue.geninfo['Chromosomes Info'][i]['Length'] < 0 ) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+					data_Vue.warnings1.push(gen_warn_text);
+				}
 
-			gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes MD and must be in number.";
-			if((!data_Vue.geninfo['Chromosomes Info'][i]['MD'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['MD']) || data_Vue.geninfo['Chromosomes Info'][i]['MD'] < 0) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings1.push(gen_warn_text);
-			}
-			else if((data_Vue.geninfo['Chromosomes Info'][i]['MD'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['MD'] > 0) & data_Vue.warnings1.indexOf(gen_warn_text) > -1){                                                        
-				data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-        		}                                                            
+				gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes MD and must be in number.";
+				if((!data_Vue.geninfo['Chromosomes Info'][i]['MD'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['MD']) || data_Vue.geninfo['Chromosomes Info'][i]['MD'] < 0) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+					data_Vue.warnings1.push(gen_warn_text);
+				}
 
-			gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes Recombination and must be in number.";
-			if((!data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Recombination']) || data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] < 0) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings1.push(gen_warn_text);
-			}
-			else if((data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] != "" & data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] > 0) & data_Vue.warnings1.indexOf(gen_warn_text) > -1){
-				data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
-			}
+				gen_warn_text = "Chromo "+(i+1)+" : "+"Please enter Chromosomes Recombination and must be in number.";
+				if((!data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] || isNaN(data_Vue.geninfo['Chromosomes Info'][i]['Recombination']) || data_Vue.geninfo['Chromosomes Info'][i]['Recombination'] < 0) & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
+					data_Vue.warnings1.push(gen_warn_text);
+				}
 			}
 		}
 		
@@ -121,7 +93,7 @@ function checkEverything(id){
 			data_Vue.warnings1.splice(data_Vue.warnings1.indexOf(gen_warn_text),1);
 		}
 		
-		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5, data_Vue.warnings6);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}             
 // end general info validation
@@ -129,7 +101,7 @@ function checkEverything(id){
 
 		
 	// phenotype validation
-	if(id == "Phenotype_Info_Div"){
+	if(id == "Phenotype_Info_Div" || id == "General_Info"){
 		
 
 		data_Vue.warnings2 = [];
@@ -175,34 +147,37 @@ function checkEverything(id){
 				}
 
 
-				gen_warn_text = "Repeatability for phenotype"+(i+1)+" must be between Heritability and 1";
-				if(data_Vue.geninfo.advanced_trait & (data_Vue.traitsinfo[i]['Trait Repeatability'] != undefined || data_Vue.traitsinfo[i]['Trait Repeatability'] != "" || data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings2.push(gen_warn_text);
-				}
-				
-				gen_warn_text = "Repeatability set to Heritability"; 
-				if(data_Vue.geninfo.advanced_trait & (data_Vue.traitsinfo[i]['Trait Repeatability'] != undefined || data_Vue.traitsinfo[i]['Trait Repeatability'] != "" || data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings2.push(gen_warn_text);
-				}
-				
-				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].dominant_qtl);
-				gen_warn_text = "Number of dominant QTL not provided for phenotype"+(i+1)
-				if(data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings2.push(gen_warn_text);
+				if(data_Vue.geninfo.advanced_trait && data_Vue.geninfo.advanced){
+					gen_warn_text = "Repeatability for phenotype"+(i+1)+" must be between Heritability and 1";
+					if(data_Vue.geninfo.advanced_trait & ( data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+						data_Vue.warnings2.push(gen_warn_text);
+					}
+					
+					gen_warn_text = "Repeatability set to Heritability"; 
+					if(data_Vue.geninfo.advanced_trait & ( data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+						data_Vue.warnings2.push(gen_warn_text);
+					}
+					
+					checkPoly = isPositiveInt(data_Vue.traitsinfo[i].dominant_qtl);
+					gen_warn_text = "Number of dominant QTL not provided for phenotype"+(i+1)
+					if(data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+						data_Vue.warnings2.push(gen_warn_text);
+					}
+
+					checkPoly = isPositiveInt(data_Vue.traitsinfo[i].qualitative_qtl);
+					gen_warn_text = "Number of qualitative epistatic QTL not provided for phenotype"+(i+1)
+					if(data_Vue.geninfo.advanced_trait &  checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+						data_Vue.warnings2.push(gen_warn_text);
+					}
+
+					
+					checkPoly = isPositiveInt(data_Vue.traitsinfo[i].quantitative_qtl);
+					gen_warn_text = "Number of quantitative epistatic QTL not provided for phenotype"+(i+1)
+					if((data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1)) {
+						data_Vue.warnings2.push(gen_warn_text);
+					}
 				}
 
-				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].qualitative_qtl);
-				gen_warn_text = "Number of qualitative epistatic QTL not provided for phenotype"+(i+1)
-				if(data_Vue.geninfo.advanced_trait &  checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings2.push(gen_warn_text);
-				}
-
-				
-				checkPoly = isPositiveInt(data_Vue.traitsinfo[i].quantitative_qtl);
-				gen_warn_text = "Number of quantitative epistatic QTL not provided for phenotype"+(i+1)
-				if((data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1)) {
-					data_Vue.warnings2.push(gen_warn_text);
-				}
 
 				
 				checkPoly = isPositiveInt(data_Vue.traitsinfo[i]['Trait Number of Polygenic Loci']);
@@ -235,20 +210,167 @@ function checkEverything(id){
 
 			}
 		}
-		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5, data_Vue.warnings6);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}	// end of phenotype validation
 	
 	
-	if(id == "Selectionindex_Div"){
-		selection_Index();
-		phenotyping_classes();		
-		economyWarning();	
-		animalHousingCost();
+	if(id == "Selectionindex_Div" || id == "General_Info"){
+		
+		data_Vue.warnings6 = []
+		
+		if(data_Vue.geninfo.advanced && data_Vue.geninfo.advanced_sub){
+			for( var i = 1; i < data_Vue.subpopulation.subpopulation_list.length; i++){
+				var ktemp = Number(data_Vue.subpopulation.subpopulation_list[i].share0) + Number(data_Vue.subpopulation.subpopulation_list[i].share1);
+				
+				var count = 0; 
+				for(var prop in data_Vue.subpopulation.subpopulation_list[i]){
+					if(data_Vue.subpopulation.subpopulation_list[i].hasOwnProperty(prop)){
+						++count;
+					}
+				}
+				
+
+					if(isNaN(ktemp)){
+						gen_warn_text = " No valid input for share of fixated markers for subpopulation " + data_Vue.subpopulation.subpopulation_list[i].Name;
+						data_Vue.warnings6.push(gen_warn_text);
+					} else if(ktemp>1){
+						gen_warn_text = " Share of fixated markers should be lower than 1 for subpopulation " + data_Vue.subpopulation.subpopulation_list[i].Name;
+
+						data_Vue.warnings6.push(gen_warn_text);
+					} else if(ktemp<0 ){
+						gen_warn_text = " Share of fixated markers should be higher than 0 for subpopulation " + data_Vue.subpopulation.subpopulation_list[i].Name;
+						data_Vue.warnings6.push(gen_warn_text);
+					}
+
+				
+				if(count > 7){
+					if(isNaN(ktemp)){
+						gen_warn_text = " No valid input for share of fixated markers for subpopulation " + data_Vue.subpopulation.subpopulation_list[i].Name;
+						data_Vue.warnings6.push(gen_warn_text);
+					} else if(ktemp==1){
+						gen_warn_text = " Share of fixated markers should be lower than 1 for subpopulation " + data_Vue.subpopulation.subpopulation_list[i].Name + " when applying deviation from mean";
+
+						data_Vue.warnings6.push(gen_warn_text);
+					} else if(ktemp== 0 ){
+						gen_warn_text = " Share of fixated markers should be higher than 0 for subpopulation " + data_Vue.subpopulation.subpopulation_list[i].Name + " when applying deviation from mean";;
+						data_Vue.warnings6.push(gen_warn_text);
+					}
+				}
+
+			
+
+
+			}
+		}
+
+		
+		
+		var traitsCnt = data_Vue.traitsinfo.length;
+		var siCnt = data_Vue.selection_index.length
+
+		if (siCnt > 0) {
+			for(var i=0; i<siCnt; i++){
+				for(var j=0; j < traitsCnt; j++)
+					{
+
+						var objSI = pVar =	data_Vue.selection_index[i];
+						var keys = Object.keys(objSI);
+						constP = keys[j+1];			
+						pVar =	data_Vue.selection_index[i][constP];
+						pName = data_Vue.selection_index[i]['Name'];
+						checkpVar = isNumeric(pVar);	
+
+						gen_warn_text = pName+(i+1)+":Pheno"+(j+1)+":Please enter selection index and it must be a number.";
+						if ((!pVar || isNaN(pVar) || checkpVar == false) & data_Vue.warnings6.indexOf(gen_warn_text) == -1) {
+							data_Vue.warnings6.push(gen_warn_text);
+						}
+					
+				}
+			}	
+		}			
+
+		var traitsCnt = data_Vue.traitsinfo.length;
+		var piCnt = data_Vue.phenotyping_class.length
+
+		if (piCnt > 0) {
+		   for(var i=0; i<piCnt; i++){
+			for(var j=0; j < traitsCnt; j++)
+			{	
+				var objPC = pVar =	data_Vue.phenotyping_class[i];
+				var keys = Object.keys(objPC);
+				
+				constPC = keys[j+2];			
+						
+				pVar =  data_Vue.phenotyping_class[i][constPC];
+				pName = data_Vue.phenotyping_class[i]['Name'];
+				Cost = data_Vue.phenotyping_class[i]['Cost of phenotyping'];
+
+				checkpVar = isNumeric(pVar);  
+				checkPospVar = isPositiveInt(pVar);
+					
+				gen_warn_text = pName+":Phenotyping Cost"+(i+1)+": Please enter phenotyping classes and it must be a positive number or zero.";
+				if ((isNaN(Cost) || Cost <0) & data_Vue.warnings6.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings6.push(gen_warn_text);
+				}
+
+				gen_warn_text = pName+(i+1)+":Pheno"+(j+1)+": Please enter phenotyping classes and it must be a positive number or zero.";
+				if ((pVar == null || isNaN(pVar) || pVar < 0 || checkpVar == false || checkPospVar == false) & data_Vue.warnings6.indexOf(gen_warn_text) == -1) {
+					data_Vue.warnings6.push(gen_warn_text);
+				}
+
+			}
+			}             
+		}
+			
+		gen_warn_text = "Fixed costs are negative!";
+		
+		curFixedCost = data_Vue.economy['Fixed Cost'];
+		console.log(curFixedCost);
+
+		if(((!curFixedCost & curFixedCost !=0) || curFixedCost < 0 || isNaN(curFixedCost)) & data_Vue.warnings6.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings6.push(gen_warn_text);
+			console.log('empty'+curFixedCost);
+		}
+		
+		gen_warn_text = "Invalid Interest Rate provided. Assume interest of 0 percent.";
+		curInt = data_Vue.economy['Interest Rate'];	
+
+		if(((!curInt & curInt !=0) || curInt < (-100) || isNaN(curInt)) & data_Vue.warnings6.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings6.push(gen_warn_text);
+			console.log('empty'+curInt);
+		}
+		
+		gen_warn_text = "Genotyping costs are negative / not entered!";
+		curGenoType = data_Vue.economy['Genotyping Cost'];
+
+		if(((!curGenoType & curGenoType !=0) || curGenoType < 0 || isNaN(curGenoType)) & data_Vue.warnings6.indexOf(gen_warn_text) == -1){
+			data_Vue.warnings6.push(gen_warn_text);
+			console.log('empty'+curInt);
+		}
+		
+		var animal_housing_costCnt = data_Vue.economy['Animal Housing Costs'].length;
+		var thisAnimalHousingCosts = data_Vue.economy['Animal Housing Costs'];
+		
+		for(var i=0; i < animal_housing_costCnt; i++){			
+			thisCost = thisAnimalHousingCosts[i]['Cost'];
+			nameOfCost = thisAnimalHousingCosts[i]['Name'];
+
+			gen_warn_text = "Housing costs for class " + nameOfCost + " are negative / not entered!";
+
+			if(((thisCost =="" & thisCost !=0) || thisCost <0 || isNaN(thisCost)) & data_Vue.warnings6.indexOf(gen_warn_text) == -1){
+				data_Vue.warnings6.push(gen_warn_text);
+			}
+	
+			
+		}
+		
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5 , data_Vue.warnings6);
+		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}
 	
 
-	if(id == "Variables_Info"){
+	if(id == "Variables_Info" || id == "General_Info"){
 
 		data_Vue.warnings3 = [];
 
@@ -279,7 +401,7 @@ function checkEverything(id){
 			}		
 				
 		}
-		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5 , data_Vue.warnings6);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}
 	
@@ -337,7 +459,7 @@ function checkEverything(id){
 			}
 		}
 		
-		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5 , data_Vue.warnings6);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}
 	
@@ -495,7 +617,7 @@ function checkEverything(id){
 
 
 		
-		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5);
+		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5, data_Vue.warnings6);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
 	}
 
@@ -626,150 +748,9 @@ function checkEverything(id){
 	}
 
 				
-	  
-	function selection_Index() {
-
-			var traitsCnt = data_Vue.traitsinfo.length;
-			var siCnt = data_Vue.selection_index.length
-
-			if (siCnt > 0) {
-				for(var i=0; i<siCnt; i++){
-
-					for(var j=0; j < traitsCnt; j++)
-					{
-
-						var objSI = pVar =	data_Vue.selection_index[i];
-						var keys = Object.keys(objSI);
-						constP = keys[j+1];			
-						pVar =	data_Vue.selection_index[i][constP];
-						pName = data_Vue.selection_index[i]['Name'];
-						checkpVar = isNumeric(pVar);	
-
-						gen_warn_text = pName+(i+1)+":Pheno"+(j+1)+":Please enter selection index and it must be a number.";
-						if ((!pVar || isNaN(pVar) || checkpVar == false) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-							data_Vue.warnings.push(gen_warn_text);
-						}
-						else if (pVar != "" & checkpVar == true & data_Vue.warnings.indexOf(gen_warn_text) > -1) {
-							data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
-						}
-					
-					}
-				}	
-			}
-	}
-	
-
-	
-	
-	function phenotyping_classes() {
-	var traitsCnt = data_Vue.traitsinfo.length;
-	var piCnt = data_Vue.phenotyping_class.length
-
-		if (piCnt > 0) {
-		   for(var i=0; i<piCnt; i++){
-			for(var j=0; j < traitsCnt; j++)
-			{	
-				var objPC = pVar =	data_Vue.phenotyping_class[i];
-				var keys = Object.keys(objPC);
-				
-				constPC = keys[j+2];			
-						
-				pVar =  data_Vue.phenotyping_class[i][constPC];
-				pName = data_Vue.phenotyping_class[i]['Name'];
-				Cost = data_Vue.phenotyping_class[i]['Cost of phenotyping'];
-
-				checkpVar = isNumeric(pVar);  
-				checkPospVar = isPositiveInt(pVar);
-					
-				gen_warn_text = pName+":Phenotyping Cost"+(i+1)+": Please enter phenotyping classes and it must be a positive number or zero.";
-				if ((isNaN(Cost) || Cost <0) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings.push(gen_warn_text);
-				}
-				else if ((Cost >=0) & data_Vue.warnings.indexOf(gen_warn_text) > -1) {
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-				}	
-
-				gen_warn_text = pName+(i+1)+":Pheno"+(j+1)+": Please enter phenotyping classes and it must be a positive number or zero.";
-				if ((pVar == null || isNaN(pVar) || pVar < 0 || checkpVar == false || checkPospVar == false) & data_Vue.warnings.indexOf(gen_warn_text) == -1) {
-					data_Vue.warnings.push(gen_warn_text);
-				}
-				else if ((pVar != null & pVar >= 0 & checkpVar == true & checkPospVar == true) & data_Vue.warnings.indexOf(gen_warn_text) > -1) {
-					data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1);
-				}
-				
-
-			}
-			}             
-		}
-	}
 
 
-	
-	function economyWarning() {
-	
-		gen_warn_text = "Fixed costs are negative!";
-		
-		curFixedCost = data_Vue.economy['Fixed Cost'];
-		console.log(curFixedCost);
 
-		if(((!curFixedCost & curFixedCost !=0) || curFixedCost < 0 || isNaN(curFixedCost)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
-			console.log('empty'+curFixedCost);
-		}
-		else if((curFixedCost != "" & curFixedCost >= 0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
-		}
-		
-		gen_warn_text = "Invalid Interest Rate provided. Assume interest of 0 percent.";
-		curInt = data_Vue.economy['Interest Rate'];	
-
-		if(((!curInt & curInt !=0) || curInt < (-100) || isNaN(curInt)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
-			console.log('empty'+curInt);
-		}
-		else if((curInt != "" & curInt >= (-100) & data_Vue.warnings.indexOf(gen_warn_text) > -1)){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
-		}
-		
-		gen_warn_text = "Genotyping costs are negative / not entered!";
-		curGenoType = data_Vue.economy['Genotyping Cost'];
-
-		if(((!curGenoType & curGenoType !=0) || curGenoType < 0 || isNaN(curGenoType)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-			data_Vue.warnings.push(gen_warn_text);
-			console.log('empty'+curInt);
-		}
-		else if((curGenoType != "" & curGenoType >= 0) & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-			data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
-		}		
-		
-	}
-	
-
-function animalHousingCost() {
-
-		var animal_housing_costCnt = data_Vue.economy['Animal Housing Costs'].length;
-		var thisAnimalHousingCosts = data_Vue.economy['Animal Housing Costs'];
-		
-		for(var i=0; i < animal_housing_costCnt; i++){			
-			thisCost = thisAnimalHousingCosts[i]['Cost'];
-			nameOfCost = thisAnimalHousingCosts[i]['Name'];
-
-			gen_warn_text = "Housing costs for class " + nameOfCost + " are negative / not entered!";
-
-			if(((thisCost =="" & thisCost !=0) || thisCost <0 || isNaN(thisCost)) & data_Vue.warnings.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings.push(gen_warn_text);
-			}
-			else if(thisCost != "" & thisCost >=0 & data_Vue.warnings.indexOf(gen_warn_text) > -1){
-				data_Vue.warnings.splice(data_Vue.warnings.indexOf(gen_warn_text),1); 
-			}		
-			
-		}
-}
-
-
-function check_eigen(){
-	
-}
 
 // this funtion will always be called after an edge has been created,
 // you can use this function to add further services, e.g add the secong parent automatically if Breeding Type == Reproduction etc.

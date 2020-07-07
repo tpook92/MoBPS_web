@@ -8,8 +8,8 @@ library("jsonlite")
 path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
-# arg <- c("Torsten", "Simple_Cattle")
-# sindex <- fromJSON("/home/nha/MoBPS/Rmodules/UserScripts/Torsten_IMAGE_del_conservation_2020-02-18_08:43.json", simplifyVector=FALSE)$`Selection Index`
+# arg <- c("Torsten", "project Friday _v3")
+# sindex <- fromJSON("/home/nha/MoBPS/Rmodules/UserScripts/Torsten_project Friday _v3_2020-07-03_16:45.json", simplifyVector=FALSE)$`Selection Index`
 
 user <- arg[1]
 filename <- arg[2]

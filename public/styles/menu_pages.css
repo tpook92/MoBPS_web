@@ -157,6 +157,12 @@ header {
    	width: 18%;
 	background: gray;
  }
+ 
+ .f6{
+	display: inline-block;
+   	font-size: 12px;
+   	width: 18%;
+ }
 
 .f1 {
     text-align: left;
@@ -172,6 +178,13 @@ header {
 	width:200px;
 	height:30px;
 	font-size: 12px;
+	text-align: left;
+}
+
+.textDiv2 {
+	width:200px;
+	height:30px;
+	font-size: 15px;
 	text-align: left;
 }
 

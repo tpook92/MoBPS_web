@@ -128,6 +128,38 @@ app.post('/changePW', function(request, response) {
 	//response.end();
 });
 
+app.post('/compareswitch', function(request, response){
+	
+	if (request.session.loggedin) {		
+		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db("DB");
+			dbo.collection(request.session.username).find({}).map(x => x.name).toArray(function(err, result){
+				if (err) throw err;
+				db.close();	
+				response.send(result);	
+				
+				tempResult = request.session.username+","+result;
+
+				fs.writeFileSync(__dirname + '/Rmodules/UserScripts/tempdatabase.text', tempResult);				
+			});
+		}); 
+			
+
+	} else {
+		response.send('');
+	}
+	
+});
+
+app.post('/recover', function(request, response) {
+	fs.readFile("/home/nha/MoBPS/Rmodules/UserScripts/tempdatabase.text", "utf8", function(err, data){
+		console.log(data);
+		response.send(data);
+	});
+});
+
+
 app.post('/database', function(request, response) {
 	if (request.session.loggedin) {
 		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
@@ -136,7 +168,11 @@ app.post('/database', function(request, response) {
 			dbo.collection(request.session.username).find({}).map(x => x.name).toArray(function(err, result){
 				if (err) throw err;
 				db.close();	
-				response.send(result);		
+				response.send(result);	
+				
+				tempResult = request.session.username+","+result;
+				var tempFile = path.join(__dirname + '/Rmodules/UserScripts');
+				fs.writeFileSync(__dirname + '/Rmodules/UserScripts/tempdatabase.text', tempResult);				
 			});
 		}); 
 	} else {
@@ -144,8 +180,9 @@ app.post('/database', function(request, response) {
 	}
 });
 
+
 app.post('/loadproject', function(request, response) {
-	if (request.session.loggedin) {
+	if (request.session.loggedin || true) {
 		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
 			if (err) throw err;
 			var dbo = db.db("DB");
@@ -197,6 +234,9 @@ app.post('/Rsim', function(request, response) {
 		}
 	});
 });
+
+
+
 
 // Run R simulation Test with spawn:
 app.post('/Rsim1', function(request, response) {

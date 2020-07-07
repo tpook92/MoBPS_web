@@ -1226,4 +1226,6 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
   padding-left: 12px;
 }
 
+
+
 .cohortsListTime tr:nth-child(even){background-color: lightgrey}

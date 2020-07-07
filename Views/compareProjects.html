@@ -60,13 +60,24 @@
 	<div id='compareProjectDiv'>
 		<div id="Project_Bar">	
 			<a>&nbsp;</a>
-				<a href="http://mobps.de/home" class="additional_link">Go back to MoBPS Home</a> 
+				<a href="http://mobps.de/home" v-if="user!=undefined" class="additional_link">Go back to MoBPS Home</a> 
 			<a>&nbsp;</a>					
 			</div>
 			
 
 			<div id="main">
 				
+				<h4 v-if="user==undefined" style="color: red; font-style:italic;"> 
+				YOUR CURRENT SYSTEM IS NOT SUPPORTING CompareProjects <br>
+				Potential issues are: <br>
+				Browser (Clear Cache, Update and ideally use Chrome) <br>
+				Operating System <br>
+				Admin Rights in browser<br>
+				Session TimeOut <br>
+				You have to Log-In again to Access/Use the Webinterface!!!
+				</h4>
+
+				<!--button v-if="user==undefined" onclick="init()" >CLICK HERE TO LOAD IN YOUR PROJECTS</button-->
 				<div id="LoadJSON_Div" >
 					<br>
 					<h2>MoBPS Compare Projects </h2>
@@ -84,6 +95,7 @@
 						</tr>
 					</table>
 				</div>
+				
     	
 	        	<br>
 				

@@ -63,16 +63,34 @@ function init() {
 
 
 function updateUser(){
+	
+
 	$.get('/user', function(dat){
+
 		data_Vue.user = dat.username;
 		data_Vue.curUserGroup = dat.usergroup;
 		data_Vue.cpInfo['curUserGroup'] = dat.usergroup;
 	})
 	
-	$.post('/database', function(dat){
-		data_Vue.database = dat;
-	})
+	if(data_Vue.user == undefined || data_Vue == ""){
+		
+		$.post('/recover', function(dat){
+			console.log(dat)
+			splitdata = dat.split(",")
+			data_Vue.user = splitdata[0];
+			splitdata.shift();
+			data_Vue.database = splitdata;
+		})
+		
+	} else{
+		
+		$.post('/database', function(dat){
+			data_Vue.database = dat;
+		})
+	}
 	
+	
+
 	localStorage.clear();
 }
 
@@ -122,8 +140,8 @@ function jsonListofProjects (plist) {
 		    complete: function() {
 		      jsonRequests(++jsonIndex);
 		    }
-		  });
-		};
+		});
+	};
 
 jsonRequests(0);
 
