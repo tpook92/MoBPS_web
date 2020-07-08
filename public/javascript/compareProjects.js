@@ -1,13 +1,7 @@
 Vue.component('treeselect', VueTreeselect.Treeselect);
 
-var queryString = window.location.search;
-var urlParams = new URLSearchParams(queryString);
-var cpuser = urlParams.get('cpuser');
-var cpusergroup = urlParams.get('cpusergroup')
-
 function cpInfo () {
-	this['curUserGroup'] = cpusergroup;
-	this['user'] = cpuser;
+	this['curUserGroup'] = '';
 }
 
 // returns an object with all parameters, we need for plotting results:
@@ -63,31 +57,41 @@ var data_Vue = new Vue({
 })
 
 function init() {
-	data_Vue.cpInfo['curUserGroup'] = cpusergroup;
-	data_Vue.cpInfo['user'] = cpuser;
-	getProjectsFromDB();
-  	isSafari();  
+  updateUser();
+  isSafari();  
 }
 
-function getProjectsFromDB(){
-	data_Vue.user = cpuser;
-	data_Vue.curUserGroup = cpusergroup;
 
-	if (data_Vue.user == "" ) {
-		alert('Please login again to analyze compare projects')
+function updateUser(){
+	
+
+	$.get('/user', function(dat){
+
+		data_Vue.user = dat.username;
+		data_Vue.curUserGroup = dat.usergroup;
+		data_Vue.cpInfo['curUserGroup'] = dat.usergroup;
+	})
+	
+	if(data_Vue.user == undefined || data_Vue == ""){
+		
+		$.post('/recover', function(dat){
+			console.log(dat)
+			splitdata = dat.split(",")
+			data_Vue.user = splitdata[0];
+			splitdata.shift();
+			data_Vue.database = splitdata;
+		})
+		
+	} else{
+		
+		$.post('/database', function(dat){
+			data_Vue.database = dat;
+		})
 	}
-	else {
-		 $.ajax({
-			type: "POST",
-			url: '/databaseCP',
-			data: {username : data_Vue.user,
-					usergroup:data_Vue.curUserGroup
-					},
-			    success: function(data) {
-			    data_Vue.database = data;
-			    },
-		  });
-		};	
+	
+	
+
+	localStorage.clear();
 }
 
 function isSafari() {

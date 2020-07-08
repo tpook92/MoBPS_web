@@ -90,7 +90,6 @@ function myGeneral () {
 	this['Chromosomes Info'] = [];
 	this['Upload_CorrFile'] = 'No';
 	this['curUserGroup'] = '';
-		this['user']=';'
 	this['Excel_File'] = '';
 	//this['listOfCohorts_withInfo'] = '';
 }
@@ -2086,7 +2085,6 @@ function updateUser(){
 		data_Vue.user = dat.username;
 		data_Vue.curUserGroup = dat.usergroup;
 		data_Vue.geninfo['curUserGroup'] = dat.usergroup;
-				data_Vue.geninfo['user'] = dat.username;
 	})
 	
 	$.post('/database', function(dat){
