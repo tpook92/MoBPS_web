@@ -12,7 +12,12 @@ function checkEverything(id){
 		if(!data_Vue.geninfo['Project Name'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings1.push(gen_warn_text);
 		}
-			
+
+		var pos1 = data_Vue.geninfo['Project Name'].search(",")
+		gen_warn_text = "Project name is not allowed to contain ',' ";
+		if(pos1 >0 ){
+			data_Vue.warnings1.push(gen_warn_text);
+		}
 		gen_warn_text = "Please specify a Species.";
 		if(!data_Vue.geninfo['Species'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings1.push(gen_warn_text);
@@ -121,6 +126,7 @@ function checkEverything(id){
 		if (phenoLength > 0 ) {
 		for (i=0; i<phenoLength; i++)
 			{
+				
 				gen_warn_text = "No trait name provided for phenotype "+(i+1);
 				if(!data_Vue.traitsinfo[i]['Trait Name']  & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
@@ -619,6 +625,26 @@ function checkEverything(id){
 		
 		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5, data_Vue.warnings6);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
+
+		
+		if(data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste != undefined && data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"] != undefined){
+			for(var j = 0; j < data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"].length; j++){
+				if(data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"][j]== "stallion licensingOCD:-4"){
+					data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"][j] = "stallion licensing OCD:-4"
+				}
+				if(data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"][j]== "breeding maresprüfung:-5"){
+					data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"][j] = "mare performance test:-5"
+				}
+				if(data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"][j]== "breeding maresprüfung:-6"){
+					data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"][j] = "mare performance test:-6"
+				}
+				if(data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"][j]== "breeding maresprüfung:-7"){
+					data_Vue.edges._data.ZuchthengsteCopy4598_Zuchthengste["Manuel selected cohorts"][j] = "mare performance test:-7"
+				}
+			}
+
+		}
+
 	}
 
 	

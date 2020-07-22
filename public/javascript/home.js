@@ -62,6 +62,12 @@ function myGeneral () {
 	this['advanced_miraculix'] = true;
 	this['advanced_parallel'] = false;
 	this['advanced_trait'] = false;
+	this['advanced_trait_epi'] = false;
+	this['advanced_trait_repeat'] = false;
+	this['advanced_trait_maternal'] = false;
+	this['advanced_trait_combi'] = false;
+	this['advanced_trait_trafo'] = false;
+	this['advanced_trait_scaling'] = false;
 	this['advanced_culling'] = false;
 	this['advanced_sub'] = false;
 	this['advanced_eco'] = false;
@@ -91,6 +97,7 @@ function myGeneral () {
 	this['Upload_CorrFile'] = 'No';
 	this['curUserGroup'] = '';
 	this['Excel_File'] = '';
+	this['user']=''
 	//this['listOfCohorts_withInfo'] = '';
 }
 
@@ -105,6 +112,9 @@ function myTrait (ind){
 	this['dominant_qtl'] = 0,
 	this['qualitative_qtl'] = 0,
 	this['quantitative_qtl'] = 0,
+	this['is_maternal'] = false,
+	this['is_paternal'] = false,
+	this['is_combi'] = false,
 	this['Trait Major QTL'] = 0,
 	this['Trait Value per Unit'] = 0,
 	this['trafo'] = "function(x){return(x)}",
@@ -206,7 +216,8 @@ function myPlottingData(){
 	this['Summary'] = "",
 	this['RespMean'] = "",
 	this['ResAccBVE'] = "",
-	this['confidence'] = false
+	this['confidence'] = false,
+	this['legend'] = true
 }
 
 
@@ -741,6 +752,16 @@ var data_Vue = new Vue({
 				}
 			}	
 		},		
+		
+		createCombi: function(ind){
+			
+			console.log(ind);
+			console.log(this.traitsinfo);
+			if( this.traitsinfo[ind]['is_combi'] == true){
+				this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
+			} 
+		},
+		
 		// create/remove new QTL on change of the # QTls, depending on 
 		// whether new number is greater or smaller --> remove from bottom
 		createQTL: function(ind){
@@ -755,6 +776,10 @@ var data_Vue = new Vue({
 				while (len < val){
 					this.counter_qtl++;
 					var newSNP = new mySNP(this.counter_qtl);
+
+					if(this.traitsinfo[ind]['Trait QTL Info'] == ""){
+						this.traitsinfo[ind]['Trait QTL Info'] = [];
+					}
 					this.traitsinfo[ind]['Trait QTL Info'].push(newSNP);
 					len++;
 				}
@@ -809,7 +834,14 @@ var data_Vue = new Vue({
 			this.matrix.push({row: new myArray(len+1)});
 			this.matrix2.push({row: new myArray(len+1)});
 			this.show_matrix_element.push({show:true});
-			if (len > 1) { showCorrDiv("true"); }						
+			if (len > 1) { 
+				showCorrDiv("true");
+				for(var ind; ind < len; ind++){
+					this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
+				}
+			}		
+			
+
 		},
 		
 		FilterDatabase: function(){
@@ -834,6 +866,7 @@ var data_Vue = new Vue({
 				for(var i=ind+1; i< len; i++){
 					this.matrix[i].row.splice(ind,1);
 					this.matrix2[i].row.splice(ind,1);
+					this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
 				}
 				this.matrix.splice(ind,1);
 				this.matrix2.splice(ind,1);
@@ -886,7 +919,7 @@ var data_Vue = new Vue({
 			});
 			if(items.length >= 1){
 				for(ii=0; ii < items.length; ii++){
-					this.nodes.update({id: items[ii], 'Number of Individuals': wert, title: items[ii]+':'+wert+' Ind', label: items[ii]+'(:'+wert+')'});
+					this.nodes.update({id: items[ii], 'Number of Individuals': wert, title: items[ii]+':'+wert+' Ind', label: items[ii]+'('+wert+')'});
 				}
 				//network.setData({nodes: this.nodes, edges: this.edges});
 			}
@@ -1350,9 +1383,12 @@ function importNetwork_intern(inputData1) {
 	var inputData = JSON.parse(JSON.stringify(inputData1));
 	data_Vue.nodes = new vis.DataSet(inputData['Nodes']);
 	data_Vue.edges = new vis.DataSet(inputData['Edges']);
+	
+	var prior_user = data_Vue.geninfo.user;
+	var prior_userclass = data_Vue.geninfo.curUserGroup;
 	data_Vue.geninfo = inputData['Genomic Info'] ? inputData['Genomic Info'] : new myGeneral();
-	
-	
+	data_Vue.geninfo.user = prior_user;
+	data_Vue.geninfo.curUserGroup = prior_userclass;
 
 	if(data_Vue.geninfo['advanced']==undefined){
 		data_Vue.geninfo['advanced'] = false;
@@ -1372,6 +1408,25 @@ function importNetwork_intern(inputData1) {
 	if(data_Vue.geninfo['advanced_trait']==undefined){
 		data_Vue.geninfo['advanced_trait'] = false;
 	}
+	if(data_Vue.geninfo['advanced_trait_epi']==undefined){
+		data_Vue.geninfo['advanced_trait_epi'] = false;
+	}
+	if(data_Vue.geninfo['advanced_trait_repeat']==undefined){
+		data_Vue.geninfo['advanced_trait_repeat'] = false;
+	}
+	if(data_Vue.geninfo['advanced_trait_maternal']==undefined){
+		data_Vue.geninfo['advanced_trait_maternal'] = false;
+	}
+	if(data_Vue.geninfo['advanced_trait_combi']==undefined){
+		data_Vue.geninfo['advanced_trait_combi'] = false;
+	}
+	if(data_Vue.geninfo['advanced_trait_trafo']==undefined){
+		data_Vue.geninfo['advanced_trait_trafo'] = false;
+	}
+	if(data_Vue.geninfo['advanced_trait_scaling']==undefined){
+		data_Vue.geninfo['advanced_trait_scaling'] = false;
+	}
+	
 	if(data_Vue.geninfo['advanced_culling']==undefined){
 		data_Vue.geninfo['advanced_culling'] = false;
 	}
@@ -1428,6 +1483,10 @@ function importNetwork_intern(inputData1) {
 	if(data_Vue.plottingData.confidence==undefined){
 		data_Vue.plottingData.confidence = false;
 	}
+	if(data_Vue.plottingData.legend==undefined){
+		data_Vue.plottingData.legend = true;
+	}
+
 
 	data_Vue.traitsinfo = inputData['Trait Info'] ? inputData['Trait Info'] : [];
 	data_Vue.selection_index = inputData['Selection Index'];
@@ -1478,6 +1537,59 @@ function importNetwork_intern(inputData1) {
 	data_Vue.genetic_data = inputData["Intern"].genetic_data;
 	//data_Vue.runned = inputData["Intern"].runned;
 	
+	if(data_Vue.traitsinfo.length > 0){
+		for(j = 0; j < data_Vue.traitsinfo.length ; j++){
+			if(data_Vue.traitsinfo[j]['Trait Name'] == undefined){
+				data_Vue.traitsinfo[j]['Trait Name'] = "Pheno " + j;
+			}
+			if(data_Vue.traitsinfo[j]['Trait Unit'] == undefined){
+				data_Vue.traitsinfo[j]['Trait Unit'] = "";
+			}
+			if(data_Vue.traitsinfo[j]['Trait Mean'] == undefined){
+				data_Vue.traitsinfo[j]['Trait Mean'] = 100;
+			}
+			if(data_Vue.traitsinfo[j]['Trait Std Deviation'] == undefined){
+				data_Vue.traitsinfo[j]['Trait Std Deviation'] = 10;
+			}
+			if(data_Vue.traitsinfo[j]['Trait Heritability'] == undefined){
+				data_Vue.traitsinfo[j]['Trait Heritability'] = 0.3;
+			}
+			if(data_Vue.traitsinfo[j]['Repeatability'] == undefined){
+				data_Vue.traitsinfo[j]['Repeatability'] = "";
+			}
+			if(data_Vue.traitsinfo[j]['Trait Number of Polygenic Loci'] == undefined){
+				data_Vue.traitsinfo[j]['Trait Number of Polygenic Loci'] = 1000;
+			}
+			if(data_Vue.traitsinfo[j]['dominant_qtl'] == undefined){
+				data_Vue.traitsinfo[j]['dominant_qtl'] = 0;
+			}
+			if(data_Vue.traitsinfo[j]['qualitative_qtl'] == undefined){
+				data_Vue.traitsinfo[j]['qualitative_qtl'] = 0;
+			}
+			if(data_Vue.traitsinfo[j]['quantitative_qtl'] == undefined){
+				data_Vue.traitsinfo[j]['quantitative_qtl'] = 0;
+			}
+			if(data_Vue.traitsinfo[j]['is_maternal'] == undefined){
+				data_Vue.traitsinfo[j]['is_maternal'] = false;
+			}
+			if(data_Vue.traitsinfo[j]['is_paternal'] == undefined){
+				data_Vue.traitsinfo[j]['is_paternal'] = false;
+			}
+			if(data_Vue.traitsinfo[j]['is_combi'] == undefined){
+				data_Vue.traitsinfo[j]['is_combi'] = false;
+			}
+			if(data_Vue.traitsinfo[j]['Trait Major QTL'] == undefined){
+				data_Vue.traitsinfo[j]['Trait Major QTL'] = 0;
+			}
+			if(data_Vue.traitsinfo[j]['Trait Value per Unit'] == undefined){
+				data_Vue.traitsinfo[j]['Trait Value per Unit'] = 0;
+			}
+			if(data_Vue.traitsinfo[j]['trafo'] == undefined){
+				data_Vue.traitsinfo[j]['trafo'] = "function(x){return(x)}";
+			}
+		}
+	}
+
 
 	var mat1 = inputData['Phenotypic Correlation'];
 	var mat2 = inputData['Genetic Correlation'];
@@ -2085,6 +2197,7 @@ function updateUser(){
 		data_Vue.user = dat.username;
 		data_Vue.curUserGroup = dat.usergroup;
 		data_Vue.geninfo['curUserGroup'] = dat.usergroup;
+		data_Vue.geninfo['user'] = dat.username;
 	})
 	
 	$.post('/database', function(dat){

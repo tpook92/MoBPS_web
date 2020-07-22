@@ -128,6 +128,22 @@ app.post('/changePW', function(request, response) {
 	//response.end();
 });
 
+app.post('/databaseCP', function(request, response) {
+		request.session.username = request.body.username;
+		request.session.usergroup = request.body.usergroup;
+		request.session.loggedin = true;
+		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db("DB");
+			dbo.collection(request.session.username).find({}).map(x => x.name).toArray(function(err, result){
+				if (err) throw err;
+				db.close();	
+				response.send(result);	
+			});
+		}); 
+
+});
+
 app.post('/compareswitch', function(request, response){
 	
 	if (request.session.loggedin) {		
@@ -648,6 +664,11 @@ app.get('/intro', function(request, response) {
 		response.sendFile(path.join(__dirname + '/Views/intro.html'));
 });
 
+app.get('/publication', function(request, response) {
+		response.sendFile(path.join(__dirname + '/Views/publication.html'));
+});
+
+
 app.get('/faq', function(request, response) {
 		response.sendFile(path.join(__dirname + '/Views/faq.html'));
 });
@@ -659,6 +680,8 @@ app.get('/history', function(request, response) {
 app.get('/agb', function(request, response) {
 		response.sendFile(path.join(__dirname + '/Views/AGB.html'));
 });
+
+
 
 
 // Uploading Map Data:

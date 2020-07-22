@@ -12,7 +12,7 @@ h3 {
 
 h4 {font-size:14px; }
 
-p {font-size:12px; }
+p {font-size:13px; }
 
 .container {
   	position: absolute;
@@ -182,7 +182,7 @@ header {
 }
 
 .textDiv2 {
-	width:200px;
+	width:150px;
 	height:30px;
 	font-size: 15px;
 	text-align: left;
@@ -229,4 +229,24 @@ header {
 	line-height: 1.5;
 	font-size:12pt;
 	font-family: verdana, arial, sans-serif;
+}
+
+.chromeLogo {
+	width: 10%;
+	height:100%;
+	margin-top: 50px;
+	margin-left: 160px;
+	float: left;
+	font-family: britanica;
+	font-size: 14px;
+}
+
+.newsTicker {
+	width: 40%;
+	height:100%;
+	margin-top: 50px;
+	margin-left: 160px;
+	float: left;
+	font-family: britanica;
+	font-size: 14px;
 }

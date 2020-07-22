@@ -438,6 +438,7 @@ function plottingResultpMean(){
 	
 	var d3colors = Plotly.d3.scale.category10();
 	var confidence = data_Vue.plottingData.confidence; 
+	var legend = data_Vue.plottingData.legend; 
 	function hexToRgb(hex) {
 		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result ? {
@@ -586,6 +587,7 @@ function plottingResultpMean(){
 				traceorder: 'normal',
 				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 				},
+			showlegend: legend,
 			};
 		var config = {
 			scrollZoom: true,
@@ -759,6 +761,7 @@ function plottingResultgMean(){
 	var pType = data_Vue.plottingPar.ResgMean_pType;
 	var d3colors = Plotly.d3.scale.category10();
 	var confidence = data_Vue.plottingData.confidence; 
+	var legend = data_Vue.plottingData.legend; 
 	function hexToRgb(hex) {
 		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result ? {
@@ -909,6 +912,7 @@ function plottingResultgMean(){
 				traceorder: 'normal',
 				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 				},
+			showlegend: legend,
 			};
 		var config = {
 			scrollZoom: true,
@@ -941,6 +945,7 @@ function plottingResultpMeanGroup(){
 	
 	var d3colors = Plotly.d3.scale.category10();
 	var confidence = data_Vue.plottingData.confidence; 
+	var legend = data_Vue.plottingData.legend; 
 	function hexToRgb(hex) {
 		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result ? {
@@ -1089,6 +1094,7 @@ function plottingResultpMeanGroup(){
 				traceorder: 'normal',
 				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 				},
+			showlegend: legend,
 			};
 		var config = {
 			scrollZoom: true,
@@ -1120,6 +1126,8 @@ function plottingResultgMeanGroup(){
 	
 	var d3colors = Plotly.d3.scale.category10();
 	var confidence = data_Vue.plottingData.confidence; 
+	var legend = data_Vue.plottingData.legend; 
+	
 	function hexToRgb(hex) {
 		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result ? {
@@ -1267,6 +1275,7 @@ function plottingResultgMeanGroup(){
 				traceorder: 'normal',
 				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 				},
+			showlegend: legend,
 			};
 		var config = {
 			scrollZoom: true,
@@ -1392,6 +1401,8 @@ function plottingResultRel(){
 	
 	var d3colors = Plotly.d3.scale.category10();
 	var confidence = data_Vue.plottingData.confidence; 
+	var legend = data_Vue.plottingData.legend; 
+	
 	function hexToRgb(hex) {
 		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result ? {
@@ -1540,6 +1551,7 @@ function plottingResultRel(){
 				traceorder: 'normal',
 				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 			},
+			showlegend: legend,
 				
 			};
 		var config = {
@@ -1573,6 +1585,8 @@ function plottingResultRelGroup(){
 	
 	var d3colors = Plotly.d3.scale.category10();
 	var confidence = data_Vue.plottingData.confidence; 
+	var legend = data_Vue.plottingData.legend; 
+	
 	function hexToRgb(hex) {
 		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result ? {
@@ -1720,6 +1734,7 @@ function plottingResultRelGroup(){
 				traceorder: 'normal',
 				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 				},
+			showlegend: legend,
 			};
 		var config = {
 			scrollZoom: true,
@@ -1926,7 +1941,9 @@ function plottingResultQTL(){
 	var pType = data_Vue.plottingPar.ResQTL_pType;
 	
 	var data = data_Vue.plottingData.ResQTL[data_Vue.traitsinfo[trait]['Trait Name']][qtl];
-	
+
+	var legend = data_Vue.plottingData.legend; 
+		
 	if(pType=="By Repeats"){
 		for(var i=0; i < coh.length; i++){
 			// allele frequency:
@@ -2104,6 +2121,7 @@ function plottingResultQTLGroup(){
 				traceorder: 'normal',
 				font: {family:'Verdana', size: 30, weight:'bold', color: 'black'},
 			},
+			showlegend: legend,
 		};
 		var config = {
 			scrollZoom: true,
@@ -2231,6 +2249,8 @@ function plottingResultAccBVE(){
 	var pType = data_Vue.plottingPar.ResAccBVE_pType;
 	var sindex = data_Vue.selection_index;
 	var data1 = [];
+	
+	var legend = data_Vue.plottingData.legend; 
 	for(var i=0;i < sindex.length; i++){
 		data1.push([]);
 	} 
@@ -2294,7 +2314,7 @@ function plottingResultAccBVE(){
 		var layout = {
 			//title : titles[i],
 			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
-			showlegend: pType != 'By Cohorts',
+			showlegend: (pType != 'By Cohorts' && legend),
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
 				//title: xtitle,
@@ -2340,6 +2360,7 @@ function plottingResultAccBVEGroup(){
 	var pType = data_Vue.plottingPar.ResAccBVEGroup_pType;
 	var sindex = data_Vue.jsonDataList[0]["Selection Index"];
 	var data1 = [];
+	var legend = data_Vue.plottingData.legend; 
 	for(var i=0;i < sindex.length; i++){
 		data1.push([]);
 	} 
@@ -2403,7 +2424,7 @@ function plottingResultAccBVEGroup(){
 		var layout = {
 			//title : titles[i],
 			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
-			showlegend: pType != 'By Cohorts',
+			showlegend: (pType != 'By Cohorts' && legend),
 			plot_bgcolor: '#FFFFFF',
 			xaxis: {
 				//title: xtitle,

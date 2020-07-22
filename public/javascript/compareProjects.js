@@ -1,7 +1,13 @@
 Vue.component('treeselect', VueTreeselect.Treeselect);
 
+var queryString = window.location.search;
+var urlParams = new URLSearchParams(queryString);
+var cpuser = urlParams.get('cpuser');
+var cpusergroup = urlParams.get('cpusergroup')
+
 function cpInfo () {
-	this['curUserGroup'] = '';
+	this['curUserGroup'] = cpusergroup;
+	this['user'] = cpuser;
 }
 
 // returns an object with all parameters, we need for plotting results:
@@ -30,7 +36,8 @@ function myPlottingData(){
 	this['SummaryGroup'] = "",
 	this['RespMeanGroup'] = "",
 	this['ResAccBVEGroup'] = "",
-	this['confidence'] = false
+	this['confidence'] = false,
+	this['legend'] = true
 }
 
 
@@ -57,10 +64,31 @@ var data_Vue = new Vue({
 })
 
 function init() {
-  updateUser();
-  isSafari();  
+	data_Vue.cpInfo['curUserGroup'] = cpusergroup;
+	data_Vue.cpInfo['user'] = cpuser;
+	getProjectsFromDB();
+  	isSafari();  
+
 }
 
+function getProjectsFromDB(){
+	data_Vue.user = cpuser;
+	data_Vue.curUserGroup = cpusergroup;
+	if (data_Vue.user == "" ) {
+	alert('Please login again to analyze compare projects')
+	} else {
+		 $.ajax({
+			type: "POST",
+			url: '/databaseCP',
+			data: {username : data_Vue.user,
+					usergroup:data_Vue.curUserGroup
+					},
+			    success: function(data) {
+			    data_Vue.database = data;
+			    },
+			});
+	};	
+}
 
 function updateUser(){
 	

@@ -103,12 +103,17 @@
 						<span class="tooltip">&#9432 <span class="tooltiptext">Test</span></span>
 					</td>
 					<td>
-						<input placeholder="Type a name" v-model="plottingData.max_rep">
+						<input placeholder="Type a number" v-model="plottingData.max_rep">
 					</td>
 					
+					<br>
 					<td>Display 95% Confidence Intervals </td> 
 					<td>
 						<input type="checkbox" v-model="plottingData.confidence">
+					</td>
+					<td>Display Legend </td> 
+					<td>
+						<input type="checkbox" v-model="plottingData.legend">
 					</td>
 				
 					<h4>Results: Observed Phenotypes</h4>

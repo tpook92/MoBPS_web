@@ -8,7 +8,7 @@ library("jsonlite")
 path <- "./Rmodules/UserScripts/"
 
 arg <- commandArgs(TRUE)
-# arg <- c("Torsten", "Simple_Cattle,Simple_Cattle2")
+# arg <- c("b.osatohanmwen", "Phenotype Class. H-0.5, 3 Phenotypic Class,Simple_Cattle2")
 # arg <- c("Torsten", "Simple_Cattle_LowSelection,Simple_Cattle_Default,Simple_Cattle_Fat")
 user <- arg[1]
 #filename <- arg[2:length(arg)]

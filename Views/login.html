@@ -19,7 +19,7 @@
 	    <div class="topnav">
 	      <a href="http://www.mobps.de/">MoBPS Home</a> 
 	      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
-	      <a href="https://www.uni-goettingen.de/de/publikationen/93141.html" target="_blank">Publications</a>
+	      <a onclick="func('publication');">Publications</a>
 		  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
 		  <a onclick="func('intro');">Introduction to MoBPS </a>
 		  <a onclick="func('faq');">FAQ  </a>
@@ -42,10 +42,17 @@
 			<input type="button"  class="guestLogin"  value="Guest Login" onClick="guestLogin();">	
 		</div>
 		
-		<div class="f6">
-			<img src="./styles/img/chrome_develop.png" alt="" style="width:100px;height:100px;padding-top:100px;padding-left:530px;">
-			<div class="textDiv2" style="padding-left:500px;">Developed and optimized for Google Chrome.</div>
-		</div> 
+		<div class="chromeLogo">
+			<img src="./styles/img/chrome_develop.png" style="width:80px;height:80px;" >
+			<h2>Developed and optimized in Google Chrome.</h2>
+ 		</div>
+
+		<div class="newsTicker">
+		  <h3>Recent updates:</h3>
+		  <p> Added maternal / paternal traits (update to MoBPS v.1.5.28) (22/7/20) </p>
+		  <p> Added MoBPS-specific publication page & started FAQ (17/7/20) </p>
+		  <p> Solved Log-Out issues when switching to CompareProject (13/7/20)</p>
+		</div>
 		
 		
 	</section>	

@@ -752,6 +752,16 @@ button[disabled]{
 	padding-left:0px;
 }
 
+.phenoSmallReadOnly {
+	width:50px;
+	font-size:10pt;
+	height:18px;
+	border: 0px;
+	padding-left:0px;
+	color: #e8e3e3;
+	background-color: #f2f2f2;
+}
+
 .phenoNumber {
 	margin-top:30px;
 	margin-bottom:30px;
@@ -761,6 +771,17 @@ button[disabled]{
     border: 2px solid red;    
 }
 
+.phenoNumberReadOnly {
+	margin-top:30px;
+	margin-bottom:30px;
+	font-size:10pt;
+	height:10px;
+	width:50px;
+    border: 0px;  
+	color: #e8e3e3;
+	background-color: #f2f2f2;	
+}
+
 .phenoCheck {
 	width:50px;
 	font-size:10pt;
@@ -768,6 +789,17 @@ button[disabled]{
 	border:2px solid #1E80EF;
 	padding-left:0px;
 }
+
+.phenoCheckReadOnly {
+	width:50px;
+	font-size:10pt;
+	height:18px;
+	border: 0px ;
+	padding-left:0px;
+	color: #e8e3e3;
+	background-color: #f2f2f2;	
+}
+
 
 .phenoTransfo {
 	width:200px;

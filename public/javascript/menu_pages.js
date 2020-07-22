@@ -12,6 +12,9 @@
 		else if (val == "agb") {
 		window.location.href = "agb";		
 		} 
+		else if (val == "publication"){
+		window.location.href = "publication";
+		}
 		else {
 		window.location.href = "auth";
 		}
