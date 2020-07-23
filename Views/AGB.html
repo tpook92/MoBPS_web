@@ -7,80 +7,81 @@
 
 <body>
 
-  <section class="container">
+	<div class="logos" >
 		<div class="header_image1">
 			<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:430px;height:88px;">
 		</div>
 		<div class="header_image2">
 			<img src="./styles/img/cibreed_logo_noback.png" alt="" style="width:210px;height:70px;" >
 		</div>
-		<br>
+	</div>
 		
-	    <div class="topnav">
-	      <a href="http://www.mobps.de/">MoBPS Home</a>
-	      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
-	      <a onclick="func('publication');">Publications</a>
-		  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
-		  <a onclick="func('intro');">Introduction to MoBPS </a>
-		  <a onclick="func('faq');">FAQ  </a>
-		  <a onclick="func('history');">Version history </a>
-		  <a onclick="func('agb');">AGB</a>
-		</div>
-
-		<header> Terms & Conditions:</header>
-		<h3> MoBPS Web-interface:</h3>
-		<div id="para"> The entire MoBPS framework is available under open source (GNU 3.0) for both academia and commercial use! We are always interested in collaborations and support to allow us extend the framework </p>
-			Generation of an account is necessary to protect your own data and only display your own projects! 
-			If necessary we are willing to sign confidential agreements or assist you in setting up your own MoBPS - server 
-		</div>
-		
-		<h3> R-Package:</h3>
-		
-		<div id ="para"> 
-			Copyright (C) 2017 -- 2020  Torsten Pook. This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
-		</div> 
-	
-		<div id ="para"> This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied warranty of 
-			MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-		</div> 
-	
-		<div id ="para"> You should have received a copy of the GNU General Public License 
-			along with this program; if not, write to the Free Software 
-			Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
-		</div>
-	
-	</section>	
-	
-		<div class="footer">
-		<div class="f1">
-			<p>CONTACT:</p>  <br>
-			Torsten Pook<br>
-			Department of Animal Breeding and Genetics<br>
-			Albrecht-Thaer-Weg 3<br>
-			37075 Goettingen<br>
-			torsten.pook (at) uni-goettingen.de<br>
-		</div> 
-		
-		<div class="f2">		
-			<img src="./styles/img/maze_logo_noback.png" alt="" style="width:180px;height:115px;">
-			<div class="textDiv"> This project has received funding from the German Federal Ministry of Education and Research under funding ID 031B0195.</div> 
-		</div>
-		
-		<div class="f3">		
-			<img src="./styles/img/sponsor1.png" alt="" style="width:160px;height:115px;">
-		</div>  
-		
-		<div class="f4">
-			<img src="./styles/img/project2.png" alt="" style="width:180px;height:115px;">
-		</div> 
-		
-		<div class="f5">
-			<img src="./styles/img/sponsor2.jpg" alt="" style="width:140px;height:95px;padding-top:0px;padding-left:40px;">
-			<div class="textDiv" style="padding-left:40px;">This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 677353.</div>
-		</div> 
-		
+    <div class="topnav" id="menuItems" style="position:fixed; z-index:10">
+      <a href="http://mobps.de/">MoBPS Home</a>
+      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
+      <a onclick="func('publication');">Publications</a>
+	  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
+	  <a onclick="func('intro');">Introduction to MoBPS </a>
+	  <a onclick="func('faq');">FAQ  </a>
+	  <a onclick="func('history');">Version history </a>
+	  <a class="active" onclick="func('agb');">AGB</a>
 	</div>
 	
+	<div class="container">	
+		<h1> Terms & Conditions:</h1>
+		<div id="body">
+			<h3> MoBPS Web-interface:</h3>
+			<div id="para"> The entire MoBPS framework is available under open source (GNU 3.0) for both academia and commercial use! We are always interested in collaborations and support to allow us extend the framework </p>
+				Generation of an account is necessary to protect your own data and only display your own projects! 
+				If necessary we are willing to sign confidential agreements or assist you in setting up your own MoBPS - server 
+			</div>
+			
+			<h3> R-Package:</h3>
+			
+			<div id ="para"> 
+				Copyright (C) 2017 -- 2020  Torsten Pook. This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+			</div> 
+		
+			<div id ="para"> This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied warranty of 
+				MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+			</div> 
+		
+			<div id ="para"> You should have received a copy of the GNU General Public License 
+				along with this program; if not, write to the Free Software 
+				Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
+			</div>	
+		</div>			
+	
+		<div class="footer">
+			<div class="f1">
+				<p>CONTACT:</p>  <br>
+				Torsten Pook<br>
+				Department of Animal Breeding and Genetics<br>
+				Albrecht-Thaer-Weg 3<br>
+				37075 Goettingen<br>
+				torsten.pook (at) uni-goettingen.de<br>
+			</div> 
+			
+			<div class="f2">		
+				<img src="./styles/img/maze_logo_noback.png" alt="" style="width:180px;height:115px;">
+				<div class="textDiv"> This project has received funding from the German Federal Ministry of Education and Research under funding ID 031B0195.</div> 
+			</div>
+			
+			<div class="f3">		
+				<img src="./styles/img/sponsor1.png" alt="" style="width:160px;height:115px;">
+			</div>  
+			
+			<div class="f4">
+				<img src="./styles/img/project2.png" alt="" style="width:180px;height:115px;">
+			</div> 
+			
+			<div class="f5">
+				<img src="./styles/img/sponsor2.jpg" alt="" style="width:140px;height:95px;padding-top:5px;padding-left:40px;">
+				<div class="textDiv" style="padding-left:40px;">This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 677353.</div>
+			</div> 			
+		</div>
+		
+	</div>	
 	
 	<script type="text/javascript" src="javascript/menu_pages.js"></script>
 

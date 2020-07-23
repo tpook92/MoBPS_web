@@ -7,55 +7,87 @@
 
 <body>
 
-  <section class="container">
+	<div class="logos" >
 		<div class="header_image1">
 			<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:430px;height:88px;">
 		</div>
 		<div class="header_image2">
 			<img src="./styles/img/cibreed_logo_noback.png" alt="" style="width:210px;height:70px;" >
 		</div>
-		<br>
+	</div>
 		
-    <div class="topnav">
-      <a href="http://www.mobps.de/">MoBPS Home</a>
+    <div class="topnav" id="menuItems" style="position:fixed; z-index:10">
+      <a href="http://mobps.de/">MoBPS Home</a>
       <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
       <a onclick="func('publication');">Publications</a>
 	  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
 	  <a onclick="func('intro');">Introduction to MoBPS </a>
-	  <a onclick="func('faq');">FAQ  </a>
+	  <a class="active" onclick="func('faq');">FAQ  </a>
 	  <a onclick="func('history');">Version history </a>
 	  <a onclick="func('agb');">AGB</a>
 	</div>
-
-	<header> Frequently asked questions</header>
-		
-	<p> Is MoBPS free to use? </p>		
-	<p> MoBPS is available under GNU 3.0 License. This means its free to use for both academia and commercial use!  </p>	
-
-	<br>
-	<p> And your software simulate my breeding program </p>
-	<p> I am assuming yes. But it helps if you tell me what you want to simulate =) </p>
-	<p> Usually its best to first think about the key steps of your simulation (drawing usually helps) and factors you want to include. </p>
-	<p> If you think your simulation is not possible, asking us if it is actually possible or if we can add new features usually helps. </p>
 	
-	<br>
-	<p> How to learn more about MoBPS? </p>		
-	<p> Extended documentation on the R-package can be found at <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>. </p>	
-	<p> Introduction for the interface in form of slides and videos can be found at <a onclick="func('intro');"> here </a>.</p>
-	<p> Due to the current CoVid-19 situation no workshops on the use of MoBPS are scheduled. </p>
-	
-	<br>
-	<p> What happens to MoBPS after Torstens PostDoc? </p>
-	<p> Our Team that is working at and with MoBPS growing with some positions with contracts till 2023. </p>
-	<p> In any case, constantly growing the framework is intended to be a big building block of the work group. Therefore continues support should be assured. </p>
-	
-	<br>
-	<p> My simulations do not finish?! </p>
-	<p> Resources per user in our cluster are limited as the backend server has just 20 cores and 64 GB memory. </p>
-	<p> Either export your JSON files to R and run the simulations on your own system or ask us help you set up your own MoBPS server. </p>
+	<div class="container">	
+		<h1> Frequently asked questions</h1>
 
-	</section>	
+		<div id="body">
+			<h3> Is MoBPS free to use? </h3>		
 
+			<div id="para"> MoBPS is available under GNU 3.0 License. This means its free to use for both academia and commercial use!  </div>	
+			<br>
+			<div id="para"> And your software simulate my breeding program <br>
+			I am assuming yes. But it helps if you tell me what you want to simulate =) <br>
+			Usually its best to first think about the key steps of your simulation (drawing usually helps) and factors you want to include. <br>
+			If you think your simulation is not possible, asking us if it is actually possible or if we can add new features usually helps. 
+			</div>
+			
+			<h3> How to learn more about MoBPS? </h3>		
+			<div id="para"> Extended documentation on the R-package can be found at <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>. <br>	
+			Introduction for the interface in form of slides and videos can be found at <a onclick="func('intro');"> here </a>.<br>
+			Due to the current CoVid-19 situation no workshops on the use of MoBPS are scheduled. 
+			</div>
+			
+			<h3> What happens to MoBPS after Torstens PostDoc? </h3>
+			<div id="para"> Our Team that is working at and with MoBPS growing with some positions with contracts till 2023. <br>
+			 In any case, constantly growing the framework is intended to be a big building block of the work group. Therefore continues support should be assured. <br>
+			</div>
+			
+			<h3> My simulations do not finish?! </h3>
+			<div id="para"> Resources per user in our cluster are limited as the backend server has just 20 cores and 64 GB memory.<br>
+			 Either export your JSON files to R and run the simulations on your own system or ask us help you set up your own MoBPS server.
+			</div>
+		</div>
+
+		<div class="footer">
+			<div class="f1">
+				<p>CONTACT:</p>  <br>
+				Torsten Pook<br>
+				Department of Animal Breeding and Genetics<br>
+				Albrecht-Thaer-Weg 3<br>
+				37075 Goettingen<br>
+				torsten.pook (at) uni-goettingen.de<br>
+			</div> 
+			
+			<div class="f2">		
+				<img src="./styles/img/maze_logo_noback.png" alt="" style="width:180px;height:115px;">
+				<div class="textDiv"> This project has received funding from the German Federal Ministry of Education and Research under funding ID 031B0195.</div> 
+			</div>
+			
+			<div class="f3">		
+				<img src="./styles/img/sponsor1.png" alt="" style="width:160px;height:115px;">
+			</div>  
+			
+			<div class="f4">
+				<img src="./styles/img/project2.png" alt="" style="width:180px;height:115px;">
+			</div> 
+			
+			<div class="f5">
+				<img src="./styles/img/sponsor2.jpg" alt="" style="width:140px;height:95px;padding-top:5px;padding-left:40px;">
+				<div class="textDiv" style="padding-left:40px;">This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 677353.</div>
+			</div> 			
+		</div>
+
+	</div>	
 	
 	<script type="text/javascript" src="javascript/menu_pages.js"></script>
 

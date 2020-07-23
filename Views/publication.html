@@ -7,90 +7,92 @@
 
 <body>
 
-  <section class="container">
+	<div class="logos" >
 		<div class="header_image1">
-			<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:430px;height:88px;">
+			<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:450px;height:100px;">
 		</div>
 		<div class="header_image2">
-			<img src="./styles/img/cibreed_logo_noback.png" alt="" style="width:210px;height:70px;" >
+			<img src="./styles/img/cibreed_logo_noback.png" alt="" style="width:250px;height:80px;" >
 		</div>
-		<br>
-		
-	    <div class="topnav">
-	      <a href="http://www.mobps.de/">MoBPS Home</a>
-	      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
-	      <a onclick="func('publication');">Publications</a>
-		  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
-		  <a onclick="func('intro');">Introduction to MoBPS </a>
-		  <a onclick="func('faq');">FAQ  </a>
-		  <a onclick="func('history');">Version history </a>
-		  <a onclick="func('agb');">AGB</a>
-		</div>
+	</div>
 
-		<header> MoBPS Publications:</header>
-
-
-		<br>
-		<h3> Pook, T., M. Schlather, and H. Simianer, 2020 MoBPS - Modular Breeding Program Simulator. G3: Genes, Genomes, Genetics 10:1915–1918.
-		</h3>
-	     <a href="https://www.g3journal.org/content/10/6/1915" target="_blank">Go to Paper</a>
 		
-		<br>
-		
-		<h3> Pook, T., L. Büttgen, A. Ganesan, N.T. Ha, H. Simianer, 2020 MoBPSweb: A web-based framework to simulate and compare breeding programs. bioRxiv (PREPRINT)
-		</h3>
-	     <a href="https://www.biorxiv.org/content/10.1101/2020.07.08.193227v1.abstract" target="_blank">Go to Paper</a>
-		
-				<br>
-		<h3> Simianer, H., L. Büttgen, A. Ganesan, N.T. Ha, T. Pook, 2020 A unifying concept of animal breeding programs. bioRxiv (PREPRINT)
-		</h3>
-	     <a href="https://www.biorxiv.org/content/10.1101/2020.07.08.193201v1.abstract" target="_blank">Go to Paper</a>
-		
-				<br>
-		<h3> Büttgen, L., J. Geibel, H. Simianer, T. Pook, 2020 Simulation Study on the Integration of Health Traits in Horse Breeding Programs. Animals 10 (7), 1153.
-		</h3>
-	     <a href="https://www.mdpi.com/2076-2615/10/7/1153" target="_blank">Go to Paper</a>
-		
-				<br>
-		<h3> Simianer, H., T. Pook, M. Schlather, 2018 Turning the PAGE – the potential of genome editing in breeding for complex traits revisited. Proc. 11th WCGALP.
-		</h3>
-	     <a href="https://www.researchgate.net/profile/Torsten_Pook/publication/339129930_Turning_the_PAGE_-the_potential_of_genome_editing_in_breeding_for_complex_traits_revisited/links/5e3ef827458515072d8a94aa/Turning-the-PAGE-the-potential-of-genome-editing-in-breeding-for-complex-traits-revisited.pdf" target="_blank">Go to Paper</a>
-
-		 <br>
-		<a href="https://www.uni-goettingen.de/de/publikationen/93141.html" target="_blank">All publications from our working group</a>
-	
-	</section>	
-	
-		<div class="footer">
-		<div class="f1">
-			<p>CONTACT:</p>  <br>
-			Torsten Pook<br>
-			Department of Animal Breeding and Genetics<br>
-			Albrecht-Thaer-Weg 3<br>
-			37075 Goettingen<br>
-			torsten.pook (at) uni-goettingen.de<br>
-		</div> 
-		
-		<div class="f2">		
-			<img src="./styles/img/maze_logo_noback.png" alt="" style="width:180px;height:115px;">
-			<div class="textDiv"> This project has received funding from the German Federal Ministry of Education and Research under funding ID 031B0195.</div> 
-		</div>
-		
-		<div class="f3">		
-			<img src="./styles/img/sponsor1.png" alt="" style="width:160px;height:115px;">
-		</div>  
-		
-		<div class="f4">
-			<img src="./styles/img/project2.png" alt="" style="width:180px;height:115px;">
-		</div> 
-		
-		<div class="f5">
-			<img src="./styles/img/sponsor2.jpg" alt="" style="width:140px;height:95px;padding-top:0px;padding-left:40px;">
-			<div class="textDiv" style="padding-left:40px;">This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 677353.</div>
-		</div> 
-		
+    <div class="topnav" id="menuItems" style="position:fixed; z-index:10">
+      <a href="http://mobps.de/">MoBPS Home</a>
+      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
+      <a class="active" onclick="func('publication');">Publications</a>
+	  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
+	  <a onclick="func('intro');">Introduction to MoBPS </a>
+	  <a onclick="func('faq');">FAQ  </a>
+	  <a onclick="func('history');">Version history </a>
+	  <a onclick="func('agb');">AGB</a>
 	</div>
 	
+	
+	<div class="container">
+		<h1> MoBPS Publications:</h1>	
+
+		<div id="body">
+
+			<h3> Pook, T., M. Schlather, and H. Simianer, 2020 MoBPS - Modular Breeding Program Simulator. G3: Genes, Genomes, Genetics 10:1915–1918.
+			</h3>
+		    <a href="https://www.g3journal.org/content/10/6/1915" target="_blank">Go to Paper</a>
+			<br>
+			
+			<h3> Pook, T., L. Büttgen, A. Ganesan, N.T. Ha, H. Simianer, 2020 MoBPSweb: A web-based framework to simulate and compare breeding programs. bioRxiv (PREPRINT)
+			</h3>
+		    <a href="https://www.biorxiv.org/content/10.1101/2020.07.08.193227v1.abstract" target="_blank">Go to Paper</a>
+			<br>
+			
+			<h3> Simianer, H., L. Büttgen, A. Ganesan, N.T. Ha, T. Pook, 2020 A unifying concept of animal breeding programs. bioRxiv (PREPRINT)
+			</h3>
+		    <a href="https://www.biorxiv.org/content/10.1101/2020.07.08.193201v1.abstract" target="_blank">Go to Paper</a>
+			<br>
+			
+			<h3> Büttgen, L., J. Geibel, H. Simianer, T. Pook, 2020 Simulation Study on the Integration of Health Traits in Horse Breeding Programs. Animals 10 (7), 1153.
+			</h3>
+		    <a href="https://www.mdpi.com/2076-2615/10/7/1153" target="_blank">Go to Paper</a>
+			<br>
+			
+			<h3> Simianer, H., T. Pook, M. Schlather, 2018 Turning the PAGE – the potential of genome editing in breeding for complex traits revisited. Proc. 11th WCGALP.
+			</h3>
+		    <a href="https://www.researchgate.net/profile/Torsten_Pook/publication/339129930_Turning_the_PAGE_-the_potential_of_genome_editing_in_breeding_for_complex_traits_revisited/links/5e3ef827458515072d8a94aa/Turning-the-PAGE-the-potential-of-genome-editing-in-breeding-for-complex-traits-revisited.pdf" target="_blank">Go to Paper</a>
+			<br><br>
+			
+			<a href="https://www.uni-goettingen.de/de/publikationen/93141.html" target="_blank">All publications from our working group</a>
+	
+			<br><br>
+		</div>	
+	
+		<div class="footer">
+			<div class="f1">
+				<p>CONTACT:</p>  <br>
+				Torsten Pook<br>
+				Department of Animal Breeding and Genetics<br>
+				Albrecht-Thaer-Weg 3<br>
+				37075 Goettingen<br>
+				torsten.pook (at) uni-goettingen.de<br>
+			</div> 
+			
+			<div class="f2">		
+				<img src="./styles/img/maze_logo_noback.png" alt="" style="width:180px;height:115px;">
+				<div class="textDiv"> This project has received funding from the German Federal Ministry of Education and Research under funding ID 031B0195.</div> 
+			</div>
+			
+			<div class="f3">		
+				<img src="./styles/img/sponsor1.png" alt="" style="width:160px;height:115px;">
+			</div>  
+			
+			<div class="f4">
+				<img src="./styles/img/project2.png" alt="" style="width:180px;height:115px;">
+			</div> 
+			
+			<div class="f5">
+				<img src="./styles/img/sponsor2.jpg" alt="" style="width:140px;height:95px;padding-top:5px;padding-left:40px;">
+				<div class="textDiv" style="padding-left:40px;">This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 677353.</div>
+			</div> 
+		</div>
+	</div>	
 	
 	<script type="text/javascript" src="javascript/menu_pages.js"></script>
 

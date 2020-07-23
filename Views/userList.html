@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+	
+	<meta charset="utf-8"/><title>MoBPS User List</title>
+	
+<style type="text/css">	
+body {
+	margin-left:20;
+	padding:0;
+	height:100%;
+	background-color: #d0daf0; 
+}
+
+.one {
+	width: 50%;
+	float: left;
+}
+
+.two {
+	width:40%;
+	float:right;
+	margin-right:100px;
+}
+
+.usersList {
+	margin-bottom:20px;
+	width: 100%;
+	border: 1px solid darkblue;
+	font-size: 13px;
+	font-family: verdana, arial, sans-serif;
+}
+
+.usersList th {
+	text-align: left;
+	padding: 2px;
+}
+
+.usersList td {
+	text-align: left;
+	padding: 3px;
+}
+
+.usersList tr:nth-child(even){background-color: white}
+
+.projectList {
+	width: 100%;
+	font-size: 13px;
+	font-family: verdana, arial, sans-serif;
+	margin-bottom:20px;
+}
+
+.projectList th {
+	text-align: left;
+	padding: 2px;
+}
+
+.projectList td {
+	text-align: left;
+	padding: 5px;
+}
+
+.btn .submit {
+	font-size: 13px;
+	font-family: verdana, arial, sans-serif;
+}
+
+.projectText {
+	font-size: 15px;
+    font-family: verdana, arial, sans-serif;
+}
+</style>
+
+</head>
+	
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+
+		<script type="text/javascript" src="javascript/jQ1.js"></script>
+		<script type="text/javascript" src="javascript/jQ2.js"></script>
+		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
+		<script type="text/javascript" src="javascript/jQ3.js"></script>
+	
+<body onLoad="init()">
+
+  	<section class="container">
+		<a href="http://localhost:8080/home">MoBPS Home</a> 
+		<br>
+	
+		<div id="app">
+	
+		<div v-if="!isEditing">
+			 
+			<form action="addUsertoDB" id = "userForm" method="POST"> 
+			<br>
+			    <table >
+				<tr>
+					<td> User Name: </td>
+					<td> <input type="text" name="username" id = "username" v-model="userDB._id" placeholder="Username" required> </td>
+				</tr>
+				<tr>
+					<td> Password: </td>
+					<td> <input type="text" name="password" id="password" v-model="userDB.passw" placeholder="Password" required> </td>
+				</tr>				
+				<tr>
+					<td> Group: </td>
+					<td> <select v-model="userDB.group" name="group" id="group" required>
+							  <option>1</option>
+							  <option>2</option>
+							  <option>3</option>
+								<option>4</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td> <input type="hidden" name="createdDate" id="createdDate" v-model="userDB.createdDate"  placeholder="group" required> </td>
+				</tr>
+				<tr>
+					<td> <input type="hidden" name="updatedDate" id="updatedDate" v-model="userDB.updatedDate"  placeholder="group" required> </td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="Add a User"></td>
+				</tr>
+				
+				</table>						
+			</form>	
+			
+			<form action="addStudentsToDB" id = "userForm" method="POST">		
+			    <table>
+				<tr>
+					<td> User Name: </td>
+					<td> <input type="text" name="username" id = "username" v-model="students.username" placeholder="username" required> </td>
+				</tr>
+				<tr>
+					<td> From: </td>
+					<td> <input type="text" name="from" id = "from" v-model="students.from" placeholder="from" required> </td>
+					<td> to: </td>
+					<td> <input type="text" name="to" id="to" v-model="students.to" placeholder="to" required> </td>
+				</tr>
+				<tr>
+					<td> Password: </td>
+					<td> <input type="text" name="password" id="to" v-model="students.password" placeholder="password" required> </td>
+				</tr>
+				<tr>
+					<td> Group: </td>
+					<td><select v-model="userDB.group" name="group" id="group" required>
+							  <option>1</option>
+							  <option>2</option>
+							  <option>3</option>
+								<option>4</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td> <input type="hidden" name="createdDate" id="createdDate" v-model="students.createdDate"  placeholder="createdDate" required> </td>
+				</tr>
+				<tr>
+					<td> <input type="hidden" name="updatedDate" id="updatedDate" v-model="students.updatedDate"  placeholder="updatedDate" required> </td>
+				</tr>
+				<tr>
+					<td><input type="submit" class="submit" value="Add Multiple Users"></td>
+				</tr>
+				</table>						
+			</form>	
+			
+		</div>
+		
+		<div v-else>
+		<br>
+			<form action="updateUsertoDB" id = "userForm" method="POST">
+			<br>
+			    <table>
+				<tr>
+					<td> User Name: </td>
+					<td> <input type="text" name="username" id = "username" v-model="userDB['_id']" placeholder="Username" readonly> </td>
+				</tr>
+				<tr>
+					<td> Password: </td>
+					<td> <input type="text" name="passw" id="passw" v-model="userDB['passw']"  placeholder="password" required> </td>
+				</tr>
+				<tr>
+					<td> Group: </td>
+					<td><select v-model="userDB['group']" name="group" id="group" required>
+							  <option>1</option>
+							  <option>2</option>
+							  <option>3</option>
+							  <option>4</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><input type="submit" class="submit" value="Update a User"></td>
+					<td><input type="submit" class="submit" formaction="loginFromUserList" value="Login"></td>
+				</tr>
+				</table>						
+			</form>			
+		</div>
+		
+		<h3> Users List</h3>				
+
+		<div id='userListDB' class="one">
+			<table class = "usersList">
+				<thead>
+					<tr><th class="boldText"> User Name </th>
+						<th class="boldText">Group </th>
+						<th class="boldText">Created Date </th>
+						<th class="boldText">Updated Date </th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr v-for='(user, index) in userListDB'>
+						<td><input id="userId" type="hidden" v-model="userListDB[index]['_id']"> {{userListDB[index]['_id']}} </td>
+						<td> {{userListDB[index]['group']}} </td>
+						<td> {{userListDB[index]['createdDate']}} </td>
+						<td> {{userListDB[index]['updatedDate']}} </td>
+						<td> <button class="btn"  @click="editUser(user)"> Edit </button> </td>
+						<td> <button class="btn" @click="deleteUser(user)"> Delete </button></td> 
+						<td> <button class="btn" @click="getProjectList(user)"> Get Projects</button></td>					
+					</tr>					
+			</table>				
+		</div>
+		<div id='getProjectsFortheUser' v-if="getProjectsFortheUser !== '' " class="two">
+			<table class="projectList">
+				<thead>
+					<tr><th class="boldText"> Project Name </th>
+						<th class="boldText">Created Date </th>
+						<th class="boldText">Updated Date </th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr v-for='(project, index) in getProjectsFortheUser'>
+						<td>  {{getProjectsFortheUser[index]['name']}} </td>
+						<td> {{getProjectsFortheUser[index]['createdDate']}} </td>
+						<td> {{getProjectsFortheUser[index]['updatedDate']}} </td>
+						<td> <button class="btn" @click="deleteProject(project)"> Delete </button></td> 
+					</tr>					
+			</table>			 			
+		</div>		
+		<div v-else>
+			<p class="projectText"> There are no projects available. </p>
+		</div> 
+	</div>
+	
+	</section>
+		
+	<script type="text/javascript" src="javascript/userList_database.js"></script> 
+
+</body>
+</html>

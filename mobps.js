@@ -17,6 +17,8 @@ var mobpsLoginRouter = require('./routes/index');
 var homeRouter = require('./routes/home');
 var compareProjectsRouter = require('./routes/compareProjects');
 
+var UsersRouter = require("./routes/Users")
+
 var app = express();
 
 // socket for streaming R output:
@@ -29,6 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', mobpsLoginRouter);
 app.use('/', homeRouter);
 app.use('/', compareProjectsRouter);
+
+app.use('/users', UsersRouter)
 
 app.use(fileUpload({
 	limits: {fileSize: 1024*1024*1024 *1024},
@@ -84,6 +88,7 @@ app.get('/user', function(request, response) {
 });
 
 app.get('/logout', function(request, response) {
+	console.log(request.session);
 	if (request.session.loggedin) {
 		request.session.destroy();
 		response.redirect('/');
@@ -753,7 +758,8 @@ app.post('/save', function(request, response) {
 		if (err) throw err;
 		var dbo = db.db("DB");
 		var versions = [{date: Date(), json: JSON.parse(request.body.jsondata)}];
-		var myobj = {name: request.body.name, json: JSON.parse(request.body.jsondata), versions: versions};
+				var createdDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var myobj = {name: request.body.name, json: JSON.parse(request.body.jsondata), versions: versions, createdDate:createdDate};
 		dbo.collection(request.session.username).insertOne(myobj, function(err, result){
 			if (err) throw err;
 			//console.log("1 document inserted");
@@ -774,8 +780,8 @@ app.post('/update', function(request, response) {
 		
 		var versions = JSON.parse(request.body.versions);
 		versions.push({date: Date(), json: JSON.parse(request.body.jsondata)});
-
-		var newvalues = {$set: {json: JSON.parse(request.body.jsondata), versions: versions}};
+		var updatedDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var newvalues = {$set: {json: JSON.parse(request.body.jsondata), versions: versions, updatedDate:updatedDate}};
 		dbo.collection(request.session.username).updateOne(myquery, newvalues, function(err, result){
 			if (err) throw err;
 			db.close();	
@@ -800,6 +806,168 @@ app.post('/delete', function(request, response) {
 		});
 	}); 
 	response.end();
+});
+
+
+// ************* Access to Database related code from Interface ********************///
+//All users from DB 
+app.get('/getAllUsersFromDB', function(request, response) {
+	if (request.session.loggedin) {
+		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db("DB");
+				dbo.collection("Users").find().toArray(function(err, result) {
+				if (err) throw err;
+				//console.log(result);
+				db.close();	
+				response.send(result);		
+			});
+		}); 
+	} else {
+		response.send('');
+	}
+});
+
+
+// save a new User to DB:
+app.post('/addUsertoDB', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var createdDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var myobj = {_id: request.body.username, passw: request.body.password, group: request.body.group, createdDate: createdDate};
+		
+		dbo.collection("Users").insertOne(myobj, function(err, result){
+			if (err) {
+				var errM = request.body.username + ' - User already exist!';
+				response.send(errM.fontcolor("red"));
+			}
+			else {
+				db.close();		
+				response.redirect('/users');
+			}	
+		});
+	}); 
+});
+
+// add Students to DB:
+app.post('/addStudentsToDB', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var studentsObj = [];
+		var start = request.body.from;
+		var end = request.body.to;
+			for(let i=start;i<=end; i++){
+				studentsObj.push({_id: request.body.username+i, passw: request.body.password+i, group: request.body.group, createdDate: request.body.createdDate});
+			}
+			dbo.collection("Users").insertMany(studentsObj, function(err, result){
+			if (err) {
+				var errM = request.body.username + ' - User is already exist!';
+				response.send(errM.fontcolor("red"));
+			}
+			else {
+			console.log("Users are inserted");
+			db.close();		
+			response.redirect('/users');
+			}	
+		});
+	}); 
+});
+
+
+// update a User to DB:
+app.post('/updateUsertoDB', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var updatedDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		dbo.collection("Users").updateOne({_id: request.body.username}, {$set : {passw: request.body.passw, group: request.body.group, updatedDate: updatedDate}},
+		{upsert:true});
+			if (err) throw err;
+			db.close();		
+			response.redirect('/users');	
+		});
+	}); 
+	
+	
+// delete a Project:
+app.post('/deleteUser', function(request, response) {
+	console.log(request.body);
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var myobj = {_id: request.body._id };
+		dbo.collection("Users").deleteOne(myobj, function(err, result){
+			if (err) throw err;
+			console.log("1 user deleted");
+			db.close();		
+		});
+	}); 
+	response.end();
+});
+
+//Project list from a selected user 
+app.get('/getProjectList', function(request, response) {
+	if (request.session.loggedin) {
+		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db("DB");
+			dbo.collection(request.query._id).find({}).toArray(function(err, result) { 
+				if (err) throw err;
+				console.log(result);
+				db.close();	
+				response.send(result);		
+			});
+		}); 
+	} else {
+		response.send('');
+	}
+});
+
+
+// delete Project from User module:
+app.post('/deleteProject', function(request, response) {
+	console.log(request.body);
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var myobj = {name: request.body.name };
+		dbo.collection(request.body.user).deleteOne(myobj, function(err, result){
+			if (err) throw err;
+			console.log("1 document deleted");
+			db.close();		
+		});
+	}); 
+	response.end();
+});
+
+// login User from User Admin 
+app.post('/loginFromUserList', function(request, response) {
+	var username = request.body.username;
+	var password = request.body.passw;
+	if (username && password) {
+		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db("DB");
+			dbo.collection("Users").find({_id: username, passw:password}).toArray(function(err, result){
+				if(result.length > 0){
+					request.session.loggedin = true;
+					request.session.username = username;
+					request.session.usergroup = result[0]['group'];
+										
+					db.close();	
+					response.redirect('/home');
+				} else {
+					db.close();	
+					response.send('Incorrect Username and/or Password!');
+				}	
+			});
+		}); 
+	} else {
+		response.send('Please enter Username and Password!');
+		response.end();
+	}
 });
 
 

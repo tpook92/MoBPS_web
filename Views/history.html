@@ -7,31 +7,33 @@
 
 <body>
 
-  <section class="container">
-			<div class="header_image1">
+	<div class="logos" >
+		<div class="header_image1">
 			<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:430px;height:88px;">
 		</div>
 		<div class="header_image2">
 			<img src="./styles/img/cibreed_logo_noback.png" alt="" style="width:210px;height:70px;" >
 		</div>
-		<br>
+	</div>
 		
-    <div class="topnav">
-      <a href="http://www.mobps.de/">MoBPS Home</a>
+    <div class="topnav" id="menuItems" style="position:fixed; z-index:10">
+      <a href="http://mobps.de/">MoBPS Home</a>
       <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
-	  <a onclick="func('publication');">Publications</a>
+      <a onclick="func('publication');">Publications</a>
 	  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
 	  <a onclick="func('intro');">Introduction to MoBPS </a>
 	  <a onclick="func('faq');">FAQ  </a>
-	  <a onclick="func('history');">Version history </a>
+	  <a class="active" onclick="func('history');">Version history </a>
 	  <a onclick="func('agb');">AGB</a>
 	</div>
-
-		<header> The MoBPS Web-interface is still in an open beta stage!</header>
+	
+	<div class="container">
+		<h1> The MoBPS Web-interface is still in an open beta stage!</h1>
 		
 		<!--tr> <img src="./styles/img/5884.png"" alt="Construction" style="width:500px"> 										</tr-->	
-		<h3> Version history (last updated 22/07/20):</h3>		
-		
+		<div id="body">
+			<h3> Version history (last updated 22/07/20):</h3>		
+			
 			<div id="para"> 
 				Our web-application is currently running using MoBPS v1.05.28. 
 				<br> New tutorial videos for YouTube are planned, but currently not the priority! 
@@ -45,13 +47,10 @@
 				Published a MoBPS study on health traits in Horse in <a href="https://pubmed.ncbi.nlm.nih.gov/32645982/" target="_blank">Animals</a> <br>			
 			</div> 
 			
-			
 			<h3> June 2020 updates:</h3>
 			<div id="para"> Style Changes (mostly login-page) <br>
-				Back-end code isAdded confidence intervals in Output-modules <br>
 				Added confidence intervals in Output-modules <br>
 				Added repeatability as an advanced trait-option
-			
 			</div> 
 			
 			<h3> May 2020 updates:</h3>
@@ -88,8 +87,39 @@
 				Minor bug-fixes for parallel computing <br> 
 			</div>
 			
-	</section>	
-
+		</div>			
+	
+		<div class="footer">
+			<div class="f1">
+				<p>CONTACT:</p>  <br>
+				Torsten Pook<br>
+				Department of Animal Breeding and Genetics<br>
+				Albrecht-Thaer-Weg 3<br>
+				37075 Goettingen<br>
+				torsten.pook (at) uni-goettingen.de<br>
+			</div> 
+			
+			<div class="f2">		
+				<img src="./styles/img/maze_logo_noback.png" alt="" style="width:180px;height:115px;">
+				<div class="textDiv"> This project has received funding from the German Federal Ministry of Education and Research under funding ID 031B0195.</div> 
+			</div>
+			
+			<div class="f3">		
+				<img src="./styles/img/sponsor1.png" alt="" style="width:160px;height:115px;">
+			</div>  
+			
+			<div class="f4">
+				<img src="./styles/img/project2.png" alt="" style="width:180px;height:115px;">
+			</div> 
+			
+			<div class="f5">
+				<img src="./styles/img/sponsor2.jpg" alt="" style="width:140px;height:95px;padding-top:5px;padding-left:40px;">
+				<div class="textDiv" style="padding-left:40px;">This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 677353.</div>
+			</div> 			
+		</div>
+		
+	</div>	
+	
 	<script type="text/javascript" src="javascript/menu_pages.js"></script>
 
 </body>

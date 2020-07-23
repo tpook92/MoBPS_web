@@ -7,84 +7,85 @@
 
 <body>
 
-  	<section class="container">
-		<div class="header_image1">
-			<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:430px;height:88px;">
+	<div id="container">
+		<div class="logos">
+			<div class="header_image1">
+				<img src="./styles/img/ugo_logo.png"" alt="University of Goettingen" style="width:450px;height:100px;">
+			</div>
+			<div class="header_image2">
+				<img src="./styles/img/cibreed_logo_noback.png" alt="" style="width:250px;height:80px;" >
+			</div>
+			
+		    <div class="topnavLogin">
+		      <a class="active" href="http://mobps.de/">MoBPS Home</a>
+		      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
+		      <a onclick="func('publication');">Publications</a>
+			  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
+			  <a onclick="func('intro');">Introduction to MoBPS </a>
+			  <a onclick="func('faq');">FAQ  </a>
+			  <a onclick="func('history');">Version history </a>
+			  <a onclick="func('agb');">AGB</a>
+			</div>
 		</div>
-		<div class="header_image2">
-			<img src="./styles/img/cibreed_logo_noback.png" alt="" style="width:230px;height:75px;" >
-		</div>
-		<br>
-	
-	    <div class="topnav">
-	      <a href="http://www.mobps.de/">MoBPS Home</a> 
-	      <a href="https://www.uni-goettingen.de/de/mitarbeiterinnen/92843.html" target="_blank">Team</a>
-	      <a onclick="func('publication');">Publications</a>
-		  <a href="https://github.com/tpook92/MoBPS" target="_blank">Github</a>
-		  <a onclick="func('intro');">Introduction to MoBPS </a>
-		  <a onclick="func('faq');">FAQ  </a>
-		  <a onclick="func('history');">Version history </a>
-		  <a onclick="func('agb');">AGB</a>
-		</div>
-		<br>
-		<header> MoBPS Login </header>
-				
-		<div class="login-form">
-			<form action="auth" id = "loginForm" method="POST">
-			    <label for="username">User Name</label><br>
-				<input type="text" name="username" id = "username" placeholder="Username" required>
-				<br>
-				<label for="password">Password</label><br>
-				<input type="password" name="password" id="password" placeholder="Password" required>
-				<input type="submit" value="Login">		
-			</form>		
-			<br>
-			<input type="button"  class="guestLogin"  value="Guest Login" onClick="guestLogin();">	
-		</div>
-		
-		<div class="chromeLogo">
-			<img src="./styles/img/chrome_develop.png" style="width:80px;height:80px;" >
-			<h2>Developed and optimized in Google Chrome.</h2>
- 		</div>
 
-		<div class="newsTicker">
-		  <h3>Recent updates:</h3>
-		  <p> Added maternal / paternal traits (update to MoBPS v.1.5.28) (22/7/20) </p>
-		  <p> Added MoBPS-specific publication page & started FAQ (17/7/20) </p>
-		  <p> Solved Log-Out issues when switching to CompareProject (13/7/20)</p>
-		</div>
+		<h1> MoBPS Login </h1>
 		
+		<div id="body">
+			<div class="login-form">		
+				<form action="auth" id = "loginForm" method="POST">
+				    <label for="username">User Name</label><br>
+					<input type="text" name="username" id = "username" placeholder="Username" required>
+					<br>
+					<label for="password">Password</label><br>
+					<input type="password" name="password" id="password" placeholder="Password" required>
+					<input type="submit" value="Login">		
+				</form>		
+				<br>
+				<input type="button"  class="guestLogin"  value="Guest Login" onClick="guestLogin();">	
+			</div>
 		
-	</section>	
+			<div class="chromeLogo">
+				<img src="./styles/img/chrome_develop.png" style="width:80px;height:80px;" >
+				<h2>Developed and optimized in Google Chrome.</h2>
+	 		</div>
 	
-	<div class="footer">
-		<div class="f1">
-			<p>CONTACT:</p>  <br>
-			Torsten Pook<br>
-			Department of Animal Breeding and Genetics<br>
-			Albrecht-Thaer-Weg 3<br>
-			37075 Goettingen<br>
-			torsten.pook (at) uni-goettingen.de<br>
-		</div> 
+			<div class="newsTicker">
+			  <h3>Recent updates:</h3>
+			  <p> Added maternal / paternal traits (update to MoBPS v.1.5.28) (22/7/20) </p>
+			  <p> Added MoBPS-specific publication page & started FAQ (17/7/20) </p>
+			  <p> Solved Log-Out issues when switching to CompareProject (13/7/20)</p>
+			</div>
+		</div>	
+	
+		<div class="footer">
+			<div class="f1">
+				<p>CONTACT:</p>  <br>
+				Torsten Pook<br>
+				Department of Animal Breeding and Genetics<br>
+				Albrecht-Thaer-Weg 3<br>
+				37075 Goettingen<br>
+				torsten.pook (at) uni-goettingen.de<br>
+			</div> 
+			
+			<div class="f2">		
+				<img src="./styles/img/maze_logo_noback.png" alt="" style="width:180px;height:115px;">
+				<div class="textDiv"> This project has received funding from the German Federal Ministry of Education and Research under funding ID 031B0195.</div> 
+			</div>
+			
+			<div class="f3">		
+				<img src="./styles/img/sponsor1.png" alt="" style="width:160px;height:115px;">
+			</div>  
+			
+			<div class="f4">
+				<img src="./styles/img/project2.png" alt="" style="width:180px;height:115px;">
+			</div> 
+			
+			<div class="f5">
+				<img src="./styles/img/sponsor2.jpg" alt="" style="width:140px;height:95px;padding-top:5px;padding-left:40px;">
+				<div class="textDiv" style="padding-left:40px;">This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 677353.</div>
+			</div> 
 		
-		<div class="f2">		
-			<img src="./styles/img/maze_logo_noback.png" alt="" style="width:180px;height:115px;">
-			<div class="textDiv"> This project has received funding from the German Federal Ministry of Education and Research under funding ID 031B0195.</div> 
 		</div>
-		
-		<div class="f3">		
-			<img src="./styles/img/sponsor1.png" alt="" style="width:160px;height:115px;">
-		</div>  
-		
-		<div class="f4">
-			<img src="./styles/img/project2.png" alt="" style="width:180px;height:115px;">
-		</div> 
-		
-		<div class="f5">
-			<img src="./styles/img/sponsor2.jpg" alt="" style="width:140px;height:95px;padding-top:0px;padding-left:40px;">
-			<div class="textDiv" style="padding-left:40px;">This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreement No 677353.</div>
-		</div> 
-		
 	</div>
 	
 	<script type="text/javascript" src="javascript/menu_pages.js"></script>

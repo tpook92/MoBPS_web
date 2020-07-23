@@ -23,3 +23,22 @@
 		document.getElementById("username").value = "Guest";
 		document.getElementById("password").value = "guest";
 	}  
+	
+	
+	
+	// when scroll the content the menu items stay on top!
+	
+	window.onscroll = function() {scrollFunction()};
+	
+	var header = document.getElementById("menuItems");
+	
+	var sticky = header.offsetTop;
+	
+	function scrollFunction() {
+	  if (window.pageYOffset > sticky) {
+	    header.classList.add("sticky");
+	  } else {
+	    header.classList.remove("sticky");
+	  }
+	}
+

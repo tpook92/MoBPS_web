@@ -1,6 +1,19 @@
-body { 
-  background-color: #d0daf0; 
-  margin-left :7%;
+body {
+	margin:0;
+	padding:0;
+	height:100%;
+	background-color: #d0daf0; 
+}
+
+h1 {
+	margin-top:55px;
+	margin-left :7%;
+	font-size: 15pt;
+	font-weight:bold;
+	text-align:left;
+	color: darkblue;
+	width:85%;
+	font-family: verdana, arial, sans-serif;
 }
 
 h2 {font-size:12px; }
@@ -12,16 +25,15 @@ h3 {
 
 h4 {font-size:14px; }
 
-p {font-size:13px; }
-
-.container {
-  	position: absolute;
-  	background-color: #d0daf0;
-  	width:90%;
-	height: 150px;
-	margin: auto;
-	padding: 10px;
-	cursor: pointer;
+p {font-size:11pt; 
+	line-height: 1.5;
+	font-family: verdana, arial, sans-serif;
+	}
+	
+.logos {
+	margin-left :7%;
+	margin-right :7%;
+   	padding:8px;
 }
 
 .header_image1 {
@@ -36,53 +48,30 @@ p {font-size:13px; }
 .header_image2 {	
    	float: right;
    	min-width: 100px;
-   	width: 20%;
+   	width: 18%;
   	background-color: #d0daf0;
 	padding-right:80px;
 	padding-bottom:10px;
  }
 
- 
-/* The navbar */
-.topnav {
-  overflow: hidden;
-  width: 100%;
-  background-color: #4A5289;
+.container {
+	margin-top:20px;
+	min-height:79%;
+	width:99.9%;
+	position:absolute;
+	padding-bottom:190px;   /* Height of the footer */
+
 }
 
-
-
-/* Navbar links */
-.topnav a {
-  float: left;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 15px;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-weight:bold;
+#body {
+	margin-left :7%;
+	margin-right :17%;
+   	padding:5px;
+	height:100%;
 }
 
-.topnav a:hover {
-  background-color: #d0daf0;
-  color: black;
-  text-decoration: underline;
-}
-
-.topnav a.active {
-  background-color: darkgreen;
-  color: white;
-}
-
-header {
-	font-size: 13pt;
-	font-weight:bold;
-	text-align:left;
-	padding-top:10px;
-}
-
-.login-form {
+#body .login-form {
+	margin-left:7px;
 	width: 20%;
 	height:100%;
 	margin-top: 50px;
@@ -91,15 +80,8 @@ header {
 	font-size: 14px;
 }
 
-.login-form h1 {
-	text-align: left;
-	color: #4d4d4d;
-	font-size: 14px;
-	padding: 20px 0 20px 0;
-}
-
-.login-form input[type="password"],
-.login-form input[type="text"] {
+#body .login-form input[type="password"],
+#body .login-form input[type="text"] {
 	width: 80%;
 	padding: 15px;
 	border: 1px solid darkblue;
@@ -109,7 +91,7 @@ header {
     border-radius: 4px;
 }
 
-.login-form input[type="submit"] {
+#body .login-form input[type="submit"] {
 	width: 80%;
 	padding: 15px;
 	background-color: #535b63;
@@ -120,7 +102,61 @@ header {
 	color: #ffffff;
 	font-size: 13px;
 }
-		
+
+#body .chromeLogo {
+	width: 11%;
+	height:100%;
+	margin-top: 50px;
+	margin-left: 150px;
+	float: left;
+}
+
+#body .newsTicker {
+	width: 45%;
+	height:100%;
+	margin-top: 50px;
+	margin-left: 150px;
+	float: left;
+}
+
+#body .newsTicker p {
+	font-size:12pt;
+}
+
+#body .chromeLogo h2 {
+	font-size:10pt;
+}
+	
+/* The navbar */
+.topnavLogin {
+  overflow: hidden;
+  width: 100%;
+  background-color: #4A5289;
+}
+
+/* Navbar links */
+.topnavLogin a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 18px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight:bold;
+}
+
+.topnavLogin a:hover {
+  background-color: #d0daf0;
+  color: black;
+  text-decoration: underline;
+}
+
+.topnavLogin a.active {
+  background-color: darkgreen;
+  color: white;
+}
+
 .guestLogin {
   padding: 15px;
   width:80%;
@@ -136,87 +172,35 @@ header {
   box-shadow: 0 2px #999;
 }
 
-.footer {
-	position: absolute;
-   	left: 0;
-   	bottom: 0px;
-  	width: 100%;
-	height:25%;
-   	background-color: gray;
-   	color: white;
-   	text-align: center;
-}
-
- .f1,
- .f2,
- .f3,
- .f4,
- .f5 {
-   	display: inline-block;
-   	font-size: 12px;
-   	width: 18%;
-	background: gray;
- }
  
- .f6{
-	display: inline-block;
-   	font-size: 12px;
-   	width: 18%;
- }
-
-.f1 {
-    text-align: left;
-	font-size: 12px;
-  }
-
-.f2, .f5 {
-    text-align: left;
-	font-size: 12px;
-  }
-
-.textDiv {
-	width:200px;
-	height:30px;
-	font-size: 12px;
-	text-align: left;
+/* The navbar */
+.topnav {
+  margin-left:7%;
+  width: 85%;
+  background-color: #4A5289;
 }
 
-.textDiv2 {
-	width:150px;
-	height:30px;
-	font-size: 15px;
-	text-align: left;
+/* Navbar links */
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 13pt;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight:bold;
 }
 
-.tinyheight {
-	height:5px;
+.topnav a:hover {
+  background-color: #d0daf0;
+  color: darkblue;
+  text-decoration: underline;
 }
 
-/* intro page */
-header {
-	margin-top:20px;
-	font-size:15pt;
-	font-family: verdana, arial, sans-serif;
-	color:darkblue;
-}
-#wrapper {
-    width: 85%;
-    overflow: auto;
-}
-#paragraph {
-	padding-top:20px;
-	padding-left:20px;
-	padding-right:100px;
-	padding-bottom:20px;
-    float: left;
-    width: 500px;
-	line-height: 1.5;
-	font-size:11pt;
-	font-family: verdana, arial, sans-serif;
-}
-#image {
-	float: left;
-    width: 300px;
+.topnav a.active {
+  background-color: darkgreen;
+  color: white;
 }
 
 #para {
@@ -231,22 +215,81 @@ header {
 	font-family: verdana, arial, sans-serif;
 }
 
-.chromeLogo {
-	width: 10%;
-	height:100%;
-	margin-top: 50px;
-	margin-left: 160px;
-	float: left;
-	font-family: britanica;
-	font-size: 14px;
+.footer {
+	position: absolute;
+   	left: 0;
+   	bottom: 0px;
+  	width: 99.9%;
+	height:190px;
+   	background-color: gray;
+   	color: white;
+   	text-align: center;
 }
 
-.newsTicker {
-	width: 40%;
-	height:100%;
-	margin-top: 50px;
-	margin-left: 160px;
+ .f1,
+ .f2,
+ .f3,
+ .f4,
+ .f5 {
+   	display: inline-block;
+   	font-size: 13px;
+   	width: 18%;
+	background: gray;
+ }
+
+.f1 {
+    text-align: left;
+	font-size: 13px;
+  }
+
+.f2, .f5 {
+    text-align: left;
+	font-size: 13px;
+  }
+
+.f5 .textDiv {
+	width:200px;
+	height:30px;
+	font-size: 12px;
+	text-align: left;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 80%;
+}
+
+.sticky + .container {
+  padding-top: 2px;
+}
+
+/* intro page */
+header {
+	margin-top:20px;
+	font-size:15pt;
+	font-family: verdana, arial, sans-serif;
+	color:darkblue;
+}
+
+#wrapper {
+    width: 85%;
+    overflow: auto;
+}
+
+#paragraph {
+	padding-top:20px;
+	padding-left:20px;
+	padding-right:100px;
+	padding-bottom:20px;
+    float: left;
+    width: 500px;
+	line-height: 1.5;
+	font-size:11pt;
+	font-family: verdana, arial, sans-serif;
+}
+
+#image {
 	float: left;
-	font-family: britanica;
-	font-size: 14px;
+    width: 300px;
 }

@@ -75,6 +75,8 @@
 					<a href="#Export_Data_H3">Export/ Import</a>
 					<a v-if="geninfo['curUserGroup'] != 1" href="/Change_Password"> Change Password</a>
 					<a href="/logout"> User: {{user}} <br> <br> Logout</a>
+					<br>
+					<a v-if="geninfo['curUserGroup'] >= 3" href="/users"> Access to Database</a>
 			</div>			
 
 			<div class="navlinks" >
@@ -918,7 +920,7 @@
 							</td>
 
 
-							
+
 							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_maternal']" >
 							</td>
@@ -926,10 +928,10 @@
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_paternal']" >
 							</td>
 							
+					
 							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_combi']" v-on:change="createCombi(index)" >
 							</td>
-							
 							<td style="width:1%;padding-right:17px;" v-if = "trait['is_combi'] == false">
 								<input class="phenoNumber" v-model="trait['Trait Major QTL']"  type="number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
 							</td>
