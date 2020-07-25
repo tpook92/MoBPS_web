@@ -76,7 +76,7 @@
 					<a v-if="geninfo['curUserGroup'] != 1" href="/Change_Password"> Change Password</a>
 					<a href="/logout"> User: {{user}} <br> <br> Logout</a>
 					<br>
-					<a v-if="geninfo['curUserGroup'] >= 3" href="/users"> Access to Database</a>
+					<a v-if="geninfo['curUserGroup'] >= 4" href="/users"> Access to Database</a>
 			</div>			
 
 			<div class="navlinks" >
@@ -838,11 +838,12 @@
 							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true" > paternal trait
 								<span class="tooltip">&#9432 <span class="tooltiptext">Genomic value of the trait is caused by the father</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true" > combination of traits
-								<span class="tooltip">&#9432 <span class="tooltiptext"> This trait is a linear combination of other traits</span></span>
-							</td>
+
 							<td>Major QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to manually add single marker effects to SNPs with known effects.</span></span>
+							</td>
+							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true" > combination of traits
+								<span class="tooltip">&#9432 <span class="tooltiptext"> This trait is a linear combination of other traits</span></span>
 							</td>
 							<td>Value per unit (&#8364;)
 								<span class="tooltip">&#9432 <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
@@ -929,14 +930,15 @@
 							</td>
 							
 					
-							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true">
-								<input class="phenoCheck" type="checkbox" v-model="trait['is_combi']" v-on:change="createCombi(index)" >
-							</td>
+
 							<td style="width:1%;padding-right:17px;" v-if = "trait['is_combi'] == false">
 								<input class="phenoNumber" v-model="trait['Trait Major QTL']"  type="number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
 							</td>
 							<td style="width:1%;padding-right:17px;" v-if = "trait['is_combi'] == true">
 								<input class="phenoNumberReadOnly" v-model="trait['Trait Major QTL']"  type="number" class="no-spinners" step=1 v-on:change="createQTL(index)" readonly> 
+							</td>
+							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true">
+								<input class="phenoCheck" type="checkbox" v-model="trait['is_combi']" v-on:change="createCombi(index)" >
 							</td>
 							<td style="width:1%;padding-right:14px;">
 								<input class="phenoNumber" v-model="trait['Trait Value per Unit']"  type="number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  

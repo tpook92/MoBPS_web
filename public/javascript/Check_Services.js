@@ -154,33 +154,38 @@ function checkEverything(id){
 
 
 				if(data_Vue.geninfo.advanced_trait && data_Vue.geninfo.advanced){
-					gen_warn_text = "Repeatability for phenotype"+(i+1)+" must be between Heritability and 1";
-					if(data_Vue.geninfo.advanced_trait & ( data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
-						data_Vue.warnings2.push(gen_warn_text);
-					}
 					
-					gen_warn_text = "Repeatability set to Heritability"; 
-					if(data_Vue.geninfo.advanced_trait & ( data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
-						data_Vue.warnings2.push(gen_warn_text);
-					}
-					
-					checkPoly = isPositiveInt(data_Vue.traitsinfo[i].dominant_qtl);
-					gen_warn_text = "Number of dominant QTL not provided for phenotype"+(i+1)
-					if(data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
-						data_Vue.warnings2.push(gen_warn_text);
+					if(data_Vue.geninfo.advanced_trait_repeat){
+						gen_warn_text = "Repeatability for phenotype"+(i+1)+" must be between Heritability and 1";
+						if(data_Vue.geninfo.advanced_trait & data_Vue.traitsinfo[i]['Trait Repeatability'] != "" & ( data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+							data_Vue.warnings2.push(gen_warn_text);
+						}
+						
+						gen_warn_text = "Repeatability set to Heritability"; 
+						if(data_Vue.geninfo.advanced_trait & data_Vue.traitsinfo[i]['Trait Repeatability'] != "" & ( data_Vue.traitsinfo[i]['Trait Heritability'] > data_Vue.traitsinfo[i]['Trait Repeatability'] ||  data_Vue.traitsinfo[i]['Trait Repeatability'] > 1) & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+							data_Vue.warnings2.push(gen_warn_text);
+						}
 					}
 
-					checkPoly = isPositiveInt(data_Vue.traitsinfo[i].qualitative_qtl);
-					gen_warn_text = "Number of qualitative epistatic QTL not provided for phenotype"+(i+1)
-					if(data_Vue.geninfo.advanced_trait &  checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
-						data_Vue.warnings2.push(gen_warn_text);
-					}
+					if(data_Vue.geninfo.advanced_trait_epi){
+						checkPoly = isPositiveInt(data_Vue.traitsinfo[i].dominant_qtl);
+						gen_warn_text = "Number of dominant QTL not provided for phenotype"+(i+1)
+						if(data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+							data_Vue.warnings2.push(gen_warn_text);
+						}
 
-					
-					checkPoly = isPositiveInt(data_Vue.traitsinfo[i].quantitative_qtl);
-					gen_warn_text = "Number of quantitative epistatic QTL not provided for phenotype"+(i+1)
-					if((data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1)) {
-						data_Vue.warnings2.push(gen_warn_text);
+						checkPoly = isPositiveInt(data_Vue.traitsinfo[i].qualitative_qtl);
+						gen_warn_text = "Number of qualitative epistatic QTL not provided for phenotype"+(i+1)
+						if(data_Vue.geninfo.advanced_trait &  checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
+							data_Vue.warnings2.push(gen_warn_text);
+						}
+
+						
+						checkPoly = isPositiveInt(data_Vue.traitsinfo[i].quantitative_qtl);
+						gen_warn_text = "Number of quantitative epistatic QTL not provided for phenotype"+(i+1)
+						if((data_Vue.geninfo.advanced_trait & checkPoly == false & data_Vue.warnings2.indexOf(gen_warn_text) == -1)) {
+							data_Vue.warnings2.push(gen_warn_text);
+						}
 					}
 				}
 
