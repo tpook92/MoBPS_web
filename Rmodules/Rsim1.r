@@ -232,6 +232,22 @@ for(rr in names(result)){
 json <- as.character(toJSON(result))
 write.table(json, file=paste(fname,"Summary.json",sep=""), row.names=FALSE, col.names=FALSE, quote=FALSE)
 
+
+if(length(warnings)>=0){
+  log <- paste(fname,"_warnings.log",sep="")
+  if(log != FALSE){
+    zz <- file(log, open="wt")
+    sink(zz, append = TRUE, type = c("output"), split=TRUE)
+  }
+  print(warnings())
+  if(log != FALSE){
+    sink(zz, append = TRUE, type = c("message"))
+    warnings()
+    sink(NULL)
+    sink(NULL, type=c("message"))
+  }
+}
+
 ################################################################################
 ################ Simulation success without Errors ##############################
 ################################################################################

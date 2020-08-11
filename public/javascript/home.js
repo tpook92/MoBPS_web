@@ -85,6 +85,7 @@ function myGeneral () {
 	this['advanced_advanced_reli'] = false; 
 	this['advanced_advanced_last'] = false; 
 	this['advanced_advanced_del'] = false; 
+	this['advanced_advanced_scaling'] = false;
 //	this['Ensembl Filter'] = "";
 //	this['Ensembl Filter Values'] = "";
 	this['Number of Chromosomes'] = '';
@@ -1478,6 +1479,9 @@ function importNetwork_intern(inputData1) {
 	}
 	if(data_Vue.geninfo['advanced_advanced_del']==undefined){
 		data_Vue.geninfo['advanced_advanced_del'] = false;
+	}
+	if(data_Vue.geninfo['advanced_advanced_scaling']==undefined){
+		data_Vue.geninfo['advanced_advanced_scaling'] = false;
 	}
 	
 	if(data_Vue.plottingData.confidence==undefined){

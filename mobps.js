@@ -65,6 +65,10 @@ app.post('/auth', function(request, response) {
 					request.session.username = username;
 					request.session.usergroup = result[0]['group'];
 					
+					var lastloginDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+					dbo.collection("Users").updateOne({_id: request.body.username}, {$set : {lastloginDate: lastloginDate}},
+					{upsert:true});
+					if (err) throw err;
 					db.close();	
 					response.redirect('/home');			
 				} else {
@@ -835,7 +839,7 @@ app.post('/addUsertoDB', function(request, response) {
 		if (err) throw err;
 		var dbo = db.db("DB");
 		var createdDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
-		var myobj = {_id: request.body.username, passw: request.body.password, group: request.body.group, createdDate: createdDate};
+		var myobj = {_id: request.body.username, passw: request.body.password, group: request.body.group, email: request.body.email, createdDate: createdDate};
 		
 		dbo.collection("Users").insertOne(myobj, function(err, result){
 			if (err) {
@@ -882,7 +886,7 @@ app.post('/updateUsertoDB', function(request, response) {
 		if (err) throw err;
 		var dbo = db.db("DB");
 		var updatedDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
-		dbo.collection("Users").updateOne({_id: request.body.username}, {$set : {passw: request.body.passw, group: request.body.group, updatedDate: updatedDate}},
+		dbo.collection("Users").updateOne({_id: request.body.username}, {$set : {passw: request.body.passw, group: request.body.group, email: request.body.email, updatedDate: updatedDate}},
 		{upsert:true});
 			if (err) throw err;
 			db.close();		
@@ -969,7 +973,6 @@ app.post('/loginFromUserList', function(request, response) {
 		response.end();
 	}
 });
-
 
 var server = http.listen(8080);
 server.setTimeout(5*24*60*60*1000); // 6 hours

@@ -25,6 +25,17 @@ h3 {
 
 h4 {font-size:14px; }
 
+h5 {
+	margin-top:20px;
+	margin-left :7%;
+	font-size: 15pt;
+	font-weight:bold;
+	text-align:left;
+	color: darkblue;
+	width:85%;
+	font-family: verdana, arial, sans-serif;
+}
+
 p {font-size:11pt; 
 	line-height: 1.5;
 	font-family: verdana, arial, sans-serif;
@@ -74,7 +85,7 @@ p {font-size:11pt;
 	margin-left:7px;
 	width: 20%;
 	height:100%;
-	margin-top: 50px;
+	margin-top: 0px;
 	float: left;
 	font-family: britanica;
 	font-size: 14px;
@@ -107,7 +118,7 @@ p {font-size:11pt;
 	width: 11%;
 	height:100%;
 	margin-top: 50px;
-	margin-left: 150px;
+	margin-left: 135px;
 	float: left;
 }
 
@@ -115,12 +126,12 @@ p {font-size:11pt;
 	width: 45%;
 	height:100%;
 	margin-top: 50px;
-	margin-left: 150px;
+	margin-left: 135px;
 	float: left;
 }
 
 #body .newsTicker p {
-	font-size:12pt;
+	font-size:11pt;
 }
 
 #body .chromeLogo h2 {

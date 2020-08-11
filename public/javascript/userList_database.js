@@ -6,6 +6,8 @@ function userDB (){
 	this._id = "",
 	this.passw = "",
 	this.group = "",
+	this.email = "",
+	this.lastloginDate = "",
 	this.createdDate="",
 	this.updatedDate=""
 }
@@ -16,6 +18,8 @@ function students (){
 	this.to = "",
 	this.passw=','
 	this.group = "2",
+	this.email = "",
+	this.lastloginDate = "",
 	this.createdDate="",
 	this.updatedDate=""
 }
@@ -50,6 +54,8 @@ var data_Vue = new Vue({
 			this._id = thisEdit._id;
 			this.passw = thisEdit.passw;
 			this.group = thisEdit.group;
+			this.email = thisEdit.email;
+			this.lastloginDate = thisEdit.lastloginDate;
 			this.createdDate= thisEdit.createdDate;
 			this.updatedDate= thisEdit.updatedDate;
   			this.isEditing = true;

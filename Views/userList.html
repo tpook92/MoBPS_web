@@ -83,7 +83,7 @@ body {
 <body onLoad="init()">
 
   	<section class="container">
-		<a href="http://mobps.de/home">MoBPS Home</a> 
+		<a href="http://localhost:8080/home">MoBPS Home</a> 
 		<br>
 	
 		<div id="app">
@@ -102,6 +102,10 @@ body {
 					<td> <input type="text" name="password" id="password" v-model="userDB.passw" placeholder="Password" required> </td>
 				</tr>				
 				<tr>
+					<td> Email: </td>
+					<td> <input type="text" name="email" id="email" v-model="userDB.email" placeholder="email"> </td>
+				</tr>
+				<tr>
 					<td> Group: </td>
 					<td> <select v-model="userDB.group" name="group" id="group" required>
 							  <option>1</option>
@@ -112,10 +116,13 @@ body {
 					</td>
 				</tr>
 				<tr>
-					<td> <input type="hidden" name="createdDate" id="createdDate" v-model="userDB.createdDate"  placeholder="group" required> </td>
+					<td> <input type="hidden" name="lastloginDate" id="lastloginDate" v-model="userDB.lastloginDate"  placeholder="lastloginDate" required> </td>
 				</tr>
 				<tr>
-					<td> <input type="hidden" name="updatedDate" id="updatedDate" v-model="userDB.updatedDate"  placeholder="group" required> </td>
+					<td> <input type="hidden" name="createdDate" id="createdDate" v-model="userDB.createdDate"  placeholder="createdDate" required> </td>
+				</tr>
+				<tr>
+					<td> <input type="hidden" name="updatedDate" id="updatedDate" v-model="userDB.updatedDate"  placeholder="updatedDate" required> </td>
 				</tr>
 				<tr>
 					<td><input type="submit" value="Add a User"></td>
@@ -138,7 +145,7 @@ body {
 				</tr>
 				<tr>
 					<td> Password: </td>
-					<td> <input type="text" name="password" id="to" v-model="students.password" placeholder="password" required> </td>
+					<td> <input type="text" name="password" id="password" v-model="students.password" placeholder="password" required> </td>
 				</tr>
 				<tr>
 					<td> Group: </td>
@@ -178,6 +185,10 @@ body {
 					<td> <input type="text" name="passw" id="passw" v-model="userDB['passw']"  placeholder="password" required> </td>
 				</tr>
 				<tr>
+					<td> email: </td>
+					<td> <input type="text" name="email" id="email" v-model="userDB['email']"  placeholder="email" required> </td>
+				</tr>
+				<tr>
 					<td> Group: </td>
 					<td><select v-model="userDB['group']" name="group" id="group" required>
 							  <option>1</option>
@@ -186,6 +197,10 @@ body {
 							  <option>4</option>
 						</select>
 					</td>
+				</tr>
+				<tr>
+					<td> Last Login: </td>
+					<td> <input type="text" name="lastloginDate" id = "lastloginDate" v-model="userDB['lastloginDate']" placeholder="lastloginDate" readonly> </td>
 				</tr>
 				<tr>
 					<td><input type="submit" class="submit" value="Update a User"></td>
@@ -202,6 +217,8 @@ body {
 				<thead>
 					<tr><th class="boldText"> User Name </th>
 						<th class="boldText">Group </th>
+						<th class="boldText">Email </th>
+						<th class="boldText">Last Login Date </th>						
 						<th class="boldText">Created Date </th>
 						<th class="boldText">Updated Date </th>
 					</tr>
@@ -210,6 +227,8 @@ body {
 					<tr v-for='(user, index) in userListDB'>
 						<td><input id="userId" type="hidden" v-model="userListDB[index]['_id']"> {{userListDB[index]['_id']}} </td>
 						<td> {{userListDB[index]['group']}} </td>
+						<td> {{userListDB[index]['email']}} </td>
+						<td> {{userListDB[index]['lastloginDate']}} </td>
 						<td> {{userListDB[index]['createdDate']}} </td>
 						<td> {{userListDB[index]['updatedDate']}} </td>
 						<td> <button class="btn"  @click="editUser(user)"> Edit </button> </td>

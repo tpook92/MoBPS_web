@@ -517,6 +517,15 @@
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_del']">
 							</td>
 						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td style="text-indent:20px;">Ignore Size scaling
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
+							</td>
+							<td style="text-indent:20px;"> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_scaling']">
+							</td>
+						</tr>
 					<tr>
 					
 					
@@ -1655,6 +1664,15 @@
 								<option v-for="ivar in individualsVar_options" v-bind:value="ivar.name">
 							</datalist>
 						</td>	
+					</tr>
+					
+					<tr v-show= "geninfo['advanced'] && geninfo['advanced_advanced'] && geninfo['advanced_advanced_scaling'] && (geninfo['individual-scaling'] != '' || geninfo['individual-scaling'] != 1)">
+						<td>Ignore Size scaling
+							<span class="tooltip">&#9432 <span class="tooltiptext">Are the individuals in this cohort founders or are they generated?</span></span>
+						</td>
+						<td> 
+							<input type="checkbox" v-model="active_node.active_scaling">
+						</td>
 					</tr>
 					
 					<tr>
