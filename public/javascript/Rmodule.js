@@ -144,7 +144,8 @@ function runningR1(){
 			
 			loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
 			loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
-	
+			loadWarningsLogOfSimulation(data_Vue.geninfo['Project Name']);
+			
 			writeSum();
 		},
 		error: function(obj, msg, err)

@@ -59,6 +59,7 @@ function myGeneral () {
 	this['advanced'] = false;
 	this['advanced_test'] = false;
 	this['advanced_history'] = false; 
+	this['advanced_litter'] = false; 
 	this['advanced_miraculix'] = true;
 	this['advanced_parallel'] = false;
 	this['advanced_trait'] = false;
@@ -148,6 +149,10 @@ function myEconomy (){
 	this['Interest Rate'] = 0,
 	this['Genotyping Cost'] = 50,
 	this['Animal Housing Costs'] = [{Name: "No Housing", Cost: 0}, {Name: 'Male individuals', Cost: 2000}, {Name: 'Female individuals', Cost: 3000}]
+}
+
+function myLitter(){
+	this['litter_info'] = [{name: "1", prob : 1}]
 }
 
 function myCulling (){
@@ -243,6 +248,7 @@ var data_Vue = new Vue({
 		traitsinfo: [],
 		economy: new myEconomy(),
 		culling: new myCulling(),
+		litter_size: new myLitter(),
 		use_phenotypic_cor: false,
 		subpopulation: new myPopulation(),
 		matrix: [],
@@ -293,6 +299,7 @@ var data_Vue = new Vue({
 		isDraggableOption:'',
 		cohortsList :[],
 		cohortsTimeList : [],
+		warningsLog:[],
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -611,6 +618,19 @@ var data_Vue = new Vue({
 			this.subpopulation['subpopulation_list'].push(newSub);	
 			document.getElementById("newSubpopulationClass").value='';				
 		},	
+		createSize(){
+			var so = 1;
+			var new_name = 1;
+			
+			for(var i=0; i<this.litter_size['litter_info'].length; i++){
+				so = so - this.litter_size['litter_info'][i].prob ;
+				new_name = Number(this.litter_size['litter_info'][i].name) + 1;
+			}
+			
+			var newSize = {name: new_name, prob: so};
+			this.litter_size['litter_info'].push(newSize);
+		},
+		
 		removeHCostClass: function(si, ind){
 			
 			var items = this.nodes.getIds({
@@ -636,6 +656,10 @@ var data_Vue = new Vue({
 			
 			this.subpopulation['subpopulation_list'].splice(ind,1);
 
+		},
+		
+		removeSize: function(ind){
+			this.litter_size['litter_info'].splice(ind,1);
 		},
 
 		// add a new selection index:
@@ -1292,6 +1316,7 @@ function exportNetwork() {
 		'Phenotyping Info': data_Vue.phenotyping_class,
 		'Economy': data_Vue.economy,
 		'Culling': data_Vue.culling,
+		'litter_size' : data_Vue.litter_size,
 		'Subpopulation': data_Vue.subpopulation,
 		'Phenotypic Correlation': mat1,
 		'PhenotypicResidual': data_Vue.use_phenotypic_cor,
@@ -1399,6 +1424,9 @@ function importNetwork_intern(inputData1) {
 	}
 	if(data_Vue.geninfo['advanced_history']==undefined){
 		data_Vue.geninfo['advanced_history'] = false;
+	}
+	if(data_Vue.geninfo['advanced_litter']==undefined){
+		data_Vue.geninfo['advanced_litter'] = false;
 	}
 	if(data_Vue.geninfo['advanced_miraculix']==undefined){
 		data_Vue.geninfo['advanced_miraculix'] = true;
@@ -1510,6 +1538,12 @@ function importNetwork_intern(inputData1) {
 		data_Vue.economy = inputData['Economy'];
 	}else{
 		data_Vue.economy = new myEconomy();
+	}
+	
+	if(inputData['litter_size']){
+		data_Vue.litter_size = inputData['litter_size'];
+	} else{
+		data_Vue.litter_size = new myLitter();
 	}
 	if(inputData['Culling']){
 		data_Vue.culling = inputData['Culling'];
@@ -1643,7 +1677,7 @@ function loadCohortInfoFromServer(name) {
 		success: function (data) {
 			if (data != '') {
 				data_Vue.cohortsList = csvToJSON(data);
-				console.log(data_Vue.cohortsList);
+				//console.log(data_Vue.cohortsList);
 				return data_Vue.cohortsList;
 				}
 			}		
@@ -1659,10 +1693,27 @@ function loadCohortTimeInfoFromServer(name) {
 		success: function (data) {
 			if (data != '') {
 				data_Vue.cohortsTimeList = csvToJSON(data);
-				console.log(data_Vue.cohortsTimeList);
+				//console.log(data_Vue.cohortsTimeList);
 				return data_Vue.cohortsTimeList;
 				}
 			}		
+	})
+}
+
+//function to get Warnings Log from Server
+function loadWarningsLogOfSimulation(name) {
+	$.ajax
+	({
+		type: "GET",
+		url: '/getWarningsInfo',
+		success: function (data) {
+			if (data != '') {
+				thisText = data.split("\n");
+				data_Vue.warningsLog = thisText;
+				alert("Your R - Simulation contains warnings during the simulation. Check R Warnings!");	
+				return data_Vue.warningsLog;
+				}
+			}			
 	})
 }
 
@@ -2223,6 +2274,7 @@ function isSafari() {
 }
 
 function loadData(ind){
+		data_Vue.warningsLog='';
 	data_Vue.allNodesforNewEdge = [];
 	localStorage.clear();
 	sessionStorage.clear();

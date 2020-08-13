@@ -608,6 +608,22 @@ app.get('/getCohortTimeInfo', function(request, res){
 	}
 });
 
+// Get warnings log file
+app.get('/getWarningsInfo', function(request, res){	
+	if (request.session.filename) {
+		var warningsFile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'_warnings.log');
+		fs.readFile(warningsFile, function(err, data){
+			if(err){
+				var message = '';
+				res.send(message);
+				console.log(message);
+			}else{
+			res.send(data);
+			}
+			});
+	}
+});
+
 // Get .txt for download
 app.get('/txtdownload', function(request, res){	
 	if (request.session.filename) {

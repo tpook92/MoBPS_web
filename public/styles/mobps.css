@@ -1261,3 +1261,22 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
 
 
 .cohortsListTime tr:nth-child(even){background-color: lightgrey}
+
+.scrollableTable1 {  width: 55%; }
+.scrollableTable1 td { border-collapse: collapse; border: 0px solid #000; }
+.scrollableTable1 thead { display: table; width: calc(100% - 17px); }
+.scrollableTable1 tbody { display: block; max-height: 200px; overflow-y: scroll; }
+.scrollableTable1 th, td { width: 10%; padding: 2px;  }
+.scrollableTable1 tr { display: table; width: 100%; box-sizing: border-box; }
+.scrollableTable1 td { text-align: center; border-bottom: none; border-left: none; }
+.scrollableTable1 tr:nth-child(even){background-color: lightgrey}
+
+.scrollableTable2 {  width: 40%; }
+.scrollableTable2 td { border-collapse: collapse; border: 0px solid #000; }
+.scrollableTable2 thead { display: table; width: calc(100% - 17px); }
+.scrollableTable2 tbody { display: block; max-height: 200px; overflow-y: scroll; }
+.scrollableTable2 th, td { width: 10%; padding: 2px; }
+.scrollableTable2 tr { display: table; width: 100%; box-sizing: border-box; }
+.scrollableTable2 td { text-align: center; border-bottom: none; border-left: none; }
+.scrollableTable2 tr:nth-child(even){background-color: lightgrey}
+
