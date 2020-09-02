@@ -1710,9 +1710,11 @@ function loadWarningsLogOfSimulation(name) {
 			if (data != '') {
 				thisText = data.split("\n");
 				data_Vue.warningsLog = thisText;
-				alert("Your R - Simulation contains warnings during the simulation. Check R Warnings!");	
+				if (data_Vue.warningsLog.length>2) {
+					alert("Your R - Simulation contains warnings during the simulation. Check R Warnings!");	
+				}				
 				return data_Vue.warningsLog;
-				}
+				}	
 			}			
 	})
 }

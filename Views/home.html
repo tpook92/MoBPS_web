@@ -2190,7 +2190,7 @@
 				-->
 				
 				<br>
-					<div style="color:red;" v-for="(number, index) in warningsLog" :key="index">
+					<div v-if="warningsLog.length >2" style="color:red;" v-for="(number, index) in warningsLog" :key="index">
 						{{warningsLog[index]}}
 					</div>
 				<br>
