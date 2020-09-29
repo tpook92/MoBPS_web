@@ -688,7 +688,7 @@ button[disabled]{
 .drag_table td {
 	padding:5px;
 	height:20px;
-  	width: 60px;
+  	width: 56px;
 	font-size:8pt;
 	font-family:cambria;
 	font-weight:bold;
@@ -802,7 +802,7 @@ button[disabled]{
 
 
 .phenoTransfo {
-	width:200px;
+	width:120px;
 	font-size:10pt;
 	height:18px;
 	border:2px solid lightblue;
@@ -894,18 +894,33 @@ select{
 	display:none;
 	position:fixed;
 	top:5vw;
-	left:25%;
+	left:15%;
 	bottom:0%;
 	right:25%;
 	z-index:700;
 	width:600px;
-	height:500px;
+	height:600px;
 	background-color: #f9f9f9;
 	border-style:solid;
 	border-width:3px;
 	border-color: #5394ed;
-	padding:30px;
+	padding:25px;
 	overflow-y: scroll;
+}
+
+#edge_cohorts_Div {
+	text-align:left;
+	display:none;
+	position:fixed;
+	top:5vw;
+	left:55%;
+	bottom:0%;
+	right:25%;
+	z-index:700;
+	width:400px;
+	height:600px;
+	padding:25px;
+	overflow-x: scroll;
 }
 
 #node-drag {
@@ -1259,5 +1274,22 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
 }
 
 
-
 .cohortsListTime tr:nth-child(even){background-color: lightgrey}
+
+.scrollableTable1 {  width: 55%; }
+.scrollableTable1 td { border-collapse: collapse; border: 0px solid #000; }
+.scrollableTable1 thead { display: table; width: calc(100% - 17px); }
+.scrollableTable1 tbody { display: block; max-height: 200px; overflow-y: scroll; }
+.scrollableTable1 th, td { width: 10%; padding: 2px;  }
+.scrollableTable1 tr { display: table; width: 100%; box-sizing: border-box; }
+.scrollableTable1 td { text-align: center; border-bottom: none; border-left: none; }
+.scrollableTable1 tr:nth-child(even){background-color: lightgrey}
+
+.scrollableTable2 {  width: 40%; }
+.scrollableTable2 td { border-collapse: collapse; border: 0px solid #000; }
+.scrollableTable2 thead { display: table; width: calc(100% - 17px); }
+.scrollableTable2 tbody { display: block; max-height: 200px; overflow-y: scroll; }
+.scrollableTable2 th, td { width: 10%; padding: 2px; }
+.scrollableTable2 tr { display: table; width: 100%; box-sizing: border-box; }
+.scrollableTable2 td { text-align: center; border-bottom: none; border-left: none; }
+.scrollableTable2 tr:nth-child(even){background-color: lightgrey}
