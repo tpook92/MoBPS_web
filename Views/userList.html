@@ -83,7 +83,7 @@ body {
 <body onLoad="init()">
 
   	<section class="container">
-		<a href="http://localhost:8080/home">MoBPS Home</a> 
+		<a href="https://mobps.de/home">MoBPS Home</a> 
 		<br>
 	
 		<div id="app">
@@ -241,6 +241,8 @@ body {
 			<table class="projectList">
 				<thead>
 					<tr><th class="boldText"> Project Name </th>
+											<th class="boldText"> SharedWith </th>
+						<th class="boldText"> isShared </th>
 						<th class="boldText">Created Date </th>
 						<th class="boldText">Updated Date </th>
 					</tr>
@@ -248,6 +250,8 @@ body {
 					<tbody>
 					<tr v-for='(project, index) in getProjectsFortheUser'>
 						<td>  {{getProjectsFortheUser[index]['name']}} </td>
+												<td>  {{getProjectsFortheUser[index]['sharedWith']}} </td>
+						<td>  {{getProjectsFortheUser[index]['isShared']}} </td>
 						<td> {{getProjectsFortheUser[index]['createdDate']}} </td>
 						<td> {{getProjectsFortheUser[index]['updatedDate']}} </td>
 						<td> <button class="btn" @click="deleteProject(project)"> Delete </button></td> 

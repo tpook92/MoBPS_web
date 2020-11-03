@@ -59,6 +59,7 @@ function myGeneral () {
 	this['advanced'] = false;
 	this['advanced_test'] = false;
 	this['advanced_history'] = false; 
+	this['advanced_litter'] = false; 
 	this['advanced_miraculix'] = true;
 	this['advanced_parallel'] = false;
 	this['advanced_trait'] = false;
@@ -86,6 +87,7 @@ function myGeneral () {
 	this['advanced_advanced_last'] = false; 
 	this['advanced_advanced_del'] = false; 
 	this['advanced_advanced_scaling'] = false;
+	this['advanced_advanced_copy'] = false;
 //	this['Ensembl Filter'] = "";
 //	this['Ensembl Filter Values'] = "";
 	this['Number of Chromosomes'] = '';
@@ -100,6 +102,8 @@ function myGeneral () {
 	this['Excel_File'] = '';
 	this['user']=''
 	//this['listOfCohorts_withInfo'] = '';
+		this['sharedWith']=[];
+	this['project_Sharer']='';
 }
 
 function myTrait (ind){
@@ -148,6 +152,10 @@ function myEconomy (){
 	this['Interest Rate'] = 0,
 	this['Genotyping Cost'] = 50,
 	this['Animal Housing Costs'] = [{Name: "No Housing", Cost: 0}, {Name: 'Male individuals', Cost: 2000}, {Name: 'Female individuals', Cost: 3000}]
+}
+
+function myLitter(){
+	this['litter_info'] = [{name: "1", prob : 1}]
 }
 
 function myCulling (){
@@ -243,12 +251,15 @@ var data_Vue = new Vue({
 		traitsinfo: [],
 		economy: new myEconomy(),
 		culling: new myCulling(),
+		litter_size: new myLitter(),
 		use_phenotypic_cor: false,
 		subpopulation: new myPopulation(),
 		matrix: [],
 		matrix2: [],
 		rlog: true,
-		
+		cohort_ids : [],
+		edge_ids : [],
+
 		show_geninfo: false,
 		show_menu: false,
 		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Salmon', 'Other'],
@@ -293,6 +304,10 @@ var data_Vue = new Vue({
 		isDraggableOption:'',
 		cohortsList :[],
 		cohortsTimeList : [],
+		warningsLog:[],
+				allDBUsers:[],
+		isPrShared:false,
+		isSharedExist:'',
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -321,7 +336,7 @@ var data_Vue = new Vue({
 		Breedingtype_options: ['Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'],
 		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
-		BVEMethod_options: ['Direct Mixed-Model', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
+		BVEMethod_options: ['Direct Mixed-Model', 'Last BVE', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
 		Cohorts_options: ['Only this cohort', 'Last Generation', 'Last 2 Generations', 'Last 3 Generations', 'All',  'Manual select'],
 		ensembl_options:{
 			Cattle: [
@@ -611,6 +626,19 @@ var data_Vue = new Vue({
 			this.subpopulation['subpopulation_list'].push(newSub);	
 			document.getElementById("newSubpopulationClass").value='';				
 		},	
+		createSize(){
+			var so = 1;
+			var new_name = 1;
+			
+			for(var i=0; i<this.litter_size['litter_info'].length; i++){
+				so = so - this.litter_size['litter_info'][i].prob ;
+				new_name = Number(this.litter_size['litter_info'][i].name) + 1;
+			}
+			
+			var newSize = {name: new_name, prob: so};
+			this.litter_size['litter_info'].push(newSize);
+		},
+		
 		removeHCostClass: function(si, ind){
 			
 			var items = this.nodes.getIds({
@@ -636,6 +664,10 @@ var data_Vue = new Vue({
 			
 			this.subpopulation['subpopulation_list'].splice(ind,1);
 
+		},
+		
+		removeSize: function(ind){
+			this.litter_size['litter_info'].splice(ind,1);
 		},
 
 		// add a new selection index:
@@ -1292,6 +1324,7 @@ function exportNetwork() {
 		'Phenotyping Info': data_Vue.phenotyping_class,
 		'Economy': data_Vue.economy,
 		'Culling': data_Vue.culling,
+		'litter_size' : data_Vue.litter_size,
 		'Subpopulation': data_Vue.subpopulation,
 		'Phenotypic Correlation': mat1,
 		'PhenotypicResidual': data_Vue.use_phenotypic_cor,
@@ -1400,6 +1433,9 @@ function importNetwork_intern(inputData1) {
 	if(data_Vue.geninfo['advanced_history']==undefined){
 		data_Vue.geninfo['advanced_history'] = false;
 	}
+	if(data_Vue.geninfo['advanced_litter']==undefined){
+		data_Vue.geninfo['advanced_litter'] = false;
+	}
 	if(data_Vue.geninfo['advanced_miraculix']==undefined){
 		data_Vue.geninfo['advanced_miraculix'] = true;
 	}
@@ -1483,12 +1519,18 @@ function importNetwork_intern(inputData1) {
 	if(data_Vue.geninfo['advanced_advanced_scaling']==undefined){
 		data_Vue.geninfo['advanced_advanced_scaling'] = false;
 	}
+	if(data_Vue.geninfo['advanced_advanced_copy']==undefined){
+		data_Vue.geninfo['advanced_advanced_copy'] = false;
+	}
 	
 	if(data_Vue.plottingData.confidence==undefined){
 		data_Vue.plottingData.confidence = false;
 	}
 	if(data_Vue.plottingData.legend==undefined){
 		data_Vue.plottingData.legend = true;
+	}
+		if(data_Vue.geninfo['sharedWith']==undefined){
+		data_Vue.geninfo['sharedWith'] = '';
 	}
 
 
@@ -1510,6 +1552,12 @@ function importNetwork_intern(inputData1) {
 		data_Vue.economy = inputData['Economy'];
 	}else{
 		data_Vue.economy = new myEconomy();
+	}
+	
+	if(inputData['litter_size']){
+		data_Vue.litter_size = inputData['litter_size'];
+	} else{
+		data_Vue.litter_size = new myLitter();
 	}
 	if(inputData['Culling']){
 		data_Vue.culling = inputData['Culling'];
@@ -1643,7 +1691,7 @@ function loadCohortInfoFromServer(name) {
 		success: function (data) {
 			if (data != '') {
 				data_Vue.cohortsList = csvToJSON(data);
-				console.log(data_Vue.cohortsList);
+				//console.log(data_Vue.cohortsList);
 				return data_Vue.cohortsList;
 				}
 			}		
@@ -1659,10 +1707,31 @@ function loadCohortTimeInfoFromServer(name) {
 		success: function (data) {
 			if (data != '') {
 				data_Vue.cohortsTimeList = csvToJSON(data);
-				console.log(data_Vue.cohortsTimeList);
+				//console.log(data_Vue.cohortsTimeList);
 				return data_Vue.cohortsTimeList;
 				}
 			}		
+	})
+}
+
+
+//function to get Warnings Log from Server
+function loadWarningsLogOfSimulation(name) {
+	$.ajax
+	({
+		type: "GET",
+		url: '/getWarningsInfo',
+		success: function (data) {
+			if (data != "") {
+
+				thisText = data.split("\n");
+				data_Vue.warningsLog = thisText;
+				if (data_Vue.warningsLog.length>2) {
+					alert("Your R - Simulation contains warnings during the simulation. Check R Warnings!");	
+				}	
+				return data_Vue.warningsLog;
+				}
+			}			
 	})
 }
 
@@ -1689,7 +1758,7 @@ function csvToJSON(cohorts) {
 
 // function to save data to database:
 
-function postProject(name, url, jsondata){
+function postProject(name, url, jsondata, sharedWith){
 	$.ajax
 	({
 		type: "POST",
@@ -1697,6 +1766,7 @@ function postProject(name, url, jsondata){
 		data: {
 			name: name,
 			jsondata : jsondata,
+						sharedWith:sharedWith,
 			versions: JSON.stringify(data_Vue.versions.reverse()),
 		},
 		success: function (data, msg) {
@@ -1721,6 +1791,7 @@ function postProject(name, url, jsondata){
 			document.getElementById('excelToArray').value = '';
 			document.getElementById("Version").value = "recent";
 			document.getElementById("SaveAs_Div").style.display = 'none';
+						document.getElementById("shareProject_Div").style.display = 'none';
 			loadData(name);
 		},
 		failure: function(msg) 
@@ -1741,6 +1812,364 @@ function FilterDatabase(){
 	data_Vue.database2 = database2;
 }
 
+function checkProjectExists() {
+	var checkProject = data_Vue.geninfo['Project Name']; 
+		var isProjectExist = data_Vue.database.includes(checkProject);
+		if(isProjectExist == false) {  
+			alert('Please save your project before using SHARE or STOP SHARE!')
+		}
+	return isProjectExist;
+}
+
+function checkSharedPrExists() {
+		var checkShared = data_Vue.geninfo['Project Name']; 
+		var isSharedExist = checkShared.substring(0,7);
+		var combineShare = "Shared_"+data_Vue.geninfo['Project Name'];
+		var isPrExist = data_Vue.database.includes(combineShare);
+		
+		if(isPrExist || isSharedExist === 'Shared_') { 
+			alert('You can not share this Project again!'); 
+			isShared = true; 
+		}
+		else {
+			isShared = false; 
+		}
+	return isShared;
+}
+
+	
+function shareUser(val) {
+	var thisUser = val;
+
+	for (var u=0; u<val.length; u++) {
+		var checkThisUser = val[u];
+		var X = data_Vue.allDBUsers.includes(checkThisUser);
+		if(X == false) { alert (thisUser+': One of the users is not existing from this User list'); 
+			u = val.length+2; 
+			loadData(data_Vue.geninfo['Project Name']); }
+	}
+	
+	if(!val){
+		data_Vue.geninfo['sharedWith'] = '';
+	}else{
+		data_Vue.geninfo['sharedWith'] = thisUser;
+	}
+	
+	data_Vue.geninfo['project_Sharer'] = data_Vue.geninfo['user'];
+	
+	var name = "Shared_"+data_Vue.geninfo['Project Name'];
+	data_Vue.geninfo['Project Name'] = name;
+
+	data_Vue.geninfo['isPrShared'] = true;
+	
+	var jsondata = JSON.stringify(exportNetwork());
+	data_Vue.geninfo['Excel_File'] = '';
+	
+	var sharedWith = data_Vue.geninfo['sharedWith'];
+	
+	if(data_Vue.versions.length > 10){
+		var r = confirm("Only the 10 most recent versions are saved. The oldest version will be deleted. Do you want to proceed? Alternative: Change the Project Name and save to create a new project");
+		if(!r) return;
+	}
+	
+	while(data_Vue.versions.length > 10){
+		data_Vue.versions.pop();
+	}
+	
+	document.getElementById('shareProject_Div').style.display = 'none';
+
+	if(X !== false) {
+		var usrCNT = thisUser.length;
+			if (usrCNT>0) {
+				for (var us=0; us<usrCNT; us++) {
+				var savetoThisUser = thisUser[us];
+				share_postProject(name, "/saveProjectWithOtherUser", jsondata, savetoThisUser, us);
+				}
+				var x = false;
+				share_postProject(name, "/saveProjectWithOtherUser", jsondata, data_Vue.geninfo['user'], x);
+			}		
+		}
+}
+
+function isShareUserExists(val) {
+		if (Array.isArray(val) ) {	
+			stopShareProject(val); 
+		}
+		else {
+			alert('You can not "STOP SHARE". The project is not shared now with any users OR The project is already stopped sharing by other User.')
+		}
+}
+
+function stopShareProject(val) {
+	var thisUser = val;
+		
+	var cnt = val.length;
+	
+	thisUser[cnt] = data_Vue.geninfo['user'];
+	
+	var name = data_Vue.geninfo['Project Name'];
+	data_Vue.geninfo['sharedWith'] = '';
+
+	var jsondata = JSON.stringify(exportNetwork());	
+
+	data_Vue.geninfo['Excel_File'] = '';	
+	
+	if(data_Vue.versions.length > 10){
+		var r = confirm("Only the 10 most recent versions are saved. The oldest version will be deleted. Do you want to proceed? Alternative: Change the Project Name and save to create a new project");
+		if(!r) return;
+	}
+	
+	while(data_Vue.versions.length > 10){ data_Vue.versions.pop(); }
+
+	var prExists = 	checkProjectExists();	
+	
+	if(prExists && val !== '') {
+		var getSharer = data_Vue.geninfo['project_Sharer']
+		var usrCNT = thisUser.length;
+		//alert('usrCNT:'+usrCNT);
+			if (usrCNT>0) {
+				for (var us=0; us<usrCNT; us++) {
+				var savetoThisUser = thisUser[us];
+				stop_shareProjectUsers(name, "/stop_sharedProjectWithOtherUser", jsondata, savetoThisUser, us, usrCNT);
+					if(data_Vue.geninfo['project_Sharer'] === savetoThisUser) {
+						saveSharedProToOri(name, getSharer);
+					}
+				
+				}
+			}			
+	}
+	else {
+	}	
+		var cShared = data_Vue.geninfo['Project Name']; 
+		var prName = 'Shared_'+cShared;
+		var prC = cShared.count;
+		var getPr = cShared.substring(7,prC);
+			if(data_Vue.geninfo['user'] === data_Vue.geninfo['project_Sharer']) {
+				if(data_Vue.geninfo['user'] === data_Vue.geninfo['project_Sharer']) 
+					loadData(cShared);
+ 			}
+			else {
+				data_Vue.geninfo['sharedWith'] = '';
+				loadData(prName);
+			}
+}
+
+
+function saveSharedProToOri(name, getSharer) {
+		var checkShared = data_Vue.geninfo['Project Name']; 
+		var prCNT = checkShared.count;
+		var getOriPr = checkShared.substring(7,prCNT);
+		var isSharedExist = checkShared.substring(0,7);
+
+		if(isSharedExist === 'Shared_') { 
+			data_Vue.geninfo['Project Name'] = getOriPr;
+		}
+			
+		var jsondata = JSON.stringify(exportNetwork());
+		data_Vue.geninfo['Excel_File'] = '';
+		
+		console.log(data_Vue.versions);
+		
+		if(data_Vue.versions.length > 10){
+			var r = confirm("Only the 10 most recent versions are saved. The oldest version will be deleted. Do you want to proceed? Alternative: Change the Project Name and save to create a new project");
+			if(!r) return;
+		}
+		
+		while(data_Vue.versions.length > 10){
+			data_Vue.versions.pop();
+		}
+		
+		updateToOrigPr(getOriPr, "/updateSharerProject", jsondata, getSharer);
+		deleteSharedProject(checkShared, getOriPr, getSharer);
+}
+
+function updateToOrigPr(name, url, jsondata, sharedWith){
+
+		$.ajax
+		({
+			type: "POST",
+			url: '/loadproject',
+			data: {name : name},
+			success: function (data, msg) {
+			if(data != ''){
+				if(data[0].versions.length > 0){
+					data_Vue.versions = data[0].versions.reverse();
+				}
+				} }
+		});
+		
+	$.ajax
+	({
+		type: "POST",
+		url: url,
+		data: {
+			name: name,
+			jsondata : jsondata,
+			projectSharer:sharedWith,
+			versions: JSON.stringify(data_Vue.versions.reverse()),
+		},
+		success: function (data, msg) {
+			$.post('/database', function(dat){
+				data_Vue.database = dat;
+			})
+		},
+		failure: function(msg) 
+		{
+			alert('Saving Error!');
+		},
+	});			
+}
+
+
+
+function deleteSharedProject(name, getOriPr, projectSharer) {
+			$.ajax
+			({
+				type: "POST",
+				url: "/deleteProject",
+				data: {
+					name: name,
+					user:projectSharer,
+				},
+				success: function (msg) {
+				},
+				failure: function(msg) 
+				{
+					alert('Delete Error!');
+				},
+			});	
+}
+
+
+function stop_shareProjectUsers(name, url, jsondata, sharedWith, shareCNT, userCNT){
+	var totalCNT = userCNT;
+	$.ajax
+	({
+		type: "POST",
+		url: url,
+		data: {
+			name: name,
+			jsondata : jsondata,
+			sharedWith:sharedWith,
+			versions: JSON.stringify(data_Vue.versions.reverse()),
+		},
+		success: function (data, msg) {
+			$.post('/database', function(dat){
+				data_Vue.database = dat;
+			})
+			
+			if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {
+				localStorage.clear();
+			}
+			else if (data_Vue['Upload_CorrFile'] == 'Yes') {
+				alert("Imported values from Excel successfully!");
+			}
+			else {
+				if(totalCNT == shareCNT+1) {
+					alert("Stopped sharing Success! To share this project again you have to use save as beforehand."); 
+					data_Vue.project_saved = true;
+					data_Vue.versions = data.reverse();
+		
+					document.getElementById('excelToArray').value = '';
+					document.getElementById("Version").value = "recent";
+					document.getElementById("SaveAs_Div").style.display = 'none';
+					document.getElementById("shareProject_Div").style.display = 'none';
+				}
+			}
+				
+		},
+		failure: function(msg) 
+		{
+			alert('Saving Error!');
+		},
+	});			
+}
+
+
+
+function share_postProject(name, url, jsondata, sharedWith, shareCNT){
+	var totalCNT = data_Vue.geninfo['sharedWith'].length;
+
+	$.ajax
+	({
+		type: "POST",
+		url: url,
+		data: {
+			name: name,
+			jsondata : jsondata,
+			sharedWith:sharedWith,
+			versions: JSON.stringify(data_Vue.versions.reverse()),
+		},
+		success: function (data, msg) {
+			$.post('/database', function(dat){
+				data_Vue.database = dat;
+			})
+			
+			if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {
+				localStorage.clear();
+			}
+			else if (data_Vue['Upload_CorrFile'] == 'Yes') {
+				alert("Imported values from Excel successfully!");
+			}
+			else {
+				var isNumber = Number.isFinite(shareCNT);
+				
+				if(isNumber && totalCNT == shareCNT+1) {
+					alert("Saving Success!"); 
+				}
+			
+			}
+				
+			data_Vue.project_saved = true;
+			data_Vue.versions = data.reverse();
+
+			document.getElementById('excelToArray').value = '';
+			document.getElementById("Version").value = "recent";
+			document.getElementById("SaveAs_Div").style.display = 'none';
+			document.getElementById("shareProject_Div").style.display = 'none';
+			loadData(name);
+		},
+		failure: function(msg) 
+		{
+			alert('Saving Error!');
+		},
+	});			
+}
+
+
+function share_SaveProject(name) {
+	if(!name){
+		var name = data_Vue.geninfo['Project Name'];
+	}else{
+		data_Vue.geninfo['Project Name'] = name;
+	}
+	var jsondata = JSON.stringify(exportNetwork());
+	data_Vue.geninfo['Excel_File'] = '';
+	
+	if(data_Vue.versions.length > 10){
+		var r = confirm("Only the 10 most recent versions are saved. The oldest version will be deleted. Do you want to proceed? Alternative: Change the Project Name and save to create a new project");
+		if(!r) return;
+	}
+	
+	while(data_Vue.versions.length > 10){
+		data_Vue.versions.pop();
+	}	
+
+	if(data_Vue.database.filter(function(obj){ return(obj==name)}).length > 0){
+			var usrCNT = data_Vue.geninfo['sharedWith'].length;
+			var curUser = 1;
+			if (usrCNT>0 && data_Vue.geninfo['sharedWith'] !== ' ') {
+				for (var us=0; us<usrCNT; us++) {
+				var savetoThisUser = data_Vue.geninfo['sharedWith'][us];
+				share_postProject(name, "/update_sharedProjectWithOtherUser", jsondata, savetoThisUser, us);
+				} 
+			}
+			postProject(name, "/updateProjectWithOtherUser", jsondata, data_Vue.geninfo['sharedWith']);
+	}
+	else {
+		postProject(name, "/save", jsondata, data_Vue.geninfo['sharedWith']);
+	}
+}
 
 function saveProject(name) {
 	if(!name){
@@ -1761,10 +2190,10 @@ function saveProject(name) {
 	}
 	
 	if(data_Vue.database.filter(function(obj){ return(obj==name)}).length > 0){
-		postProject(name, "/update", jsondata);
+		postProject(name, "/update", jsondata, data_Vue.geninfo['sharedWith']);
 	}else{
-		postProject(name, "/save", jsondata);
-	}
+		postProject(name, "/save", jsondata, data_Vue.geninfo['sharedWith']);
+	}	
 }
 
 function deleteProject() {
@@ -1796,6 +2225,14 @@ function deleteProject() {
 
 function saveProjectAs() {
 	document.getElementById("SaveAs_Div").style.display = 'block';
+}
+
+function shareProjectWith(val) {
+	var isPrExist = checkProjectExists();
+	var isShared = checkSharedPrExists();
+	if(isPrExist === true && isShared == false) {
+		document.getElementById("shareProject_Div").style.display = 'block';
+	}
 }
 
 // set the path of Own Map file, after map has been uploaded:
@@ -2096,6 +2533,7 @@ function saveNodeData(data, callback) {
 							if(res == data_Vue.tempNodeforCohort) { var isCohortExist = "yes";	}
 							updatedCohortNode.push(isCohortNode[j]);							
 						}
+																			document.getElementById('edge_cohorts_Div').style.display = 'block';
 					}
 					if (isCohortExist === "yes") { check_cohorts_edges.push(checkedgesforCohort[i]); }
 					isCohortExist = '';
@@ -2150,12 +2588,22 @@ function editEdgeWithoutDrag(data, callback) {
 	document.getElementById('edge-saveButton').onclick = saveEdgeData.bind(this, data, callback);
 	document.getElementById('edge-cancelButton').onclick = cancelEdgeEdit.bind(this,callback);
 	document.getElementById('edge-popUp').style.display = 'block';
-}
-
+	
+	// show-hide div for cohorts manual select
+	if (data_Vue.active_edge["Cohorts used in BVE"] == 'Manual select') {
+		document.getElementById('edge_cohorts_Div').style.display = 'block';
+	}
+	else {
+		document.getElementById('edge_cohorts_Div').style.display = 'none';
+	}
+	
+	}
+	
 function clearEdgePopUp() {
 	document.getElementById('edge-saveButton').onclick = null;
 	document.getElementById('edge-cancelButton').onclick = null;
 	document.getElementById('edge-popUp').style.display = 'none';
+		document.getElementById('edge_cohorts_Div').style.display = 'none';
 }
 
 function cancelEdgeEdit(callback) {
@@ -2191,6 +2639,7 @@ function init() {
   draw();
   updateUser();
   isSafari();  
+  shareUserTable();
 }
 
 
@@ -2213,6 +2662,20 @@ function updateUser(){
 		data_Vue.template_database = dat;
 		//console.log(dat);
 	})
+	
+		$.get('/getAllUsersFromDB', function(dat){
+		var tempArray = [];
+		tempArray = dat;
+		data_Vue.allDBUsers = tempArray;
+		var len = tempArray.length;
+		var tzUsers = [];	
+	  	for (var i = 0; i < len; i++) {
+		    var thisUser = tempArray[i]["_id"];
+			  tzUsers.push(thisUser);
+		}
+		data_Vue.allDBUsers = tzUsers;
+		})
+
 	data_Vue.project_saved = true;
 	localStorage.clear();
 }
@@ -2223,6 +2686,7 @@ function isSafari() {
 }
 
 function loadData(ind){
+	data_Vue.warningsLog='';
 	data_Vue.allNodesforNewEdge = [];
 	localStorage.clear();
 	sessionStorage.clear();
@@ -2237,18 +2701,43 @@ function loadData(ind){
 				if(data != ''){
 					data_Vue.filename = data[0].name;
 					importNetwork_intern(data[0].json);
+					
+										if(typeof data[0].sharedWith !== 'undefined') {
+							if (data[0].sharedWith.length > 0) {
+								data_Vue.geninfo['isPrShared'] = true;		
+								data_Vue.geninfo['sharedWith'] = data[0].sharedWith;}
+							else { 
+								data_Vue.geninfo['isPrShared'] = false;
+								data[0].sharedWith = ''; 
+								}
+						}
+					else { 
+						data_Vue.geninfo['isPrShared'] = false;
+						data_Vue.geninfo['sharedWith'] = '';
+						}
+				
+					if(data[0].isShared === "Yes") {
+						data_Vue.geninfo['isSharedExist'] = "Yes";	
+					}
+					else if (data[0].isShared === "No") {
+						data_Vue.geninfo['isSharedExist'] = "No";
+					}
+					else { 
+						data_Vue.geninfo['isSharedExist'] = '';
+					}
+					
 					if(data[0].versions.length > 0){
 						data_Vue.versions = data[0].versions.reverse();
 					}
 					document.getElementById("Version").value = "recent";
 					data_Vue.project_saved = true;
 					
-					checkEverything(id="General_Info")
-					checkEverything(id="Phenotype_Info_Div")
-					checkEverything(id="Selectionindex_Div")
-					checkEverything(id="Variables_Info")
-					checkEverything(id="edge-popUp")
-					checkEverything(id="node-popUp")
+					checkEverything(id="General_Info");
+					checkEverything(id="Phenotype_Info_Div");
+					checkEverything(id="Selectionindex_Div");
+					checkEverything(id="Variables_Info");
+					checkEverything(id="edge-popUp");
+					checkEverything(id="node-popUp");
 					
 				}else{
 					alert("Loading Data failed. Contact administrator.");
