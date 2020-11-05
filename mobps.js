@@ -64,7 +64,15 @@ app.post('/auth', function(request, response) {
 					request.session.loggedin = true;
 					request.session.username = username;
 					request.session.usergroup = result[0]['group'];
+					request.session.userShare = result[0]['share'];
 					
+					if(typeof request.session.userShare === 'undefined') {
+						request.session.userShare = '';
+					}
+					else { 
+						request.session.userShare = result[0]['share']; 
+					}
+						
 					var lastloginDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
 					dbo.collection("Users").updateOne({_id: request.body.username}, {$set : {lastloginDate: lastloginDate}},
 					{upsert:true});
@@ -608,6 +616,25 @@ app.get('/getCohortTimeInfo', function(request, res){
 	}
 });
 
+// Get warnings log file
+app.get('/getWarningsInfo', function(request, res){	
+	if (request.session.filename) {
+		var warningsFile = path.join(__dirname + '/Rmodules/UserScripts/'+request.session.username+'_'+request.session.filename+'_warnings.log');
+		fs.readFile(warningsFile, function(err, data){
+			if(err){
+				var message = '';
+				res.send(message);
+				console.log(message);
+			}else{
+				console.log("test")
+				console.log(data)
+			res.send(data);
+			}
+			});
+	}
+});
+
+
 // Get .txt for download
 app.get('/txtdownload', function(request, res){	
 	if (request.session.filename) {
@@ -753,6 +780,138 @@ app.post('/JSONgroup', function(request, response) {
 			response.send(data);
 		}
 	});
+});
+
+// saving Project with another user:
+app.post('/saveProjectWithOtherUser', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+				var thisJSON = JSON.parse(request.body.jsondata);
+				var allUserShares = thisJSON['Genomic Info']['sharedWith'];
+				allUserShares.push(request.session.username);
+		var dbo = db.db("DB");
+		var sharedWith = request.body.sharedWith;
+		isExist = allUserShares.includes(sharedWith); 
+		if (isExist) {
+			var thisUser = allUserShares.indexOf(sharedWith);
+			allUserShares.splice(thisUser,1);
+		}
+		var isShared="Yes";
+		var versions = JSON.parse(request.body.versions);
+		versions.push({date: Date(), json: JSON.parse(request.body.jsondata)});
+		var createdDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var myobj = {name: request.body.name, json: JSON.parse(request.body.jsondata), versions: versions, createdDate:createdDate, sharedWith:allUserShares, isShared:isShared};
+				dbo.collection(request.body.sharedWith).insertOne(myobj, function(err, result){
+					if (err) {
+						var errUser = request.body.sharedWith + ' - Please check if this User exist!';
+						response.send(errUser);
+					}
+					else {
+						db.close();
+						response.send(versions);
+					}
+			console.log("1 document inserted");
+		});
+	}); 
+});
+
+
+// update Project:
+app.post('/updateProjectWithOtherUser', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var sharedWith = request.body.sharedWith;
+		var myquery = {name: request.body.name };		
+		var isShared="Yes";
+		var versions = JSON.parse(request.body.versions);
+		versions.push({date: Date(), json: JSON.parse(request.body.jsondata)});
+		var updatedDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var newvalues = {$set: {json: JSON.parse(request.body.jsondata), versions: versions, updatedDate:updatedDate, sharedWith:sharedWith, isShared:isShared}};
+
+		dbo.collection(request.session.username).updateOne(myquery, newvalues, function(err, result){
+			if (err) throw err;
+			db.close();	
+		});		
+
+	}); 
+});
+
+// update shared Project:
+app.post('/update_sharedProjectWithOtherUser', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+			var thisJSON = JSON.parse(request.body.jsondata);
+			var allUserShares = thisJSON['Genomic Info']['sharedWith'];
+			allUserShares.push(request.session.username);
+		var dbo = db.db("DB");
+		var sharedWith = request.body.sharedWith;
+		isExist = allUserShares.includes(sharedWith); 
+		if (isExist) {
+			var thisUser = allUserShares.indexOf(sharedWith);
+			allUserShares.splice(thisUser,1);
+		}
+		var myquery = {name: request.body.name };		
+		var isShared="Yes";
+		var versions = JSON.parse(request.body.versions);
+		versions.push({date: Date(), json: JSON.parse(request.body.jsondata)});
+		var updatedDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var newvalues = {$set: {json: JSON.parse(request.body.jsondata), versions: versions, updatedDate:updatedDate, sharedWith:allUserShares, isShared:isShared}};
+		dbo.collection(request.body.sharedWith).updateOne(myquery, newvalues, function(err, result){
+			if (err) throw err;
+			db.close();	
+			response.send(versions);
+		});		
+	}); 
+});
+
+
+
+
+// STOP SHARE Project:
+app.post('/stop_sharedProjectWithOtherUser', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var myquery = {name: request.body.name };		
+		var nosharedUser = ' ';
+		var isShared="No";
+		var versions = JSON.parse(request.body.versions);
+		versions.push({date: Date(), json: JSON.parse(request.body.jsondata)});
+		var updatedDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var newvalues = {$set: {json: JSON.parse(request.body.jsondata), versions: versions, updatedDate:updatedDate, sharedWith:nosharedUser, isPrShared:true, isShared:isShared}};
+		dbo.collection(request.body.sharedWith).updateOne(myquery, newvalues, function(err, result){
+		if (err) {
+			var errUser = request.body.sharedWith + ' - Please check if this User exist to stop!';
+			response.send(errUser);
+			}
+		else {
+			db.close();
+			response.send(versions);
+			}
+		});		
+
+	}); 
+});
+
+// update Project for the Project Sharer:
+app.post('/updateSharerProject', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var myquery = {name: request.body.name };
+		var versions = JSON.parse(request.body.versions);
+		var isShared="No";
+		versions.push({date: Date(), json: JSON.parse(request.body.jsondata)});
+		var updatedDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var newvalues = {$set: {json: JSON.parse(request.body.jsondata), versions: versions, updatedDate:updatedDate, isShared:isShared}};
+		dbo.collection(request.body.projectSharer).updateOne(myquery, newvalues, function(err, result){
+			if (err) throw err;
+			db.close();	
+			response.send(versions);
+		});		
+
+	}); 
 });
 
 // saving Project:

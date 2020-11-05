@@ -81,6 +81,62 @@ function runningR(){
 }
 
 
+function ImportEdge(copy){
+
+	edges = data_Vue.edges.get();
+	edges = Array.from(edges);
+	
+	for(var i=0; i <edges.length; i++){
+		if( (edges[i].from + "_" + edges[i].to) == copy){
+			activ = i;
+		}
+	}
+
+	
+	copy_edge = edges[activ];
+	
+	active_edge = data_Vue.active_edge;
+	from_store = active_edge.from;
+	to_store = active_edge.to;
+	id_store = active_edge.id;
+	
+	active_edge = copy_edge;
+	active_edge.from = from_store;
+	active_edge.to = to_store;
+	active_edge.id = id_store;
+	data_Vue.active_edge = active_edge;
+}
+
+function ImportNode(copy){
+		
+	nodes = data_Vue.nodes.get();
+	nodes = Array.from(nodes);
+	cohort_ids = [];
+	for(var i=0; i <nodes.length; i++){
+		if(nodes[i].id == copy){
+			activ = i; 
+		}
+	}
+
+	
+	copy_node = nodes[activ];
+	
+	active_node = data_Vue.active_node;
+	x_store = active_node.x;
+	y_store = active_node.y;
+	id_store = active_node.id;
+	label_store = active_node.label;
+	title_store = active_node.title;
+	
+	active_node = copy_node;
+	active_node.x = x_store;
+	active_node.y = y_store;
+	active_node.label = label_store;	
+	active_node.title = title_store;
+	active_node.id = id_store;
+	data_Vue.active_node = active_node;
+}
+
 //Running R with streaming
 function runningR1(){
 	clearResult();
@@ -144,7 +200,7 @@ function runningR1(){
 			
 			loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
 			loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
-	
+			loadWarningsLogOfSimulation(data_Vue.geninfo['Project Name']);
 			writeSum();
 		},
 		error: function(obj, msg, err)
@@ -1117,6 +1173,7 @@ function plottingResultpMeanGroup(){
 		Plotly.newPlot('RespMeanGroup_Div'+(i+1), data_plot, layout, config);
 	}
 }
+
 
 
 function plottingResultgMeanGroup(){

@@ -496,6 +496,18 @@ function checkEverything(id){
 		edges = data_Vue.edges.get();
 		edges = Array.from(edges);
 		
+		cohort_ids = [];
+		for(var i=0; i <nodes.length; i++){
+			cohort_ids.push(nodes[i].id);
+		}
+		
+		edge_ids = [];
+		for(var i=0; i <edges.length; i++){
+			edge_ids.push(edges[i].from + "_" + edges[i].to);
+		}
+		data_Vue.edge_ids = edge_ids;
+		data_Vue.cohort_ids = cohort_ids;
+		
 		if(edges.length > 0){
 			edge_from = [];
 			edge_to = [];
@@ -509,6 +521,25 @@ function checkEverything(id){
 				node_name.push(nodes[i]['id'])
 				node_founder.push(nodes[i]['Founder'])
 			}
+			
+			edges_check = [];
+			for(var i=0; i < edges.length ; i++){
+				
+				k1 = -1;
+				k2 = -1;
+				for(var j=0; j < nodes.length; j++){
+					if(edges[i]['from']==node_name[j]){
+						k1 = j;
+					}
+					if(edges[i]['to']==node_name[j]){
+						k2 = j
+					}
+				}
+				if(k1!=(-1) & k2!=(-1)){
+					edges_check.push(edges[i]);
+				}
+			}
+			edges = edges_check;
 			
 			for(var i=0; i < edges.length; i++){
 				edge_to.push(edges[i]['to']);
@@ -571,6 +602,18 @@ function checkEverything(id){
 							count++;
 							if(edge_type[j] == "Combine"){
 								size1 = parseFloat(nodes[edge_nrfrom[j]]['Number of Individuals']);
+								
+								if(nodes[edge_nrfrom[j]]["Sex"] == "Both"){
+									if(nodes[i]["Sex"]=="Male"){
+										scalef = parseFloat(nodes[edge_nrfrom[j]]['Proportion of Male']);
+										size1 = scalef * size1;
+									}
+									if(nodes[i]["Sex"]=="Female"){
+										scalef = 1 - parseFloat(nodes[edge_nrfrom[j]]['Proportion of Male']);
+										size1 = scalef * size1;
+									}
+								}
+
 								combine_count = combine_count + size1;
 							}
 						}

@@ -8,7 +8,7 @@
 	</script>
 		
 	<head>
-		<title>MoBPS (v1.5.28)</title>
+		<title>MoBPS (v1.5.44)</title>
 		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
@@ -83,10 +83,12 @@
 				<button onclick="openNav()" id="openB" class="openbtn"> Navigation Open </button> 
 				<button class="invisible_button"></button>
 				<button class='bar_button' id="new_button" onclick="window.location.reload();">NEW</button> 
-				<button class='bar_button' id="save_button" onclick="saveProject();">SAVE</button> 
-				<button class='bar_button' onclick="saveProjectAs();">COPY</button> 
-				<!-- <button class='bar_button' id="download_button" onclick="importNetwork()" >Import Project</button> -->
-				<input type="button" class="fileType" id="importProject" value="IMPORT" class='bar_button' onclick="document.getElementById('input-file').click();importNetwork()" />
+				<button v-if="geninfo['sharedWith'] === '' " class='bar_button' id="save_button" onclick="saveProject();">SAVE</button> 
+				<button v-if="geninfo['sharedWith'] !== '' " class='bar_button' id="save_button" onclick="share_SaveProject();">SAVE</button>
+				<button class='bar_button' onclick="saveProjectAs();">SAVE AS</button> 
+				<a v-if="geninfo['isPrShared'] === false && geninfo['isSharedExist'] === '' " class='bar_button' onclick="shareProjectWith(geninfo['Project Name']);"> SHARE </a>
+				<a v-if="geninfo['isPrShared'] === true && geninfo['isSharedExist'] === 'Yes'  " class='bar_button' onclick="isShareUserExists(data_Vue.geninfo['sharedWith']);"> STOP SHARE </a>				<input type="button" class="fileType" id="importProject" value="IMPORT" class='bar_button' onclick="document.getElementById('input-file').click();importNetwork()" />
+
 				<input type="file" style="display:none;" id="input-file" name="file"/>
 				<button class='bar_button' id="download_button" onclick="downloadNetwork()" >EXPORT</button>
 				<button class='bar_button' id="delete_button" onclick="deleteProject()" >DELETE</button>
@@ -97,6 +99,21 @@
 
 
 			</div>
+			
+			<div id='shareProject_Div'>
+			    <p>
+			      <input type="button" class="button_type" id="addRow" value="Add User" onclick="addRow()" />
+			    </p>
+											<br>
+			    <div id="cont"></div>
+				<br>
+			      <p>
+			        <input type="button" class="button_type" value="Submit" onclick="shareUsersubmit()" />
+					<input type="button" value="Cancel" class="button_type" onclick="document.getElementById('shareProject_Div').style.display = 'none'"/>
+			      </p>
+
+			</div>
+			
 			<div id='SaveAs_Div'>
 				New Project Name: <input id="saveAs-name" type="text" placeholder="Type a name"/> <br><br>
 				<input type="button" value="Save" id="SaveAs-saveButton" class="button_type" onclick="saveProject(document.getElementById('saveAs-name').value)" />
@@ -152,6 +169,7 @@
 			<div id="LoadJSON_Div" >
 			<h2 v-if="geninfo['Project Name'] !== '' " > MoBPS &nbsp;&nbsp;  {{geninfo['Project Name']}} </h2>
 			<h2 v-if="geninfo['Project Name'] == '' " > MoBPS </h2>
+			<h4 style="margin-left:125px" v-if="(geninfo['sharedWith'].length > 0 )" > {{geninfo['sharedWith'] }} </h4>
 			<br>
 			<h3>Load a new/existent project from your own database:</h3>
 
@@ -266,7 +284,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Advanced settings </td> 
+						<td style="font-weight:bold">Advanced settings </td> 
 						<td>
 							<input type="checkbox" v-model="geninfo['advanced']" style="vertical-align: middle;">
 						</td>
@@ -281,26 +299,9 @@
 						</td>
 					</tr>
 					
+
 					<tr v-if="geninfo['advanced']">
-						<td>miraculix-active
-							<span class="tooltip">&#9432 <span class="tooltiptext">Deactivating this will increase run-times but lead to RData population that can be analyzed without miraculix/RandomFieldsUtils</span></span>
-						</td>
-						<td> 
-							<input type="checkbox" v-model="geninfo['advanced_miraculix']">
-						</td>
-					</tr>
-					
-					<tr v-if="geninfo['advanced']">
-						<td>Parallel Computing + Multiple Simulation
-							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will allow to run a simulation multiple times.</span></span>
-						</td>
-						<td> 
-							<input type="checkbox" v-model="geninfo['advanced_parallel']">
-						</td>
-					</tr>
-					
-					<tr v-if="geninfo['advanced']">
-						<td>Advanced Trait modelling
+						<td style="font-weight:bold">Advanced Trait modelling
 							<span class="tooltip">&#9432 <span class="tooltiptext"> Activating this will unlock use of dominant and epistatic trait architectures.</span></span>
 						</td>
 						<td> 
@@ -399,18 +400,20 @@
 						</td>
 					</tr>
 					
-										
 					<tr v-if="geninfo['advanced']">
-						<td>Export/Import Box 
-							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with a text box for import/export </span></span>
+						<td>Litter size Module
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with additional features to control the litter size</span></span>
 						</td>
 						<td> 
-							<input type="checkbox" v-model="geninfo['advanced_box']">
+							<input type="checkbox" v-model="geninfo['advanced_litter']">
 						</td>
 					</tr>
 					
+										
+
+					
 					<tr v-if="geninfo['advanced']">
-						<td>Advanced Edge/Node options
+						<td style="font-weight:bold">Advanced Edge/Node options
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges </span></span>
 						</td>
 						<td> 
@@ -418,6 +421,7 @@
 						</td>
 					</tr>
 					<tr>
+
 					
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced'] ">
 							<td  style="text-indent:20px;">Share genotyped
@@ -526,7 +530,43 @@
 								<input type="checkbox"  v-model="geninfo['advanced_advanced_scaling']">
 							</td>
 						</tr>
+						
+						<tr v-if="geninfo['advanced'] & geninfo['advanced_advanced']">
+							<td style="text-indent:20px;"> Copy settings from other nodes/edges
+								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock additional options for nodes/edges</span></span>
+							</td>
+							<td style="text-indent:20px;"> 
+								<input type="checkbox"  v-model="geninfo['advanced_advanced_copy']">
+							</td>
+						</tr>
 					<tr>
+					
+					<tr v-if="geninfo['advanced']">
+						<td>miraculix-active
+							<span class="tooltip">&#9432 <span class="tooltiptext">Deactivating this will increase run-times but lead to RData population that can be analyzed without miraculix/RandomFieldsUtils</span></span>
+						</td>
+						<td> 
+							<input type="checkbox" v-model="geninfo['advanced_miraculix']">
+						</td>
+					</tr>
+					
+					<tr v-if="geninfo['advanced']">
+						<td>Parallel Computing + Multiple Simulation
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will allow to run a simulation multiple times.</span></span>
+						</td>
+						<td> 
+							<input type="checkbox" v-model="geninfo['advanced_parallel']">
+						</td>
+					</tr>
+					
+					<tr v-if="geninfo['advanced']">
+						<td>Export/Import Box 
+							<span class="tooltip">&#9432 <span class="tooltiptext">Activating provide you with a text box for import/export </span></span>
+						</td>
+						<td> 
+							<input type="checkbox" v-model="geninfo['advanced_box']">
+						</td>
+					</tr>
 					
 					
 						<td>Species
@@ -820,7 +860,7 @@
 							<td>Pheno. SD
 								<span class="tooltip">&#9432 <span class="tooltiptext">Trait variance for the group of all founders will be scaled accordingly. Residual variance is assumed to be fixed over all generations.</span></span>
 							</td>
-							<td>Heritability
+							<td style="padding-right:0px;">Heritability
 								<span class="tooltip">&#9432 <span class="tooltiptext">Heritability of the trait.</span></span>
 							</td>
 							<td  v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_repeat']">Repeatability
@@ -848,16 +888,16 @@
 								<span class="tooltip">&#9432 <span class="tooltiptext">Genomic value of the trait is caused by the father</span></span>
 							</td>
 
-							<td>Major QTL
+							<td style="padding-right:0px;">Major QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to manually add single marker effects to SNPs with known effects.</span></span>
 							</td>
 							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true" > combination of traits
 								<span class="tooltip">&#9432 <span class="tooltiptext"> This trait is a linear combination of other traits</span></span>
 							</td>
-							<td>Value per unit (&#8364;)
+							<td style="padding-right:0px;">Value per unit (&#8364;)
 								<span class="tooltip">&#9432 <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
 							</td>
-							<td style="width:200px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_trafo']==true">Apply Transformation
+							<td style="width:90px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_trafo']==true">Apply Transformation
 								<span class="tooltip">&#9432 <span class="tooltiptext">The only allowed input variable is the genomic value (x). Potential input: function(x){y = x^2; return(y)}</span></span>
 							</td>
 							<td>Show Cor</td>
@@ -875,88 +915,87 @@
 					@end="onEnd">
 					<template v-for='(trait, index) in traitsinfo' >
 						<tr>
-							<td style="width:1%;padding-right:10px;">
+							<td style="width:0.06%;">
 								<input class="phenoMedium" v-model="trait['Trait Name']"> 
 							</td>
-							<td style="width:1%;padding-right:18px;">
+							<td style="width:0.05%;padding-right:12px;">
 								<input class="phenoSmall" v-model="trait['Trait Unit']" > 
 							</td>
-							<td style="width:1%;padding-right:19px;"  v-if = "trait['is_combi'] == false">
+							<td style="width:0.05%;padding-right:12px;"  v-if = "trait['is_combi'] == false">
 								<input class="phenoSmall" v-model="trait['Trait Mean']" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
 							</td>
-							<td style="width:1%;padding-right:19px;"  v-if = "trait['is_combi'] == true">
+							<td style="width:0.1%;"  v-if = "trait['is_combi'] == true">
 								<input class="phenoSmallReadOnly" v-model="trait['Trait Mean']" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')" readonly> 
 							</td>
-							<td style="width:1%;padding-right:19px;"  v-if = "trait['is_combi'] == false">
+							<td style="width:0.05%;padding-right:4px;"  v-if = "trait['is_combi'] == false">
 								<input class="phenoSmall" v-model="trait['Trait Std Deviation']" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
 							</td>
 
-							<td style="width:1%;padding-right:19px;"  v-if = "trait['is_combi'] == true">
+							<td style="width:0.1%;"  v-if = "trait['is_combi'] == true">
 								<input class="phenoSmallReadOnly" v-model="trait['Trait Std Deviation']" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')" readonly>  
 							</td>
 							
-							<td style="width:1%;padding-right:19px;">
+							<td style="width:0.05%;padding-right:0px;">
 								<input class="phenoSmall" v-model="trait['Trait Heritability']" max=1 min=0 class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
 							</td>
-							<td style="width:1%;padding-right:19px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_repeat']==true">
+							<td style="width:0.3%;padding-right:0.07px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_repeat']==true">
 								<input class="phenoSmall"  v-model="trait['Trait Repeatability']" max=1 min=0 class="no-spinners" step=0.0001 v-on:change="trait['Trait Repeatability'] = trait['Trait Repeatability'].replace(/,/g, '.')"> 
 							</td>
-							<td style="width:1%;padding-right:15px;" v-if = "trait['is_combi'] == false">
+							<td style="width:0.15%;padding-right:0px;" v-if = "trait['is_combi'] == false">
 								<input class="phenoSmall" v-model="trait['Trait Number of Polygenic Loci']" class="no-spinners" step=1> 
 							</td>
-							<td style="width:1%;padding-right:15px;" v-if = "trait['is_combi'] == true">
+							<td style="width:0.15%;padding-right:0.07px;" v-if = "trait['is_combi'] == true">
 								<input class="phenoSmallReadOnly" v-model="trait['Trait Number of Polygenic Loci']" class="no-spinners" step=1 readonly> 
 							</td>
 							
 							
-							<td style="width:1%;padding-right:9px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
+							<td style="width:0.1%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoSmall"  v-model="trait['dominant_qtl']"  class="no-spinners" step=1> 
 							</td>
-							<td style="width:1%;padding-right:9px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
+							<td style="width:0.4%;padding-right:4px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
 								<input class="phenoSmallReadOnly" v-model="trait['dominant_qtl']"  class="no-spinners" step=1 readonly> 
 							</td>
 
-							<td style="width:1%;padding-right:13px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
+							<td style="width:0.1%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoSmall" v-model="trait['qualitative_qtl']" class="no-spinners" step=1> 
 							</td>
-							<td style="width:1%;padding-right:13px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true" >
+							<td style="width:0.4%;padding-right:4px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true" >
 								<input class="phenoSmallReadOnly"  v-model="trait['qualitative_qtl']" class="no-spinners" step=1 readonly> 
 							</td>
-							<td style="width:1%;padding-right:16px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
+							<td style="width:0.1%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoSmall"  v-model="trait['quantitative_qtl']"  class="no-spinners" step=1> 
 							</td>
-							<td style="width:1%;padding-right:16px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
+							<td style="width:0.4%;padding-right:4px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
 								<input class="phenoSmallReadOnly"  v-model="trait['quantitative_qtl']"  class="no-spinners" step=1 readonly> 
 							</td>
 
-
-
-							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true">
+							
+							<td style="width:0.3%;padding-right:5px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_maternal']" >
 							</td>
-							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true">
+							<td style="width:0.3%;padding-right:5px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_paternal']" >
 							</td>
 							
 					
 
-							<td style="width:1%;padding-right:17px;" v-if = "trait['is_combi'] == false">
+							<td style="width:0.04%;padding-right:0px;" v-if = "trait['is_combi'] == false">
 								<input class="phenoNumber" v-model="trait['Trait Major QTL']"  type="number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
 							</td>
-							<td style="width:1%;padding-right:17px;" v-if = "trait['is_combi'] == true">
+							<td style="width:0.1%;padding-right:15px;" v-if = "trait['is_combi'] == true">
 								<input class="phenoNumberReadOnly" v-model="trait['Trait Major QTL']"  type="number" class="no-spinners" step=1 v-on:change="createQTL(index)" readonly> 
 							</td>
-							<td style="width:1%;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true">
+							<td style="width:0.3%;padding-right:9px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_combi']" v-on:change="createCombi(index)" >
 							</td>
-							<td style="width:1%;padding-right:14px;">
+							<td style="width:0.08%;padding-right:4px;">
 								<input class="phenoNumber" v-model="trait['Trait Value per Unit']"  type="number" class="no-spinners" step=0.001 v-on:change="trait['Trait Value per Unit'] = trait['Trait Value per Unit'].replace(/,/g, '.')">  
 							</td>
-							<td style="width:1%;padding-right:9px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_trafo']==true">
+							<td style="width:0.09%;padding-right:9px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_trafo']==true">
 								<input class="phenoTransfo"  v-model="trait['trafo']" > 
 							</td>
 							
-							<td style="width:1%;padding-right:10px;">
+							<td style="width:0.1%;padding-right:10px;">
 								<input class="phenoCheck" type="checkbox" v-model="show_matrix_element[index].show">
 							</td>
 							<td>
@@ -1068,7 +1107,7 @@
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
 						<td v-for="(cl, cind) in matrix" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
-							<input v-model="matrix[rind].row[cind].val" style="width:40px;font-size:11pt;font-weight:bold;height:18px;border:2px solid lightblue;" v-if="rind > cind" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix[rind].row[cind].val = matrix[rind].row[cind].val.replace(/,/g, '.')">  
+							<input v-model="matrix[rind].row[cind].val" style="width:40px;font-size:10pt;font-weight:bold;height:18px;border:2px solid lightblue;" v-if="rind > cind" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix[rind].row[cind].val = matrix[rind].row[cind].val.replace(/,/g, '.')">  
 							<template v-if="rind <= cind">
 								{{ matrix[cind].row[rind].val }}
 							</template>
@@ -1497,9 +1536,45 @@
 					<br>
 				</template>
 				
-				<br>
-				<br>
 				
+				<h3 v-if="geninfo['advanced'] && geninfo['advanced_litter']"> Litter size
+					<span class="tooltip">&#9432 <span class="tooltiptext">
+						Select a probability for the size of each litter.  
+					</span></span>
+				</h3>
+				
+				<td v-if="geninfo['advanced'] && geninfo['advanced_litter']" colspan="2" style="text-align:left;">
+					<button class="sub_button" v-on:click="createSize()"> Add new litter size </button>
+				</td>
+				
+				
+				
+				<table v-if="geninfo['advanced'] && geninfo['advanced_litter']" id="general_Litter"> 			
+					
+					<thead>
+					<tr> 
+						<td>Litter size </td>
+						<td>Probability </td>
+						<td> </td>
+					</tr>
+					</thead>
+					<tbody>
+						<tr v-for='(litter, index) in litter_size["litter_info"]'>
+							<td>
+								<input v-model="litter.name" style = "width: 50px;">
+							 </td>
+							 <td>
+								<input v-model="litter.prob" style = "width: 50px;">
+							 </td>
+							<td>
+								<button v-on:click="removeSize(index)">X</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<br>
+				<br>
+
 				<h3 v-if="geninfo['advanced'] && geninfo['advanced_eco']">General Economy Parameters
 					<span class="tooltip">&#9432 <span class="tooltiptext">
 						Assign costs to basic breeding actions.  <br>
@@ -1650,6 +1725,21 @@
 						<col width="40%">
 						<col width="60%">
 					</colgroup>
+					
+					<tr v-if="geninfo['advanced'] && geninfo['advanced_advanced'] && geninfo['advanced_advanced_copy']">
+						<td> Copy Node-Options </td>
+						<td>
+							<select v-model="active_node['copy']">
+								<option v-for="option in cohort_ids" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+						<td>
+							<button onclick="ImportNode(data_Vue.active_node.copy)" >Import</button>
+						</td>
+					<tr>
+					
 					<tr>
 						<td>Name
 							<span class="tooltip">&#9432 <span class="tooltiptext">Name of the cohort. Please avoid names with : or _ . In particular avoid trailing numbers like ABC_1. Repeated nodes will use this syntax!</span></span>
@@ -1803,10 +1893,23 @@
 				
 				<table style="margin:auto; width: 100%;">
 					<colgroup>
-						<col width="40%">
-						<col width="60%">
+						<col width="45%">
+						<col width="55%">
 					</colgroup>
 					<br>
+					
+					<tr v-if="geninfo['advanced'] && geninfo['advanced_advanced'] && geninfo['advanced_advanced_copy']">
+						<td> Copy Edge-Options </td>
+						<td>
+							<select v-model="active_edge['copy']">
+								<option v-for="option in edge_ids" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+						<td>
+							<button onclick="ImportEdge(data_Vue.active_edge.copy)" >Import</button>
+						</td>
 					<tr>
 						<td>Breeding Type
 							<span class="tooltip">&#9432 <span class="tooltiptext">Selected the breeding action you want to use to generate new cohorts and/or link them. </span></span>
@@ -2070,7 +2173,7 @@
 							<span class="tooltip">&#9432 <span class="tooltiptext">Manual select provides you with maximum flexibility to select which individuals to use.</span></span>
 						</td>
 						<td> 
-							<select v-model="active_edge['Cohorts used in BVE']">
+							<select v-model="active_edge['Cohorts used in BVE']" onchange="cohorts_Div(this);">
 								<option v-for="option in Cohorts_options" v-bind:value="option">
 								{{ option }}
 								</option>
@@ -2081,27 +2184,30 @@
 						<td>Select cohorts for manuel select:
 							<span class="tooltip">&#9432 <span class="tooltiptext">Cohorts available for selection are only refresh on reloading or when EDITING an edge. We are working on that.</span></span>
 						</td>
-				<!--		<td v-if="isCohortNameChanged ===''" >						
-							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
-						</td>
-						<td v-if="isCohortNameChanged ==='Yes'" >	
-							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="updated_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
-						</td> -->
+					</tr>
+					</table>
+					<br>
+					<input class='button_type' type="button" value="Save" id="edge-saveButton" />
+					<input class='button_type' type="button" value="Cancel" id="edge-cancelButton" />
+				</div>
+				<br>
+
+				<div id="edge_cohorts_Div" >				
+					<table >					
+						<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE' && active_edge['Cohorts used in BVE'] == 'Manual select'">
+
 						<td v-if="isCohortNameChanged ==='' && edge_operation === ('Add Edge')" >						
-							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="allNode_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
+							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="allNode_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 						</td>
 						<td v-if="isCohortNameChanged ==='' && edge_operation === ('Edit Edge')" >						
-							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
+							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true" />
 						</td>
 						<td v-if="isCohortNameChanged ==='Yes'" >	
-							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :options="updated_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
+							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="updated_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 						</td>
 
 					</tr>
 				</table>
-				<br>
-				<input class='button_type' type="button" value="Save" id="edge-saveButton" />
-				<input class='button_type' type="button" value="Cancel" id="edge-cancelButton" />
 			</div>
 			<br>
         	
@@ -2144,6 +2250,16 @@
 				-->
 				
 				<br>
+					<div v-if="warningsLog.length >2" style="color:red;" v-for="(number, index) in warningsLog" :key="index">
+						{{warningsLog[index]}}
+					</div>
+				<br>
+				
+				<div v-if="warningsLog.length >2" style="color:red;" v-for="(number, index) in warningsLog" :key="index">
+						{{warningsLog[index]}}
+				</div>
+				<br>
+				
 				<p v-if="cohortsList.length >0" class="boldText">  Download Rdata : 
 					<span class="tooltip">&#9432 <span class="tooltiptext"> Download the output of the simulation as Rdata file to save it on your own machine or use it for further analysis in R. </span></span> &nbsp;&nbsp;
 					<a v-if="filename" href="/Rdownload"> {{geninfo['Project Name']}}.RData </a> 
@@ -2189,6 +2305,65 @@
 
 
 					
+					
+						<div v-if="cohortsList.length >0">
+							<table  class="scrollableTable1">
+								<thead>
+									<tr>
+										<th style="width:15%; text-align:left;"> Cohort Name </th>
+										<th>Nr. of Individuals </th>
+										<th>Time point </th>
+										<th>Total costs </th>
+										<th>Cost genotyping </th>
+										<th>Cost phenotyping </th>
+										<th>Cost housing </th>
+									</tr>
+								</thead>
+								<tbody>							
+									<tr v-for='(cohorts, index) in cohortsList' >
+										<td style="width:15%; text-align:left;"> {{cohortsList[index]['Cohort name']}} </td>
+										<td> {{cohortsList[index]['Nr. of individuals']}} </td>
+										<td> {{cohortsList[index]['Time-point']}} </td>
+										<td> {{cohortsList[index]['Total costs']}} </td>
+										<td> {{cohortsList[index]['Cost genotyping']}} </td>
+										<td> {{cohortsList[index]['Cost phenotyping']}} </td>
+										<td> {{cohortsList[index]['Cost housing']}} </td>			
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+
+				<p v-if="cohortsList.length >0" class="boldText"> Download Cohorts List: 
+					<span class="tooltip">&#9432 <span class="tooltiptext"> Download CSV file containing cohort names, number of individuals, time-point of generation, total costs, genotyping costs, cost phenotyping and  housing costs.</span></span>&nbsp; 
+					<a v-if="filename" href="/Exceldownload"> Download {{geninfo['Project Name']}}.csv </a> 
+				</p>
+				<br>	
+
+
+				<p v-if="cohortsTimeList.length >0" class="boldText">Computing time estimates : </p>
+				<div v-if="cohortsTimeList.length >0">
+					<table class="scrollableTable2">
+						<thead>
+							<tr>
+								<th style="width:20%; text-align:left;">Cohort Name </th>
+								<th>BVE Time </th>
+								<th>Generation Time </th>
+								<th>TOTAL Time </th>
+							</tr>
+							</thead>
+						<tbody>
+							<tr v-for='(cohorts, index) in cohortsTimeList' >
+								<td style="width:20%; text-align:left;"> {{cohortsTimeList[index]['Cohort name']}} </td>
+								<td> {{cohortsTimeList[index]['BVEtime']}} </td>
+								<td> {{cohortsTimeList[index]['Gentime']}} </td>
+								<td> {{cohortsTimeList[index]['Totaltime']}} </td>			
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+				
 					
 					<h4> Download population list: </h4>
 					<div class="populationList">	
@@ -2427,9 +2602,10 @@
 				<p v-if="cohortsList.length >0" class="boldText">Cohorts List : </p>
 				
 				<div v-if="cohortsList.length >0">
-					<table class="cohortsList">
+					<table  class="scrollableTable1">
+						<thead>
 							<tr>
-								<th> Cohort Name </th>
+								<th style="width:15%; text-align:left;"> Cohort Name </th>
 								<th>Nr. of Individuals </th>
 								<th>Time point </th>
 								<th>Total costs </th>
@@ -2437,9 +2613,11 @@
 								<th>Cost phenotyping </th>
 								<th>Cost housing </th>
 							</tr>
-							
+						</thead>
+						
+						<tbody>	
 							<tr v-for='(cohorts, index) in cohortsList' >
-								<td> {{cohortsList[index]['Cohort name']}} </td>
+								<td style="width:15%; text-align:left;"> {{cohortsList[index]['Cohort name']}} </td>
 								<td> {{cohortsList[index]['Nr. of individuals']}} </td>
 								<td> {{cohortsList[index]['Time-point']}} </td>
 								<td> {{cohortsList[index]['Total costs']}} </td>
@@ -2447,6 +2625,7 @@
 								<td> {{cohortsList[index]['Cost phenotyping']}} </td>
 								<td> {{cohortsList[index]['Cost housing']}} </td>			
 							</tr>
+						</tbody>
 					</table>
 
 				</div>
@@ -2458,24 +2637,29 @@
 				<br>	
 				
 				
-				<p v-if="cohortsTimeList.length >0" class="boldText">Computing time estimates : </p>
+				<p v-if="cohortsTimeList.length >0" class="boldText">Computing time estimates: </p>
 				<div v-if="cohortsTimeList.length >0">
-					<table class="cohortsListTime">
+					<table class="scrollableTable2">
+						<thead>
 							<tr>
-								<th>Cohort Name </th>
+								<th style="width:20%; text-align:left;">Cohort Name </th>
 								<th>BVE Time </th>
 								<th>Generation Time </th>
 								<th>TOTAL Time </th>
 
 							</tr>
+						</thead>
+						<tbody>
 
 							<tr v-for='(cohorts, index) in cohortsTimeList' >
-								<td> {{cohortsTimeList[index]['Cohort name']}} </td>
+								<td style="width:20%; text-align:left;"> {{cohortsTimeList[index]['Cohort name']}} </td>
 								<td> {{cohortsTimeList[index]['BVEtime']}} </td>
 								<td> {{cohortsTimeList[index]['Gentime']}} </td>
 								<td> {{cohortsTimeList[index]['Totaltime']}} </td>			
 		
 							</tr>
+						</tbody>
+						
 					</table>
 
 				</div>
@@ -2502,7 +2686,7 @@
 					<br>
 					
 					<div>
-						<textarea id='OutputArea' style="margin-left:177px; width:750px; height:200px;"></textarea>
+						<textarea id='OutputArea' style="margin-left:177px; width:750px; height:200px; max-height: 750px;"></textarea>
 					</div>
 					<br>
 				</div>
@@ -2607,7 +2791,97 @@
 			    }
 		}
 
+			// Manual select cohorts for edge:
+		function cohorts_Div(select) {
+			if (select.value =="Manual select") {
+				document.getElementById("edge_cohorts_Div").style.display = "block";
+			}
+			else {		
+			  document.getElementById("edge_cohorts_Div").style.display = "none";
+			}
+		}
 
+
+		// share Project with users related code:	
+		const arrHead = ['', ''];
+
+		function shareUserTable() {
+			var shareUser = document.createElement('table');
+			shareUser.setAttribute('id', 'shareUser');
+			var tr = shareUser.insertRow(-1);
+			for (var h = 0; h < arrHead.length; h++) {
+				var th = document.createElement('th');        
+				th.innerHTML = arrHead[h];
+				tr.appendChild(th);
+			}
+			var div = document.getElementById('cont');
+			div.appendChild(shareUser);    
+			addRow();
+		}
+
+
+		function addRow() {
+			var shareTab = document.getElementById('shareUser');
+			var rowCnt = shareTab.rows.length;        
+			var tr = shareTab.insertRow(rowCnt);      
+			tr = shareTab.insertRow(rowCnt);
+
+			for (var c = 0; c < arrHead.length; c++) {
+				var td = document.createElement('td');       
+				td = tr.insertCell(c);
+				if (c == 0) {   
+					var ele = document.createElement('input');
+					ele.setAttribute('type', 'text');
+					ele.setAttribute('value', '');
+					td.appendChild(ele);
+				}
+				else {
+					var button = document.createElement('input');
+					button.setAttribute('type', 'button');
+					button.setAttribute('value', 'X');
+					button.setAttribute('class', 'button_type');
+					button.setAttribute('id', 'rm');
+					button.setAttribute('onclick', 'removeRow(this)');
+					td.appendChild(button);
+				}
+			}
+		}
+
+		function removeRow(oButton) {
+			var shareTab = document.getElementById('shareUser');
+			shareTab.deleteRow(oButton.parentNode.parentNode.rowIndex);       // BUTTON -> TD -> TR.
+		}
+
+
+		function shareUsersubmit() {
+			var myTab = document.getElementById('shareUser');
+			var values = new Array();
+
+			for (row = 1; row < myTab.rows.length - 1; row++) {
+				for (c = 0; c < myTab.rows[row].cells.length; c++) {                  // EACH CELL IN A ROW.
+					var element = myTab.rows.item(row).cells[c];
+					if (element.childNodes[0].getAttribute('type') == 'text') {
+						values.push(element.childNodes[0].value);                    
+					}
+				}
+			}
+
+			values = values.filter(uniqueUsers);
+			var shareValues = removeFrmArr(values, data_Vue.geninfo['user']);
+			var shvalues = shareValues.filter(function(el) { return el; });
+
+			shareUser(shvalues);
+		}
+
+		function uniqueUsers(value, index, self) {
+			return self.indexOf(value) === index;
+		}
+
+
+		function removeFrmArr(array, element) {
+			return array.filter(e => e !== element);
+		};
+	
 	</script>		
 
 </html>
