@@ -1784,14 +1784,61 @@ function postProject(name, url, jsondata, sharedWith){
 			else {
 				alert("Saving Success!");
 			}
-				
+			
 			data_Vue.project_saved = true;
 			data_Vue.versions = data.reverse();
 
 			document.getElementById('excelToArray').value = '';
 			document.getElementById("Version").value = "recent";
 			document.getElementById("SaveAs_Div").style.display = 'none';
-						document.getElementById("shareProject_Div").style.display = 'none';
+			document.getElementById("shareProject_Div").style.display = 'none';
+			loadData(name);
+		},
+		failure: function(msg) 
+		{
+			alert('Saving Error!');
+		},
+	});			
+}
+
+
+// function to save data to database:
+
+function unique_postProject(name, url, jsondata, sharedWith){
+	$.ajax
+	({
+		type: "POST",
+		url: url,
+		data: {
+			name: name,
+			jsondata : jsondata,
+			sharedWith:sharedWith,
+			versions: JSON.stringify(data_Vue.versions.reverse()),
+		},
+		success: function (data, msg) {
+			$.post('/database', function(dat){
+				data_Vue.database = dat;
+				//document.getElementById("Project_Name").value = name; 
+			})
+			
+			if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {
+				localStorage.clear();
+			}
+			else if (data_Vue['Upload_CorrFile'] == 'Yes') {
+				alert("Imported values from Excel successfully!");
+			}
+			else {
+				if (data_Vue.geninfo['sharedWith'] === " " || data_Vue.geninfo['sharedWith'].cnt === "undefined") {
+					alert("Saving Success!"); }					
+			}
+			
+			data_Vue.project_saved = true;
+			data_Vue.versions = data.reverse();
+
+			document.getElementById('excelToArray').value = '';
+			document.getElementById("Version").value = "recent";
+			document.getElementById("SaveAs_Div").style.display = 'none';
+			document.getElementById("shareProject_Div").style.display = 'none';
 			loadData(name);
 		},
 		failure: function(msg) 
@@ -1902,27 +1949,23 @@ function isShareUserExists(val) {
 
 function stopShareProject(val) {
 	var thisUser = val;
-		
 	var cnt = val.length;
-	
 	thisUser[cnt] = data_Vue.geninfo['user'];
-	
 	var name = data_Vue.geninfo['Project Name'];
 	data_Vue.geninfo['sharedWith'] = '';
-
 	var jsondata = JSON.stringify(exportNetwork());	
 
 	data_Vue.geninfo['Excel_File'] = '';	
-	
+
 	if(data_Vue.versions.length > 10){
 		var r = confirm("Only the 10 most recent versions are saved. The oldest version will be deleted. Do you want to proceed? Alternative: Change the Project Name and save to create a new project");
 		if(!r) return;
 	}
-	
+
 	while(data_Vue.versions.length > 10){ data_Vue.versions.pop(); }
 
 	var prExists = 	checkProjectExists();	
-	
+
 	if(prExists && val !== '') {
 		var getSharer = data_Vue.geninfo['project_Sharer']
 		var usrCNT = thisUser.length;
@@ -1934,7 +1977,7 @@ function stopShareProject(val) {
 					if(data_Vue.geninfo['project_Sharer'] === savetoThisUser) {
 						saveSharedProToOri(name, getSharer);
 					}
-				
+
 				}
 			}			
 	}
@@ -1950,6 +1993,8 @@ function stopShareProject(val) {
  			}
 			else {
 				data_Vue.geninfo['sharedWith'] = '';
+				data_Vue.geninfo['isPrShared'] = false;
+				data_Vue.geninfo['isSharedExist'] = "No";	
 				loadData(prName);
 			}
 }
@@ -2159,12 +2204,13 @@ function share_SaveProject(name) {
 			var usrCNT = data_Vue.geninfo['sharedWith'].length;
 			var curUser = 1;
 			if (usrCNT>0 && data_Vue.geninfo['sharedWith'] !== ' ') {
+				//alert('share _save after stop');
 				for (var us=0; us<usrCNT; us++) {
 				var savetoThisUser = data_Vue.geninfo['sharedWith'][us];
 				share_postProject(name, "/update_sharedProjectWithOtherUser", jsondata, savetoThisUser, us);
 				} 
 			}
-			postProject(name, "/updateProjectWithOtherUser", jsondata, data_Vue.geninfo['sharedWith']);
+			unique_postProject(name, "/updateProjectWithOtherUser", jsondata, data_Vue.geninfo['sharedWith']);
 	}
 	else {
 		postProject(name, "/save", jsondata, data_Vue.geninfo['sharedWith']);
@@ -2702,7 +2748,7 @@ function loadData(ind){
 					data_Vue.filename = data[0].name;
 					importNetwork_intern(data[0].json);
 					
-										if(typeof data[0].sharedWith !== 'undefined') {
+						if(typeof data[0].sharedWith !== 'undefined') {
 							if (data[0].sharedWith.length > 0) {
 								data_Vue.geninfo['isPrShared'] = true;		
 								data_Vue.geninfo['sharedWith'] = data[0].sharedWith;}

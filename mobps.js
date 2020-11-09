@@ -822,7 +822,7 @@ app.post('/updateProjectWithOtherUser', function(request, response) {
 		var dbo = db.db("DB");
 		var sharedWith = request.body.sharedWith;
 		var myquery = {name: request.body.name };		
-		var isShared="Yes";
+		if(sharedWith === " " || sharedWith.cnt === "undefined") {var isShared="No";} else { var isShared = "Yes";}
 		var versions = JSON.parse(request.body.versions);
 		versions.push({date: Date(), json: JSON.parse(request.body.jsondata)});
 		var updatedDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
@@ -831,6 +831,7 @@ app.post('/updateProjectWithOtherUser', function(request, response) {
 		dbo.collection(request.session.username).updateOne(myquery, newvalues, function(err, result){
 			if (err) throw err;
 			db.close();	
+			response.send(versions);
 		});		
 
 	}); 
