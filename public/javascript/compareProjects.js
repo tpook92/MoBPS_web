@@ -50,6 +50,8 @@ var data_Vue = new Vue({
 		cpInfo: cpInfo,
 		user:'',
 		database:[],
+		database2:[],
+		filter: [],
 		compareProjects:[],
 		jsonDataList:[],
 		plottingPar: new myPlottingPar(),
@@ -60,7 +62,20 @@ var data_Vue = new Vue({
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
 		plottingType2: ["By Repeats", "By Time"],
 		Summary: [],
-		}
+		},
+		
+	methods: {
+			FilterDatabase: function(){
+				var database2 = [];
+				var f = this.filter;
+				for(var i=0; i < this.database.length; i++){
+					if(this.database[i].indexOf(f)>=0){
+						database2.push(this.database[i]);
+					}
+				}
+				this.database2 = database2;
+			}
+	},
 })
 
 function init() {
@@ -125,6 +140,18 @@ function updateUser(){
 function isSafari() {
 	data_Vue.isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 }
+
+function FilterDatabase(){
+	var database2 = [];
+	var f = data_Vue.filter;
+	for(var i=0; i < data_Vue.database.length; i++){
+		if(data_Vue.database[i].indexOf(f)>=0){
+			database2.push(data_Vue.database[i]);
+		}
+	}
+	data_Vue.database2 = database2;
+}
+		
 
 function getProjects(val) {
  	var len = val.options.length;

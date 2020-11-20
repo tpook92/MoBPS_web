@@ -44,6 +44,7 @@ function myEdge (fr, to) {
 	this['OGC'] = "No";
 	this['Depth of Pedigree'] = "";
 	this['Max Offspring'] = "Inf";
+	this['Max Offspring Pair'] = "Inf";
 }
 
 // define the classe myGeneral with default values for General information:
@@ -697,7 +698,7 @@ var data_Vue = new Vue({
 			mySIscaling["Name"] = val; 
 			mySIscaling["active_scaling"] = false; 
 			mySIscaling["miesenberger"]=false;
-			mySIscaling["w_scaling"]= 'Per Unit';
+			mySIscaling["w_scaling"]= 'Per Genomic Value SD';
 			this.selection_index.push(mySI);	
 			this.selection_index_scaling.push(mySIscaling);
 			document.getElementById("newSI").value='';		
@@ -1800,6 +1801,55 @@ function postProject(name, url, jsondata, sharedWith){
 		},
 	});			
 }
+			
+			
+			
+			
+// function to save data to database:
+
+function unique_postProject(name, url, jsondata, sharedWith){
+	$.ajax
+	({
+		type: "POST",
+		url: url,
+		data: {
+			name: name,
+			jsondata : jsondata,
+			sharedWith:sharedWith,
+			versions: JSON.stringify(data_Vue.versions.reverse()),
+		},
+		success: function (data, msg) {
+			$.post('/database', function(dat){
+				data_Vue.database = dat;
+				//document.getElementById("Project_Name").value = name; 
+			})
+
+			if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {
+				localStorage.clear();
+			}
+			else if (data_Vue['Upload_CorrFile'] == 'Yes') {
+				alert("Imported values from Excel successfully!");
+			}
+			else {
+				if (data_Vue.geninfo['sharedWith'] === " " || data_Vue.geninfo['sharedWith'].cnt === "undefined") {
+					alert("Saving Success!"); }					
+			}
+
+			data_Vue.project_saved = true;
+			data_Vue.versions = data.reverse();
+
+			document.getElementById('excelToArray').value = '';
+			document.getElementById("Version").value = "recent";
+			document.getElementById("SaveAs_Div").style.display = 'none';
+			document.getElementById("shareProject_Div").style.display = 'none';
+			loadData(name);
+		},
+		failure: function(msg) 
+		{
+			alert('Saving Error!');
+		},
+	});			
+}
 
 function FilterDatabase(){
 	var database2 = [];
@@ -1950,6 +2000,8 @@ function stopShareProject(val) {
  			}
 			else {
 				data_Vue.geninfo['sharedWith'] = '';
+				data_Vue.geninfo['isPrShared'] = false;
+				data_Vue.geninfo['isSharedExist'] = "No";
 				loadData(prName);
 			}
 }
@@ -2159,13 +2211,13 @@ function share_SaveProject(name) {
 			var usrCNT = data_Vue.geninfo['sharedWith'].length;
 			var curUser = 1;
 			if (usrCNT>0 && data_Vue.geninfo['sharedWith'] !== ' ') {
+				//alert('share _save after stop');
 				for (var us=0; us<usrCNT; us++) {
 				var savetoThisUser = data_Vue.geninfo['sharedWith'][us];
 				share_postProject(name, "/update_sharedProjectWithOtherUser", jsondata, savetoThisUser, us);
 				} 
 			}
-			postProject(name, "/updateProjectWithOtherUser", jsondata, data_Vue.geninfo['sharedWith']);
-	}
+			unique_postProject(name, "/updateProjectWithOtherUser", jsondata, data_Vue.geninfo['sharedWith']);	}
 	else {
 		postProject(name, "/save", jsondata, data_Vue.geninfo['sharedWith']);
 	}

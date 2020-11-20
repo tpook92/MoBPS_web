@@ -8,7 +8,7 @@
 	</script>
 		
 	<head>
-		<title>MoBPS (v1.5.44)</title>
+		<title>MoBPS (v1.6.02)</title>
 		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
@@ -1976,6 +1976,12 @@
 							<span class="tooltip">&#9432 <span class="tooltiptext">Maximum number of offspring each individual from the parent node is allowed to have.</span></span>
 						</td>
 						<td><input placeholder="Type a number or Inf" v-model="active_edge['Max Offspring']"></td>
+					</tr>	
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_off']">
+						<td>Maximal # offspring from one mating pair
+							<span class="tooltip">&#9432 <span class="tooltiptext">Maximum number of offspring from one mating pair.</span></span>
+						</td>
+						<td><input placeholder="Type a number or Inf" v-model="active_edge['Max Offspring Pair']"></td>
 					</tr>	
 					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 & geninfo['advanced'] && geninfo['advanced_advanced'] & geninfo['advanced_advanced_ratio']">
 						<td>Selection ratio

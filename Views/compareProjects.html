@@ -85,9 +85,25 @@
 						<tr>
 						<td>
 						<h3>Select multiple projects to compare : {{compareProjects}}</h3><br>
-						<select id="thisArray" name="thisArray[]" multiple onChange="getProjects(this)" v-model="compareProjects" class="comparePSelect">
+						
+						<td>
+						Filter Projects for Keyword: 
+							<input placeholder="Type in filter criterion" type="text" v-model="filter">
+							<button class="sub_button" v-on:click="FilterDatabase();"> Apply Filter </button>
+							<!--<input type='submit' value='Upload Map'>-->
+						</td>
+						<br>
+						
+						<select id="thisArray" name="thisArray[]" multiple onChange="getProjects(this)" v-model="compareProjects" class="comparePSelect" v-if="database2.length==0">
 							<option value="">Choose Multiple Projects:</option>
 							<option v-for="option in database" v-bind:value="option">
+								{{ option }}
+							</option>
+						</select>
+						
+						<select id="thisArray" name="thisArray[]" multiple onChange="getProjects(this)" v-model="compareProjects" class="comparePSelect" v-if="database2.length!=0">
+							<option value="">Choose Multiple Projects:</option>
+							<option v-for="option in database2" v-bind:value="option">
 								{{ option }}
 							</option>
 						</select>
