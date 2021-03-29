@@ -867,15 +867,15 @@ select{
 #mynetwork_container {
 	position:relative;
 	width: 1500px;
-	height: 800px;
+	height: 832px;
 	border: 1px solid #4f567c;
 }
 
 #mynetwork_label {
 	float:left;
 	position:relative;
-	width: 125px;
-	height: 800px;
+	width: 130px;
+	height: 830px;
 	border: 0 ;
 	padding: 5px;
 }
@@ -883,8 +883,8 @@ select{
 #mynetwork {
 	float:left;
 	position:relative;
-	width: 1360px;
-	height: 798px;
+	width: 1355px;
+	height: 827px;
 	border: 1px solid lightgray ;
 }
 
@@ -1213,24 +1213,6 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
        cursor: pointer;
 }
 
-
-.trait_move_button {
-  display: none;
-  margin-top:5px;
-  font-size: 12px;
-  cursor: pointer;
-  text-align: center;
-  width:100%;
-  text-decoration: none;
-  color: white;
-  position: right;
-  background-color: #486F88;
-  border: none;
-  border-radius: 5px;
-  box-shadow: 0 2px #4A5289;
-}
-
-
 /* compareProject additional style */
 .comparePSelect {
     padding:9px;
@@ -1239,9 +1221,6 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
  	width: 300px;
 	height: 400px;
     border-radius:4px;
-    -webkit-box-shadow: 
-        0 0px 0 lightblue,
-        0 0px darkblue inset;
     color:black;
     border:darkblue;
     outline:none;
