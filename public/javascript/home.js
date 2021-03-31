@@ -42,6 +42,10 @@ function myEdge (fr, to) {
 	this['Cohorts used in BVE'] = "";
 	this['Manuel selected cohorts'] = [];
 	this['OGC'] = "No";
+	this['ogc_target'] = "min.sKin";
+	this['ogc_constrain1'] = "inactive";
+	this['ogc_constrain2'] = "inactive";
+	this['ogc_constrain3'] = "inactive";
 	this['Depth of Pedigree'] = "";
 	this['Max Offspring'] = "Inf";
 	this['Max Offspring Pair'] = "Inf";
@@ -59,8 +63,10 @@ function myGeneral () {
 	this['number-simulations-core'] = 1;
 	this['advanced'] = false;
 	this['advanced_test'] = false;
+	this['advanced_ld'] = false;
 	this['advanced_history'] = false; 
 	this['advanced_litter'] = false; 
+	this['advanced_multi'] = false; 
 	this['advanced_miraculix'] = true;
 	this['advanced_parallel'] = false;
 	this['advanced_trait'] = false;
@@ -105,6 +111,8 @@ function myGeneral () {
 	//this['listOfCohorts_withInfo'] = '';
 	this['sharedWith']=[];
 	this['project_Sharer']='';
+	this['majorQTLsyntax'] = "SNP + Chromosome";
+
 }
 
 function myTrait (ind){
@@ -128,23 +136,23 @@ function myTrait (ind){
 }
 
 function mySNP (ind){
-	this['QTL SNP Number'] = ind,
-	this['QTL ID'] = 'QTL'+ind,
-	this['QTL BP'] = Math.round(Math.random()*1000000),
-	this['QTL Chromosome'] = 1,
-	this['QTL Effect AA'] = Math.round(Math.random()*10) +1,
-	this['QTL Effect AB'] = Math.round(Math.random()*10) +1,
-	this['QTL Effect BB'] = Math.round(Math.random()*10) +1,
-	this['QTL Allele Frequency'] = Math.round(Math.random()*100)/100,
+	this['QTL SNP Number'] = "",
+	this['QTL ID'] = "",
+	this['QTL BP'] = "",
+	this['QTL Chromosome'] = "",
+	this['QTL Effect AA'] = 0,
+	this['QTL Effect AB'] = 0,
+	this['QTL Effect BB'] = 0,
+	this['QTL Allele Frequency'] = 0.5,
 	this['QTL Optional Info'] = ''
 }
 
 function mySNPsub (ind){
-	this['QTL SNP Number'] = ind,
-	this['QTL ID'] = 'QTL'+ind,
-	this['QTL BP'] = Math.round(Math.random()*1000000),
-	this['QTL Chromosome'] = 1,
-	this['QTL Allele Frequency'] = Math.round(Math.random()*100)/100,
+	this['QTL SNP Number'] = "",
+	this['QTL ID'] = "",
+	this['QTL BP'] = "",
+	this['QTL Chromosome'] = "",
+	this['QTL Allele Frequency'] = 0.5,
 	this['QTL Optional Info'] = ''
 }
 
@@ -164,7 +172,7 @@ function myCulling (){
 }
 
 function myPopulation (){
-	this['subpopulation_list'] = [{Name: "Population 1", beta1 : 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, 'QTL Info': []}]
+	this['subpopulation_list'] = [{Name: "Population 1", beta1 : 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, nindi: 100, sharef: 0.5, ngen: 0, majorfreq: true, 'QTL Info': []}]
 }
 
 function mySelectionScaling (selection_index){
@@ -264,6 +272,7 @@ var data_Vue = new Vue({
 		show_geninfo: false,
 		show_menu: false,
 		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Salmon', 'Other'],
+		units_options: ['select node/edge', 'nodes', 'edges'],
 		Time_Unit_options: ['Years', 'Month', 'Weeks', 'Days'],
 		true_false_options: ['TRUE', 'FALSE'],
 		w_options: ['Per Unit', 'Per Phenotypic SD', 'Per Breeding Value SD', 'Per Genomic Value SD'],
@@ -275,6 +284,7 @@ var data_Vue = new Vue({
 		show_matrix2: true,
 		show_matrix_element: [],
 		selection_type : ['Phenotype', 'Breeding Value', 'Genomic Value'],
+		major_qtl_type: ['SNP + Chromosome', "SNP ID", 'BasePair + Chromosome'],
 		selection_index : [{'Name': 'Default Index'}, {'Name': 'Non'}],
 		selection_index_scaling : [{'Name': 'Default Index', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}, {'Name': 'Non', 'active_scaling': false, 'miesenberger': false, 'w_scaling': 'Per Unit'}],
 		phenotyping_class : [{'Name': 'Fully phenotyped', 'Cost of phenotyping': 0}, {'Name': 'Not phenotyped', 'Cost of phenotyping': 0}],
@@ -309,6 +319,21 @@ var data_Vue = new Vue({
 		allDBUsers:[],
 		isPrShared:false,
 		isSharedExist:'',
+		majorvisible : false,
+		
+		change_type: 'select node/edge',
+		change_type1: 'All',
+		change_type2: 'All',
+		change_type3: 'All',
+		change_type4: 'All',
+		change_type5: '',		
+		change_type7: 'All',		
+		change_type8: 'All',
+		change_type9: 'Remain unchanged',
+		change_type10: '',
+		change_type11: 'Remain unchanged',
+		change_type12: 'Remain unchanged',
+		change_type13: [],
 		
 		// params for nodes and edges:
 		nodes: nodes,
@@ -319,10 +344,14 @@ var data_Vue = new Vue({
 		edge_operation: '',
 		Sex_options: ['Male', 'Female', 'Both', 'Indefinit'],
 		Sex_options2: ['Male', 'Female', 'Both'],
+		Sex_options3: ['All', 'Male', 'Female', 'Both'],
 		node_colors: {'Male':'#9acef4', 'Female':'#f29595', 'Both':'#ddd264'},
 		edge_colors: {'Selection':'#7bbb44', 'Reproduction':'#f5a623', 'Aging':'#dba59a', 'Combine':'#5a4f7c', 'Repeat':'#f14235',
 							'Split': '#94db8e', 'Cloning':'#9932CC', 'Selfing':'#ff90b7', 'DH-Production':'#aa76fd',
 							'Semen-collection': '#483D8B'},
+		ogc_targets: ['min.sKin', 'max.BV', 'min.BV'], 
+		ogc_constrain: ['ub.BV', 'eq.BV', 'lb.BV', 'ub.sKin', 'uniform', 'lb.BV.increase', 'ub.sKin.increase', 'inactive'],
+		ogc_uniform: ['male', 'female'],
 		counter_pheno: 0,
 		counter_qtl:0,
 		counter_qtl_sub:0,
@@ -335,6 +364,7 @@ var data_Vue = new Vue({
 		list_cohorts: [],		
 		Genotype_generation_options: ["Upload Genotypes", "Random-sampling", "Fully-homozygous", "Fully-heterozygous", "All-B-Allele", "All-A-Allele"],
 		Breedingtype_options: ['Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'],
+		Breedingtype_options2: ['All', 'Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'],
 		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
 		BVEMethod_options: ['Direct Mixed-Model', 'Last BVE', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
@@ -623,7 +653,7 @@ var data_Vue = new Vue({
 				alert("No name for subpopulation entered. No subpopulation generated.")
 				return;				
 			}
-			var newSub = {Name: val, beta1: 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, 'QTL Info': []};
+			var newSub = {Name: val, beta1: 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, nindi: 100, sharef: 0.5, ngen: 0,  majorfreq: true, 'QTL Info': []};
 			this.subpopulation['subpopulation_list'].push(newSub);	
 			document.getElementById("newSubpopulationClass").value='';				
 		},	
@@ -763,6 +793,203 @@ var data_Vue = new Vue({
 			this.phenotyping_class.splice(ind,1);
 
 		},	
+		
+		ExecuteChanges: function(){
+			
+			var nnodes = 0;
+
+			if(data_Vue.change_type == 'nodes'){
+				nodes = data_Vue.nodes.get();
+				for(i = 0; i<nodes.length;i++){
+					console.log(i);
+					if((data_Vue.change_type5=="" || data_Vue.change_type5 == nodes[i]['Number of Individuals']) & 
+							(data_Vue.change_type4=='All' || data_Vue.change_type4 == nodes[i]['Sex']) & 
+							(data_Vue.change_type7=='All' || data_Vue.change_type7 == nodes[i]["Phenotyping Class"]) & 
+							(data_Vue.change_type8=='All' || data_Vue.change_type8 == nodes[i]["Housing Cost Class"])){
+								
+						nnodes++
+						
+						if(data_Vue.change_type10!=""){
+							nodes[i]['Number of Individuals'] = data_Vue.change_type10;
+							nodes[i]['individualsVar'] = data_Vue.change_type10;
+							nodes[i]['label'] = nodes[i]['id'] + ' (' + data_Vue.change_type10 +')';
+							nodes[i]['title'] = nodes[i]['id'] + ': ' + data_Vue.change_type10 ;
+						}
+						
+						if(data_Vue.change_type9!="Remain unchanged"){
+							nodes[i]['Sex'] = data_Vue.change_type9;
+							if(nodes[i]['Sex']=="Male"){
+								nodes[i]['color'] = "#9acef4";
+							}
+							if(nodes[i]['Sex']=="Female"){
+								nodes[i]['color'] = "#f29595";
+							}
+							if(nodes[i]['Sex']=="Both"){
+								nodes[i]['color'] = "#ddd264";
+							}
+						}
+						if(data_Vue.change_type11!="Remain unchanged"){
+							nodes[i]['Phenotyping Class'] = data_Vue.change_type11;
+						}
+						if(data_Vue.change_type12!="Remain unchanged"){
+							nodes[i]['Housing Cost Class'] = data_Vue.change_type12;
+						}
+						
+
+						data_Vue.nodes.update(nodes[i]);
+					}
+					
+					data_Vue.active_node=[];
+					
+				}
+				
+			};
+			if(data_Vue.change_type=='edges'){
+				nodes = data_Vue.nodes.get();
+				edges = data_Vue.edges.get();
+				for(i = 0; i < edges.length; i++){
+					
+					for(j=0; j<nodes.length; j++){
+						if(edges[i]["from"] == nodes[j]["id"]){
+							sex1 = nodes[j]["Sex"];
+						}
+						if(edges[i]["to"] == nodes[j]["id"]){
+							sex2 = nodes[j]["Sex"];
+						}
+					}
+					
+					if((data_Vue.change_type1==edges[i]["Breeding Type"] | data_Vue.change_type1=="All") && (data_Vue.change_type2=="All" | data_Vue.change_type2==sex1) & (data_Vue.change_type3=="All" | data_Vue.change_type3==sex2)){
+
+						nnodes++
+						if(data_Vue.change_type13["Breeding Type"]!=undefined & data_Vue.change_type13["Breeding Type"] != "Remain unchanged"){
+							edges[i]["Breeding Type"] = data_Vue.change_type13["Breeding Type"];
+							
+							if(edges[i]["Breeding Type"] == "Selection"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#7bbb44";
+							}
+							if(edges[i]["Breeding Type"] == "Reproduction"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#f5a623";
+							}
+							if(edges[i]["Breeding Type"] == "Aging"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#dba59a";
+							}
+							if(edges[i]["Breeding Type"] == "Combine"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#5a4f7c";
+							}
+							if(edges[i]["Breeding Type"] == "Repeat"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#f14235";
+							}
+							if(edges[i]["Breeding Type"] == "Split"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#94db8e";
+							}
+							if(edges[i]["Breeding Type"] == "Cloning"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#9932CC";
+							}
+							if(edges[i]["Breeding Type"] == "Selfing"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#ff90b7";
+							}
+							if(edges[i]["Breeding Type"] == "DH-Production"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#aa76fd";
+							}
+							if(edges[i]["Breeding Type"] == "Semen-collection"){
+								edges[i].color.color = edges[i].color.highlight = edges[i].color.hover = "#483D8B";
+							}
+						}
+						if(data_Vue.change_type13["Time Needed"]!=undefined &data_Vue.change_type13["Time Needed"] != ""){
+							edges[i]["Time Needed"] = data_Vue.change_type13["Time Needed"];
+						}
+						
+						if(data_Vue.change_type13["last_available"]!=undefined &data_Vue.change_type13["last_available"] != "Remain unchanged"){
+							edges[i]["last_available"] = data_Vue.change_type13["last_available"]=="true";
+						}
+						if(data_Vue.change_type13["OGC"]!=undefined &data_Vue.change_type13["OGC"] != "Remain unchanged"){
+							edges[i]["OGC"] = data_Vue.change_type13["OGC"];
+						}
+						if(data_Vue.change_type13["full_sib"]!=undefined &data_Vue.change_type13["full_sib"] != "Remain unchanged"){
+							edges[i]["full_sib"] = data_Vue.change_type13["full_sib"]=="true";
+						}
+						if(data_Vue.change_type13["half_sib"]!=undefined &data_Vue.change_type13["half_sib"] != "Remain unchanged"){
+							edges[i]["half_sib"] = data_Vue.change_type13["half_sib"]=="true";
+						}
+						if(data_Vue.change_type13["ogc_aCa"]!=undefined &data_Vue.change_type13["ogc_aCa"] != ""){
+							edges[i]["ogc_aCa"] = data_Vue.change_type13["ogc_aCa"];
+						}
+						if(data_Vue.change_type13["Max Offspring"]!=undefined &data_Vue.change_type13["Max Offspring"] != ""){
+							edges[i]["Max Offspring"] = data_Vue.change_type13["Max Offspring"];
+						}
+						if(data_Vue.change_type13["Max Offspring Pair"]!=undefined &data_Vue.change_type13["Max Offspring Pair"] != ""){
+							edges[i]["Max Offspring Pair"] = data_Vue.change_type13["Max Offspring Pair"];
+						}
+						if(data_Vue.change_type13["selection_ratio"]!=undefined &data_Vue.change_type13["selection_ratio"] != ""){
+							edges[i]["selection_ratio"] = data_Vue.change_type13["selection_ratio"];
+						}
+						if(data_Vue.change_type13["selection_ratio_type"]!=undefined &data_Vue.change_type13["selection_ratio_type"] != ""){
+							edges[i]["selection_ratio_type"] = data_Vue.change_type13["selection_ratio_type"];
+						}
+						if(data_Vue.change_type13["selection_ratio_index"]!=undefined &data_Vue.change_type13["selection_ratio_index"] != "Remain unchanged"){
+							edges[i]["selection_ratio_index"] = data_Vue.change_type13["selection_ratio_index"];
+						}
+						if(data_Vue.change_type13["Number of Repeat"]!=undefined &data_Vue.change_type13["Number of Repeat"] != ""){
+							edges[i]["Number of Repeat"] = data_Vue.change_type13["Number of Repeat"];
+						}
+						if(data_Vue.change_type13["Selection Type"]!=undefined &data_Vue.change_type13["Selection Type"] != "Remain unchanged"){
+							edges[i]["Selection Type"] = data_Vue.change_type13["Selection Type"];
+						}
+						if(data_Vue.change_type13["BVE Method"]!=undefined &data_Vue.change_type13["BVE Method"] != "Remain unchanged"){
+							edges[i]["BVE Method"] = data_Vue.change_type13["BVE Method"];
+						}
+						if(data_Vue.change_type13["MAS_marker"]!=undefined &data_Vue.change_type13["MAS_marker"] != ""){
+							edges[i]["MAS_marker"] = data_Vue.change_type13["MAS_marker"];
+						}
+						for(j=1; j<=data_Vue.traitsinfo; j++){
+							if(data_Vue.change_type13[j]!=undefined &data_Vue.change_type13[j] != ""){
+								edges[i][j] = data_Vue.change_type13[j];
+							}
+						}
+
+						if(data_Vue.change_type13["Selection Index"]!=undefined &data_Vue.change_type13["Selection Index"] != "Remain unchanged"){
+							edges[i]["Selection Index"] = data_Vue.change_type13["Selection Index"];
+						}
+						if(data_Vue.change_type13["threshold"]!=undefined &data_Vue.change_type13["threshold"] != ""){
+							edges[i]["threshold"] = data_Vue.change_type13["threshold"];
+						}
+						if(data_Vue.change_type13["threshold_sign"]!=undefined &data_Vue.change_type13["threshold_sign"] != "Remain unchanged"){
+							edges[i]["threshold_sign"] = data_Vue.change_type13["threshold_sign"];
+						}
+						if(data_Vue.change_type13["reliability"]!=undefined &data_Vue.change_type13["reliability"] != "Remain unchanged"){
+							edges[i]["reliability"] = data_Vue.change_type13["reliability"];
+						}
+						if(data_Vue.change_type13["skip"]!=undefined &data_Vue.change_type13["skip"] != "Remain unchanged"){
+							edges[i]["skip"] = data_Vue.change_type13["skip"];
+						}
+						if(data_Vue.change_type13["phenotype_used"]!=undefined &data_Vue.change_type13["phenotype_used"] != "Remain unchanged"){
+							edges[i]["phenotype_used"] = data_Vue.change_type13["phenotype_used"];
+						}
+						if(data_Vue.change_type13["Relationship Matrix"]!=undefined &data_Vue.change_type13["Relationship Matrix"] != "Remain unchanged"){
+							edges[i]["Relationship Matrix"] = data_Vue.change_type13["Relationship Matrix"];
+						}
+						if(data_Vue.change_type13["Depth of Pedigree"]!=undefined &data_Vue.change_type13["Depth of Pedigree"] != ""){
+							edges[i]["Depth of Pedigree"] = data_Vue.change_type13["Depth of Pedigree"];
+						}
+						if(data_Vue.change_type13["Cohorts used in BVE"]!=undefined &data_Vue.change_type13["Cohorts used in BVE"] != "Remain unchanged"){
+							edges[i]["Cohorts used in BVE"] = data_Vue.change_type13["Cohorts used in BVE"];
+						}
+						
+						if(data_Vue.change_type13["Manuel selected cohorts"]!=undefined && data_Vue.change_type13["Manuel selected cohorts"].length>0){
+							edges[i]["Manuel selected cohorts"] = data_Vue.change_type13["Manuel selected cohorts"];
+						}
+						
+						data_Vue.edges.update(edges[i]);
+						
+					}
+
+				}
+				
+			}
+			
+			alert(nnodes + ' nodes/edges were considered for modification.')
+			
+		},
 		// create/remove new Chromosomes on change of the # Chromosomes, depending on 
 		// whether new number is greater or smaller --> remove from bottom
 		createChrom: function(){
@@ -1418,7 +1645,8 @@ function importNetwork_intern(inputData1) {
 	var inputData = JSON.parse(JSON.stringify(inputData1));
 	data_Vue.nodes = new vis.DataSet(inputData['Nodes']);
 	data_Vue.edges = new vis.DataSet(inputData['Edges']);
-	
+
+
 	var prior_user = data_Vue.geninfo.user;
 	var prior_userclass = data_Vue.geninfo.curUserGroup;
 	data_Vue.geninfo = inputData['Genomic Info'] ? inputData['Genomic Info'] : new myGeneral();
@@ -1431,11 +1659,17 @@ function importNetwork_intern(inputData1) {
 	if(data_Vue.geninfo['advanced_test']==undefined){
 		data_Vue.geninfo['advanced_test'] = false;
 	}
+	if(data_Vue.geninfo['advanced_ld']==undefined){
+		data_Vue.geninfo['advanced_ld'] = false;
+	}
 	if(data_Vue.geninfo['advanced_history']==undefined){
 		data_Vue.geninfo['advanced_history'] = false;
 	}
 	if(data_Vue.geninfo['advanced_litter']==undefined){
 		data_Vue.geninfo['advanced_litter'] = false;
+	}
+	if(data_Vue.geninfo['advanced_multi']==undefined){
+		data_Vue.geninfo['advanced_multi'] = false;
 	}
 	if(data_Vue.geninfo['advanced_miraculix']==undefined){
 		data_Vue.geninfo['advanced_miraculix'] = true;
@@ -1524,6 +1758,15 @@ function importNetwork_intern(inputData1) {
 		data_Vue.geninfo['advanced_advanced_copy'] = false;
 	}
 	
+	if(data_Vue.geninfo['max_d']==undefined){
+		data_Vue.geninfo['max_d'] = 25;
+	}
+	if(data_Vue.geninfo['max_d2']==undefined){
+		data_Vue.geninfo['max_d2'] = 25;
+	}
+		if(data_Vue.geninfo['advanced_advanced_copy']==undefined){
+		data_Vue.geninfo['advanced_advanced_copy'] = false;
+	}
 	if(data_Vue.plottingData.confidence==undefined){
 		data_Vue.plottingData.confidence = false;
 	}
@@ -1534,7 +1777,58 @@ function importNetwork_intern(inputData1) {
 	if(data_Vue.geninfo['sharedWith']==undefined){
 		data_Vue.geninfo['sharedWith'] = '';
 	}
+	
+	if(data_Vue.geninfo['majorQTLsyntax']==undefined){
+		data_Vue.geninfo['majorQTLsyntax'] = 'SNP + Chromosome';
+	}
 
+	if(data_Vue.change_type==undefined){
+		data_Vue.change_type = 'select node/edge';
+	}
+	
+	if(data_Vue.change_type1==undefined){
+		data_Vue.change_type1 = 'All';
+	}
+	
+	if(data_Vue.change_type2==undefined){
+		data_Vue.change_type2 = 'All';
+	}
+		
+	if(data_Vue.change_type3==undefined){
+		data_Vue.change_type3 = 'All';
+	}	
+	if(data_Vue.change_type4==undefined){
+		data_Vue.change_type4 = 'All';
+	}	
+	if(data_Vue.change_type5==undefined){
+		data_Vue.change_type5 = '';
+	}
+	
+	if(data_Vue.change_type7==undefined){
+		data_Vue.change_type7 = 'All';
+	}
+	if(data_Vue.change_type8==undefined){
+		data_Vue.change_type8 = 'All';
+	}
+		if(data_Vue.change_type9==undefined){
+		data_Vue.change_type9 = 'Remain unchanged';
+	}
+		if(data_Vue.change_type10==undefined){
+		data_Vue.change_type10 = '';
+	}
+		if(data_Vue.change_type11==undefined){
+		data_Vue.change_type11 = 'Remain unchanged';
+	}
+		if(data_Vue.change_type12==undefined){
+		data_Vue.change_type12 = 'Remain unchanged';
+	}
+		if(data_Vue.change_type13==undefined){
+		data_Vue.change_type13 = [];
+	}
+	if(data_Vue.majorvisible==undefined){
+		data_Vue.majorvisible = false;
+	}
+	
 	data_Vue.traitsinfo = inputData['Trait Info'] ? inputData['Trait Info'] : [];
 	data_Vue.selection_index = inputData['Selection Index'];
 	if(inputData['PhenotypicResidual']){
@@ -1567,12 +1861,57 @@ function importNetwork_intern(inputData1) {
 	}
 	if(inputData['Subpopulation']){
 		data_Vue.subpopulation = inputData['Subpopulation'];
+		
+		for(i = 0; i < data_Vue.subpopulation.subpopulation_list.length; i++){
+			if(data_Vue.subpopulation.subpopulation_list[i].nindi == undefined){
+				data_Vue.subpopulation.subpopulation_list[i].nindi = 100;
+			}
+			if(data_Vue.subpopulation.subpopulation_list[i].sharef == undefined){
+				data_Vue.subpopulation.subpopulation_list[i].sharef = 0.5;
+			}
+			if(data_Vue.subpopulation.subpopulation_list[i].ngen == undefined){
+				data_Vue.subpopulation.subpopulation_list[i].ngen = 0;
+			}
+			if(data_Vue.subpopulation.subpopulation_list[i].majorfreq == undefined){
+				data_Vue.subpopulation.subpopulation_list[i].majorfreq = true;
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}else{
 		data_Vue.subpopulation = new myPopulation();
 	}
 	
 	if(inputData['Phenotyping Info']){
 		data_Vue.phenotyping_class = inputData['Phenotyping Info'];
+		
+		for(var i=0; i < data_Vue.phenotyping_class.length; i++){
+			if(data_Vue.phenotyping_class[i]["Cost of phenotyping"] == undefined){
+				data_Vue.phenotyping_class[i]["Cost of phenotyping"] = "0";
+			}
+		}
 	}else{
 		// an older Version of JSON file, maually add phenoC
 		data_Vue.phenotyping_class = [{Name: "Fully phenotyped"}];
@@ -1671,6 +2010,39 @@ function importNetwork_intern(inputData1) {
 	}
 	loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
 	loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
+	
+	if(data_Vue.nodes.length >0){
+		nodes = data_Vue.nodes.get();
+		for(i = 0; i < nodes.length; i ++){
+			if(nodes[i]["Proportion of genotyped individuals"] == undefined){
+				nodes[i]["Proportion of genotyped individuals"] = 1;
+			}
+			if(nodes[i]["Phenotyping Class"] == undefined){
+				nodes[i]["Phenotyping Class"] = data_Vue.phenotyping_class[0]["Name"];
+			}
+			data_Vue.nodes.update(nodes[i]);
+		}
+	}
+	
+	if(data_Vue.edges.length > 0){
+		edges = data_Vue.edges.get();
+		for(i = 0; i < edges.length; i++){
+			if(edges[i]["Time Needed"] == undefined){
+				edges[i]["Time Needed"] = 0;
+			}
+			if(edges[i]["Cohorts used in BVE"] == undefined){
+				edges[i]["Cohorts used in BVE"] = "";
+			}
+			if(edges[i]['Selection Type'] ==undefined){
+				edges[i]['Selection Type'] = "Random";
+			} 
+			if(edges[i]['Selection Index'] ==undefined){
+				edges[i]['Selection Index'] = data_Vue.selection_index[0]["Name"];
+			} 
+			data_Vue.edges.update(edges[i]);
+		}
+	}
+	
 	
 	draw();
 	console.log("Loading Data successful.");

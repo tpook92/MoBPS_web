@@ -276,7 +276,7 @@ app.post('/Rsim1', function(request, response) {
 	
 	request.setTimeout(5*24*60*60*1000);
 
-	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Rsim1.r') + " --args "+request.session.username+" "+ JSON.stringify(request.body.jsondata) +"";
+	var command = "nohup env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 R --file="+ path.join(__dirname + '/Rmodules/Rsim1.r') + " --args "+request.session.username+" "+ JSON.stringify(request.body.jsondata) +"";
 	console.log(command);
 	
 	fs.writeFile(path.join(__dirname + '/Rmodules/UserScripts/'+ request.session.username+ '.sh'), command, function(err){
@@ -562,6 +562,7 @@ app.get('/Rdownload', function(request, res){
 				res.download(textfile);
 			}
 		});
+		
 	} else {
 		res.send('Please select a project to download RData!');
 	}

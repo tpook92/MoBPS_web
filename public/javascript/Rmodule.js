@@ -38,6 +38,48 @@ function checkRunTime(){
 	return comptime;	
 }
 
+
+function alignNodes(){
+	
+	max_d = data_Vue.geninfo.max_d
+	max_d2 = data_Vue.geninfo.max_d2
+	var nodes = data_Vue.nodes.get();
+	x_values = [];
+	for(var i=0; i < nodes.length; i++){
+			x_values.push(nodes[i].x);
+	}
+	for(var i=0; i < nodes.length; i++){
+		for(var j=0; j < i; j++){
+			if(x_values[i] < (x_values[j] + max_d) && x_values[i] > (x_values[j] - max_d)){
+				x_values[i] = x_values[j];
+			}
+		}
+	}
+	for(var i=0; i < nodes.length; i++){
+		nodes[i].x = x_values[i]
+	}
+
+
+	y_values = [];
+	for(var i=0; i < nodes.length; i++){
+			y_values.push(nodes[i].y);
+	}
+	for(var i=0; i < nodes.length; i++){
+		for(var j=0; j < i; j++){
+			if(y_values[i] < (y_values[j] + max_d2) && y_values[i] > (y_values[j] - max_d2)){
+				y_values[i] = y_values[j];
+			}
+		}
+	}
+	for(var i=0; i < nodes.length; i++){
+		nodes[i].y = y_values[i]
+	}
+	
+	for(var i=0; i < nodes.length; i++){
+		data_Vue.nodes.update(nodes[i])
+	}
+}
+
 function runningR(){
 	
   
@@ -768,7 +810,13 @@ function RunDataPreparation(){
 	var auser = data_Vue.user
 	var filename = data_Vue.geninfo["Project Name"];
 	var dtype = data_Vue.plottingPar.download1;
-	var cohort = data_Vue.plottingPar.download2.id;
+	if(data_Vue.plottingPar.download2=="ALL"){
+		var cohort = data_Vue.plottingPar.download2;
+	} else{
+		var cohort = data_Vue.plottingPar.download2.id;
+	}
+
+	
 	if(data_Vue.plottingPar.download3 == undefined){
 		var nrepeat = 0;
 	} else{
@@ -1351,7 +1399,7 @@ function plottingResultgMeanGroup(){
 				data_plot.push(data2[i][p]);
 			}
 		}
-				
+
 		Plotly.newPlot('ResgMeanGroup_Div'+(i+1),  data_plot, layout, config);
 	}
 }
@@ -2053,7 +2101,7 @@ function plottingResultQTL(){
 		}
 	}
 	
-	var titles = ["Allele Frequency (A)", "Observed Heterozygosity", "Expected Heterozygosity"];
+	var titles = ["Allele Frequency (B)", "Observed Heterozygosity", "Expected Heterozygosity"];
 	for(var i=0; i < 3; i++){
 		var layout = {
 			//title : titles[i],
@@ -2155,7 +2203,7 @@ function plottingResultQTLGroup(){
 		}
 	}
 	
-	var titles = ["Allele Frequency (A)", "Observed Heterozygosity", "Expected Heterozygosity"];
+	var titles = ["Allele Frequency (B)", "Observed Heterozygosity", "Expected Heterozygosity"];
 	for(var i=0; i < 3; i++){
 		var layout = {
 			//title : titles[i],
