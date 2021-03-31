@@ -1,5 +1,3 @@
-Vue.component('treeselect', VueTreeselect.Treeselect);
-
 var queryString = window.location.search;
 var urlParams = new URLSearchParams(queryString);
 var cpuser = urlParams.get('cpuser');
@@ -106,34 +104,24 @@ function getProjectsFromDB(){
 }
 
 function updateUser(){
-	
-
 	$.get('/user', function(dat){
-
 		data_Vue.user = dat.username;
 		data_Vue.curUserGroup = dat.usergroup;
 		data_Vue.cpInfo['curUserGroup'] = dat.usergroup;
 	})
 	
 	if(data_Vue.user == undefined || data_Vue == ""){
-		
 		$.post('/recover', function(dat){
-			console.log(dat)
 			splitdata = dat.split(",")
 			data_Vue.user = splitdata[0];
 			splitdata.shift();
 			data_Vue.database = splitdata;
 		})
-		
 	} else{
-		
 		$.post('/database', function(dat){
 			data_Vue.database = dat;
 		})
 	}
-	
-	
-
 	localStorage.clear();
 }
 
@@ -165,9 +153,7 @@ function getProjects(val) {
 	  }
 
 	data_Vue.compareProjects = compProjects;
-	
 	jsonListofProjects(data_Vue.compareProjects);
-	
 }
 
 function jsonListofProjects (plist) {

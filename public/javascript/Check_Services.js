@@ -197,13 +197,13 @@ function checkEverything(id){
 					data_Vue.warnings2.push(gen_warn_text);
 				}
 
-				gen_warn_text = "Pheno"+(i+1)+" : "+"Trait value per unit must be a number.";
+				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Value per Unit and must be in number.";
 				if((data_Vue.traitsinfo[i]['Trait Value per Unit'] == "" & data_Vue.traitsinfo[i]['Trait Value per Unit']  != "0") & data_Vue.warnings2.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings2.push(gen_warn_text);
 				}
 
 								
-				gen_warn_text = "Pheno"+(i+1)+" : "+"Number of major QTLs must be positive or zero.";
+				gen_warn_text = "Pheno"+(i+1)+" : "+"Please enter Major QTL and must be in positive number or can be zero. ";
 				thisMajorQTL = data_Vue.traitsinfo[i]['Trait Major QTL']
 				if(thisMajorQTL < 0 & data_Vue.warnings2.indexOf(gen_warn_text) ==-1){  
 					data_Vue.warnings2.push(gen_warn_text);
@@ -223,14 +223,6 @@ function checkEverything(id){
 		}
 		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5, data_Vue.warnings6);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
-		
-		a = false;
-		for(i = 0; i < data_Vue.traitsinfo.length; i++){
-			if(data_Vue.traitsinfo[[i]]['Trait Major QTL'] > 0){
-				a = true;
-			}
-		}
-		data_Vue.majorvisible = a
 	}	// end of phenotype validation
 	
 	
@@ -328,12 +320,12 @@ function checkEverything(id){
 				checkpVar = isNumeric(pVar);  
 				checkPospVar = isPositiveInt(pVar);
 					
-				gen_warn_text = pName+": Costs of phenotyping should be positive or zero.";
+				gen_warn_text = pName+":Phenotyping Cost"+(i+1)+": Please enter phenotyping classes and it must be a positive number or zero.";
 				if ((isNaN(Cost) || Cost <0) & data_Vue.warnings6.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings6.push(gen_warn_text);
 				}
 
-				gen_warn_text = pName+(i+1)+": Number of generated phenotypes must be positive or zero.";
+				gen_warn_text = pName+(i+1)+":Pheno"+(j+1)+": Please enter phenotyping classes and it must be a positive number or zero.";
 				if ((pVar == null || isNaN(pVar) || pVar < 0 || checkpVar == false || checkPospVar == false) & data_Vue.warnings6.indexOf(gen_warn_text) == -1) {
 					data_Vue.warnings6.push(gen_warn_text);
 				}
@@ -410,11 +402,15 @@ function checkEverything(id){
 			thisName = ownVariable[i]['name'];
 			thisValue = ownVariable[i]['value'];
 
-			gen_warn_text = thisName+" : "+" Declared own variable must be positive or zero.";
+			gen_warn_text = thisName+" : "+"Please enter Own variable and must be a positive number.";
 
-			if((thisValue == "" || thisValue <0 || isNaN(thisValue)) & data_Vue.warnings3.indexOf(gen_warn_text) == -1){
-				data_Vue.warnings3.push(gen_warn_text);
+			if((thisValue == "" || thisValue =="0" || thisValue <0 || isNaN(thisValue)) & data_Vue.warnings3.indexOf(gen_warn_text) == -1){
+				data_Vue.warnings2.push(gen_warn_text);
 			}
+			else if((thisValue != "" & thisValue >0) & data_Vue.warnings3.indexOf(gen_warn_text) > -1){
+				data_Vue.warnings3.splice(data_Vue.warnings3.indexOf(gen_warn_text),1); 
+			}		
+				
 		}
 		data_Vue.warnings = data_Vue.warnings1.concat(data_Vue.warnings2, data_Vue.warnings3, data_Vue.warnings4, data_Vue.warnings5 , data_Vue.warnings6);
 		data_Vue.warnings = data_Vue.warnings.filter(Boolean);
@@ -574,7 +570,7 @@ function checkEverything(id){
 					}
 				}
 				if(edge_type[i] =="Selection" || edge_type[i] == "Aging" || edge_type[i] == "Split"){
-					if(nodes[edge_nrfrom[i]]['Sex']!=nodes[edge_nrto[i]]['Sex'] & nodes[edge_nrfrom[i]]['Sex'] != "Both"){
+					if(nodes[edge_nrfrom[i]]['Sex']!=nodes[edge_nrto[i]]['Sex'] & nodes[edge_nrto[i]]['Sex'] != "Both"){
 						gen_warn_text = "Different sex between nodes " + edge_to[i] + " and " + edge_from[i];
 						data_Vue.warnings5.push(gen_warn_text);
 					}

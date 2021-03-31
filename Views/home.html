@@ -4,7 +4,7 @@
 	
 	<script type="text/javascript">
 		var isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-		console.log(isBrowserSafari);
+		//console.log(isBrowserSafari);
 	</script>
 		
 	<head>
@@ -13,9 +13,8 @@
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
-		
-		<script src="https://unpkg.com/vue-slider"></script>
-			
+		<link rel="shortcut icon" href="#">		
+
 		<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
     	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
 		
@@ -28,29 +27,22 @@
 		<link src="https://visjs.github.io/vis-network/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
 		
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
 
 		<link rel="stylesheet" type="text/css" href="./styles/mobps.css">
 	
 		<!--  for javascript and ajax call -->		
-		<script type="text/javascript" src="javascript/jQ1.js"></script>
-		<script type="text/javascript" src="javascript/jQ2.js"></script>
-		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
+		<script type="text/javascript" src="javascript/jQ2_2.js"></script> 
 		<script type="text/javascript" src="javascript/jQ3.js"></script>
-		
-		<!-- excel to json related files -->
-		<script lang="javascript" src="javascript/jszip_excelToArray.js"></script>
-		<script lang="javascript" src="javascript/xlsx_excelToArray.js"></script>
-		<script lang="javascript" src="javascript/excelToArray.js"></script>
 		
 		<!-- for drag and drop for Phenotype table -->	
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.16.0/vuedraggable.min.js"></script>	
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
 
 	</head>
 
 	<body onload="init();">
-
 		
 		<div id="runningDog">
 			<button style="color: red" class='bar_button' onclick="stopR();">Stop R Simulation</button> 
@@ -95,32 +87,24 @@
 				<button class='showhide_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
 				<button class='showhide_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 				&nbsp;
-				<a :href="'http://mobps.de/compareProjects?cpuser=' + geninfo['user']+'&cpusergroup='+geninfo['curUserGroup']" class ="additional_link" onclick=writeTemp()> Compare Projects</a>
-
-
+				<a :href="'http://mobps.de/compareProjects?cpuser=' + geninfo['user']+'&cpusergroup='+geninfo['curUserGroup']" class ="additional_link" > Compare Projects</a>
 			</div>
-			
 			<div id='shareProject_Div'>
 			    <p>
 			      <input type="button" class="button_type" id="addRow" value="Add User" onclick="addRow()" />
 			    </p>
-											<br>
 			    <div id="cont"></div>
 				<br>
 			      <p>
 			        <input type="button" class="button_type" value="Submit" onclick="shareUsersubmit()" />
 					<input type="button" value="Cancel" class="button_type" onclick="document.getElementById('shareProject_Div').style.display = 'none'"/>
 			      </p>
-
 			</div>
-			
 			<div id='SaveAs_Div'>
 				New Project Name: <input id="saveAs-name" type="text" placeholder="Type a name"/> <br><br>
 				<input type="button" value="Save" id="SaveAs-saveButton" class="button_type" onclick="saveProject(document.getElementById('saveAs-name').value)" />
 				<input type="button" value="Cancel" id="SaveAs-cancelButton" class="button_type" onclick="document.getElementById('SaveAs_Div').style.display = 'none'"/>
 			</div>
-
-
 			<div id="warnings_sum">
 				<h4 v-if="warnings.length > 0" style="color: red; font-style:italic;"> Attention, there are {{warnings.length}} warnings! R Simulation most likely cannot be run unless they are fixed.</h4>
 			</div>
@@ -161,11 +145,9 @@
 						</span>
 					</span>
 				</div>
-			</transition>
-			
+			</transition>			
 
 		<div id="main">
-
 			<div id="LoadJSON_Div" >
 			<h2 v-if="geninfo['Project Name'] !== '' " > MoBPS &nbsp;&nbsp;  {{geninfo['Project Name']}} </h2>
 			<h2 v-if="geninfo['Project Name'] == '' " > MoBPS </h2>
@@ -173,8 +155,7 @@
 			<br>
 			<h3>Load a new/existent project from your own database:</h3>
 
-			<br>
-			
+			<br>			
 				<table id="load_table">
 					<tr>
 						<td> Project: 
@@ -190,7 +171,6 @@
 								{{ option }}
 							</option>
 						</select>
-
 						&nbsp;&nbsp; Version: 
 						<select id="Version" onchange="loadVersion(value)">
 							<option value="recent">(most recent)</option>
@@ -202,18 +182,12 @@
 						</select>
 						</td>
 					</tr>
-					<tr>
-						<td>
-						Filter Projects for Keyword: 
+					<tr><td>Filter Projects for Keyword: 
 							<input placeholder="Type in filter criterion" type="text" v-model="filter">
 							<button class="sub_button" v-on:click="FilterDatabase();"> Apply Filter </button>
-							<!--<input type='submit' value='Upload Map'>-->
-						</td>
-					</tr>					
+						</td></tr>					
 
-					<tr>
-						<td>
-						Exemplary Templates: 						
+					<tr><td>Exemplary Templates: 						
 						<select onchange="loadTemplate(value)" >
 							<option value="Create_New_12345XXX"></option>
 							<option v-for="(option,index) in template_database" v-bind:value="index">
@@ -223,7 +197,6 @@
 						</td>
 					</tr>
 				</table>
-
 				<br>		
 			
 			<h3 v-if="curUserGroup =='4'"> You are assigned to User Class Admin. 
@@ -252,10 +225,8 @@
 						&#8226 Basic tutorials are in preparation and can be found at: https://www.youtube.com/channel/UC4LDcBka39NidOF1y_65FFw<br>
 						&#8226 For advanced questions, bug reports, potentially collaborations  contact me! (Torsten Pook / torsten.pook@uni-goettingen.de)
 					</p>
-				</div>
-					
-			</div>
-			
+				</div>					
+			</div>			
 			
 			<div id="General_Info" v-on:click="show_info ='general'" onchange="checkEverything(this.id)">
 				<br>
@@ -272,10 +243,7 @@
 					</div>
 				
 				<table id="geninfo_table">
-					<colgroup>
-						<col width="40%">
-						<col width="60%">
-					</colgroup>
+					<colgroup><col width="40%">	<col width="60%"></colgroup>
 					<tr>
 						<td>Project Name
 							<span class="tooltip">&#9432 <span class="tooltiptext">Enter the name of your project. You can save/copy/delete your project via the action bar and load different version to return to.</span></span>
@@ -290,7 +258,6 @@
 							<input type="checkbox" v-model="geninfo['advanced']" style="vertical-align: 75%;">
 						</td>
 					</tr>
-
 					<tr v-if="geninfo['advanced']">
 						<td>Test-Mode / Size Scaling
 							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock the scaling of node sizes and ignore imported genotypes.</span></span>
@@ -299,9 +266,6 @@
 							<input type="checkbox" v-model="geninfo['advanced_test']" style="vertical-align: 75%;">
 						</td>
 					</tr>
-					
-				
-
 					<tr v-if="geninfo['advanced']">
 						<td style="font-weight:bold">Advanced Trait modelling
 							<span class="tooltip">&#9432 <span class="tooltiptext"> Activating this will unlock use of dominant and epistatic trait architectures.</span></span>
@@ -310,8 +274,7 @@
 							<input type="checkbox" v-model="geninfo['advanced_trait']" style="vertical-align: 75%;">
 						</td>
 					</tr>
-					
-						<tr v-if="geninfo['advanced'] & geninfo['advanced_trait'] ">
+					<tr v-if="geninfo['advanced'] & geninfo['advanced_trait'] ">
 							<td  style="text-indent:20px;">Non-additive effects
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will enable generation of non-additive QTL effect </span></span>
 							</td>
@@ -328,7 +291,6 @@
 								<input type="checkbox"  v-model="geninfo['advanced_trait_repeat']" style="vertical-align: 75%;">
 							</td>
 						</tr>
-						
 						<tr v-if="geninfo['advanced'] & geninfo['advanced_trait'] ">
 							<td  style="text-indent:20px;">Maternal / paternal effects
 								<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will enable modelling of maternal / paternal effects </span></span>
@@ -365,15 +327,6 @@
 							</td>
 						</tr>
 				
-					<tr v-if="geninfo['advanced']">
-						<td> LD build-up Module
-							<span class="tooltip">&#9432 <span class="tooltiptext">Activating this will unlock a module to simulated genomic data with baseline LD as a starting point of the simulation</span></span>
-						</td>
-						<td> 
-							<input type="checkbox" v-model="geninfo['advanced_ld']" style="vertical-align: 75%;">
-						</td>
-					</tr>
-					
 
 					<tr v-if="geninfo['advanced']">
 						<td>Culling Module 
@@ -1184,21 +1137,19 @@
 
 			<div id="corrDiv" style="display:none">
 				<h3> Import correlation matrices via Excel/csv  <span class="tooltip">&#9432 </h3>
-				
 				<button class="accordion"> Press here to get info on how this module works! </button>
+			
 				<div class="guideline">
-									<p class="guidelines"> 
-									<span class="tooltiptext">
-									This module is intended to import large-scale correlation matrices. <br>
-									&#8226 After importing this will overwrite all entries in Residual/Genetic correlation accordingly. <br>
-									&#8226 The first row and first column of the csv/excel should be name after used phenotypes <br>
-									&#8226 When importing both genetic and residual correlation matrix jointly make sure that: <br>
-									&#8226 Genetic correlation is above the diagonal and phenotypic correlation is below the diagonal <br>
-									</p>
-
+					<p class="guidelines"> 
+					<span class="tooltiptext">
+					This module is intended to import large-scale correlation matrices. <br>
+					&#8226 After importing this will overwrite all entries in Residual/Genetic correlation accordingly. <br>
+					&#8226 The first row and first column of the csv/excel should be name after used phenotypes <br>
+					&#8226 When importing both genetic and residual correlation matrix jointly make sure that: <br>
+					&#8226 Genetic correlation is above the diagonal and phenotypic correlation is below the diagonal <br>
+					</p>
 				</div>
-				
-				<div class="guideline">
+
  				<table id="load_table">
 					<tr>
 					<td>Select the type of Excel File:
@@ -1219,7 +1170,7 @@
 					<button class="sub_button" id="save_button" onclick="saveProject(geninfo['Project Name']);">Import Table</button></td>
 					</tr>
 				</table>
-				</div>	
+				<!--</div>-->	
 				</div>
 			</div>
 			
@@ -1365,66 +1316,6 @@
 					</table>
 					<br>
 				</template>	
-				
-				
-				<h3 v-if="geninfo['advanced'] && geninfo['advanced_ld']"> LD build-up
-					<span class="tooltip">&#9432 <span class="tooltiptext">
-					</span></span>
-				</h3>
-				
-				<button class="accordion" v-show="geninfo['advanced'] && geninfo['advanced_ld']"> Press here to get info on how this module works!</button>
-				<div class="guideline">
-						<p class="guidelines"> 
-						
-					&#8226 Founder genotypes on default have no LD / haplotype structure. <br> 
-					&#8226 This module provides options to perform generations of random mating to get a baseline population structure <br> 
-					&#8226 For more complex population history (e.g. bottlenecks, systematic drift etc) you need to simulate this via additional nodes in the breeding scheme <br>
-					&#8226 If different founder nodes should have different population history add multiple Subpopulations in the Subpopulation Module <br>
-					&#8226 This will alter the allele frequency spectrum selected in the Subpopulation module as it will lead to drift and thus usually include more rare / fixated markers <br>
-					</p>
-				</div>
-				
-				<table v-if="geninfo['advanced'] && geninfo['advanced_ld']" class="trait_table">
-
-					<tr>	
-						<td style="font-weight:bold">Subpopulation	
-						</td>
-						<td style="padding:5px;"> Individuals
-							<span class="tooltip">&#9432 <span class="tooltiptext"> Number of individuals to generate per generation </span></span>
-						</td>
-						<td style="padding:5px;"> Share female
-							<span class="tooltip">&#9432 <span class="tooltiptext"> Share of female individuals in each generation </span></span>
-						</td>
-						<td style="padding:5px;"> Generations
-											<span class="tooltip">&#9432 <span class="tooltiptext"> Number of generations to simulate. Larger populations usually require higher number of generations to build up stronger LD.</span></span>
-						</td>
-						<td style="padding:5px;"> Fix Major QTL frequency
-							<span class="tooltip">&#9432 <span class="tooltiptext"> Due to drift the allelel frequency of major QTLs can change in the LD build-up. By activating this, this will be negated. LD build-up will be negated for Major QTLs!</span></span>
-						</td>
-
-					</tr>
-					<tr v-for="(vv, ind) in subpopulation['subpopulation_list']">
-						<td>
-							{{vv.Name}}  
-						</td>
-						<td>
-							<input v-model="vv.nindi" style="width:100px;"> 
-						</td>
-						<td>
-							<input v-model="vv.sharef" style="width:100px;"> 
-						</td>
-						<td>
-							<input v-model="vv.ngen" style="width:100px;"> 
-						</td>
-						<td> 
-							<input type="checkbox" v-model="vv.majorfreq">
-						</td>
-					</tr>
-
-				</table>
-				
-				
-				
 				
 				<h3 v-if="geninfo['advanced'] && geninfo['advanced_culling']"> Culling
 					<span class="tooltip">&#9432 <span class="tooltiptext">
@@ -2301,7 +2192,6 @@
 				
 				<h3> Breeding Scheme </h3> 
 		
-				
 				<button class="accordion"> Press here to get info on how this module works!</button>
 				<div class="guideline">
 					<p class="guidelines"> 
@@ -2909,43 +2799,27 @@
 						<td v-if="isCohortNameChanged ==='Yes'" >	
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="updated_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 						</td>
-
-					</tr>
-				</table>
-			</div>
-			<br>
-        	
-				<button class="accordion"> Press here to get info on how this module works!</button>
-				<div class="guideline">
-					<p class="guidelines"> 
-						Intension of this module is to aline nodes in the flash application to get nice graphs <br>			
-						&#8226 All nodes with similar x or y coordinate will be put to the same value in the respective axis <br>
-						&#8226 Increase values to align more nodes / Reduce values to align less nodes <br>
-						&#8226 Expand flash environment will increase the size of the flash environment <br>
-					</p>									
-				</div> 
-				
-				
-							
-				<td>Max X-Axis difference</td>
-						<td>
-							<input placeholder="Max x-axis difference" type="text" v-model="geninfo['max_d']">
-						</td>
-				<td>Max Y-Axis difference</td>
-						<td>
-							<input placeholder="Max y-axis difference" type="text" v-model="geninfo['max_d2']">
-						</td>
-				<td>
-				 	<button class="sub_button" onclick="alignNodes()"> Align nodes </button>
-				</td>
-				
-				<p> Expand flash environment : <span class="tooltip">&#9432 <span class="tooltiptext"> Please click this button to have bigger breeding scheme diagram and save the project to rearrange nodes and edges.</span></span>
-					<input type="checkbox" id="bigFontNode" v-model="geninfo['bigFontNode']" style="cursor: pointer;width: 30px; height: 16px;" onclick="networkBoxChange()">
-				</p>
+						</tr>
+					</table>
+				</div>
 				<br>
-				
-        	<br>
-        	<br>	
+        	
+			<table style="margin:left; width: 70%;">
+			<tr>
+				<td>Max X-Axis difference</td>
+				<td> <input placeholder="Max x-axis difference" type="text" v-model="geninfo['max_d']">	</td>
+				<td>Max Y-Axis difference</td>
+				<td><input placeholder="Max y-axis difference" type="text" v-model="geninfo['max_d2']">	</td>
+				<td><button class="sub_button" onclick="alignNodes()"> Align nodes </button></td>
+			</tr>
+			</table>
+
+			<p> Expand flash enviroment : <span class="tooltip">&#9432 <span class="tooltiptext"> Please click this button to have bigger breeding scheme diagram and save the project to rearrange nodes and edges.</span></span>
+				 <input id="heightDefault" type="range" min="1" max="6" value="1" onchange="heightNetwork.value=value;networkBoxChange();"></input> 
+				<output id="heightNetwork">1</output>
+			</p>
+			<br>
+
 			<div v-if = "geninfo['Project Name']" id="Results_Div">
 				<h3 id="RSim"></h3>
 				<br>
@@ -3004,14 +2878,8 @@
 					<!--input type='submit' value='Load Results'-->
 					<button onclick="UploadSim();">Load Results</button>
 				</form>
-			
-
-
 			</div>
 
-
-				
-				
 				<br>
 				
 				<p v-show="runned">Click here to clear all results and plots.</p>
@@ -3034,11 +2902,7 @@
 						<span class="tooltip">&#9432 <span class="tooltiptext"> Download CSV file containing cohort names, number of individuals, time-point of generation, total costs, genotyping costs, cost phenotyping and  housing costs.</span></span>&nbsp; 
 						<a v-if="filename" href="/Exceldownload"> Download {{geninfo['Project Name']}}.csv </a> 
 						</p>
-						<br>				
-
-
-					
-					
+						<br>	
 						<div v-if="cohortsList.length >0">
 							<table  class="scrollableTable1">
 								<thead>
@@ -3064,7 +2928,6 @@
 									</tr>
 								</tbody>
 							</table>
-
 						</div>
 
 				<p v-if="cohortsList.length >0" class="boldText"> Download Cohorts List: 
@@ -3095,22 +2958,8 @@
 						</tbody>
 					</table>
 
-				</div>
-				
+				</div>			
 					
-				<button class="accordion"> Press here to get info on how this module works!</button>
-				<div class="guideline">
-					<p class="guidelines"> 
-						The following modules allow you to download information on the simulated data<br>			
-						&#8226 The population list itself is stored as an RData-object <br>
-						&#8226 In case you are not using miraculix you will not be able to decode underlying genotypes. If that is needed please deactive miraculix in the Advanced settings > miraculix-active <br>
-						
-						<br>
-						&#8226 Before downloading specific data files (VCF / phenotypes etc) press the Prepare data. <br>
-						&#8226 selecting repeat = 0 means the node itself. The first repeat (1) is the second cycle of the breeding program!
-					</p>									
-				</div> 
-				
 					<h4> Download population list: </h4>
 					<div class="populationList">	
 						<a href="/Rdownload" style="background-color:#eee;" onclick="alert('Genotype coding can vary between miraculix-versions / compilers! In case you plan to export genotype from the RData-object please deactivate miraculix for now (Advanced settings)!!!')"> Download RData</a>
@@ -3399,7 +3248,6 @@
 							</tr>
 						</thead>
 						<tbody>
-
 							<tr v-for='(cohorts, index) in cohortsTimeList' >
 								<td style="width:20%; text-align:left;"> {{cohortsTimeList[index]['Cohort name']}} </td>
 								<td> {{cohortsTimeList[index]['BVEtime']}} </td>
@@ -3407,14 +3255,9 @@
 								<td> {{cohortsTimeList[index]['Totaltime']}} </td>			
 		
 							</tr>
-						</tbody>
-						
+						</tbody>						
 					</table>
-
 				</div>
-				
-				
-				
 				</div>
 				<br>
 				<br>
@@ -3451,10 +3294,8 @@
 	<script type="text/javascript" src="javascript/GenomeData.js"></script>
 	
 	<!-- Eigene Javascripte Main Code -->
-	<script src="javascript/socket.io.js"></script>
 	<script type="text/javascript" src="javascript/home.js"></script>
-	<script type="text/javascript" src="javascript/Rmodule.js"></script>
-	
+	<script type="text/javascript" src="javascript/Rmodule.js"></script>	
 	
 	<!-- Eigene Javascripte Checking and additional Services -->
 	<script type="text/javascript" src="javascript/Check_Services.js"></script>
@@ -3529,15 +3370,43 @@
 		        o.style.height = (25+o.scrollHeight)+"px";
 		    }
 			
-		function networkBoxChange() {
-			if (document.getElementById("bigFontNode").checked == true) {
-			    document.getElementById("mynetwork_container").style.height = "1000px";
-			document.getElementById("mynetwork").style.height = "995px";
-			} 
-			else {
-			   document.getElementById("mynetwork_container").style.height = "800px";
-			   document.getElementById("mynetwork").style.height = "798px";
-			    }
+		function networkBoxChange() {       
+			if (heightNetwork.value == 1) {
+				document.getElementById("mynetwork_container").style.height = "930px";
+				document.getElementById("mynetwork").style.height = "926px";
+				network.setOptions({height: "926px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 2) {
+				document.getElementById("mynetwork_container").style.height = "1000px";
+				document.getElementById("mynetwork").style.height = "996px";
+				network.setOptions({height: "996px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 3) {
+				document.getElementById("mynetwork_container").style.height = "1100px";
+				document.getElementById("mynetwork").style.height = "1096px";
+				network.setOptions({height: "1096px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 4) {
+				document.getElementById("mynetwork_container").style.height = "1200px";
+				document.getElementById("mynetwork").style.height = "1196px";
+				network.setOptions({height: "1196px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 5) {
+				document.getElementById("mynetwork_container").style.height = "1300px";
+				document.getElementById("mynetwork").style.height = "1296px";
+				network.setOptions({height: "1296px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 6) {
+				document.getElementById("mynetwork_container").style.height = "1400px";
+				document.getElementById("mynetwork").style.height = "1396px";
+				network.setOptions({height: "1396px" });
+				network.moveTo({scale: 0.98}); 
+			} else {
+				document.getElementById("mynetwork_container").style.height = "1500px";
+				document.getElementById("mynetwork").style.height = "1496px";
+				network.setOptions({height: "1500px" });
+				network.moveTo({scale: 0.98}); 
+			}
 		}
 
 			// Manual select cohorts for edge:

@@ -63,7 +63,6 @@ function myGeneral () {
 	this['number-simulations-core'] = 1;
 	this['advanced'] = false;
 	this['advanced_test'] = false;
-	this['advanced_ld'] = false;
 	this['advanced_history'] = false; 
 	this['advanced_litter'] = false; 
 	this['advanced_multi'] = false; 
@@ -172,7 +171,7 @@ function myCulling (){
 }
 
 function myPopulation (){
-	this['subpopulation_list'] = [{Name: "Population 1", beta1 : 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, nindi: 100, sharef: 0.5, ngen: 0, majorfreq: true, 'QTL Info': []}]
+	this['subpopulation_list'] = [{Name: "Population 1", beta1 : 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, 'QTL Info': []}]
 }
 
 function mySelectionScaling (selection_index){
@@ -293,18 +292,18 @@ var data_Vue = new Vue({
 		warnings: [],
 		runned: false,
 		genetic_data:'Ens',
-		user:'',
-		database:[],
+		user:null,
 		database2:[],
+		database:null,
 		filter: [],
 		versions:[],
-		template_database:[],
+		template_database:null,
 		project_saved: "",
 		plottingPar: new myPlottingPar(),
 		plottingData: new myPlottingData(),
 		Summary: [],
 		socket: '',
-		curUserGroup:'',
+		curUserGroup:null,
 		filename:'',
 		Excel_File_options: ['', 'Genetic', 'Residual', 'both'],
 		allNodes:[],
@@ -316,7 +315,7 @@ var data_Vue = new Vue({
 		cohortsList :[],
 		cohortsTimeList : [],
 		warningsLog:[],
-		allDBUsers:[],
+		allDBUsers:null,
 		isPrShared:false,
 		isSharedExist:'',
 		majorvisible : false,
@@ -411,15 +410,74 @@ var data_Vue = new Vue({
 			Other: [{Dataset: "", Filter:"variation_set_name", Value: ""}],
 		},
 	},
+	async created() {
+		const response3  = await axios.get('/user')
+	      .catch(function (error) {
+	        if (error.response3) {
+	          console.log(error.response3);
+	        }
+	      })
+
+		this.user = response3.data['username'];
+		this.curUserGroup = response3.data['usergroup'];
+		this.geninfo['curUserGroup'] = response3.data['usergroup'];
+		this.geninfo['user'] = response3.data['username'];
+
+		const response = await axios.post('/database')
+	      .catch(function (error) {
+	        if (error.response) {
+	          console.log(error.response);
+	        }
+	      })
+		this.database = response.data;
+
+		const response1  = await axios.post('/template_database')
+	      .catch(function (error) {
+	        if (error.response1) {
+	          console.log(error.response1);
+	        }
+	      })
+		this.template_database = response1.data;
+
+		const response2  = await axios.get('/getAllUsersFromDB')
+	      .catch(function (error) {
+	        if (error.response2) {
+	          console.log(error.response2);
+	        }
+	      })
+		var len = response2.length;
+		var tzUsers = [];	
+	  	for (var i = 0; i < len; i++) {
+		    var thisUser = response2[i]["_id"];
+			  tzUsers.push(thisUser);
+		}
+		this.allDBUsers = tzUsers;	
+
+
+		this.project_saved = true;
+		localStorage.clear();
+	},
+	mounted(){
+		let externalScript = document.createElement('script')
+	    externalScript.setAttribute('src', 'javascript/jszip_excelToArray.js')
+    	document.head.appendChild(externalScript)
+	
+		let externalScript1 = document.createElement('script')
+	    externalScript1.setAttribute('src', 'javascript/xlsx_excelToArray.js')
+    	document.head.appendChild(externalScript1)
+	
+		let externalScript2 = document.createElement('script')
+	    externalScript2.setAttribute('src', 'javascript/excelToArray.js')
+    	document.head.appendChild(externalScript2)
+	},
+	
 	watch: {
 		project_saved: function(val){
-			console.log(val);
 			document.getElementById("save_button").disabled = val;
 		},
 		traitsinfo: function(val){
 			var len = val.length;
-			var oldlen = Object.keys(this.selection_index[0]).length -1; 
-			
+			var oldlen = Object.keys(this.selection_index[0]).length -1;			
 			var diff = len - oldlen;
 			
 			if (diff > 0){
@@ -580,16 +638,11 @@ var data_Vue = new Vue({
 			},
 		},	
 	},
-	methods: {
-		
+	methods: {		
 		moveMatrix: function(evt) { 
 		    if (localStorage.getItem("movetrait") === null) { 
 				getMatrix();
 			} 
-	     	var traitsfrom = evt.draggedContext.index;
-	     	var traitsTo = evt.draggedContext.futureIndex;
-	     	var traitsLen = data_Vue.traitsinfo.length;     
-
 	     	data_Vue.geninfo['Traits moveFrom'] = evt.draggedContext.index;
 	     	data_Vue.geninfo['Traits moveTo'] = evt.draggedContext.futureIndex;
 		},
@@ -599,14 +652,9 @@ var data_Vue = new Vue({
 			updateMatrices();
 			updateSIKeys();
 			updatePCKeys();
-			var oldRow = event.moved.oldIndex;
-			var newRow = event.moved.newIndex;
 		},
 		onEnd: function(evt) {
-			//document.getElementById("save_button").disabled = false;
-			//saveProject(data_Vue.geninfo['Project Name']);
 		},
-
 		
 		// add a new animal housing cost class:
 		createHCostClass: function(){
@@ -653,7 +701,7 @@ var data_Vue = new Vue({
 				alert("No name for subpopulation entered. No subpopulation generated.")
 				return;				
 			}
-			var newSub = {Name: val, beta1: 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, nindi: 100, sharef: 0.5, ngen: 0,  majorfreq: true, 'QTL Info': []};
+			var newSub = {Name: val, beta1: 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, 'QTL Info': []};
 			this.subpopulation['subpopulation_list'].push(newSub);	
 			document.getElementById("newSubpopulationClass").value='';				
 		},	
@@ -686,15 +734,12 @@ var data_Vue = new Vue({
 
 		},
 		
-		removeCulling: function(si, ind){
-			
+		removeCulling: function(si, ind){			
 			this.culling['culling_reasons'].splice(ind,1);
 
 		},
-		removeSub: function(si, ind){
-			
+		removeSub: function(si, ind){			
 			this.subpopulation['subpopulation_list'].splice(ind,1);
-
 		},
 		
 		removeSize: function(ind){
@@ -762,7 +807,6 @@ var data_Vue = new Vue({
 		},	
 		// remove clicked SI, check whether is used somewhere first:
 		removeSI: function(si, ind){
-			
 			var items = this.edges.getIds({
 				filter: function (item) {
 					return item['Selection Index'] == si.Name;
@@ -772,14 +816,11 @@ var data_Vue = new Vue({
 			if(items.length >= 1 ){
 				alert("Selection index is still in used by "+items.length+ " edges. Removing not possible!");
 				return;
-			}
-			
+			}			
 			this.selection_index.splice(ind,1);
 			this.selection_index_scaling.splice(ind,1);
-
 		},
-		removePC: function(si, ind){
-			
+		removePC: function(si, ind){			
 			var items = this.nodes.getIds({
 				filter: function (item) {
 					return item['Phenotyping Class'] == si.Name;
@@ -791,17 +832,13 @@ var data_Vue = new Vue({
 				return;
 			}
 			this.phenotyping_class.splice(ind,1);
-
 		},	
-		
 		ExecuteChanges: function(){
-			
 			var nnodes = 0;
-
 			if(data_Vue.change_type == 'nodes'){
 				nodes = data_Vue.nodes.get();
 				for(i = 0; i<nodes.length;i++){
-					console.log(i);
+				//	console.log(i);
 					if((data_Vue.change_type5=="" || data_Vue.change_type5 == nodes[i]['Number of Individuals']) & 
 							(data_Vue.change_type4=='All' || data_Vue.change_type4 == nodes[i]['Sex']) & 
 							(data_Vue.change_type7=='All' || data_Vue.change_type7 == nodes[i]["Phenotyping Class"]) & 
@@ -834,21 +871,15 @@ var data_Vue = new Vue({
 						if(data_Vue.change_type12!="Remain unchanged"){
 							nodes[i]['Housing Cost Class'] = data_Vue.change_type12;
 						}
-						
-
 						data_Vue.nodes.update(nodes[i]);
 					}
-					
 					data_Vue.active_node=[];
-					
 				}
-				
 			};
 			if(data_Vue.change_type=='edges'){
 				nodes = data_Vue.nodes.get();
 				edges = data_Vue.edges.get();
 				for(i = 0; i < edges.length; i++){
-					
 					for(j=0; j<nodes.length; j++){
 						if(edges[i]["from"] == nodes[j]["id"]){
 							sex1 = nodes[j]["Sex"];
@@ -859,7 +890,6 @@ var data_Vue = new Vue({
 					}
 					
 					if((data_Vue.change_type1==edges[i]["Breeding Type"] | data_Vue.change_type1=="All") && (data_Vue.change_type2=="All" | data_Vue.change_type2==sex1) & (data_Vue.change_type3=="All" | data_Vue.change_type3==sex2)){
-
 						nnodes++
 						if(data_Vue.change_type13["Breeding Type"]!=undefined & data_Vue.change_type13["Breeding Type"] != "Remain unchanged"){
 							edges[i]["Breeding Type"] = data_Vue.change_type13["Breeding Type"];
@@ -980,15 +1010,10 @@ var data_Vue = new Vue({
 						}
 						
 						data_Vue.edges.update(edges[i]);
-						
 					}
-
 				}
-				
 			}
-			
 			alert(nnodes + ' nodes/edges were considered for modification.')
-			
 		},
 		// create/remove new Chromosomes on change of the # Chromosomes, depending on 
 		// whether new number is greater or smaller --> remove from bottom
@@ -997,9 +1022,7 @@ var data_Vue = new Vue({
 				this.geninfo['Number of Chromosomes'] = Math.round(Number(this.geninfo['Number of Chromosomes']));
 				var val = this.geninfo['Number of Chromosomes'];
 				
-			}else{
-				var val = 1;
-			}
+			}else{ var val = 1;	}
 			var len = this.geninfo['Chromosomes Info'].length;
 			var diff = val - len;
 			
@@ -1012,12 +1035,8 @@ var data_Vue = new Vue({
 					len++;
 				}
 			}	
-		},		
-		
-		createCombi: function(ind){
-			
-			console.log(ind);
-			console.log(this.traitsinfo);
+		},
+		createCombi: function(ind){			
 			if( this.traitsinfo[ind]['is_combi'] == true){
 				this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
 			} 
@@ -1044,8 +1063,7 @@ var data_Vue = new Vue({
 					this.traitsinfo[ind]['Trait QTL Info'].push(newSNP);
 					len++;
 				}
-			}
-			
+			}			
 		},
 		createQTLsub: function(ind){
 			this.subpopulation['subpopulation_list'][ind]['fixed_freq'] = Math.round(Number(this.subpopulation['subpopulation_list'][ind]['fixed_freq']));
@@ -1071,20 +1089,15 @@ var data_Vue = new Vue({
 			var indS = this.traitsinfo[indT]['Trait QTL Info'].indexOf(snp);
 			this.traitsinfo[indT]['Trait QTL Info'].splice(indS,1);
 			this.traitsinfo[indT]['Trait Major QTL']--;
-
-		},
-		
+		},		
 		removeQTLsub: function(subpop, trait, snp){
-			var indA = this.subpopulation.indexOf(subpop)
+			var indA = this.subpopulation.indexOf(subpop);
 			var indT = this.subpopulation[indA].indexOf(trait);
 			var indS = this.subpopulation[indA][indT]['QTL Info'].indexOf(snp);
 			
 			this.subpopulation[indA][indT]['QTL Info'].splice(indS,1);
 			this.subpopulation[indA][indT]['fixed_freq']--;
-
-		},
-		
-		
+		},		
 		// add a new Phenotype, then also add correlation matrices:
 		addPheno: function(){
 			this.counter_pheno++;
@@ -1101,10 +1114,7 @@ var data_Vue = new Vue({
 					this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
 				}
 			}		
-			
-
-		},
-		
+		},		
 		FilterDatabase: function(){
 			var database2 = [];
 			var f = this.filter;
@@ -1115,12 +1125,10 @@ var data_Vue = new Vue({
 			}
 			this.database2 = database2;
 		},
-
 		// remove clicked Phenotype
 		removePheno: function(ind){
 			var len = this.traitsinfo.length;
-			this.traitsinfo.splice(ind,1);
-			
+			this.traitsinfo.splice(ind,1);			
 			// remove also correlation matrix elements
 			// associated with this phenotype
 			if(len > 1){
@@ -1135,8 +1143,7 @@ var data_Vue = new Vue({
 				this.matrix = [];
 				this.matrix2 = [];
 			}
-			this.show_matrix_element.splice(ind, 1);
-			
+			this.show_matrix_element.splice(ind, 1);			
 			// remove also selection index, phenotyping classes 
 			// associated with this phenotype			
 			for(var i=0; i<this.selection_index.length; i++){
@@ -1203,9 +1210,7 @@ var data_Vue = new Vue({
 					//console.log(new_E);
 					this.edges.update(new_E);
 				}
-				//network.setData({nodes: this.nodes, edges: this.edges});
 			}
-				
 		},
 		// remove Variable if no Nodes are using it:
 		removeVariable: function(vv){
@@ -1260,7 +1265,6 @@ function getMatrix() {
               sessionStorage.setItem(data_Vue.traitsinfo[j]['Trait Name']+'_'+data_Vue.traitsinfo[i]['Trait Name'], JSON.stringify(matrixval2));
          }
      }
-
 }
 
 function getSI() {
@@ -1325,7 +1329,6 @@ function updateVar(param, ivar){
 // if we change Species on Selection, we need to change the default Values:
 function updateSpeciesData(value){
 	Object.assign(data_Vue.geninfo, genome_default_data[value]);
-	//data_Vue.chromo = data_Vue.geninfo['Chromosomes Info'];
 	data_Vue.traitsinfo = data_Vue.geninfo['Default Traits'];
 	data_Vue.counter_pheno = data_Vue.traitsinfo.length;
 	data_Vue.matrix = data_Vue.geninfo['Phenotypic Correlation'];
@@ -1334,11 +1337,6 @@ function updateSpeciesData(value){
 	for(var i =0; i< data_Vue.traitsinfo.length; i++){
 		data_Vue.show_matrix_element.push({show:true});
 	}
-	
-	//if(data_Vue.traitsinfo.length > 0){
-	//	data_Vue.addSI('Default Index');
-	//	data_Vue.addPC('Default PhenoC');
-	//}
 	
 	// update Ensembl data
 	data_Vue.geninfo['Ensembl Dataset'] = data_Vue.ensembl_options[value].Dataset;
@@ -1353,23 +1351,12 @@ function updateSpeciesData(value){
 
 // function to export Data into OutputArea:
 
-
-
 // two set of matrices for each correlation - one to display the correlation values (mat1,mat2) to container and another to save each correlation to database(savemat1, savemat2)!
 function updateMatrices() {  
 	if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {   
-		 var mat1 = [];
-	     var mat2 = [];
-
-		 var savemat1 = [];
-		 var savemat2 = [];
-	
-	     var row1;
-	     var row2; 
-		
-		var saverow1;
-		var saverow2;
-	     
+		 var mat1 = [], mat2 = [], savemat1 = [], savemat2  = [] ;
+	     var row1, row2, saverow1, saverow2;
+     
 	     var listArray5 = [];
 	     for(var a=0; a < data_Vue.traitsinfo.length; a++){
 	         listArray5.push(data_Vue.traitsinfo[a]['Trait Name']);
@@ -1378,10 +1365,8 @@ function updateMatrices() {
 		var arrayLength = listArray5.length;
          
          for(var i=0; i < arrayLength; i++){
-              row1 = [];
-              row2 = [];
-			  saverow1 = [];
-			  saverow2 = [];
+              row1= [], row2= [], saverow1= [], saverow2 = [];
+              
               var am = listArray5[i]; 
          
               for(var j=0; j <= i; j++){
@@ -1468,7 +1453,6 @@ function updatePCKeys() {
 }
 
 // function to export Data into OutputArea:
-
 function exportNetwork() {
     exportArea = document.getElementById('OutputArea');
     exportArea.value = "";
@@ -1479,10 +1463,8 @@ function exportNetwork() {
         data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display;
     }
 
-    var mat1 = [];
-    var mat2 = [];
-    var row1;
-    var row2; 
+    var mat1 = [], mat2 = [];
+    var row1, row2;
      
     if((data_Vue['Upload_CorrFile'] == 'Yes') & (data_Vue.geninfo['Excel_File'] == 'both')) {
          var mat1 = data_Vue.mymatrix1;
@@ -1519,8 +1501,7 @@ function exportNetwork() {
      }
      else {
          for(var i=0; i < data_Vue.traitsinfo.length; i++){
-              row1 = [];
-              row2 = [];
+              row1 = [], row2 = [];              
               for(var j=0; j <= i; j++){
                    row1.push(data_Vue.matrix[i].row[j].val);
                    row2.push(data_Vue.matrix2[i].row[j].val);
@@ -1561,14 +1542,9 @@ function exportNetwork() {
 		'Class' : data_Vue.curUserGroup
 	};
 	var exportValue = JSON.stringify(data_to_export, undefined, 2);
-
 	exportArea.value = exportValue;
-
 	resizeExportArea();
-	
-	//delete data_Vue.geninfo["Chromosomes Info"];
 	return data_to_export;
-	
 }
 
 // function to download network:
@@ -1588,18 +1564,16 @@ function downloadNetwork(){
 }
 
 
-
 // function to import file from local drive and display in the UI.
 function importNetwork() {
 	var localDrivetoUI = document.getElementById('input-file');
 
 		if(localDrivetoUI) {
-			console.log(localDrivetoUI);
+		//	console.log(localDrivetoUI);
 			localDrivetoUI.addEventListener('change', getJSONFromDrive, false);
 		}	
 	data_Vue.project_saved = false;
-	showCorrDiv("true");
-	
+	showCorrDiv("true");	
 }
 
 
@@ -1621,16 +1595,12 @@ function importNetwork_fromBox() {
 function getJSONFromDrive(event) {
 		const input = event.target;
   		if ('files' in input && input.files.length > 0) {
-				//console.log (input.files[0]);
-
 			 var reader = new FileReader();
 			    reader.onload = function(){
 			      var text = reader.result;
-
-				var inputData = JSON.parse(text);	
+				  var inputData = JSON.parse(text);	
 				importNetwork_intern(inputData);	
 			    };
-
 	    	reader.readAsText(input.files[0]);
 	  };
  }
@@ -1646,7 +1616,6 @@ function importNetwork_intern(inputData1) {
 	data_Vue.nodes = new vis.DataSet(inputData['Nodes']);
 	data_Vue.edges = new vis.DataSet(inputData['Edges']);
 
-
 	var prior_user = data_Vue.geninfo.user;
 	var prior_userclass = data_Vue.geninfo.curUserGroup;
 	data_Vue.geninfo = inputData['Genomic Info'] ? inputData['Genomic Info'] : new myGeneral();
@@ -1658,9 +1627,6 @@ function importNetwork_intern(inputData1) {
 	}
 	if(data_Vue.geninfo['advanced_test']==undefined){
 		data_Vue.geninfo['advanced_test'] = false;
-	}
-	if(data_Vue.geninfo['advanced_ld']==undefined){
-		data_Vue.geninfo['advanced_ld'] = false;
 	}
 	if(data_Vue.geninfo['advanced_history']==undefined){
 		data_Vue.geninfo['advanced_history'] = false;
@@ -1861,45 +1827,6 @@ function importNetwork_intern(inputData1) {
 	}
 	if(inputData['Subpopulation']){
 		data_Vue.subpopulation = inputData['Subpopulation'];
-		
-		for(i = 0; i < data_Vue.subpopulation.subpopulation_list.length; i++){
-			if(data_Vue.subpopulation.subpopulation_list[i].nindi == undefined){
-				data_Vue.subpopulation.subpopulation_list[i].nindi = 100;
-			}
-			if(data_Vue.subpopulation.subpopulation_list[i].sharef == undefined){
-				data_Vue.subpopulation.subpopulation_list[i].sharef = 0.5;
-			}
-			if(data_Vue.subpopulation.subpopulation_list[i].ngen == undefined){
-				data_Vue.subpopulation.subpopulation_list[i].ngen = 0;
-			}
-			if(data_Vue.subpopulation.subpopulation_list[i].majorfreq == undefined){
-				data_Vue.subpopulation.subpopulation_list[i].majorfreq = true;
-			}
-			
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}else{
 		data_Vue.subpopulation = new myPopulation();
 	}
@@ -1920,14 +1847,12 @@ function importNetwork_intern(inputData1) {
 		}
 	}
 	
-
 	data_Vue.show_matrix_element = inputData["Intern"].show_matrix_element;
 	data_Vue.counter_pheno = inputData["Intern"].counter_pheno;
 	data_Vue.counter_qtl = inputData["Intern"].counter_qtl;
 	data_Vue.counter_qtl_sub = inputData["Intern"].counter_qtl_sub;
 	data_Vue.individualsVar_options = inputData["Intern"].individualsVar_options;
 	data_Vue.genetic_data = inputData["Intern"].genetic_data;
-	//data_Vue.runned = inputData["Intern"].runned;
 	
 	if(data_Vue.traitsinfo.length > 0){
 		for(j = 0; j < data_Vue.traitsinfo.length ; j++){
@@ -1987,13 +1912,10 @@ function importNetwork_intern(inputData1) {
 	var mat2 = inputData['Genetic Correlation'];
 	//console.log(mat1);
 	if(mat1.length > 0){		
-		var matrix = [];
-		var matrix2 = [];
-		var row1;
-		var row2;
+		var matrix = [], matrix2 = [];
+		var row1, row2;
 		for(var i=0; i < data_Vue.traitsinfo.length; i++){
-			row1 = [];
-			row2 = [];
+			row1 = [], row2 = [];
 			for(var j=0; j <= i; j++){
 				row1.push({val : mat1[i][j]});
 				row2.push({val : mat2[i][j]});
@@ -2043,12 +1965,10 @@ function importNetwork_intern(inputData1) {
 		}
 	}
 	
-	
 	draw();
 	console.log("Loading Data successful.");
 	data_Vue.project_saved = true;
 	showCorrDiv("true");
-	
 }
 
 function resizeExportArea() {
@@ -2109,7 +2029,6 @@ function loadWarningsLogOfSimulation(name) {
 }
 
 //csv to JSON to get list of Cohorts in json format
-
 function csvToJSON(cohorts) {
 	var lines=cohorts.split("\n");
   	var result = [];
@@ -2130,7 +2049,6 @@ function csvToJSON(cohorts) {
 }
 
 // function to save data to database:
-
 function postProject(name, url, jsondata, sharedWith){
 	$.ajax
 	({
@@ -2174,11 +2092,7 @@ function postProject(name, url, jsondata, sharedWith){
 	});			
 }
 			
-			
-			
-			
 // function to save data to database:
-
 function unique_postProject(name, url, jsondata, sharedWith){
 	$.ajax
 	({
@@ -2193,7 +2107,6 @@ function unique_postProject(name, url, jsondata, sharedWith){
 		success: function (data, msg) {
 			$.post('/database', function(dat){
 				data_Vue.database = dat;
-				//document.getElementById("Project_Name").value = name; 
 			})
 
 			if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {
@@ -2392,8 +2305,6 @@ function saveSharedProToOri(name, getSharer) {
 		var jsondata = JSON.stringify(exportNetwork());
 		data_Vue.geninfo['Excel_File'] = '';
 
-		console.log(data_Vue.versions);
-
 		if(data_Vue.versions.length > 10){
 			var r = confirm("Only the 10 most recent versions are saved. The oldest version will be deleted. Do you want to proceed? Alternative: Change the Project Name and save to create a new project");
 			if(!r) return;
@@ -2408,7 +2319,6 @@ function saveSharedProToOri(name, getSharer) {
 }
 
 function updateToOrigPr(name, url, jsondata, sharedWith){
-
 		$.ajax
 		({
 			type: "POST",
@@ -2416,9 +2326,7 @@ function updateToOrigPr(name, url, jsondata, sharedWith){
 			data: {name : name},
 			success: function (data, msg) {
 			if(data != ''){
-				if(data[0].versions.length > 0){
-					data_Vue.versions = data[0].versions.reverse();
-				}
+				if(data[0].versions.length > 0){data_Vue.versions = data[0].versions.reverse();	}
 				} }
 		});
 
@@ -2438,9 +2346,7 @@ function updateToOrigPr(name, url, jsondata, sharedWith){
 			})
 		},
 		failure: function(msg) 
-		{
-			alert('Saving Error!');
-		},
+		{ alert('Saving Error!'); },
 	});			
 }
 
@@ -2455,8 +2361,7 @@ function deleteSharedProject(name, getOriPr, projectSharer) {
 					name: name,
 					user:projectSharer,
 				},
-				success: function (msg) {
-				},
+				//success: function (msg) {},
 				failure: function(msg) 
 				{
 					alert('Delete Error!');
@@ -2541,7 +2446,6 @@ function share_postProject(name, url, jsondata, sharedWith, shareCNT){
 				if(isNumber && totalCNT == shareCNT+1) {
 					alert("Saving Success!"); 
 				}
-
 			}
 
 			data_Vue.project_saved = true;
@@ -2581,9 +2485,7 @@ function share_SaveProject(name) {
 
 	if(data_Vue.database.filter(function(obj){ return(obj==name)}).length > 0){
 			var usrCNT = data_Vue.geninfo['sharedWith'].length;
-			var curUser = 1;
 			if (usrCNT>0 && data_Vue.geninfo['sharedWith'] !== ' ') {
-				//alert('share _save after stop');
 				for (var us=0; us<usrCNT; us++) {
 				var savetoThisUser = data_Vue.geninfo['sharedWith'][us];
 				share_postProject(name, "/update_sharedProjectWithOtherUser", jsondata, savetoThisUser, us);
@@ -2635,8 +2537,7 @@ function deleteProject() {
 					name: name,
 				},
 				success: function (msg) {
-					//loadData(name);
-					console.log("Project deleted.");
+					//console.log("Project deleted.");
 					location.reload();
 				},
 				failure: function(msg) 
@@ -2738,9 +2639,7 @@ function draw() {
 		},
 		physics: {enabled: false},
 		edges: {
-			arrows: {
-				to: true,
-			},
+			arrows: {to: true,},
 			chosen: true,
 			smooth: {      
 				type: "diagonalCross",
@@ -2752,14 +2651,14 @@ function draw() {
 		nodes: {
 			shape: 'box',
 			shapeProperties: {borderRadius: 0},
-			font: {
-			     size: 23,		
-			 },
+			font: {size: 23, },
 		},
 		interaction: {
 			hover: true,
 			hoverConnectedEdges: false,
-			selectConnectedEdges: true,			
+			selectConnectedEdges: true,	
+			navigationButtons: true,
+            keyboard: true,		
 		},
 	};
 	network = new vis.Network(container, network_data, options);
@@ -2801,7 +2700,6 @@ function draw() {
 		}
 	});
 	network.on('dragEnd', function (params) {	
-		//console.log(params.nodes);
 		if(params.nodes.length > 0 ){
 			data_Vue.active_node = data_Vue.nodes.get(params.nodes[0]);
 			var positions = network.getPositions(params.nodes[0]);
@@ -2881,7 +2779,6 @@ function addNode_extern(data) {
 }
 
 function saveNodeData(data, callback) {
-
 	
 	var old_id = data.id;
 
@@ -2891,9 +2788,8 @@ function saveNodeData(data, callback) {
 	change_id = change_id.replace("_","-");
 	data.id = change_id;
 	
-	//data.label = data.id;
 	var myInd = JSON.stringify(data['Number of Individuals']).replace(/\"/g, "");
-	//data.label = data.id+'\n'+myInd;
+
 	data.label = data.id+" ("+myInd+")";
 	if(data.Founder == "Yes"){
 		data.label = data.label + " *F"
@@ -2917,7 +2813,7 @@ function saveNodeData(data, callback) {
 				return item.from == old_id;
 			}
 		});
-		console.log(items);
+
 		if(items.length >= 1){
 			for(ii=0; ii < items.length; ii++){
 				data_Vue.edges.update({id: items[ii], from: data.id});
@@ -2929,7 +2825,7 @@ function saveNodeData(data, callback) {
 				return item.to == old_id;
 			}
 		});
-		console.log(items);
+
 		if(items.length >= 1){
 			for(ii=0; ii < items.length; ii++){
 				data_Vue.edges.update({id: items[ii], to: data.id});
@@ -2937,7 +2833,6 @@ function saveNodeData(data, callback) {
 		}
 		
 		// update edge -- Selection -> BVE - > Manual select cohorts 27/02/2020
-		
 		var checkedgesforCohort = data_Vue.edges.get();		
 		if(checkedgesforCohort.length > 0) { 
 			var check_cohorts_edges = [];
@@ -2999,7 +2894,6 @@ function saveNodeData(data, callback) {
 }
 
 function editEdgeWithoutDrag(data, callback) {
-	
 	data_Vue.displayBtn = false;
 	var hidden = data_Vue.displayBtn;
 	action(hidden);
@@ -3061,48 +2955,11 @@ function saveEdgeData(data, callback) {
 
 function init() {
   draw();
-  updateUser();
   isSafari();  
   shareUserTable();
+  openNav();
 }
 
-
-//******************* If the User take data from database, then load them here **********/
-function updateUser(){
-	$.get('/user', function(dat){
-		console.log(dat)
-		data_Vue.user = dat.username;
-		data_Vue.curUserGroup = dat.usergroup;
-		data_Vue.geninfo['curUserGroup'] = dat.usergroup;
-		data_Vue.geninfo['user'] = dat.username;
-	})
-	
-	$.post('/database', function(dat){
-		data_Vue.database = dat;
-	//	console.log(data_Vue.database);
-	})
-	
-	$.post('/template_database', function(dat){
-		data_Vue.template_database = dat;
-		//console.log(dat);
-	})
-	
-	$.get('/getAllUsersFromDB', function(dat){
-		var tempArray = [];
-		tempArray = dat;
-		data_Vue.allDBUsers = tempArray;
-		var len = tempArray.length;
-		var tzUsers = [];	
-	  	for (var i = 0; i < len; i++) {
-		    var thisUser = tempArray[i]["_id"];
-			  tzUsers.push(thisUser);
-		}
-		data_Vue.allDBUsers = tzUsers;
-	})
-		
-	data_Vue.project_saved = true;
-	localStorage.clear();
-}
 
 function isSafari() {
 	data_Vue.isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -3208,14 +3065,6 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 
-
-function myFunction() {
-  document.getElementById("Icon").classList.toggle("change");
-  data_Vue.show_menu = !data_Vue.show_menu;
-} 
-
-
-
 // excel to Array 
 var excelToArr = document.getElementById('excelToArray');
 if(excelToArr) {
@@ -3227,7 +3076,5 @@ function importexcelToArray(evt) {
     var excelToArray = new ExcelToArray();
     excelToArray.parseExcel(selectedFile[0]);
  }	
-
-
 // excel to Array end
 

@@ -53,10 +53,10 @@ if(length(avail)>1){
     for(i in 1:nrow(coh)){
       ani <- NULL
       if(coh[i,3] != 0){
-        ani <- cbind(ani, 100+ (population$breeding[[as.numeric(coh[i,2])]][[7]][,as.numeric(coh[i,6]):(as.numeric(coh[i,6])+as.numeric(coh[i,3])-1), drop=FALSE]-100)*if(user=="Torsten"){c(21.91/30.33, 24/32.78, 84.85/96, 30.98/40.57, 53.66/64.31)}else{1})
+        ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[7]][,as.numeric(coh[i,6]):(as.numeric(coh[i,6])+as.numeric(coh[i,3])-1), drop=FALSE])
       }
       if(coh[i,4] != 0){
-        ani <- cbind(ani, 100+ (population$breeding[[as.numeric(coh[i,2])]][[8]][,as.numeric(coh[i,7]):(as.numeric(coh[i,7])+as.numeric(coh[i,4])-1), drop=FALSE]-100)*if(user=="Torsten"){c(21.91/30.33, 24/32.78, 84.85/96, 30.98/40.57, 53.66/64.31)}else{1})
+        ani <- cbind(ani, population$breeding[[as.numeric(coh[i,2])]][[8]][,as.numeric(coh[i,7]):(as.numeric(coh[i,7])+as.numeric(coh[i,4])-1), drop=FALSE])
       }
       if(length(gMean[[ttnames[i]]][[as.character(ttrep[i])]])==0){
         gMean[[ttnames[i]]][[as.character(ttrep[i])]] <- list(ttime=coh[i,"time point"],tval=rowMeans(ani))

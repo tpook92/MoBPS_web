@@ -22,18 +22,14 @@ if(length(arg)>4){
     rep1 <- 0
 }
 
-
-
-
-load(paste(path,user,"_",filename,".RData",sep=""))
-
-if(coh=="ALL"){
-  activ_cohort <- get.cohorts(population)
-} else if(rep1==0){
+if(rep1==0){
   activ_cohort <- coh
 } else{
   activ_cohort <- paste0(coh, "_", rep1)
 }
+
+
+load(paste(path,user,"_",filename,".RData",sep=""))
 
 if(type=="Phenotypes"){
   out <- get.pheno(population, cohorts=activ_cohort)
