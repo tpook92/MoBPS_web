@@ -4,7 +4,7 @@
 	
 	<script type="text/javascript">
 		var isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-		console.log(isBrowserSafari);
+		//console.log(isBrowserSafari);
 	</script>
 		
 	<head>
@@ -14,7 +14,7 @@
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
 		
-		<script src="https://unpkg.com/vue-slider"></script>
+		<link rel="shortcut icon" href="#">
 			
 		<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
     	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
@@ -28,24 +28,18 @@
 		<link src="https://visjs.github.io/vis-network/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
 		
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
-
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="./styles/mobps.css">
 	
 		<!--  for javascript and ajax call -->		
-		<script type="text/javascript" src="javascript/jQ1.js"></script>
-		<script type="text/javascript" src="javascript/jQ2.js"></script>
-		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
+		<script type="text/javascript" src="javascript/jQ2_2.js"></script> 
 		<script type="text/javascript" src="javascript/jQ3.js"></script>
 		
-		<!-- excel to json related files -->
-		<script lang="javascript" src="javascript/jszip_excelToArray.js"></script>
-		<script lang="javascript" src="javascript/xlsx_excelToArray.js"></script>
-		<script lang="javascript" src="javascript/excelToArray.js"></script>
 		
 		<!-- for drag and drop for Phenotype table -->	
 		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.16.0/vuedraggable.min.js"></script>	
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
 
 	</head>
 
@@ -95,7 +89,7 @@
 				<button class='showhide_button' v-on:click='show_geninfo = !show_geninfo; show_warnings = false;' >Show/Hide Info</button>
 				<button class='showhide_button' v-on:click='show_warnings = !show_warnings; show_geninfo=false;' >Show/Hide Warnings</button>
 				&nbsp;
-				<a :href="'http://mobps.de/compareProjects?cpuser=' + geninfo['user']+'&cpusergroup='+geninfo['curUserGroup']" class ="additional_link" onclick=writeTemp()> Compare Projects</a>
+				<a :href="'http://mobps.de/compareProjects?cpuser=' + geninfo['user']+'&cpusergroup='+geninfo['curUserGroup']" class ="additional_link" > Compare Projects</a>
 
 
 			</div>
@@ -2939,10 +2933,11 @@
 				 	<button class="sub_button" onclick="alignNodes()"> Align nodes </button>
 				</td>
 				
-				<p> Expand flash environment : <span class="tooltip">&#9432 <span class="tooltiptext"> Please click this button to have bigger breeding scheme diagram and save the project to rearrange nodes and edges.</span></span>
-					<input type="checkbox" id="bigFontNode" v-model="geninfo['bigFontNode']" style="cursor: pointer;width: 30px; height: 16px;" onclick="networkBoxChange()">
-				</p>
-				<br>
+				<p> Expand flash enviroment : <span class="tooltip">&#9432 <span class="tooltiptext"> Please click this button to have bigger breeding scheme diagram and save the project to rearrange nodes and edges.</span></span>
+				 <input id="heightDefault" type="range" min="1" max="6" value="1" onchange="heightNetwork.value=value;networkBoxChange();"></input> 
+				<output id="heightNetwork">1</output>
+			</p>
+			<br>
 				
         	<br>
         	<br>	
@@ -3529,15 +3524,43 @@
 		        o.style.height = (25+o.scrollHeight)+"px";
 		    }
 			
-		function networkBoxChange() {
-			if (document.getElementById("bigFontNode").checked == true) {
-			    document.getElementById("mynetwork_container").style.height = "1000px";
-			document.getElementById("mynetwork").style.height = "995px";
-			} 
-			else {
-			   document.getElementById("mynetwork_container").style.height = "800px";
-			   document.getElementById("mynetwork").style.height = "798px";
-			    }
+		function networkBoxChange() {       
+			if (heightNetwork.value == 1) {
+				document.getElementById("mynetwork_container").style.height = "930px";
+				document.getElementById("mynetwork").style.height = "926px";
+				network.setOptions({height: "926px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 2) {
+				document.getElementById("mynetwork_container").style.height = "1000px";
+				document.getElementById("mynetwork").style.height = "996px";
+				network.setOptions({height: "996px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 3) {
+				document.getElementById("mynetwork_container").style.height = "1100px";
+				document.getElementById("mynetwork").style.height = "1096px";
+				network.setOptions({height: "1096px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 4) {
+				document.getElementById("mynetwork_container").style.height = "1200px";
+				document.getElementById("mynetwork").style.height = "1196px";
+				network.setOptions({height: "1196px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 5) {
+				document.getElementById("mynetwork_container").style.height = "1300px";
+				document.getElementById("mynetwork").style.height = "1296px";
+				network.setOptions({height: "1296px" });
+				network.moveTo({scale: 0.98}); 
+			} else if (heightNetwork.value == 6) {
+				document.getElementById("mynetwork_container").style.height = "1400px";
+				document.getElementById("mynetwork").style.height = "1396px";
+				network.setOptions({height: "1396px" });
+				network.moveTo({scale: 0.98}); 
+			} else {
+				document.getElementById("mynetwork_container").style.height = "1500px";
+				document.getElementById("mynetwork").style.height = "1496px";
+				network.setOptions({height: "1500px" });
+				network.moveTo({scale: 0.98}); 
+			}
 		}
 
 			// Manual select cohorts for edge:

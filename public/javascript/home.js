@@ -293,18 +293,18 @@ var data_Vue = new Vue({
 		warnings: [],
 		runned: false,
 		genetic_data:'Ens',
-		user:'',
-		database:[],
+		user:null,
+		database: null,
 		database2:[],
 		filter: [],
 		versions:[],
-		template_database:[],
+		template_database:null,
 		project_saved: "",
 		plottingPar: new myPlottingPar(),
 		plottingData: new myPlottingData(),
 		Summary: [],
 		socket: '',
-		curUserGroup:'',
+		curUserGroup:null,
 		filename:'',
 		Excel_File_options: ['', 'Genetic', 'Residual', 'both'],
 		allNodes:[],
@@ -316,7 +316,7 @@ var data_Vue = new Vue({
 		cohortsList :[],
 		cohortsTimeList : [],
 		warningsLog:[],
-		allDBUsers:[],
+		allDBUsers:null,
 		isPrShared:false,
 		isSharedExist:'',
 		majorvisible : false,
@@ -411,6 +411,68 @@ var data_Vue = new Vue({
 			Other: [{Dataset: "", Filter:"variation_set_name", Value: ""}],
 		},
 	},
+	
+	async created() {
+		const response3  = await axios.get('/user')
+	      .catch(function (error) {
+	        if (error.response3) {
+	          console.log(error.response3);
+	        }
+	      })
+
+		this.user = response3.data['username'];
+		this.curUserGroup = response3.data['usergroup'];
+		this.geninfo['curUserGroup'] = response3.data['usergroup'];
+		this.geninfo['user'] = response3.data['username'];
+
+		const response = await axios.post('/database')
+	      .catch(function (error) {
+	        if (error.response) {
+	          console.log(error.response);
+	        }
+	      })
+		this.database = response.data;
+
+		const response1  = await axios.post('/template_database')
+	      .catch(function (error) {
+	        if (error.response1) {
+	          console.log(error.response1);
+	        }
+	      })
+		this.template_database = response1.data;
+
+		const response2  = await axios.get('/getAllUsersFromDB')
+	      .catch(function (error) {
+	        if (error.response2) {
+	          console.log(error.response2);
+	        }
+	      })
+		var len = response2.length;
+		var tzUsers = [];	
+	  	for (var i = 0; i < len; i++) {
+		    var thisUser = response2[i]["_id"];
+			  tzUsers.push(thisUser);
+		}
+		this.allDBUsers = tzUsers;	
+
+
+		this.project_saved = true;
+		localStorage.clear();
+	},
+	mounted(){
+		let externalScript = document.createElement('script')
+	    externalScript.setAttribute('src', 'javascript/jszip_excelToArray.js')
+    	document.head.appendChild(externalScript)
+
+		let externalScript1 = document.createElement('script')
+	    externalScript1.setAttribute('src', 'javascript/xlsx_excelToArray.js')
+    	document.head.appendChild(externalScript1)
+
+		let externalScript2 = document.createElement('script')
+	    externalScript2.setAttribute('src', 'javascript/excelToArray.js')
+    	document.head.appendChild(externalScript2)
+	},
+	
 	watch: {
 		project_saved: function(val){
 			console.log(val);
@@ -585,10 +647,7 @@ var data_Vue = new Vue({
 		moveMatrix: function(evt) { 
 		    if (localStorage.getItem("movetrait") === null) { 
 				getMatrix();
-			} 
-	     	var traitsfrom = evt.draggedContext.index;
-	     	var traitsTo = evt.draggedContext.futureIndex;
-	     	var traitsLen = data_Vue.traitsinfo.length;     
+			}   
 
 	     	data_Vue.geninfo['Traits moveFrom'] = evt.draggedContext.index;
 	     	data_Vue.geninfo['Traits moveTo'] = evt.draggedContext.futureIndex;
@@ -599,12 +658,8 @@ var data_Vue = new Vue({
 			updateMatrices();
 			updateSIKeys();
 			updatePCKeys();
-			var oldRow = event.moved.oldIndex;
-			var newRow = event.moved.newIndex;
 		},
 		onEnd: function(evt) {
-			//document.getElementById("save_button").disabled = false;
-			//saveProject(data_Vue.geninfo['Project Name']);
 		},
 
 		
@@ -1016,8 +1071,6 @@ var data_Vue = new Vue({
 		
 		createCombi: function(ind){
 			
-			console.log(ind);
-			console.log(this.traitsinfo);
 			if( this.traitsinfo[ind]['is_combi'] == true){
 				this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
 			} 
@@ -1075,7 +1128,7 @@ var data_Vue = new Vue({
 		},
 		
 		removeQTLsub: function(subpop, trait, snp){
-			var indA = this.subpopulation.indexOf(subpop)
+			var indA = this.subpopulation.indexOf(subpop);
 			var indT = this.subpopulation[indA].indexOf(trait);
 			var indS = this.subpopulation[indA][indT]['QTL Info'].indexOf(snp);
 			
@@ -1358,17 +1411,9 @@ function updateSpeciesData(value){
 // two set of matrices for each correlation - one to display the correlation values (mat1,mat2) to container and another to save each correlation to database(savemat1, savemat2)!
 function updateMatrices() {  
 	if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {   
-		 var mat1 = [];
-	     var mat2 = [];
-
-		 var savemat1 = [];
-		 var savemat2 = [];
 	
-	     var row1;
-	     var row2; 
-		
-		var saverow1;
-		var saverow2;
+		var mat1 = [], mat2 = [], savemat1 = [], savemat2  = [] ;
+	     var row1, row2, saverow1, saverow2;
 	     
 	     var listArray5 = [];
 	     for(var a=0; a < data_Vue.traitsinfo.length; a++){
@@ -1378,10 +1423,7 @@ function updateMatrices() {
 		var arrayLength = listArray5.length;
          
          for(var i=0; i < arrayLength; i++){
-              row1 = [];
-              row2 = [];
-			  saverow1 = [];
-			  saverow2 = [];
+			row1= [], row2= [], saverow1= [], saverow2 = [];
               var am = listArray5[i]; 
          
               for(var j=0; j <= i; j++){
@@ -1479,10 +1521,8 @@ function exportNetwork() {
         data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display;
     }
 
-    var mat1 = [];
-    var mat2 = [];
-    var row1;
-    var row2; 
+   var mat1 = [], mat2 = [];
+    var row1, row2;
      
     if((data_Vue['Upload_CorrFile'] == 'Yes') & (data_Vue.geninfo['Excel_File'] == 'both')) {
          var mat1 = data_Vue.mymatrix1;
@@ -1594,7 +1634,7 @@ function importNetwork() {
 	var localDrivetoUI = document.getElementById('input-file');
 
 		if(localDrivetoUI) {
-			console.log(localDrivetoUI);
+			// console.log(localDrivetoUI);
 			localDrivetoUI.addEventListener('change', getJSONFromDrive, false);
 		}	
 	data_Vue.project_saved = false;
@@ -1879,27 +1919,6 @@ function importNetwork_intern(inputData1) {
 		}
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}else{
 		data_Vue.subpopulation = new myPopulation();
 	}
@@ -1987,13 +2006,10 @@ function importNetwork_intern(inputData1) {
 	var mat2 = inputData['Genetic Correlation'];
 	//console.log(mat1);
 	if(mat1.length > 0){		
-		var matrix = [];
-		var matrix2 = [];
-		var row1;
-		var row2;
+		var matrix = [], matrix2 = [];
+		var row1, row2;
 		for(var i=0; i < data_Vue.traitsinfo.length; i++){
-			row1 = [];
-			row2 = [];
+			row1 = [], row2 = [];
 			for(var j=0; j <= i; j++){
 				row1.push({val : mat1[i][j]});
 				row2.push({val : mat2[i][j]});
@@ -3061,48 +3077,11 @@ function saveEdgeData(data, callback) {
 
 function init() {
   draw();
-  updateUser();
   isSafari();  
   shareUserTable();
+  openNav();
 }
 
-
-//******************* If the User take data from database, then load them here **********/
-function updateUser(){
-	$.get('/user', function(dat){
-		console.log(dat)
-		data_Vue.user = dat.username;
-		data_Vue.curUserGroup = dat.usergroup;
-		data_Vue.geninfo['curUserGroup'] = dat.usergroup;
-		data_Vue.geninfo['user'] = dat.username;
-	})
-	
-	$.post('/database', function(dat){
-		data_Vue.database = dat;
-	//	console.log(data_Vue.database);
-	})
-	
-	$.post('/template_database', function(dat){
-		data_Vue.template_database = dat;
-		//console.log(dat);
-	})
-	
-	$.get('/getAllUsersFromDB', function(dat){
-		var tempArray = [];
-		tempArray = dat;
-		data_Vue.allDBUsers = tempArray;
-		var len = tempArray.length;
-		var tzUsers = [];	
-	  	for (var i = 0; i < len; i++) {
-		    var thisUser = tempArray[i]["_id"];
-			  tzUsers.push(thisUser);
-		}
-		data_Vue.allDBUsers = tzUsers;
-	})
-		
-	data_Vue.project_saved = true;
-	localStorage.clear();
-}
 
 function isSafari() {
 	data_Vue.isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -3206,13 +3185,6 @@ window.addEventListener('beforeunload', function (e) {
 		e.returnValue = '';
 	}
 });
-
-
-
-function myFunction() {
-  document.getElementById("Icon").classList.toggle("change");
-  data_Vue.show_menu = !data_Vue.show_menu;
-} 
 
 
 
