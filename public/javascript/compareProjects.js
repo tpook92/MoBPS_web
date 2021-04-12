@@ -1,14 +1,7 @@
-Vue.component('treeselect', VueTreeselect.Treeselect);
-
 var queryString = window.location.search;
 var urlParams = new URLSearchParams(queryString);
 var cpuser = urlParams.get('cpuser');
 var cpusergroup = urlParams.get('cpusergroup')
-
-function cpInfo () {
-	this['curUserGroup'] = cpusergroup;
-	this['user'] = cpuser;
-}
 
 // returns an object with all parameters, we need for plotting results:
 function myPlottingPar(){
@@ -41,184 +34,93 @@ function myPlottingData(){
 }
 
 
-var cpInfo = new cpInfo();
-
 var data_Vue = new Vue({
 	el: '#compareProjectDiv',
 	
 	data: {
-		cpInfo: cpInfo,
-		user:'',
-		database:[],
-		database2:[],
-		filter: [],
+		user:cpuser,
+		curUserGroup:cpusergroup,
+		database:null,
 		compareProjects:[],
 		jsonDataList:[],
 		plottingPar: new myPlottingPar(),
 		plottingData: new myPlottingData(),
 		socket: '',
-		curUserGroup:'',
-		isBrowserSafari:'',
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
 		plottingType2: ["By Repeats", "By Time"],
 		Summary: [],
+				
+		cptreeData:getMoBPSTreeProject(),
+		cptreeModel:null,
+		cpfilter:null,
+        cptreeOptions: {
+             propertyNames: {
+              text: 'group_Name',
+              children: 'Child',
+              state: 'options',
+             },
+            dnd: false,
+            checkbox: true,
+			multiple:true,
+			parentSelect:true,
+        },
+
+	},
+	async created() {
+		const response = await axios.post('/databaseCP', {username : cpuser,
+				usergroup:cpusergroup})
+	      .catch(function (error) {
+	        if (error.response) {
+	          console.log(error.response);
+	        }
+	      })
+	this.database = response.data;
+	},
+	methods: {
+		nodeChecked(node){	
+			let arr1 = [];	
+			let checkedList = data_Vue.cptreeModel.checked.map(el => el.text);
+			checkedList.push(node.text);
+				
+				for (let k=0; k < checkedList.length; k++) {
+					let project_name = checkedList[k];
+					for (let j=0; j < data_Vue.database.length; j++) {
+				        if (data_Vue.database[j].name === project_name) {
+				          arr1.push(data_Vue.database[j].json);
+				     	}
+			 		}
+				}
+			data_Vue.jsonDataList = arr1;
+			console.log(data_Vue.jsonDataList);
 		},
 		
-	methods: {
-			FilterDatabase: function(){
-				var database2 = [];
-				var f = this.filter;
-				for(var i=0; i < this.database.length; i++){
-					if(this.database[i].indexOf(f)>=0){
-						database2.push(this.database[i]);
-					}
-				}
-				this.database2 = database2;
-			}
-	},
-})
-
-function init() {
-	data_Vue.cpInfo['curUserGroup'] = cpusergroup;
-	data_Vue.cpInfo['user'] = cpuser;
-	getProjectsFromDB();
-  	isSafari();  
-
-}
-
-function getProjectsFromDB(){
-	data_Vue.user = cpuser;
-	data_Vue.curUserGroup = cpusergroup;
-	if (data_Vue.user == "" ) {
-	alert('Please login again to analyze compare projects')
-	} else {
-		 $.ajax({
-			type: "POST",
-			url: '/databaseCP',
-			data: {username : data_Vue.user,
-					usergroup:data_Vue.curUserGroup
-					},
-			    success: function(data) {
-			    data_Vue.database = data;
-			    },
-			});
-	};	
-}
-
-function updateUser(){
-	
-
-	$.get('/user', function(dat){
-
-		data_Vue.user = dat.username;
-		data_Vue.curUserGroup = dat.usergroup;
-		data_Vue.cpInfo['curUserGroup'] = dat.usergroup;
-	})
-	
-	if(data_Vue.user == undefined || data_Vue == ""){
-		
-		$.post('/recover', function(dat){
-			console.log(dat)
-			splitdata = dat.split(",")
-			data_Vue.user = splitdata[0];
-			splitdata.shift();
-			data_Vue.database = splitdata;
-		})
-		
-	} else{
-		
-		$.post('/database', function(dat){
-			data_Vue.database = dat;
-		})
-	}
-	
-	
-
-	localStorage.clear();
-}
-
-function isSafari() {
-	data_Vue.isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-}
-
-function FilterDatabase(){
-	var database2 = [];
-	var f = data_Vue.filter;
-	for(var i=0; i < data_Vue.database.length; i++){
-		if(data_Vue.database[i].indexOf(f)>=0){
-			database2.push(data_Vue.database[i]);
+		nodeUnchecked(node){
+			let arr = []; 
+			let thisList = data_Vue.cptreeModel.checked.map(el => el.text);
+			let index = thisList.indexOf(node.text);
+			thisList.splice(index, 1);
+				
+					for (let p=0; p < thisList.length; p++) {
+						let project_name1 = thisList[p];
+						for (let i=0; i < data_Vue.database.length; i++) {
+					        if (data_Vue.database[i].name === project_name1) {
+					         arr.push(data_Vue.database[i].json);
+					     }
+	 				}
+				}					
+		data_Vue.jsonDataList = arr;
+		console.log(data_Vue.jsonDataList);
 		}
+		
 	}
-	data_Vue.database2 = database2;
-}
+	
+})
 		
 
-function getProjects(val) {
- 	var len = val.options.length;
-	var compProjects = [];	
-  	for (var i = 0; i < len; i++) {
-	    opt = val.options[i];
-		pro = val.options[i]['text'];
-	    if (opt.selected) {
-		  compProjects.push(pro);
-	    }
-	  }
+async function getMoBPSTreeProject() {
+	const treeArray = await axios.get('/get_projectTree')
+	  .catch(function (error) {
+	})
 
-	data_Vue.compareProjects = compProjects;
-	
-	jsonListofProjects(data_Vue.compareProjects);
-	
+	return treeArray.data[0]['ProjectGroup'];
 }
-
-function jsonListofProjects (plist) {
-	var arr = [];
-	
-	var jsonRequests  = function(jsonIndex) {
-	  if (plist.length == jsonIndex) {
-	    console.log("jsonList Success", arr);
-	    return;
-	  }
-
- 	 var project_name = plist[jsonIndex];
-
- 		 $.ajax({
-			type: "POST",
-			url: '/loadproject',
-			data: {name : project_name},
-			    success: function(data) {
-			      arr.push(data[0].json);
-			    },
-		    error: function() {
-		      arr.push({});
-		      console.error("jsonList Error", "plist", arguments);
-		    },
-		    complete: function() {
-		      jsonRequests(++jsonIndex);
-		    }
-		});
-	};
-
-jsonRequests(0);
-
-data_Vue.jsonDataList = arr;
-//console.log(data_Vue.jsonDataList);
-}
-
-
-//************* warn the user about unsaved changes, when leaving:
-window.addEventListener('beforeunload', function (e) {
-	if(data_Vue.project_saved == false){
-		// Cancel the event
-		e.preventDefault();
-		// Chrome requires returnValue to be set
-		e.returnValue = '';
-	}
-});
-
-
-
-function myFunction() {
-  document.getElementById("Icon").classList.toggle("change");
-  data_Vue.show_menu = !data_Vue.show_menu;
-} 
-

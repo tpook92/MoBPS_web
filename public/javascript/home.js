@@ -42,10 +42,6 @@ function myEdge (fr, to) {
 	this['Cohorts used in BVE'] = "";
 	this['Manuel selected cohorts'] = [];
 	this['OGC'] = "No";
-	this['ogc_target'] = "min.sKin";
-	this['ogc_constrain1'] = "inactive";
-	this['ogc_constrain2'] = "inactive";
-	this['ogc_constrain3'] = "inactive";
 	this['Depth of Pedigree'] = "";
 	this['Max Offspring'] = "Inf";
 	this['Max Offspring Pair'] = "Inf";
@@ -63,7 +59,6 @@ function myGeneral () {
 	this['number-simulations-core'] = 1;
 	this['advanced'] = false;
 	this['advanced_test'] = false;
-	this['advanced_ld'] = false;
 	this['advanced_history'] = false; 
 	this['advanced_litter'] = false; 
 	this['advanced_multi'] = false; 
@@ -112,7 +107,7 @@ function myGeneral () {
 	this['sharedWith']=[];
 	this['project_Sharer']='';
 	this['majorQTLsyntax'] = "SNP + Chromosome";
-
+	this['slider_value']=0;
 }
 
 function myTrait (ind){
@@ -136,23 +131,23 @@ function myTrait (ind){
 }
 
 function mySNP (ind){
-	this['QTL SNP Number'] = "",
-	this['QTL ID'] = "",
-	this['QTL BP'] = "",
-	this['QTL Chromosome'] = "",
-	this['QTL Effect AA'] = 0,
-	this['QTL Effect AB'] = 0,
-	this['QTL Effect BB'] = 0,
-	this['QTL Allele Frequency'] = 0.5,
+	this['QTL SNP Number'] = ind,
+	this['QTL ID'] = 'QTL'+ind,
+	this['QTL BP'] = Math.round(Math.random()*1000000),
+	this['QTL Chromosome'] = 1,
+	this['QTL Effect AA'] = Math.round(Math.random()*10) +1,
+	this['QTL Effect AB'] = Math.round(Math.random()*10) +1,
+	this['QTL Effect BB'] = Math.round(Math.random()*10) +1,
+	this['QTL Allele Frequency'] = Math.round(Math.random()*100)/100,
 	this['QTL Optional Info'] = ''
 }
 
 function mySNPsub (ind){
-	this['QTL SNP Number'] = "",
-	this['QTL ID'] = "",
-	this['QTL BP'] = "",
-	this['QTL Chromosome'] = "",
-	this['QTL Allele Frequency'] = 0.5,
+	this['QTL SNP Number'] = ind,
+	this['QTL ID'] = 'QTL'+ind,
+	this['QTL BP'] = Math.round(Math.random()*1000000),
+	this['QTL Chromosome'] = 1,
+	this['QTL Allele Frequency'] = Math.round(Math.random()*100)/100,
 	this['QTL Optional Info'] = ''
 }
 
@@ -172,7 +167,7 @@ function myCulling (){
 }
 
 function myPopulation (){
-	this['subpopulation_list'] = [{Name: "Population 1", beta1 : 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, nindi: 100, sharef: 0.5, ngen: 0, majorfreq: true, 'QTL Info': []}]
+	this['subpopulation_list'] = [{Name: "Population 1", beta1 : 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, 'QTL Info': []}]
 }
 
 function mySelectionScaling (selection_index){
@@ -255,6 +250,23 @@ var data_Vue = new Vue({
 	el: '#mainDiv',
 	
 	data: {
+		//params for project tree
+		treeModel:null,
+		treeData:getMoBPSTreeProject(),
+		filter:null,
+        treeOptions: {
+             propertyNames: {
+              text: 'group_Name',
+              children: 'Child',
+              state: 'options',
+             },
+            dnd:true,
+            checkbox:false,
+			parentSelect:false,
+        },
+		showTree: [],
+		editProjectForTree:'',
+				
 		// params for general information:
 		geninfo: geninfo,
 		traitsinfo: [],
@@ -294,9 +306,9 @@ var data_Vue = new Vue({
 		runned: false,
 		genetic_data:'Ens',
 		user:null,
-		database: null,
-		database2:[],
-		filter: [],
+		database:[],
+		//database2:[],
+		//filter: [],
 		versions:[],
 		template_database:null,
 		project_saved: "",
@@ -334,7 +346,7 @@ var data_Vue = new Vue({
 		change_type11: 'Remain unchanged',
 		change_type12: 'Remain unchanged',
 		change_type13: [],
-		
+						
 		// params for nodes and edges:
 		nodes: nodes,
 		edges: edges,
@@ -349,9 +361,6 @@ var data_Vue = new Vue({
 		edge_colors: {'Selection':'#7bbb44', 'Reproduction':'#f5a623', 'Aging':'#dba59a', 'Combine':'#5a4f7c', 'Repeat':'#f14235',
 							'Split': '#94db8e', 'Cloning':'#9932CC', 'Selfing':'#ff90b7', 'DH-Production':'#aa76fd',
 							'Semen-collection': '#483D8B'},
-		ogc_targets: ['min.sKin', 'max.BV', 'min.BV'], 
-		ogc_constrain: ['ub.BV', 'eq.BV', 'lb.BV', 'ub.sKin', 'uniform', 'lb.BV.increase', 'ub.sKin.increase', 'inactive'],
-		ogc_uniform: ['male', 'female'],
 		counter_pheno: 0,
 		counter_qtl:0,
 		counter_qtl_sub:0,
@@ -411,7 +420,6 @@ var data_Vue = new Vue({
 			Other: [{Dataset: "", Filter:"variation_set_name", Value: ""}],
 		},
 	},
-	
 	async created() {
 		const response3  = await axios.get('/user')
 	      .catch(function (error) {
@@ -428,10 +436,11 @@ var data_Vue = new Vue({
 		const response = await axios.post('/database')
 	      .catch(function (error) {
 	        if (error.response) {
+				console.log('errpr');
 	          console.log(error.response);
 	        }
 	      })
-		this.database = response.data;
+		this.database = response.data;		
 
 		const response1  = await axios.post('/template_database')
 	      .catch(function (error) {
@@ -455,7 +464,6 @@ var data_Vue = new Vue({
 		}
 		this.allDBUsers = tzUsers;	
 
-
 		this.project_saved = true;
 		localStorage.clear();
 	},
@@ -472,10 +480,9 @@ var data_Vue = new Vue({
 	    externalScript2.setAttribute('src', 'javascript/excelToArray.js')
     	document.head.appendChild(externalScript2)
 	},
-	
 	watch: {
 		project_saved: function(val){
-			console.log(val);
+		//	console.log(val);
 			document.getElementById("save_button").disabled = val;
 		},
 		traitsinfo: function(val){
@@ -643,12 +650,44 @@ var data_Vue = new Vue({
 		},	
 	},
 	methods: {
+			logDragStart() {
+			},         
+			logDragFinish() {
+				saveGroupTreeToDB();
+	    	},
+			editNode(node) {
+	            node.startEditing();
+				saveGroupTreeToDB();
+	   	    },
+	      	removeNode(node) {
+	            if (confirm('Are you sure to remove the folder?')) {
+	              node.remove();
+				  saveGroupTreeToDB();
+	            }				
+	      	},
+			addChildFolder(node) {
+				var nodeName = "New Folder ";
+				const subNo = Math.round(Math.random() * 10);
+				var localnodeName = nodeName + subNo;	
+				node['states'].dropable = true;		
+				node['states'].draggable = true;		
+				node.prepend(localnodeName);
+				 saveGroupTreeToDB();
+			},			
+			nodeClicked(node){		
+				data_Vue.editProjectForTree = node;
+				if(node.parent === null) {
+					if(isProject(node.text)) {loadDataFromTree(node.text);}
+				}
+				else {
+					loadDataFromTree(node.text);
+				}
+	    	},
 		
 		moveMatrix: function(evt) { 
 		    if (localStorage.getItem("movetrait") === null) { 
 				getMatrix();
-			}   
-
+			} 
 	     	data_Vue.geninfo['Traits moveFrom'] = evt.draggedContext.index;
 	     	data_Vue.geninfo['Traits moveTo'] = evt.draggedContext.futureIndex;
 		},
@@ -662,7 +701,6 @@ var data_Vue = new Vue({
 		onEnd: function(evt) {
 		},
 
-		
 		// add a new animal housing cost class:
 		createHCostClass: function(){
 			var val = document.getElementById("newHCostClass").value;
@@ -708,7 +746,7 @@ var data_Vue = new Vue({
 				alert("No name for subpopulation entered. No subpopulation generated.")
 				return;				
 			}
-			var newSub = {Name: val, beta1: 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, nindi: 100, sharef: 0.5, ngen: 0,  majorfreq: true, 'QTL Info': []};
+			var newSub = {Name: val, beta1: 1, beta2: 1, share0: 0, share1: 0, fixed_freq: 0, 'QTL Info': []};
 			this.subpopulation['subpopulation_list'].push(newSub);	
 			document.getElementById("newSubpopulationClass").value='';				
 		},	
@@ -856,7 +894,7 @@ var data_Vue = new Vue({
 			if(data_Vue.change_type == 'nodes'){
 				nodes = data_Vue.nodes.get();
 				for(i = 0; i<nodes.length;i++){
-					console.log(i);
+				//	console.log(i);
 					if((data_Vue.change_type5=="" || data_Vue.change_type5 == nodes[i]['Number of Individuals']) & 
 							(data_Vue.change_type4=='All' || data_Vue.change_type4 == nodes[i]['Sex']) & 
 							(data_Vue.change_type7=='All' || data_Vue.change_type7 == nodes[i]["Phenotyping Class"]) & 
@@ -1071,6 +1109,8 @@ var data_Vue = new Vue({
 		
 		createCombi: function(ind){
 			
+		//	console.log(ind);
+		//	console.log(this.traitsinfo);
 			if( this.traitsinfo[ind]['is_combi'] == true){
 				this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
 			} 
@@ -1128,7 +1168,7 @@ var data_Vue = new Vue({
 		},
 		
 		removeQTLsub: function(subpop, trait, snp){
-			var indA = this.subpopulation.indexOf(subpop);
+			var indA = this.subpopulation.indexOf(subpop)
 			var indT = this.subpopulation[indA].indexOf(trait);
 			var indS = this.subpopulation[indA][indT]['QTL Info'].indexOf(snp);
 			
@@ -1158,17 +1198,6 @@ var data_Vue = new Vue({
 
 		},
 		
-		FilterDatabase: function(){
-			var database2 = [];
-			var f = this.filter;
-			for(var i=0; i < this.database.length; i++){
-				if(this.database[i].indexOf(f)>=0){
-					database2.push(this.database[i]);
-				}
-			}
-			this.database2 = database2;
-		},
-
 		// remove clicked Phenotype
 		removePheno: function(ind){
 			var len = this.traitsinfo.length;
@@ -1296,6 +1325,241 @@ var data_Vue = new Vue({
 //******************************************************************************************//
 //**************** own functions required to manually update data_Vue or DOM ***************//
 
+function isCharacterALetter(char) {
+  return char.toLowerCase() != char.toUpperCase()
+}
+
+
+async function getMoBPSTreeProject() {
+	const checkTreeExist = await axios.get('/get_projectTree')
+		  .catch(function (error) {
+		})
+
+	if (checkTreeExist.data[0]!== undefined ){
+		return checkTreeExist.data[0]['ProjectGroup'];
+	}	
+	else {
+		const thisdb = await axios.get('/fields_database')
+			  .catch(function (error) {
+		})
+
+		var treeArray = [];
+		var tempObj = {};
+		var parent_options = { draggable: true, clicked: false };
+		var child_options = {dropable:false};
+	
+	    var tempObj = { group_Name:"New Group", options: parent_options };
+		treeArray.push(tempObj);
+
+		for (var t = 0; t < thisdb.data.length; t++) {
+			var thisName = thisdb.data[t]['name'];
+			treeObj1 = {group_Name:thisName,  options:  child_options };
+			if(thisName !== undefined ) {
+			treeArray.push(treeObj1); }
+		}	
+			
+			const saveTree = await axios.post('/create_projectTree',
+			{ project: treeArray }).then(res => {
+			  })
+			  .catch(error => {
+			    console.error(error)
+			  })
+			}					
+			
+	return treeArray;
+}
+
+
+
+function loadDataFromTree(project_name) {
+var isProjectName = project_name;
+var isProjectExist = data_Vue.database.includes(isProjectName);
+	if(isProjectExist == false) {  
+		console.log("This is project group") 
+	}
+	else {
+		loadData(isProjectName);
+	}
+}
+
+
+function isProject(proj_name) {
+var isProjName = proj_name;
+var isProjExist = data_Vue.database.includes(isProjName);
+	return isProjExist;
+}
+
+function createProjectTree() {
+	if(data_Vue.showNewGroup === true) {
+			var treeArray = [];
+			var treeArray1 = [];
+			var tempObj = {};
+			
+			var parent_options = { draggable: false, clicked: false };
+			var child_options = {dropable:false};
+	
+		    var tempObj = { group_Name:"New Group", options: parent_options };
+	
+			treeObj1 = {group_Name:name,  options:  child_options };
+			treeArray1.push(treeObj1); 
+				
+			tempObj.Child = treeArray1;
+			treeArray.push(tempObj);
+			
+			data_Vue.showNewGroup = false;
+			
+			$.ajax
+			({
+				type: "POST",
+				url: '/create_projectTree',
+				data: {
+					project: treeArray,
+				},
+				success: function (data, msg) {
+				//	$.post('/database', function(dat){
+				//		data_Vue.database = dat;
+					
+			//	});
+				},
+				failure: function(msg) 
+				{
+					alert('Saving tree Error!');
+				},
+				})	
+	}		
+				
+}
+
+function saveGroupTreeToDB() {
+	var saveArray = data_Vue.treeModel['tree']['model'];
+	var parent_options = { draggable: true, clicked: false };
+	var child_options = {dropable: false};
+	
+	if (saveArray.length > 0 ){
+		var sArray = new Array();
+
+		for (var s = 0; s < saveArray.length; s++) {
+			var thisChild = saveArray[s].children.length;
+			var childArr = new Array();
+			
+			if(thisChild > 0) {
+				for (var s2 = 0; s2 < thisChild; s2++) {
+					if(saveArray[s].children[s2].children.length > 0) {
+						var s1_childArr = new Array();
+						for (var s3 = 0; s3 < saveArray[s].children[s2].children.length; s3++) {
+							if(saveArray[s].children[s2].children[s3].children.length > 0) {
+								var s2_childArr = new Array();
+								for (var s4 = 0; s4 < saveArray[s].children[s2].children[s3].children.length; s4++) {
+									if(saveArray[s].children[s2].children[s3].children[s4].children.length > 0) {	
+										var s3_childArr = new Array();									
+										for (var s5 = 0; s5 < saveArray[s].children[s2].children[s3].children[s4].children.length; s5++) {
+									
+										if(saveArray[s].children[s2].children[s3].children[s4].children[s5].children.length > 0) {										
+											var s4_childArr = new Array();
+											for (var s6 = 0; s6 < saveArray[s].children[s2].children[s3].children[s4].children[s5].children.length; s6++) {
+											s4_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].children[s5].children[s6].text, options:child_options});
+											}
+											s3_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].children[s5].text, Child:s4_childArr, options:parent_options});
+											}
+										else {
+											var s3GroupName = saveArray[s].children[s2].children[s3].children[s4].children[s5].text;
+											s3_childArr.push({group_Name:s3GroupName, options:child_options});
+										}
+									
+									
+										}
+										s2_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].text, Child:s3_childArr, options:child_options});
+										}
+									else {
+										var s2GroupName = saveArray[s].children[s2].children[s3].children[s4].text;
+										s2_childArr.push({group_Name:s2GroupName, options:child_options});
+									}								
+								}
+									if(isProject(saveArray[s].children[s2].children[s3].text) === true)
+									s1_childArr.push({group_Name:saveArray[s].children[s2].children[s3].text, Child:s2_childArr, options:child_options});
+									else {s1_childArr.push({group_Name:saveArray[s].children[s2].children[s3].text, Child:s2_childArr, options:parent_options});}
+							}
+							else {
+							var s1GroupName = saveArray[s].children[s2].children[s3].text;
+							s1_childArr.push({group_Name:s1GroupName, options:child_options});
+							}
+						}
+						if(isProject(saveArray[s].children[s2].text) === true)
+							{ childArr.push({group_Name:saveArray[s].children[s2].text, Child:s1_childArr, options:child_options}); } 
+						else {childArr.push({group_Name:saveArray[s].children[s2].text, Child:s1_childArr, options:parent_options}); }
+					}								
+					else {
+						var sGroupName = saveArray[s].children[s2].text;	
+						childArr.push({group_Name:sGroupName, options:child_options});}
+				}
+			}
+			if(isProject(saveArray[s].data.text) === true)
+				{ sArray.push({group_Name:saveArray[s].data.text, Child:childArr, options:child_options}); } 
+			else {sArray.push({group_Name:saveArray[s].data.text, Child:childArr, options:parent_options}); } 
+		}
+	}
+	saveProjectTree_toDB(sArray);
+}
+
+
+function removeProject_Tree(project) {
+    project.remove();
+	saveGroupTreeToDB();
+}
+
+function saveProjectTree_toDB(projectTree) {
+	var projectGroup = projectTree;
+	$.ajax
+	({
+		type: "POST",
+		url: '/update_ProjectTree',
+		data: {
+			project: JSON.stringify(projectGroup),	
+		},
+		success: function (data, msg) {
+			$.post('/database', function(dat){
+				data_Vue.database = dat;
+			})
+		},
+		failure: function(msg) 
+		{
+			alert('Saving Error!');
+		},
+	});			
+	
+}
+
+
+
+function updateGroup_nouse(project_name, dropgroup) {
+	if(dropgroup !== '') {
+		alert('inserting');
+		$.ajax
+		({
+			type: "POST",
+			url: "/updateGroup",
+			data: {
+				name: project_name,
+				projectGroup : dropgroup,
+			},
+			success: function (data, msg) {
+				$.post('/database', function(dat){
+					data_Vue.database = dat;
+				})
+			},
+			failure: function(msg) 
+			{
+				alert('Saving Error!');
+			},
+		});			
+	}
+	else {
+		alert('not inserting');
+		
+	}	
+}
+
+
 function getMatrix() {
 	 data_Vue['Upload_CorrFile'] == 'No';
      localStorage.setItem("movetrait", "yes");
@@ -1411,9 +1675,17 @@ function updateSpeciesData(value){
 // two set of matrices for each correlation - one to display the correlation values (mat1,mat2) to container and another to save each correlation to database(savemat1, savemat2)!
 function updateMatrices() {  
 	if (typeof localStorage.getItem("movetrait") !== "undefined" & localStorage.getItem("movetrait") === "yes") {   
+		 var mat1 = [];
+	     var mat2 = [];
+
+		 var savemat1 = [];
+		 var savemat2 = [];
 	
-		var mat1 = [], mat2 = [], savemat1 = [], savemat2  = [] ;
-	     var row1, row2, saverow1, saverow2;
+	     var row1;
+	     var row2; 
+		
+		var saverow1;
+		var saverow2;
 	     
 	     var listArray5 = [];
 	     for(var a=0; a < data_Vue.traitsinfo.length; a++){
@@ -1423,7 +1695,10 @@ function updateMatrices() {
 		var arrayLength = listArray5.length;
          
          for(var i=0; i < arrayLength; i++){
-			row1= [], row2= [], saverow1= [], saverow2 = [];
+              row1 = [];
+              row2 = [];
+			  saverow1 = [];
+			  saverow2 = [];
               var am = listArray5[i]; 
          
               for(var j=0; j <= i; j++){
@@ -1521,8 +1796,10 @@ function exportNetwork() {
         data_Vue.geninfo["Chromosomes Info"] = data_Vue.chromo_display;
     }
 
-   var mat1 = [], mat2 = [];
-    var row1, row2;
+    var mat1 = [];
+    var mat2 = [];
+    var row1;
+    var row2; 
      
     if((data_Vue['Upload_CorrFile'] == 'Yes') & (data_Vue.geninfo['Excel_File'] == 'both')) {
          var mat1 = data_Vue.mymatrix1;
@@ -1634,7 +1911,7 @@ function importNetwork() {
 	var localDrivetoUI = document.getElementById('input-file');
 
 		if(localDrivetoUI) {
-			// console.log(localDrivetoUI);
+		//	console.log(localDrivetoUI);
 			localDrivetoUI.addEventListener('change', getJSONFromDrive, false);
 		}	
 	data_Vue.project_saved = false;
@@ -1685,8 +1962,7 @@ function importNetwork_intern(inputData1) {
 	var inputData = JSON.parse(JSON.stringify(inputData1));
 	data_Vue.nodes = new vis.DataSet(inputData['Nodes']);
 	data_Vue.edges = new vis.DataSet(inputData['Edges']);
-
-
+	
 	var prior_user = data_Vue.geninfo.user;
 	var prior_userclass = data_Vue.geninfo.curUserGroup;
 	data_Vue.geninfo = inputData['Genomic Info'] ? inputData['Genomic Info'] : new myGeneral();
@@ -1698,9 +1974,6 @@ function importNetwork_intern(inputData1) {
 	}
 	if(data_Vue.geninfo['advanced_test']==undefined){
 		data_Vue.geninfo['advanced_test'] = false;
-	}
-	if(data_Vue.geninfo['advanced_ld']==undefined){
-		data_Vue.geninfo['advanced_ld'] = false;
 	}
 	if(data_Vue.geninfo['advanced_history']==undefined){
 		data_Vue.geninfo['advanced_history'] = false;
@@ -1798,15 +2071,6 @@ function importNetwork_intern(inputData1) {
 		data_Vue.geninfo['advanced_advanced_copy'] = false;
 	}
 	
-	if(data_Vue.geninfo['max_d']==undefined){
-		data_Vue.geninfo['max_d'] = 25;
-	}
-	if(data_Vue.geninfo['max_d2']==undefined){
-		data_Vue.geninfo['max_d2'] = 25;
-	}
-		if(data_Vue.geninfo['advanced_advanced_copy']==undefined){
-		data_Vue.geninfo['advanced_advanced_copy'] = false;
-	}
 	if(data_Vue.plottingData.confidence==undefined){
 		data_Vue.plottingData.confidence = false;
 	}
@@ -1816,10 +2080,6 @@ function importNetwork_intern(inputData1) {
 
 	if(data_Vue.geninfo['sharedWith']==undefined){
 		data_Vue.geninfo['sharedWith'] = '';
-	}
-	
-	if(data_Vue.geninfo['majorQTLsyntax']==undefined){
-		data_Vue.geninfo['majorQTLsyntax'] = 'SNP + Chromosome';
 	}
 
 	if(data_Vue.change_type==undefined){
@@ -1865,9 +2125,6 @@ function importNetwork_intern(inputData1) {
 		if(data_Vue.change_type13==undefined){
 		data_Vue.change_type13 = [];
 	}
-	if(data_Vue.majorvisible==undefined){
-		data_Vue.majorvisible = false;
-	}
 	
 	data_Vue.traitsinfo = inputData['Trait Info'] ? inputData['Trait Info'] : [];
 	data_Vue.selection_index = inputData['Selection Index'];
@@ -1901,36 +2158,12 @@ function importNetwork_intern(inputData1) {
 	}
 	if(inputData['Subpopulation']){
 		data_Vue.subpopulation = inputData['Subpopulation'];
-		
-		for(i = 0; i < data_Vue.subpopulation.subpopulation_list.length; i++){
-			if(data_Vue.subpopulation.subpopulation_list[i].nindi == undefined){
-				data_Vue.subpopulation.subpopulation_list[i].nindi = 100;
-			}
-			if(data_Vue.subpopulation.subpopulation_list[i].sharef == undefined){
-				data_Vue.subpopulation.subpopulation_list[i].sharef = 0.5;
-			}
-			if(data_Vue.subpopulation.subpopulation_list[i].ngen == undefined){
-				data_Vue.subpopulation.subpopulation_list[i].ngen = 0;
-			}
-			if(data_Vue.subpopulation.subpopulation_list[i].majorfreq == undefined){
-				data_Vue.subpopulation.subpopulation_list[i].majorfreq = true;
-			}
-			
-		}
-		
-		
 	}else{
 		data_Vue.subpopulation = new myPopulation();
 	}
 	
 	if(inputData['Phenotyping Info']){
 		data_Vue.phenotyping_class = inputData['Phenotyping Info'];
-		
-		for(var i=0; i < data_Vue.phenotyping_class.length; i++){
-			if(data_Vue.phenotyping_class[i]["Cost of phenotyping"] == undefined){
-				data_Vue.phenotyping_class[i]["Cost of phenotyping"] = "0";
-			}
-		}
 	}else{
 		// an older Version of JSON file, maually add phenoC
 		data_Vue.phenotyping_class = [{Name: "Fully phenotyped"}];
@@ -1939,6 +2172,14 @@ function importNetwork_intern(inputData1) {
 		}
 	}
 	
+	if(data_Vue.geninfo['slider_value'] === undefined) {
+		data_Vue.geninfo['slider_value'] = 0;
+		document.getElementById('heightNetwork').innerHTML = 0;
+		networkBoxChange(0);
+	}
+	else {
+		networkBoxChange(data_Vue.geninfo['slider_value']);
+	}
 
 	data_Vue.show_matrix_element = inputData["Intern"].show_matrix_element;
 	data_Vue.counter_pheno = inputData["Intern"].counter_pheno;
@@ -2006,10 +2247,13 @@ function importNetwork_intern(inputData1) {
 	var mat2 = inputData['Genetic Correlation'];
 	//console.log(mat1);
 	if(mat1.length > 0){		
-		var matrix = [], matrix2 = [];
-		var row1, row2;
+		var matrix = [];
+		var matrix2 = [];
+		var row1;
+		var row2;
 		for(var i=0; i < data_Vue.traitsinfo.length; i++){
-			row1 = [], row2 = [];
+			row1 = [];
+			row2 = [];
 			for(var j=0; j <= i; j++){
 				row1.push({val : mat1[i][j]});
 				row2.push({val : mat2[i][j]});
@@ -2026,39 +2270,6 @@ function importNetwork_intern(inputData1) {
 	}
 	loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
 	loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
-	
-	if(data_Vue.nodes.length >0){
-		nodes = data_Vue.nodes.get();
-		for(i = 0; i < nodes.length; i ++){
-			if(nodes[i]["Proportion of genotyped individuals"] == undefined){
-				nodes[i]["Proportion of genotyped individuals"] = 1;
-			}
-			if(nodes[i]["Phenotyping Class"] == undefined){
-				nodes[i]["Phenotyping Class"] = data_Vue.phenotyping_class[0]["Name"];
-			}
-			data_Vue.nodes.update(nodes[i]);
-		}
-	}
-	
-	if(data_Vue.edges.length > 0){
-		edges = data_Vue.edges.get();
-		for(i = 0; i < edges.length; i++){
-			if(edges[i]["Time Needed"] == undefined){
-				edges[i]["Time Needed"] = 0;
-			}
-			if(edges[i]["Cohorts used in BVE"] == undefined){
-				edges[i]["Cohorts used in BVE"] = "";
-			}
-			if(edges[i]['Selection Type'] ==undefined){
-				edges[i]['Selection Type'] = "Random";
-			} 
-			if(edges[i]['Selection Index'] ==undefined){
-				edges[i]['Selection Index'] = data_Vue.selection_index[0]["Name"];
-			} 
-			data_Vue.edges.update(edges[i]);
-		}
-	}
-	
 	
 	draw();
 	console.log("Loading Data successful.");
@@ -2145,8 +2356,16 @@ function csvToJSON(cohorts) {
   return result; 
 }
 
-// function to save data to database:
 
+function updateTree(){
+	//console.log(data_Vue.treeData);
+	//console.log(data_Vue.geninfo['Project Name']);
+	data_Vue.treeData.push({group_Name:data_Vue.geninfo['Project Name'], options:{dropable:false} });
+	//data_Vue.treeData = data_Vue.treeModel;
+}
+
+
+// function to save data to database:
 function postProject(name, url, jsondata, sharedWith){
 	$.ajax
 	({
@@ -2171,14 +2390,24 @@ function postProject(name, url, jsondata, sharedWith){
 				alert("Imported values from Excel successfully!");
 			}
 			else {
-				alert("Saving Success!");
+				if(url === '/save' && data_Vue.database.length !== 0) { 
+					saveProjectToTree(); 	
+					alert('Saving Success.'+ '\n' + 'Please refresh mobps if you want to add the new project to group.');
+				}
+				else if(data_Vue.database.length === 0) {
+					saveProjectToTree();
+				}
+				else {
+					alert("Saving Success!");
+				} 
 			}
-				
+					
 			data_Vue.project_saved = true;
 			data_Vue.versions = data.reverse();
 
 			document.getElementById('excelToArray').value = '';
-			document.getElementById("Version").value = "recent";
+			if(document.getElementById("Version")) {
+			document.getElementById("Version").value = "recent"; }
 			document.getElementById("SaveAs_Div").style.display = 'none';
 			document.getElementById("shareProject_Div").style.display = 'none';
 			loadData(name);
@@ -2190,8 +2419,67 @@ function postProject(name, url, jsondata, sharedWith){
 	});			
 }
 			
+function saveProjectToTree() {
+	var name = data_Vue.geninfo['Project Name'];
+	
+	$.ajax
+	({
+		type: "POST",
+		url: '/saveProject_ProjectTree',
+		data: {
+			name: name,
+		},
+		success: function (data, msg) {
+			//$.get('/get_projectTree', function(dat){
+			//	console.log('tree'+dat);
+			//	data_Vue.showTree = dat;
+		//});
+		//getMoBPSTreeProject();
+		},
+		failure: function(msg) 
+		{
+			alert('Saving dfdgfg Error!');
+		},
+		})
+}	
+
+
+function createProjectTree(name) {
+			var treeArray = [];
+			var treeArray1 = [];
+			var tempObj = {};
 			
+			var parent_options = { draggable: false, clicked: false };
+			var child_options = {dropable:false};
+	
+		    var tempObj = { group_Name:"New Group", options: parent_options };
+	
+			treeObj1 = {group_Name:name,  options:  child_options };
+			treeArray1.push(treeObj1); 
+				
+			tempObj.Child = treeArray1;
+			treeArray.push(tempObj);
 			
+			$.ajax
+			({
+				type: "POST",
+				url: '/create_projectTree',
+				data: {
+					project: treeArray,
+				},
+				success: function (data, msg) {
+					$.post('/database', function(dat){
+						data_Vue.database = dat;
+					
+				});
+				},
+				failure: function(msg) 
+				{
+					alert('Saving tree Error!');
+				},
+				})			
+				
+}
 			
 // function to save data to database:
 
@@ -2237,17 +2525,6 @@ function unique_postProject(name, url, jsondata, sharedWith){
 			alert('Saving Error!');
 		},
 	});			
-}
-
-function FilterDatabase(){
-	var database2 = [];
-	var f = data_Vue.filter;
-	for(var i=0; i < data_Vue.database.length; i++){
-		if(data_Vue.database[i].indexOf(f)>=0){
-			database2.push(data_Vue.database[i]);
-		}
-	}
-	data_Vue.database2 = database2;
 }
 
 function checkProjectExists() {
@@ -2408,7 +2685,7 @@ function saveSharedProToOri(name, getSharer) {
 		var jsondata = JSON.stringify(exportNetwork());
 		data_Vue.geninfo['Excel_File'] = '';
 
-		console.log(data_Vue.versions);
+	//	console.log(data_Vue.versions);
 
 		if(data_Vue.versions.length > 10){
 			var r = confirm("Only the 10 most recent versions are saved. The oldest version will be deleted. Do you want to proceed? Alternative: Change the Project Name and save to create a new project");
@@ -2639,6 +2916,7 @@ function saveProject(name) {
 
 function deleteProject() {
 	var name = data_Vue.geninfo['Project Name'];
+	//console.log(name);
 	
 	if(data_Vue.database.filter(function(x){return(x == name)}).length > 0){
 		var r = confirm("The whole project including all older versions will be deleted. Do you want to proceed?");
@@ -2646,13 +2924,13 @@ function deleteProject() {
 			$.ajax
 			({
 				type: "POST",
-				url: "/delete",
+			//	url: "/delete",
 				data: {
 					name: name,
 				},
 				success: function (msg) {
 					//loadData(name);
-					console.log("Project deleted.");
+				//	console.log("Project deleted.");
 					location.reload();
 				},
 				failure: function(msg) 
@@ -2663,6 +2941,40 @@ function deleteProject() {
 		}
 	}
 }
+
+function deleteProject_FromTree() {
+	var project = data_Vue.editProjectForTree;
+	project.remove();
+	saveGroupTreeToDB();
+}
+
+function deleteProjects_FromTree(projects) {
+	var deleteArray = projects['children'];
+
+	var dArray = new Array();
+
+	if (deleteArray.length > 0 ){
+		for (var d = 0; d < deleteArray.length; d++) {
+			if(deleteArray[d].children.length > 0) {
+
+				for (var d2 = 0; d2 < deleteArray[d].children.length; d2++) {
+						if(deleteArray[d].children[d2].children.length > 0) {
+							for (var d3 = 0; d3 < deleteArray[d].children[d2].children.length; d3++) {
+							if(deleteArray[d].children[d2].children[d3].children.length > 0) {
+							}
+							else {dArray.push(deleteArray[d].children[d2].children[d3].data.text);}
+							}							
+						
+						}
+						else {dArray.push(deleteArray[d].children[d2].data.text);}
+					}	
+				
+			}
+			else {dArray.push(deleteArray[d].data.text); }				
+	}}
+}
+
+
 
 function saveProjectAs() {
 	document.getElementById("SaveAs_Div").style.display = 'block';
@@ -2775,7 +3087,9 @@ function draw() {
 		interaction: {
 			hover: true,
 			hoverConnectedEdges: false,
-			selectConnectedEdges: true,			
+			selectConnectedEdges: true,	
+			navigationButtons: true,
+   	            keyboard: true,
 		},
 	};
 	network = new vis.Network(container, network_data, options);
@@ -2783,12 +3097,12 @@ function draw() {
 	network.on("selectNode", function(params){
 		data_Vue.show_info = 'node';
 		data_Vue.active_node = data_Vue.nodes.get(params.nodes[0]);
-		console.log('Active Node is ' + data_Vue.active_node.id);
+		//console.log('Active Node is ' + data_Vue.active_node.id);
 	});
 	network.on("selectEdge", function(params){
 		if(params.nodes.length == 0) data_Vue.show_info = 'edge';
 		data_Vue.active_edge = data_Vue.edges.get(params.edges[0]);
-		console.log('Active Edge is ' + data_Vue.active_edge.id);
+		//console.log('Active Edge is ' + data_Vue.active_edge.id);
 	});
 	network.on("doubleClick", function(params){
 		data_Vue.displayBtn = true;
@@ -2933,7 +3247,7 @@ function saveNodeData(data, callback) {
 				return item.from == old_id;
 			}
 		});
-		console.log(items);
+		//console.log(items);
 		if(items.length >= 1){
 			for(ii=0; ii < items.length; ii++){
 				data_Vue.edges.update({id: items[ii], from: data.id});
@@ -2945,7 +3259,7 @@ function saveNodeData(data, callback) {
 				return item.to == old_id;
 			}
 		});
-		console.log(items);
+		//console.log(items);
 		if(items.length >= 1){
 			for(ii=0; ii < items.length; ii++){
 				data_Vue.edges.update({id: items[ii], to: data.id});
@@ -3076,13 +3390,14 @@ function saveEdgeData(data, callback) {
 }
 
 function init() {
+  openNav();
   draw();
   isSafari();  
   shareUserTable();
-  openNav();
 }
 
 
+//******************* If the User take data from database, then load them here **********/
 function isSafari() {
 	data_Vue.isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 	data_Vue.isDraggableOption='No';
@@ -3188,6 +3503,13 @@ window.addEventListener('beforeunload', function (e) {
 
 
 
+function myFunction() {
+  document.getElementById("Icon").classList.toggle("change");
+  data_Vue.show_menu = !data_Vue.show_menu;
+} 
+
+
+
 // excel to Array 
 var excelToArr = document.getElementById('excelToArray');
 if(excelToArr) {
@@ -3202,4 +3524,3 @@ function importexcelToArray(evt) {
 
 
 // excel to Array end
-

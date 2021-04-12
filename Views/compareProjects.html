@@ -4,44 +4,35 @@
 	
 	<script type="text/javascript">
 		var isBrowserSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-		console.log(isBrowserSafari);
+	//	console.log(isBrowserSafari);
 	</script>
 		
 	<head>
 		<title>MoBPS</title>
+		
+		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
-
-		<script src="https://unpkg.com/vue-slider"></script>
-
-		<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
-    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
-
+		
 		<!-- for plotting graphs: -->
 		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-		<script type="text/javascript" src="https://visjs.github.io/vis-network/dist/vis-network.min.js" ></script>
-		<script type="text/javascript" src="https://unpkg.com/alea@1.0.0/alea.js"></script>
-		<script type="text/javascript" src="https://visjs.github.io/vis-network/examples/network/exampleUtil.js"></script>
-		<link src="https://visjs.github.io/vis-network/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
-
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
-
 		<link rel="stylesheet" type="text/css" href="./styles/mobps.css">
-
+	
 		<!--  for javascript and ajax call -->		
-		<script type="text/javascript" src="javascript/jQ1.js"></script>
-		<script type="text/javascript" src="javascript/jQ2.js"></script>
 		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
 		<script type="text/javascript" src="javascript/jQ3.js"></script>
+		
+		<script type="javascript" src="https://unpkg.com/liquor-tree"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+		<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" media="all" rel="stylesheet" type="text/css" />
 
-			
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/liquor-tree/dist/liquor-tree.umd.js"></script>
+		<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" media="all" rel="stylesheet" type="text/css" />
+	
 	</head>
 
-	<body onload="init();">		
 	<div id="runningDog">
 		<button style="color: red" class='bar_button' onclick="stopR();">Stop R Analyze</button> 
 		<h3 id="runningDogTitle">
@@ -53,13 +44,12 @@
 	<div id='compareProjectDiv'>
 		<div id="Project_Bar">	
 			<a>&nbsp;</a>
-				<a href="http://mobps.de/home" v-if="user!=undefined" class="additional_link">Go back to MoBPS Home</a> 
+				<a href="/home" v-if="user!=undefined" class="additional_link" onclick=writeTemp()>Go back to MoBPS Home</a> 
 			<a>&nbsp;</a>					
 			</div>
 			
 
-			<div id="main">
-				
+			<div id="mainCP">				
 				<h4 v-if="user==undefined" style="color: red; font-style:italic;"> 
 				YOUR CURRENT SYSTEM IS NOT SUPPORTING CompareProjects <br>
 				Potential issues are: <br>
@@ -70,42 +60,26 @@
 				You have to Log-In again to Access/Use the Webinterface!!!
 				</h4>
 
-				<!--button v-if="user==undefined" onclick="init()" >CLICK HERE TO LOAD IN YOUR PROJECTS</button-->
-				<div id="LoadJSON_Div" >
-					<br>
-					<h2>MoBPS Compare Projects </h2>
-					<table>
-						<tr>
-						<td>
-						<h3>Select multiple projects to compare : {{compareProjects}}</h3><br>
-						
-						<td>
-						Filter Projects for Keyword: 
-							<input placeholder="Type in filter criterion" type="text" v-model="filter">
-							<button class="sub_button" v-on:click="FilterDatabase();"> Apply Filter </button>
-							<!--<input type='submit' value='Upload Map'>-->
-						</td>
-						<br>
-						
-						<select id="thisArray" name="thisArray[]" multiple onChange="getProjects(this)" v-model="compareProjects" class="comparePSelect" v-if="database2.length==0">
-							<option value="">Choose Multiple Projects:</option>
-							<option v-for="option in database" v-bind:value="option">
-								{{ option }}
-							</option>
-						</select>
-						
-						<select id="thisArray" name="thisArray[]" multiple onChange="getProjects(this)" v-model="compareProjects" class="comparePSelect" v-if="database2.length!=0">
-							<option value="">Choose Multiple Projects:</option>
-							<option v-for="option in database2" v-bind:value="option">
-								{{ option }}
-							</option>
-						</select>
-						</td>
-						</tr>
-					</table>
+				<h2>MoBPS Compare Projects </h2>
+				<div id="projectListDivCP">					
+	 				 <div class="example-description">
+	            		<input type="text" placeholder="Enter Project to filter..." v-model="cpfilter" class="filter-field">
+	          		</div>							
+					<tree :v-if="cptreeData" :data="cptreeData" :options="cptreeOptions"  :filter="cpfilter" v-model="cptreeModel" ref="tree" @node:checked="nodeChecked"  @node:unchecked="nodeUnchecked">
+						<div slot-scope="{ node }" class="node-container">
+							<div class="node-text">  
+								<i v-if="node.hasChildren()" :class="[node.expanded() ? 'ion-android-folder-open' : 'ion-android-folder']" ></i>
+								{{ node.text }}
+							</div>
+
+				        </div>
+			        </tree>
 				</div>
-				
-    	
+								
+			    <p v-if="cptreeModel">
+			      <b>Select multiple projects to compare :  </b>  {{ cptreeModel.checked.map(el => el.text) }}
+			    </p>
+		
 	        	<br>
 				
 					<td>Maximum number of repeats to analyze:
@@ -137,11 +111,6 @@
 						</select>
 						<br>
 						Select cohorts (multiple selection possible): 
-						<!--select v-model="plottingPar.ResgMean_cohorts" size="6" multiple>
-							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
-							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
-							</option>
-						</select-->
 						<button onclick="plottingResultpMeanGroup()" >Plot Results</button>
 						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.RespMeanGroup_cohorts" :searchable="true" style="width:800px"/>
 					</template>
@@ -166,11 +135,6 @@
 						</select>
 						<br>
 						Select cohorts (multiple selection possible): 
-						<!--select v-model="plottingPar.ResgMean_cohorts" size="6" multiple>
-							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
-							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
-							</option>
-						</select-->
 						<button onclick="plottingResultgMeanGroup()" >Plot Results</button>
 						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResgMeanGroup_cohorts" :searchable="true" style="width:800px"/>
 					</template>
@@ -230,11 +194,6 @@
 						</select>
 						<br>
 						Select cohorts (multiple selection possible):
-						<!--select v-model="plottingPar.ResRel_cohorts" size="6" multiple>
-							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
-							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
-							</option>
-						</select-->
 						<button onclick="plottingResultRelGroup()" >Plot Results</button>
 						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResRelGroup_cohorts" :searchable="true" style="width:800px"/>
 					</template>
@@ -276,11 +235,6 @@
 						</select>
 						<br>
 						Select Cohorts (multiple selection possible):
-						<!--select v-model="plottingPar.ResQTL_cohorts" size="6" multiple>
-							<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
-							{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
-							</option>
-						</select-->
 						<button onclick="plottingResultQTLGroup()" >Plot Results</button>
 						<treeselect :multiple="true" :options="Summary" v-model="plottingPar.ResQTLGroup_cohorts" :searchable="true" style="width:800px"/>
 					</template>
@@ -299,10 +253,8 @@
 	</body>
 
 	<!-- Eigene Javascripte Main Code -->
-	<script src="javascript/socket.io.js"></script>
 	<script type="text/javascript" src="javascript/compareProjects.js"></script>
 	<script type="text/javascript" src="javascript/Rmodule.js"></script>
 	
-
 </html>
 

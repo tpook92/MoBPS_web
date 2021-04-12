@@ -60,6 +60,11 @@ h6 {
 	position:absolute;
 }
 
+#mainCP {
+  margin-top: 70px;
+  margin-left: 20px;
+}
+
 .container {
   display: block;
   cursor: pointer;
@@ -218,36 +223,6 @@ h6 {
 	overflow: auto;
 }
 
-ul {
-  list-style-type: none;
-  font-size:12pt;
-  font-weight:bold;
-  margin: 0;
-  padding: 0;
-  top: 50px;
-  width: 300px;
-  background-color:#4A5289;
-  height: 100%; 
-  position: fixed;
-  overflow-y: auto;
-}
-
-li a {
-  display: block;
-  color: #4f567c;
-  padding: 7% 12%;
-  text-decoration: none;
-}
-
-li a.active {
-  background-color: #555;
-  color: white;
-}
-
-li a:hover:not(.active) {
-  background-color: #555;
-  color: white;
-}
 
 #warnings {
 	margin-top:180px;
@@ -657,7 +632,6 @@ button[disabled]{
     border: 2px solid lightblue;  
 	font-family:cambria;
 }
-
 
 .culling_table {
 	background-color: #f0f0f0;
@@ -1214,8 +1188,23 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
        cursor: pointer;
 }
 
-
-
+/*
+.trait_move_button {
+  display: none;
+  margin-top:5px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  width:100%;
+  text-decoration: none;
+  color: white;
+  position: right;
+  background-color: #486F88;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px #4A5289;
+}
+*/
 
 /* compareProject additional style */
 .comparePSelect {
@@ -1292,3 +1281,66 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
 .scrollableTable2 tr { display: table; width: 100%; box-sizing: border-box; }
 .scrollableTable2 td { text-align: center; border-bottom: none; border-left: none; }
 .scrollableTable2 tr:nth-child(even){background-color: lightgrey} 
+
+#projectListDiv{
+	padding-left:50px;
+	position:relative;
+	width:600px;
+	height:300px;
+	background-color: white;
+    border: 1px solid darkblue;
+	overflow: auto;
+}
+
+#projectListDiv .tree-anchor {
+    color: green;
+	font-size: 15pt;
+}
+
+#projectListDiv .tree-anchor .node-container{
+    color: blue;
+	font-size: 15pt;
+	border:2px;
+}
+
+#projectListDiv .node-container .node-text {
+    font-size: 15pt;
+    color: green;
+}
+
+
+#projectListDivCP{
+	padding-left:50px;
+	position:relative;
+	width:400px;
+	height:300px;
+	background-color: white;
+    border: 1px solid darkblue;
+	overflow: auto;
+}
+
+#projectListDivCP .tree-anchor {
+    color: blue;
+	font-size: 13pt;
+}
+
+#projectListDivCP .tree-anchor .node-container{
+    color: blue;
+	font-size: 13pt;
+	border:2px;
+}
+
+#projectListDivCP .node-container .node-text {
+    font-size: 13pt;
+    color: blue;
+}
+
+#projectListDivCP .tree-content {
+    display: flex;
+    align-items: center;
+    padding: 1px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+

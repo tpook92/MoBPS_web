@@ -11,6 +11,8 @@ const fileUpload = require('express-fileupload');
 var MongoClient = require('mongodb').MongoClient;
 var urldb = "mongodb://localhost:27017/";
 
+process.env.NODE_ENV = 'production';
+
 const MongoStore = require('connect-mongo')(session);
 
 var mobpsLoginRouter = require('./routes/index');
@@ -100,10 +102,10 @@ app.get('/user', function(request, response) {
 });
 
 app.get('/logout', function(request, response) {
-	console.log(request.session);
+	//console.log(request.session);
 	if (request.session.loggedin) {
 		request.session.destroy();
-		response.redirect('/');
+		response.redirect('/login');
 		response.end();
 	} else {
 		response.send('already logout!');
@@ -122,12 +124,12 @@ app.post('/changePW', function(request, response) {
 			if (err) throw err;
 			var dbo = db.db("DB");
 			var myquery = {_id: request.session.username, passw:request.body.oldpassw };
-			console.log(myquery);
+			//console.log(myquery);
 			var newvalues = {$set: {passw: request.body.newpassw1}};
 			if(request.body.newpassw1 == request.body.newpassw2){
 				dbo.collection("Users").updateOne(myquery, newvalues, function(err, result){
 					if (err) throw err;
-					console.log(result.result.nModified);
+					//console.log(result.result.nModified);
 					if(result.result.nModified >0){ 	
 						response.send("Password successfully changed.");
 					}else{
@@ -152,14 +154,17 @@ app.post('/databaseCP', function(request, response) {
 		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
 			if (err) throw err;
 			var dbo = db.db("DB");
-			dbo.collection(request.session.username).find({}).map(x => x.name).toArray(function(err, result){
+			//dbo.collection(request.session.username).find({}).map(x => x.name).toArray(function(err, result){
+				dbo.collection(request.session.username).find({}).project({name:1, json:1, _id:0}).toArray(function(err, result){
 				if (err) throw err;
 				db.close();	
+				console.log(result);
 				response.send(result);	
 			});
 		}); 
 
 });
+
 
 app.post('/compareswitch', function(request, response){
 	
@@ -224,7 +229,7 @@ app.post('/loadproject', function(request, response) {
 			dbo.collection(request.session.username).find(obj).toArray(function(err, result){
 				if (err) throw err;
 				db.close();	
-				console.log(result);
+			//	console.log(result);
 				response.send(result);		
 			});
 		}); 
@@ -239,6 +244,143 @@ app.post('/template_database', function(request, response) {
 			if (err) throw err;
 			var dbo = db.db("DB");
 			dbo.collection("root").find({}).toArray(function(err, result){
+				if (err) throw err;
+				db.close();	
+				response.send(result);		
+			});
+		}); 
+	} else {
+		response.send('');
+	}
+});
+
+
+//project tree
+app.get('/fields_database', function(request, response) {
+	if (request.session.loggedin) {
+		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db("DB");
+			//dbo.collection(request.session.username).find({}).project({ProjectGroup:1, ProjectGroupChild:1, name:1, _id:0}).sort({ProjectGroup: -1, ProjectGroupChild: -1, name: -1}).toArray((err, result) => {
+		//	dbo.collection(request.session.username).find({}).toArray((err, result) => {
+		dbo.collection(request.session.username).find({}).project({name:1, json:1, _id:0}).toArray(function(err, result){
+
+				
+				if (err) throw err;
+				db.close();	
+			//	console.log(result);
+				response.send(result);	
+				
+				tempResult = request.session.username+","+result;
+				var tempFile = path.join(__dirname + '/Rmodules/UserScripts');
+				fs.writeFileSync(__dirname + '/Rmodules/UserScripts/tempdatabase.text', tempResult);				
+			});
+		}); 
+	} else {
+		response.send('');
+	}
+});
+
+//project tree
+app.get('/get_projectTree', function(request, response) {
+	if (request.session.loggedin) {
+		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db("DB");
+			dbo.collection("UserProjectTree").find({_id:request.session.username}).project({ProjectGroup:1, _id:0}).toArray((err, result) => {
+		//	dbo.collection("UserProjectTree").find({_id:request.session.username}).toArray((err, result) => {
+				if (err) throw err;
+				db.close();	
+			//	console.log("projectree");
+			//	console.log(result);
+				response.send(result);							
+			});
+		}); 
+	} else {
+		response.send('');
+	}
+});
+
+//create project tree
+app.post('/create_projectTree', function(request, response) {
+	//console.log(request.body);
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var createdDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var myobj = {ProjectGroup:request.body.project, _id:request.session.username, createdDate:createdDate};
+		dbo.collection("UserProjectTree").insertOne(myobj, function(err, result){
+			if (err) throw err;
+			console.log("1 document inserted");
+			db.close();		
+		//	response.send(result);		
+		});
+	}); 
+	response.end();
+});
+
+
+//delete project from existing project tree
+app.post('/deleteProject_FromTree', function(request, response) {
+	//console.log(request.body);
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var createdDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
+		var myobj = {group_Name:request.body.name};
+		dbo.collection("UserProjectTree").updateOne({_id: request.session.username},{$pull:{ProjectGroup:myobj}}, function(err, result){
+			if (err) throw err;
+			console.log("1 document tree inserted");
+			db.close();		
+		//	response.send(result);		
+		});
+	}); 
+	response.end();
+});
+
+
+//add project name to existing project tree
+app.post('/saveProject_ProjectTree', function(request, response) {
+	//console.log(request.body);
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var myobj = {group_Name:request.body.name, options:{dropable:false}};
+		dbo.collection("UserProjectTree").updateOne({_id: request.session.username},{$addToSet:{ProjectGroup:myobj}}, function(err, result){
+			if (err) throw err;
+			console.log("1 document tree inserted");
+			db.close();		
+		});
+	}); 
+	response.end();
+});
+
+
+//update project tree with new structure
+app.post('/update_ProjectTree', function(request, response) {
+	//console.log(request.body.project);
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var thisProjectGroup = JSON.parse(request.body.project);
+		dbo.collection("UserProjectTree").updateOne({_id: request.session.username},{$set:{ProjectGroup:thisProjectGroup}}, function(err, result){
+			if (err) throw err;
+			console.log("1 document updated");
+			db.close();		
+		});
+	}); 
+	response.end();
+});
+
+
+
+//getProject list for a user(for dragdrop) 
+app.get('/getProjectListforDragDrop', function(request, response) {
+	if (request.session.loggedin) {
+		MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+			if (err) throw err;
+			var dbo = db.db("DB");
+			dbo.collection(request.session.username).find({}).toArray(function(err, result) { 
 				if (err) throw err;
 				db.close();	
 				response.send(result);		
@@ -276,7 +418,7 @@ app.post('/Rsim1', function(request, response) {
 	
 	request.setTimeout(5*24*60*60*1000);
 
-	var command = "nohup env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 R --file="+ path.join(__dirname + '/Rmodules/Rsim1.r') + " --args "+request.session.username+" "+ JSON.stringify(request.body.jsondata) +"";
+	var command = "nohup env OPENBLAS_NUM_THREADS=5 OMP_NUM_THREADS=5 R --file="+ path.join(__dirname + '/Rmodules/Rsim1.r') + " --args "+request.session.username+" "+ JSON.stringify(request.body.jsondata) +"";
 	console.log(command);
 	
 	fs.writeFile(path.join(__dirname + '/Rmodules/UserScripts/'+ request.session.username+ '.sh'), command, function(err){
@@ -498,8 +640,8 @@ app.post('/RsimDownload', function(request, response) {
 
 // Run R simulation: Calculate Result
 app.post('/RsimResult', function(request, response) {
-	console.log(request);
-	console.log(response);
+	//console.log(request);
+	//console.log(response);
 	request.setTimeout(5*24*60*60*1000);
 
 	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' " + " '"+ request.body.consider_cohort +"' "; // '" + JSON.stringify(request.body.cohorts) + "'";
@@ -508,7 +650,7 @@ app.post('/RsimResult', function(request, response) {
 		
 	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
 		if(err){
-			console.log(err);
+	//		console.log(err);
 			response.send(stderr);
 		}else{
 			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_'+request.body.filename + request.body.script+'.json';
@@ -525,17 +667,12 @@ app.post('/RsimResult', function(request, response) {
 
 // Run R simulation: Calculate Result Comparison
 app.post('/RsimResultGroup', function(request, response) {
-	console.log(request);
-	console.log(response);
 	request.setTimeout(5*24*60*60*1000);
 
 	var command = "nohup R --file="+ path.join(__dirname + '/Rmodules/Results') + "_"+request.body.script +".r --args "+request.session.username+ " '"+ request.body.filename +"' " + " '"+ request.body.consider_cohort +"' " + " '"+ request.body.max_rep +"' "  ; // '" + JSON.stringify(request.body.cohorts) + "'";
 
-	console.log(command);
-		
 	exec(command, {maxBuffer: 5000*1024},function(err, stdout, stderr){
 		if(err){
-			console.log(err);
 			response.send(stderr);
 		}else{
 			var textfile = path.join(__dirname + '/Rmodules/UserScripts/') +request.session.username+'_Compare_' + request.body.script+'.json';
@@ -625,10 +762,7 @@ app.get('/getWarningsInfo', function(request, res){
 			if(err){
 				var message = '';
 				res.send(message);
-				console.log(message);
 			}else{
-				console.log("test")
-				console.log(data)
 			res.send(data);
 			}
 			});
@@ -691,7 +825,7 @@ app.post('/ResultUpload', function(req, res) {
   sampleFile.mv(path.join(__dirname + '/Rmodules/UserScripts/')+req.session.username +"_"+sampleFile.name+".RData" , function(err) {
     if (err)
       return res.status(500).send(err);
-	console.log(sampleFile.name);
+	//console.log(sampleFile.name);
     res.send('File uploaded!');
   });
 });
@@ -752,7 +886,7 @@ app.post('/GenoUpload', function(req, res) {
   sampleFile.mv(path.join(__dirname + '/UserGenos/')+req.session.username +"_"+sampleFile.name , function(err) {
     if (err)
       return res.status(500).send(err);
-	console.log(sampleFile.name);
+	//console.log(sampleFile.name);
     res.send('File uploaded!');
   });
 });
@@ -928,7 +1062,7 @@ app.post('/save', function(request, response) {
 		dbo.collection(request.session.username).insertOne(myobj, function(err, result){
 			if (err) throw err;
 			//console.log("1 document inserted");
-			console.log(versions);
+			//console.log(versions);
 			db.close();			
 			response.send(versions);
 		});
@@ -959,7 +1093,7 @@ app.post('/update', function(request, response) {
 
 // delete Project:
 app.post('/delete', function(request, response) {
-	console.log(request.body);
+	//console.log(request.body);
 	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db("DB");
@@ -1032,7 +1166,7 @@ app.post('/addStudentsToDB', function(request, response) {
 				response.send(errM.fontcolor("red"));
 			}
 			else {
-			console.log("Users are inserted");
+			//console.log("Users are inserted");
 			db.close();		
 			response.redirect('/users');
 			}	
@@ -1058,14 +1192,14 @@ app.post('/updateUsertoDB', function(request, response) {
 	
 // delete a Project:
 app.post('/deleteUser', function(request, response) {
-	console.log(request.body);
+	//console.log(request.body);
 	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db("DB");
 		var myobj = {_id: request.body._id };
 		dbo.collection("Users").deleteOne(myobj, function(err, result){
 			if (err) throw err;
-			console.log("1 user deleted");
+//			console.log("1 user deleted");
 			db.close();		
 		});
 	}); 
@@ -1080,7 +1214,7 @@ app.get('/getProjectList', function(request, response) {
 			var dbo = db.db("DB");
 			dbo.collection(request.query._id).find({}).toArray(function(err, result) { 
 				if (err) throw err;
-				console.log(result);
+				//console.log(result);
 				db.close();	
 				response.send(result);		
 			});
@@ -1093,14 +1227,14 @@ app.get('/getProjectList', function(request, response) {
 
 // delete Project from User module:
 app.post('/deleteProject', function(request, response) {
-	console.log(request.body);
+	//console.log(request.body);
 	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db("DB");
 		var myobj = {name: request.body.name };
 		dbo.collection(request.body.user).deleteOne(myobj, function(err, result){
 			if (err) throw err;
-			console.log("1 document deleted");
+//			console.log("1 document deleted");
 			db.close();		
 		});
 	}); 
@@ -1137,6 +1271,3 @@ app.post('/loginFromUserList', function(request, response) {
 
 var server = http.listen(8080);
 server.setTimeout(5*24*60*60*1000); // 6 hours
-
-
-
