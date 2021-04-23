@@ -271,6 +271,7 @@ var data_Vue = new Vue({
         },
 		showTree: [],
 		editProjectForTree:'',
+		groupProjectCnt:'',
 				
 		// params for general information:
 		geninfo: geninfo,
@@ -1345,6 +1346,7 @@ async function getMoBPSTreeProject() {
 		})
 
 	if (checkTreeExist.data[0]!== undefined ){
+		data_Vue.groupProjectCnt = checkTreeExist.data[0]['ProjectGroup'].length;
 		return checkTreeExist.data[0]['ProjectGroup'];
 	}	
 	else {

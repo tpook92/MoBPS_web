@@ -206,7 +206,59 @@
 				</p>
 			</div>
 
-			<div v-if="database.length >0" id="projectListDiv" >				
+			<div v-if="groupProjectCnt>0 && groupProjectCnt < 5" id="projectListDiv" >				
+				<div class="examples">
+			        <div class="example">
+	 					<div class="example-description">
+	            			<input type="text" placeholder="Enter Project to filter..." v-model="filter" class="filter-field">
+	          			</div>
+			         <div class="example-tree">
+						<tree :v-if="treeData" :data="treeData" :options="treeOptions"  :filter="filter" v-model="treeModel" ref="tree" @node:checked=""
+							@node:dragging:start="logDragStart" @node:clicked="nodeClicked"  @node:dragging:finish="logDragFinish" >
+			              	<div slot-scope="{ node }"  class="node-container" >
+			 					<div class="node-text">  
+									<i v-if="node['states'].dropable == true" :class="[node.expanded() ? 'ion-android-folder-open' : 'ion-android-folder']"></i>
+									{{ node.text }}
+								</div>
+				 				<div v-if="node['states'].dropable == true" >
+									<a href="#" @mouseup.stop="editNode(node)"> Edit |</a>
+						        	<a href="#" @mouseup.stop="removeNode(node)">Remove |</a> 
+						        	<a href="#" @mouseup.stop="addChildFolder(node)">Add Folder </a>
+			               		</div>
+			              	</div>
+			            </tree>	
+			          </div>				
+					 </div>
+		        </div>
+			</div>	
+			
+			<div v-else-if="groupProjectCnt >=5 && groupProjectCnt < 35" id="projectListDiv" style="height:700px">				
+				<div class="examples">
+			        <div class="example">
+	 					<div class="example-description">
+	            			<input type="text" placeholder="Enter Project to filter..." v-model="filter" class="filter-field">
+	          			</div>
+			         <div class="example-tree">
+						<tree :v-if="treeData" :data="treeData" :options="treeOptions"  :filter="filter" v-model="treeModel" ref="tree" @node:checked=""
+							@node:dragging:start="logDragStart" @node:clicked="nodeClicked"  @node:dragging:finish="logDragFinish" >
+			              	<div slot-scope="{ node }"  class="node-container" >
+			 					<div class="node-text">  
+									<i v-if="node['states'].dropable == true" :class="[node.expanded() ? 'ion-android-folder-open' : 'ion-android-folder']"></i>
+									{{ node.text }}
+								</div>
+				 				<div v-if="node['states'].dropable == true" >
+									<a href="#" @mouseup.stop="editNode(node)"> Edit |</a>
+						        	<a href="#" @mouseup.stop="removeNode(node)">Remove |</a> 
+						        	<a href="#" @mouseup.stop="addChildFolder(node)">Add Folder </a>
+			               		</div>
+			              	</div>
+			            </tree>	
+			          </div>				
+					 </div>
+		        </div>
+			</div>	
+			
+			<div v-else="groupProjectCnt >=35" id="projectListDiv" style="height:900px">				
 				<div class="examples">
 			        <div class="example">
 	 					<div class="example-description">
@@ -2047,8 +2099,8 @@
 
 			<div id="node-popUp" onclick="checkEverything(this.id)">
 				<div id="node-popUpheader"> 
-					<h3> {{node_operation}} </h3> <h6> Drag Node in this Area! </h6> 
-					<h4> Node {{ active_node.id }}</h4> <h6> </h6>
+					<p class="operation"> {{node_operation}} </p> <p class="drag">Drag Node in this Area! </p> 
+					<p class="title"> Node {{ active_node.id }}</p>
 				</div> 
 				<br>
 				<table style="margin:auto; width:100%">
@@ -2213,13 +2265,13 @@
 				</table>
 				<br>
 				<input class='button_type' type="button" value="Save" id="node-saveButton" />
-				<input class='button_type' type="button" value="Cancel" id="node-cancelButton" />
+				&nbsp;&nbsp;&nbsp;<input class='button_type' type="button" value="Cancel" id="node-cancelButton" />
 			</div>
 			
 			<div id="edge-popUp" onclick="checkEverything(this.id)">
 				<div id="edge-popUpheader"> 
-					<h3> {{edge_operation}} </h3><h6> Drag Edge in this Area! </h6><br>
-					<h4>Edge {{ active_edge.id }}</h4>
+					<p class="operation"> {{edge_operation}} </p><p class="drag"> Drag Edge in this Area! </p>
+					<p class="title">Edge {{ active_edge.id }}</p>
 				</div>
 				
 				<table style="margin:auto; width: 100%;">
@@ -2588,7 +2640,7 @@
 					</table>
 					<br>
 					<input class='button_type' type="button" value="Save" id="edge-saveButton" />
-					<input class='button_type' type="button" value="Cancel" id="edge-cancelButton" />
+					&nbsp;&nbsp;&nbsp;<input class='button_type' type="button" value="Cancel" id="edge-cancelButton" />
 				</div>
 				<br>
 

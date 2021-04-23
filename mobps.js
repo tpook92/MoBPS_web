@@ -105,7 +105,7 @@ app.get('/logout', function(request, response) {
 	//console.log(request.session);
 	if (request.session.loggedin) {
 		request.session.destroy();
-		response.redirect('/login');
+		response.redirect('/');
 		response.end();
 	} else {
 		response.send('already logout!');
