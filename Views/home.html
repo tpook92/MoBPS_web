@@ -206,7 +206,7 @@
 				</p>
 			</div>
 
-			<div v-if="groupProjectCnt>0 && groupProjectCnt < 5" id="projectListDiv" >				
+			<div v-if="(groupProjectCnt>0 && groupProjectCnt < 10) || groupProjectCnt == '' " id="projectListDiv" >				
 				<div class="examples">
 			        <div class="example">
 	 					<div class="example-description">
@@ -222,6 +222,7 @@
 								</div>
 				 				<div v-if="node['states'].dropable == true" >
 									<a href="#" @mouseup.stop="editNode(node)"> Edit |</a>
+									<a href="#" @mouseup.stop="saveNode(node)"> Save |</a>
 						        	<a href="#" @mouseup.stop="removeNode(node)">Remove |</a> 
 						        	<a href="#" @mouseup.stop="addChildFolder(node)">Add Folder </a>
 			               		</div>
@@ -232,7 +233,7 @@
 		        </div>
 			</div>	
 			
-			<div v-else-if="groupProjectCnt >=5 && groupProjectCnt < 35" id="projectListDiv" style="height:700px">				
+			<div v-else-if="groupProjectCnt >=10 && groupProjectCnt < 35" id="projectListDiv" style="height:700px">				
 				<div class="examples">
 			        <div class="example">
 	 					<div class="example-description">
@@ -248,6 +249,7 @@
 								</div>
 				 				<div v-if="node['states'].dropable == true" >
 									<a href="#" @mouseup.stop="editNode(node)"> Edit |</a>
+									<a href="#" @mouseup.stop="saveNode(node)"> Save |</a>
 						        	<a href="#" @mouseup.stop="removeNode(node)">Remove |</a> 
 						        	<a href="#" @mouseup.stop="addChildFolder(node)">Add Folder </a>
 			               		</div>
@@ -274,6 +276,7 @@
 								</div>
 				 				<div v-if="node['states'].dropable == true" >
 									<a href="#" @mouseup.stop="editNode(node)"> Edit |</a>
+									<a href="#" @mouseup.stop="saveNode(node)"> Save |</a>
 						        	<a href="#" @mouseup.stop="removeNode(node)">Remove |</a> 
 						        	<a href="#" @mouseup.stop="addChildFolder(node)">Add Folder </a>
 			               		</div>
@@ -2349,6 +2352,19 @@
 					</tr>	
 					
 					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['OGC']=='Yes'">
+						<td>OGC Relationship matrix 
+							<span class="tooltip">&#9432 <span class="tooltiptext">Relationship matrix used in OGC</span></span>
+						</td>
+						<td>
+							<select v-model="active_edge['ogc_relation']">
+								<option v-for="option in RelationshipMatrixOGC_options" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					
+					<tr v-if="['Reproduction', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['OGC']=='Yes'">
 						<td>OGC constrain 1 </td>
 							<span class="tooltip">&#9432 <span class="tooltiptext">Variable names according to Wellmann et al. 2019: ub.bv (upper bound on genomic value), eq.bv (target genomic value), lb.bv (lower bound genomic value), ub.sKin (upper bound for avg. kinship), uniform (equal contributes of male/females), lb.BV.increase (minimum increase in genomic value), ub.sKin.increase (maximum increase in avg. relationship)</span></span>
 						<td>
@@ -3182,6 +3198,7 @@
 	<script type="text/javascript" src="javascript/GenomeData.js"></script>
 	
 	<!-- Eigene Javascripte Main Code -->
+		<script src="javascript/socket.io.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 	<script type="text/javascript" src="javascript/home.js"></script>
 	<script type="text/javascript" src="javascript/Rmodule.js"></script>	

@@ -18,6 +18,11 @@ function checkEverything(id){
 		if(pos1 >0 ){
 			data_Vue.warnings1.push(gen_warn_text);
 		}
+		var pos1 = data_Vue.geninfo['Project Name'].search("/")
+		gen_warn_text = "Project name is not allowed to contain '/' ";
+		if(pos1 >0 ){
+			data_Vue.warnings1.push(gen_warn_text);
+		}
 		gen_warn_text = "Please specify a Species.";
 		if(!data_Vue.geninfo['Species'] & data_Vue.warnings1.indexOf(gen_warn_text) == -1){
 			data_Vue.warnings1.push(gen_warn_text);
