@@ -3260,7 +3260,7 @@ function saveNodeData(data, callback) {
 							if(res == data_Vue.tempNodeforCohort) { var isCohortExist = "yes";	}
 							updatedCohortNode.push(isCohortNode[j]);							
 						}
-						document.getElementById('edge_cohorts_Div').style.display = 'block';
+						//document.getElementById('edge_cohorts_Div').style.display = 'block';
 					}
 					if (isCohortExist === "yes") { check_cohorts_edges.push(checkedgesforCohort[i]); }
 					isCohortExist = '';
