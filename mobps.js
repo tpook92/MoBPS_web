@@ -355,6 +355,22 @@ app.post('/saveProject_ProjectTree', function(request, response) {
 	response.end();
 });
 
+//add project name to existing project tree for Shared User
+app.post('/saveProject_ProjectTree_ForSharedUser', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var myobj = {group_Name:request.body.name, options:{dropable:false}};
+		var thisUser = JSON.parse(request.body.user);
+		dbo.collection("UserProjectTree").updateOne({_id: thisUser},{$addToSet:{ProjectGroup:myobj}}, function(err, result){
+			if (err) throw err;
+			console.log("1 document tree inserted");
+			db.close();		
+		});
+	}); 
+	response.end();
+});
+
 
 //update project tree with new structure
 app.post('/update_ProjectTree', function(request, response) {
@@ -372,6 +388,20 @@ app.post('/update_ProjectTree', function(request, response) {
 	response.end();
 });
 
+//delete a shared "Shared_" project from tree 
+app.post('/deleteASharedProject_FromTree', function(request, response) {
+	MongoClient.connect(urldb, {useNewUrlParser: true }, function(err, db) {
+		if (err) throw err;
+		var dbo = db.db("DB");
+		var thisProjectGroup = JSON.parse(request.body.project);
+		dbo.collection("UserProjectTree").deleteOne({_id: request.body.user},{$set:{ProjectGroup:thisProjectGroup}}, function(err, result){
+			if (err) throw err;
+			console.log("1 project removed!");
+			db.close();		
+		});
+	}); 
+	response.end();
+});
 
 
 //getProject list for a user(for dragdrop) 

@@ -46,7 +46,10 @@ var data_Vue = new Vue({
 		database:[],		
 		curUserGroup:'',
 		isBrowserSafari:'',		
-		project_user:'',		
+		project_user:'',
+				mobpsProject:'',
+		fileName:'',
+		json:[],		
 	},
 	methods: {
 		editUser: function(val) {
@@ -152,4 +155,23 @@ function getAllUsersFromDB() {
 				}
 			}		
 	})
+}
+
+
+// function to download network:
+function downloadJSON(project){
+	data_Vue.mobpsProject = project.name;
+	data_Vue.json = project.json;
+	var jsondata = JSON.stringify(data_Vue.json, undefined, 2);
+	var filename = data_Vue.mobpsProject ? data_Vue.mobpsProject : "File";
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(jsondata));
+    element.setAttribute('download', filename+'.json');
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
 }
