@@ -1,3 +1,5 @@
+Vue.component('treeselect', VueTreeselect.Treeselect);
+
 var queryString = window.location.search;
 var urlParams = new URLSearchParams(queryString);
 var cpuser = urlParams.get('cpuser');

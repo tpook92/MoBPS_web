@@ -43,6 +43,7 @@ function myEdge (fr, to) {
 	this['Manuel selected cohorts'] = [];
 	this['OGC'] = "No";
 	this['ogc_target'] = "min.sKin";
+	this['ogc_relation'] = "vanRaden";
 	this['ogc_constrain1'] = "inactive";
 	this['ogc_constrain2'] = "inactive";
 	this['ogc_constrain3'] = "inactive";
@@ -126,6 +127,9 @@ function myTrait (ind){
 	this['dominant_qtl'] = 0,
 	this['qualitative_qtl'] = 0,
 	this['quantitative_qtl'] = 0,
+	this['additive_equal'] = 0,
+	this['dominant_equal'] = 0,
+	this['dominant_positive'] = 0,
 	this['is_maternal'] = false,
 	this['is_paternal'] = false,
 	this['is_combi'] = false,
@@ -289,7 +293,7 @@ var data_Vue = new Vue({
 
 		show_geninfo: false,
 		show_menu: false,
-		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Salmon', 'Other'],
+		Species_options: ['Chicken', 'Cattle', 'Sheep', 'Pig', 'Horse', 'Goat', 'Human', 'Maize', 'Wheat', 'Sorghum', 'Salmon', 'Tilapia', 'Other'],
 		units_options: ['select node/edge', 'nodes', 'edges'],
 		Time_Unit_options: ['Years', 'Month', 'Weeks', 'Days'],
 		true_false_options: ['TRUE', 'FALSE'],
@@ -386,6 +390,7 @@ var data_Vue = new Vue({
 		Breedingtype_options2: ['All', 'Selection', 'Reproduction', 'Aging', 'Combine', 'Repeat', 'Split', 'Cloning', 'Selfing', 'DH-Production', 'Semen-collection'],
 		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
+		RelationshipMatrixOGC_options: ['VanRaden', 'Pedigree'],
 		BVEMethod_options: ['Direct Mixed-Model', 'Last BVE', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
 		Cohorts_options: ['Only this cohort', 'Last Generation', 'Last 2 Generations', 'Last 3 Generations', 'All',  'Manual select'],
 		ensembl_options:{
@@ -426,6 +431,9 @@ var data_Vue = new Vue({
 			Salmon: [
 				{Dataset: "", Filter:"variation_set_name", Value: "96k_AtlanticSalmon_male_Tsai"},
 				{Dataset: "", Filter:"variation_set_name", Value: "96k_AtlanticSalmon_female_Tsai"},
+			],
+			Tilapia: [
+				{Dataset: "", Filter:"variation_set_name", Value: "68k_NileTilapia_Penaloza"},
 			],
 			Other: [{Dataset: "", Filter:"variation_set_name", Value: ""}],
 		},
@@ -667,6 +675,15 @@ var data_Vue = new Vue({
 	    	},
 			editNode(node) {
 	            node.startEditing();
+				node['states'].dropable = true;		
+				node['states'].draggable = true;	
+				saveGroupTreeToDB();
+	   	    },
+			saveNode(node)
+			{
+				node['states'].dropable = true;		
+				node['states'].draggable = true;
+				
 				saveGroupTreeToDB();
 	   	    },
 	      	removeNode(node) {
@@ -682,7 +699,7 @@ var data_Vue = new Vue({
 				node['states'].dropable = true;		
 				node['states'].draggable = true;		
 				node.prepend(localnodeName);
-				 saveGroupTreeToDB();
+				// saveGroupTreeToDB();
 			},			
 			nodeClicked(node){		
 				data_Vue.editProjectForTree = node;
@@ -1400,52 +1417,9 @@ var isProjExist = data_Vue.database.includes(isProjName);
 	return isProjExist;
 }
 
-function createProjectTree() {
-	if(data_Vue.showNewGroup === true) {
-			var treeArray = [];
-			var treeArray1 = [];
-			var tempObj = {};
-			
-			var parent_options = { draggable: false, clicked: false };
-			var child_options = {dropable:false};
-	
-		    var tempObj = { group_Name:"New Group", options: parent_options };
-	
-			treeObj1 = {group_Name:name,  options:  child_options };
-			treeArray1.push(treeObj1); 
-				
-			tempObj.Child = treeArray1;
-			treeArray.push(tempObj);
-			
-			data_Vue.showNewGroup = false;
-			
-			$.ajax
-			({
-				type: "POST",
-				url: '/create_projectTree',
-				data: {
-					project: treeArray,
-				},
-				success: function (data, msg) {
-				//	$.post('/database', function(dat){
-				//		data_Vue.database = dat;
-					
-			//	});
-				},
-				failure: function(msg) 
-				{
-					alert('Saving tree Error!');
-				},
-				})	
-	}		
-				
-}
-
 function saveGroupTreeToDB() {
 	var saveArray = data_Vue.treeModel['tree']['model'];
-	var parent_options = { draggable: true, clicked: false };
-	var child_options = {dropable: false};
-	
+
 	if (saveArray.length > 0 ){
 		var sArray = new Array();
 
@@ -1462,52 +1436,37 @@ function saveGroupTreeToDB() {
 								var s2_childArr = new Array();
 								for (var s4 = 0; s4 < saveArray[s].children[s2].children[s3].children.length; s4++) {
 									if(saveArray[s].children[s2].children[s3].children[s4].children.length > 0) {	
-										var s3_childArr = new Array();									
+										var s3_childArr = new Array();	
 										for (var s5 = 0; s5 < saveArray[s].children[s2].children[s3].children[s4].children.length; s5++) {
 									
 										if(saveArray[s].children[s2].children[s3].children[s4].children[s5].children.length > 0) {										
 											var s4_childArr = new Array();
 											for (var s6 = 0; s6 < saveArray[s].children[s2].children[s3].children[s4].children[s5].children.length; s6++) {
-											s4_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].children[s5].children[s6].text, options:child_options});
+											s4_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].children[s5].children[s6].text, options:{dropable:saveArray[s].children[s2].children[s3].children[s4].children[s5].children[s6]['states'].dropable }});
+											
 											}
-											s3_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].children[s5].text, Child:s4_childArr, options:parent_options});
+											s3_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].children[s5].text, Child:s4_childArr, options:{dropable:saveArray[s].children[s2].children[s3].children[s4].children[s5]['states'].dropable}});
 											}
-										else {
-											var s3GroupName = saveArray[s].children[s2].children[s3].children[s4].children[s5].text;
-											s3_childArr.push({group_Name:s3GroupName, options:child_options});
+										else {s3_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].children[s5].text, options:{dropable:saveArray[s].children[s2].children[s3].children[s4].children[s5]['states'].dropable, draggable:saveArray[s].children[s2].children[s3].children[s4].children[s5]['states'].draggable }});}					
 										}
 									
-									
-										}
-										s2_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].text, Child:s3_childArr, options:child_options});
-										}
-									else {
-										var s2GroupName = saveArray[s].children[s2].children[s3].children[s4].text;
-										s2_childArr.push({group_Name:s2GroupName, options:child_options});
-									}								
+										
+										s2_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].text, Child:s3_childArr, options:{dropable:saveArray[s].children[s2].children[s3].children[s4]['states'].dropable}});
+									}
+									else {s2_childArr.push({group_Name:saveArray[s].children[s2].children[s3].children[s4].text, options:{dropable:saveArray[s].children[s2].children[s3].children[s4]['states'].dropable, draggable:saveArray[s].children[s2].children[s3].children[s4]['states'].draggable }});}	
 								}
-									if(isProject(saveArray[s].children[s2].children[s3].text) === true)
-									s1_childArr.push({group_Name:saveArray[s].children[s2].children[s3].text, Child:s2_childArr, options:child_options});
-									else {s1_childArr.push({group_Name:saveArray[s].children[s2].children[s3].text, Child:s2_childArr, options:parent_options});}
+								
+								
+							s1_childArr.push({group_Name:saveArray[s].children[s2].children[s3].text, Child:s2_childArr, options:{dropable:saveArray[s].children[s2].children[s3]['states'].dropable}});
 							}
-							else {
-							var s1GroupName = saveArray[s].children[s2].children[s3].text;
-							s1_childArr.push({group_Name:s1GroupName, options:child_options});
-							}
+							else {s1_childArr.push({group_Name:saveArray[s].children[s2].children[s3].text, options:{dropable:saveArray[s].children[s2].children[s3]['states'].dropable, draggable:saveArray[s].children[s2].children[s3]['states'].draggable }});}
 						}
-						if(isProject(saveArray[s].children[s2].text) === true)
-							{ childArr.push({group_Name:saveArray[s].children[s2].text, Child:s1_childArr, options:child_options}); } 
-						else {childArr.push({group_Name:saveArray[s].children[s2].text, Child:s1_childArr, options:parent_options}); }
-					}								
-					else {
-						var sGroupName = saveArray[s].children[s2].text;	
-						childArr.push({group_Name:sGroupName, options:child_options});}
-				}
-			}
-			if(isProject(saveArray[s].data.text) === true)
-				{ sArray.push({group_Name:saveArray[s].data.text, Child:childArr, options:child_options}); } 
-			else {sArray.push({group_Name:saveArray[s].data.text, Child:childArr, options:parent_options}); } 
+						childArr.push({group_Name:saveArray[s].children[s2].text, Child:s1_childArr, options:{dropable:saveArray[s].children[s2]['states'].dropable }});
+								  
+			}								
+			else {childArr.push({group_Name:saveArray[s].children[s2].text, options:{dropable:saveArray[s].children[s2]['states'].dropable, draggable:saveArray[s].children[s2]['states'].draggable }});}}
 		}
+		sArray.push({group_Name:saveArray[s].data.text, Child:childArr, options:{dropable:saveArray[s]['states'].dropable }});}
 	}
 	saveProjectTree_toDB(sArray);
 }
@@ -1540,35 +1499,6 @@ function saveProjectTree_toDB(projectTree) {
 	
 }
 
-
-
-function updateGroup_nouse(project_name, dropgroup) {
-	if(dropgroup !== '') {
-		alert('inserting');
-		$.ajax
-		({
-			type: "POST",
-			url: "/updateGroup",
-			data: {
-				name: project_name,
-				projectGroup : dropgroup,
-			},
-			success: function (data, msg) {
-				$.post('/database', function(dat){
-					data_Vue.database = dat;
-				})
-			},
-			failure: function(msg) 
-			{
-				alert('Saving Error!');
-			},
-		});			
-	}
-	else {
-		alert('not inserting');
-		
-	}	
-}
 
 
 function getMatrix() {
@@ -2274,6 +2204,18 @@ function importNetwork_intern(inputData1) {
 			if(data_Vue.traitsinfo[j]['quantitative_qtl'] == undefined){
 				data_Vue.traitsinfo[j]['quantitative_qtl'] = 0;
 			}
+			
+			if(data_Vue.traitsinfo[j]['additive_equal'] == undefined){
+				data_Vue.traitsinfo[j]['additive_equal'] = 0;
+			}
+			
+			if(data_Vue.traitsinfo[j]['dominant_equal'] == undefined){
+				data_Vue.traitsinfo[j]['dominant_equal'] = 0;
+			}
+			
+			if(data_Vue.traitsinfo[j]['dominant_positive'] == undefined){
+				data_Vue.traitsinfo[j]['dominant_positive'] = false;
+			}
 			if(data_Vue.traitsinfo[j]['is_maternal'] == undefined){
 				data_Vue.traitsinfo[j]['is_maternal'] = false;
 			}
@@ -2443,12 +2385,6 @@ function csvToJSON(cohorts) {
 }
 
 
-function updateTree(){
-	//console.log(data_Vue.treeData);
-	//console.log(data_Vue.geninfo['Project Name']);
-	data_Vue.treeData.push({group_Name:data_Vue.geninfo['Project Name'], options:{dropable:false} });
-	//data_Vue.treeData = data_Vue.treeModel;
-}
 
 
 // function to save data to database:
@@ -2477,11 +2413,17 @@ function postProject(name, url, jsondata, sharedWith){
 			}
 			else {
 				if(url === '/save' && data_Vue.database.length !== 0) { 
-					saveProjectToTree(); 	
-					alert('Saving Success.'+ '\n' + 'Please refresh mobps if you want to add the new project to group.');
+					data_Vue.$refs.tree.append({ text: name,  state: { dropable: false } });
+					saveProjectToTree();
+					alert('Saving Success.');
 				}
 				else if(data_Vue.database.length === 0) {
-					saveProjectToTree();
+					data_Vue.$refs.tree.append({ text: name,  state: { dropable: false } });
+					var save_array1 = [];
+					save_array1.push({group_Name:name, options:{ dropable: false } });
+					save_array1.push({group_Name:'New Group', options:{ dropable: true } });
+					saveProjectTree_toDB(save_array1);
+					alert('Saving Success.');
 				}
 				else {
 					alert("Saving Success!");
@@ -2529,43 +2471,6 @@ function saveProjectToTree() {
 		})
 }	
 
-
-function createProjectTree(name) {
-			var treeArray = [];
-			var treeArray1 = [];
-			var tempObj = {};
-			
-			var parent_options = { draggable: false, clicked: false };
-			var child_options = {dropable:false};
-	
-		    var tempObj = { group_Name:"New Group", options: parent_options };
-	
-			treeObj1 = {group_Name:name,  options:  child_options };
-			treeArray1.push(treeObj1); 
-				
-			tempObj.Child = treeArray1;
-			treeArray.push(tempObj);
-			
-			$.ajax
-			({
-				type: "POST",
-				url: '/create_projectTree',
-				data: {
-					project: treeArray,
-				},
-				success: function (data, msg) {
-					$.post('/database', function(dat){
-						data_Vue.database = dat;
-					
-				});
-				},
-				failure: function(msg) 
-				{
-					alert('Saving tree Error!');
-				},
-				})			
-				
-}
 			
 // function to save data to database:
 
@@ -3374,7 +3279,7 @@ function saveNodeData(data, callback) {
 							if(res == data_Vue.tempNodeforCohort) { var isCohortExist = "yes";	}
 							updatedCohortNode.push(isCohortNode[j]);							
 						}
-						document.getElementById('edge_cohorts_Div').style.display = 'block';
+						//document.getElementById('edge_cohorts_Div').style.display = 'block';
 					}
 					if (isCohortExist === "yes") { check_cohorts_edges.push(checkedgesforCohort[i]); }
 					isCohortExist = '';

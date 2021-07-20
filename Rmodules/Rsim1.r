@@ -140,6 +140,8 @@ if(length(dat$'Genomic Info'$'advanced_parallel')>0 && dat$'Genomic Info'$'advan
     }
     t1 <- Sys.time()
     cat(paste0("Start simulation number ", rep, "\n"))
+
+
     population <- try(MoBPS::json.simulation(total=dat, verbose=verbose, log = log,
                                              time.check = time.check, time.max = time.max))
     if("try-error" %in% is(population)){

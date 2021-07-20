@@ -758,7 +758,8 @@ function RunResultpMean(){
 }
 
 function RunResultpMeanGroup(){
-	var filename = data_Vue.compareProjects;
+	
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var max_rep = data_Vue.plottingData.max_rep;
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
 	
@@ -1450,7 +1451,7 @@ function RunResultgMean(){
 
 function RunResultgMeanGroup(){
 	
-	var filename = data_Vue.compareProjects;
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var max_rep = data_Vue.plottingData.max_rep;
 	
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
@@ -1909,7 +1910,7 @@ function RunResultRel(){
 }
 
 function RunResultRelGroup(){
-	var filename = data_Vue.compareProjects;
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var consider_cohort = data_Vue.plottingData.consider_cohort;
 	var max_rep = data_Vue.plottingData.max_rep;
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
@@ -2295,7 +2296,7 @@ function RunResultQTL(){
 }
 
 function RunResultQTLGroup(){
-	var filename = data_Vue.compareProjects;
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var max_rep = data_Vue.plottingData.max_rep;
 	var qtl = 0;
 	for(var i=0; i< data_Vue.jsonDataList[0]['Trait Info'].length; i++){
@@ -2615,7 +2616,7 @@ function RunResultAccBVE(){
 
 function RunResultAccBVEGroup(){
 	
-	var filename = data_Vue.compareProjects;
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var max_rep = data_Vue.plottingData.max_rep;
 	
 	$.ajax

@@ -115,19 +115,18 @@ p {font-size:11pt;
 }
 
 #body .chromeLogo {
-	width: 11%;
+	width: 8.5%;
 	height:100%;
 	margin-top: 50px;
-	margin-left: 135px;
+	margin-left: 110px;
 	float: left;
 }
 
 #body .newsTicker {
-	width: 45%;
+	width: 55%;
 	height:100%;
-	margin-top: 50px;
-	margin-left: 135px;
-	float: left;
+	margin-top: 5px;
+	margin-left: 680px;
 }
 
 #body .newsTicker p {
