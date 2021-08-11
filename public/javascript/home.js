@@ -3203,6 +3203,7 @@ function showEdge(data, cancelAction) {
 	if (data_Vue.displayBtn == true) {
 		var hidden = data_Vue.displayBtn;
 		action(hidden);
+		document.getElementById('edge_cohorts_Div').style.display = 'block';
 		document.getElementById('edge-cancelButton').onclick = cancelAction.bind(this);
 		document.getElementById('edge-popUp').style.display = 'block';
 	}

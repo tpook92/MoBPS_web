@@ -2833,6 +2833,9 @@
 						<td v-if="isCohortNameChanged ==='' && edge_operation === ('Edit Edge')" >						
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true" />
 						</td>
+						<td v-if="edge_operation === 'Edge Display Only'" >				
+							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true" />
+						</td>
 						<td v-if="isCohortNameChanged ==='Yes'" >	
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="updated_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 						</td>
