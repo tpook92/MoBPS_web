@@ -7,7 +7,7 @@
 	</script>
 		
 	<head>
-		<title>MoBPS (v1.6.31)</title>
+		<title>MoBPS (v1.6.60)</title>
 		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> 
 
@@ -622,6 +622,15 @@
 								{{ option }}
 								</option>
 							</select>
+						</td>
+					</tr>
+
+					<tr>
+						<td>Mutation rate
+							<span class="tooltip">&#9432 <span class="tooltiptext">Mutation Rate per meiosis when performing reproduction.</span></span>
+						</td>
+						<td>
+							<input type="value" v-model="geninfo['mutation_rate']">
 						</td>
 					</tr>					
 					<tr>
@@ -1934,6 +1943,19 @@
 										</option>
 									</select>
 								</td>
+							</tr>	
+
+							<tr v-show="['Selection', 'Split', 'Aging'].indexOf(change_type13['Breeding Type']) >= 0 && change_type13['Selection Type'] == 'BVE' && change_type13['BVE Method']=='Direct Mixed-Model' ">
+								<td>Solving Technique
+									<span class="tooltip">&#9432 <span class="tooltiptext">Regular Inversion will be done using a Cholesky decomposition and will scale cubically in the number of individuals. For larger datasets other solvers will be more efficient.</span></span>
+								</td>
+								<td> 
+									<select v-model="change_type13['BVE Method_solver']">
+										<option v-for="option in BVEMethod_solver" v-bind:value="option">
+										{{ option }}
+										</option>
+									</select>
+								</td>
 							</tr>							
 							<tr v-show="['Selection', 'Split', 'Aging'].indexOf(change_type13['Breeding Type']) >= 0 && change_type13['Selection Type'] == 'BVE' & change_type13['BVE Method']=='Marker assisted selection (lm)'">
 								<td>Number of markers used for MAS (leave empty to not change)
@@ -2582,6 +2604,19 @@
 						</td>
 					</tr>
 					
+					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE' && active_edge['BVE Method']=='Direct Mixed-Model' ">
+						<td>Solving Technique
+							<span class="tooltip">&#9432 <span class="tooltiptext">Regular Inversion will be done using a Cholesky decomposition and will scale cubically in the number of individuals. For larger datasets other solvers will be more efficient.</span></span>
+						</td>
+						<td> 
+							<select v-model="active_edge['BVE Method_solver']">
+								<option v-for="option in BVEMethod_solver" v-bind:value="option">
+								{{ option }}
+								</option>
+							</select>
+						</td>
+					</tr>
+					
 					<tr v-show="['Selection', 'Split', 'Aging'].indexOf(active_edge['Breeding Type']) >= 0 && active_edge['Selection Type'] == 'BVE' & active_edge['BVE Method']=='Marker assisted selection (lm)'">
 						<td>Number of markers used for MAS
 							<span class="tooltip">&#9432 <span class="tooltiptext">This is a very simple implementation of MAS using a linear model of randomly sampled effect markers</span></span>
@@ -2719,6 +2754,9 @@
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="allNode_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true"/>
 						</td>
 						<td v-if="isCohortNameChanged ==='' && edge_operation === ('Edit Edge')" >						
+							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true" />
+						</td>
+						<td v-if="edge_operation === 'Edge Display Only'" >				
 							<treeselect :value-consists-of="'LEAF_PRIORITY'" :multiple="true" :disabled="false" :flat="false" :always-open="true" :options="node_manualselect_options" v-model="active_edge['Manuel selected cohorts']" :searchable="true" />
 						</td>
 						<td v-if="isCohortNameChanged ==='Yes'" >	

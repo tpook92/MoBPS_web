@@ -30,6 +30,7 @@ function myEdge (fr, to) {
 	//this['Selection Proportion'] = "";  -> we do not save it, always calculate from Number of Individuals
 	this['Relationship Matrix'] = "";
 	this['BVE Method'] = "";
+	this['BVE Method_solver'] = "Regular Inversion";
 	//this['New Mutation Rate'] = "";
 	//this['New Remutation Rate'] = "";
 	//this['Number of Rec per M'] = "";
@@ -101,6 +102,7 @@ function myGeneral () {
 	this['Number of Chromosomes'] = '';
 	this['Chromosomes of Equal Length'] = 'Yes';
 	this['Time Unit'] = 'Weeks';
+	this['mutation_rate'] = '1e-08';
 	this['Use Own Map'] = 'Yes';
 	this['Own Map Path'] = '';
 	// this['chromo will be filled with myChromo elements later=
@@ -110,7 +112,7 @@ function myGeneral () {
 	this['Excel_File'] = '';
 	this['user']=''
 	//this['listOfCohorts_withInfo'] = '';
-	this['sharedWith']=[];
+	this['sharedWith']='';
 	this['project_Sharer']='';
 	this['majorQTLsyntax'] = "SNP + Chromosome";
 	this['slider_value']=0;
@@ -392,6 +394,7 @@ var data_Vue = new Vue({
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
 		RelationshipMatrixOGC_options: ['VanRaden', 'Pedigree'],
 		BVEMethod_options: ['Direct Mixed-Model', 'Last BVE', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
+		BVEMethod_solver: ['Regular Inversion', 'PCG'],
 		Cohorts_options: ['Only this cohort', 'Last Generation', 'Last 2 Generations', 'Last 3 Generations', 'All',  'Manual select'],
 		ensembl_options:{
 			Cattle: [
@@ -474,13 +477,14 @@ var data_Vue = new Vue({
 	          console.log(error.response2);
 	        }
 	      })
-		var len = response2.length;
+		var len = response2.data.length;
 		var tzUsers = [];	
 	  	for (var i = 0; i < len; i++) {
-		    var thisUser = response2[i]["_id"];
+		    var thisUser = response2.data[i]["_id"];
 			  tzUsers.push(thisUser);
 		}
 		this.allDBUsers = tzUsers;	
+		data_Vue.allDBUsers = tzUsers;
 
 		this.project_saved = true;
 		localStorage.clear();
@@ -1057,6 +1061,9 @@ var data_Vue = new Vue({
 						}
 						if(data_Vue.change_type13["BVE Method"]!=undefined &data_Vue.change_type13["BVE Method"] != "Remain unchanged"){
 							edges[i]["BVE Method"] = data_Vue.change_type13["BVE Method"];
+						}
+						if(data_Vue.change_type13["BVE Method_solver"]!=undefined &data_Vue.change_type13["BVE Method_solver"] != "Remain unchanged"){
+							edges[i]["BVE Method_solver"] = data_Vue.change_type13["BVE Method_solver"];
 						}
 						if(data_Vue.change_type13["MAS_marker"]!=undefined &data_Vue.change_type13["MAS_marker"] != ""){
 							edges[i]["MAS_marker"] = data_Vue.change_type13["MAS_marker"];
@@ -2019,6 +2026,10 @@ function importNetwork_intern(inputData1) {
 		data_Vue.geninfo['advanced_advanced_copy'] = false;
 	}
 	
+	if(data_Vue.geninfo['mutation_rate']==undefined){
+		data_Vue.geninfo['mutation_rate'] = 1e-08;
+	}
+	
 	if(data_Vue.geninfo['max_d']==undefined){
 		data_Vue.geninfo['max_d'] = 25;
 	}
@@ -2241,7 +2252,7 @@ function importNetwork_intern(inputData1) {
 	var mat1 = inputData['Phenotypic Correlation'];
 	var mat2 = inputData['Genetic Correlation'];
 	//console.log(mat1);
-	if(mat1.length > 0){		
+	if(mat1 !== undefined && mat1.length > 0 ){		
 		var matrix = [];
 		var matrix2 = [];
 		var row1;
@@ -2260,8 +2271,8 @@ function importNetwork_intern(inputData1) {
 		data_Vue.matrix = matrix;
 		data_Vue.matrix2 = matrix2;
 	}else{
-		data_Vue.matrix = [];
-		data_Vue.matrix2 = [];		
+		data_Vue.matrix = mat1;
+		data_Vue.matrix2 = mat2;		
 	}
 	loadCohortInfoFromServer(data_Vue.geninfo['Project Name']);
 	loadCohortTimeInfoFromServer(data_Vue.geninfo['Project Name']);
@@ -2293,6 +2304,10 @@ function importNetwork_intern(inputData1) {
 			} 
 			if(edges[i]['Selection Index'] ==undefined){
 				edges[i]['Selection Index'] = data_Vue.selection_index[0]["Name"];
+			} 
+			
+			if(edges[i]['BVE Method_solver'] ==undefined){
+				edges[i]['BVE Method_solver'] = "Regular Inversion";
 			} 
 			data_Vue.edges.update(edges[i]);
 		}
@@ -2409,7 +2424,14 @@ function postProject(name, url, jsondata, sharedWith){
 				localStorage.clear();
 			}
 			else if (data_Vue['Upload_CorrFile'] == 'Yes') {
-				alert("Imported values from Excel successfully!");
+				if(isProject(name) === false) {
+					data_Vue.$refs.tree.append({ text: name,  state: { dropable: false } });
+					saveProjectToTree();
+					alert("Saving success with Imported values from Excel!");
+				}
+				else {
+					alert("Imported values from Excel successfully!");
+				}
 			}
 			else {
 				if(url === '/save' && data_Vue.database.length !== 0) { 
@@ -2588,13 +2610,35 @@ function shareUser(val) {
 		var usrCNT = thisUser.length;
 			if (usrCNT>0) {
 				for (var us=0; us<usrCNT; us++) {
-				var savetoThisUser = thisUser[us];
-				share_postProject(name, "/saveProjectWithOtherUser", jsondata, savetoThisUser, us);
+					var savetoThisUser = thisUser[us];
+					share_postProject(name, "/saveProjectWithOtherUser", jsondata, savetoThisUser, us);
+					saveProjectToTree_forSharedUser(name, savetoThisUser);
 				}
 				var x = false;
 				share_postProject(name, "/saveProjectWithOtherUser", jsondata, data_Vue.geninfo['user'], x);
+				saveProjectToTree_forSharedUser(name, data_Vue.geninfo['user']);
+				data_Vue.$refs.tree.append({ text: name,  state: { dropable: false } })
 			}		
 		}
+}
+
+function saveProjectToTree_forSharedUser(name, user) {
+
+	$.ajax
+	({
+		type: "POST",
+		url: '/saveProject_ProjectTree_ForSharedUser',
+		data: {
+			name: name,
+			user:JSON.stringify(user),	
+		},
+		success: function (data, msg) {
+		},
+		failure: function(msg) 
+		{
+			alert('Saving dfdgfg Error!');
+		},
+		})
 }
 
 function isShareUserExists(val) {
@@ -2689,6 +2733,10 @@ function saveSharedProToOri(name, getSharer) {
 
 		updateToOrigPr(getOriPr, "/updateSharerProject", jsondata, getSharer);
 		deleteSharedProject(checkShared, getOriPr, getSharer);
+		deleteASharedPro_FromTree(checkShared, data_Vue.geninfo['project_Sharer']);
+		if(data_Vue.user === data_Vue.geninfo['project_Sharer']) {
+			data_Vue.$refs.tree.remove({ text: name});
+		}
 }
 
 function updateToOrigPr(name, url, jsondata, sharedWith){
@@ -2748,6 +2796,29 @@ function deleteSharedProject(name, getOriPr, projectSharer) {
 			});	
 }
 
+function deleteASharedPro_FromTree(project, user) {
+	var projectGroup = project;
+	console.log(projectGroup);
+	$.ajax
+	({
+		type: "POST",
+		url: '/deleteASharedProject_FromTree',
+		data: {
+			project: JSON.stringify(projectGroup),	
+			user:user,
+		},
+		success: function (data, msg) {
+			$.post('/database', function(dat){
+				data_Vue.database = dat;
+			})
+		},
+		failure: function(msg) 
+		{
+			alert('Saving Error!');
+		},
+	});			
+
+}
 
 function stop_shareProjectUsers(name, url, jsondata, sharedWith, shareCNT, userCNT){
 	var totalCNT = userCNT;
@@ -2865,7 +2936,7 @@ function share_SaveProject(name) {
 
 	if(data_Vue.database.filter(function(obj){ return(obj==name)}).length > 0){
 			var usrCNT = data_Vue.geninfo['sharedWith'].length;
-			var curUser = 1;
+			// var curUser = 1;
 			if (usrCNT>0 && data_Vue.geninfo['sharedWith'] !== ' ') {
 				//alert('share _save after stop');
 				for (var us=0; us<usrCNT; us++) {
@@ -3080,7 +3151,7 @@ function draw() {
 			hoverConnectedEdges: false,
 			selectConnectedEdges: true,	
 			navigationButtons: true,
-   	            keyboard: true,
+   	            keyboard: false,
 		},
 	};
 	network = new vis.Network(container, network_data, options);
@@ -3160,6 +3231,7 @@ function showEdge(data, cancelAction) {
 	if (data_Vue.displayBtn == true) {
 		var hidden = data_Vue.displayBtn;
 		action(hidden);
+		document.getElementById('edge_cohorts_Div').style.display = 'block';
 		document.getElementById('edge-cancelButton').onclick = cancelAction.bind(this);
 		document.getElementById('edge-popUp').style.display = 'block';
 	}
@@ -3395,6 +3467,7 @@ function isSafari() {
 }
 
 function loadData(ind){
+	data_Vue.name='';
 	data_Vue.warningsLog='';
 	data_Vue.allNodesforNewEdge = [];
 	localStorage.clear();
@@ -3508,9 +3581,30 @@ if(excelToArr) {
 }
 
 function importexcelToArray(evt) {    
-    var selectedFile = evt.target.files; 
-    var excelToArray = new ExcelToArray();
-    excelToArray.parseExcel(selectedFile[0]);
+	if (data_Vue.traitsinfo.length == 0) {
+		document.getElementById("excelImport_button").disabled = true;
+		document.getElementById('excelToArray').value = '';
+		data_Vue.geninfo['Excel_File'] = '';
+		alert("Please add phenotypes first and then choose to import correlation data! ")
+	}
+	else if ((data_Vue.geninfo['Excel_File'] !== '' && data_Vue.traitsinfo.length !== 0)) {
+		var selectedFile = evt.target.files; 
+		var fileName = selectedFile[0].name;
+		const fileType = fileName.slice(-4);
+			if (data_Vue.geninfo['Excel_File'] !== '' && fileType === "xlsx" ) {
+				var excelToArray = new ExcelToArray();
+	    		excelToArray.parseExcel(selectedFile[0]);	
+			}
+			else {
+				document.getElementById('excelToArray').value = '';
+				alert("Please use Excel file of .xslx to upload correlation data.")
+			}	
+	}
+	else {
+		document.getElementById('excelToArray').value = '';
+		alert("Please select type of excel file then choose to import correlation data! ")
+	}	
+
  }	
 
 

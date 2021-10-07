@@ -663,6 +663,9 @@ function plottingResultpMean(){
 	//console.log(data);
 	var titles = data_Vue.traitsinfo.map(function(x){return(x['Trait Name'])});
 	for(var i=0; i < data_Vue.traitsinfo.length; i++){
+		var thisUnit = data_Vue.traitsinfo[i]['Trait Unit'];
+		if(thisUnit != '') { var ytitle = 'Observed phenotypes in ' + thisUnit } else {var ytitle = 'Observed phenotypes' }
+		
 		var layout = {
 			//title : titles[i],
 			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },	
@@ -677,6 +680,7 @@ function plottingResultpMean(){
 				automargin: true
 				},
 			yaxis: {
+				title: { text:ytitle, font: {family: 'verdana',weight:'bold', size: 18, color:'black'}, },
 				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 				},
 			legend: {
@@ -996,6 +1000,9 @@ function plottingResultgMean(){
 	}
 	var titles = data_Vue.traitsinfo.map(function(x){return(x['Trait Name'])});
 	for(var i=0; i < data_Vue.traitsinfo.length; i++){
+		var thisUnit1 = data_Vue.traitsinfo[i]['Trait Unit'];
+		if(thisUnit1 != '') { var ytitle = 'True Breeding Values in ' + thisUnit1 } else {var ytitle = 'True Breeding Values' }
+		
 		var layout = {
 			//title : titles[i],
 			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
@@ -1009,6 +1016,7 @@ function plottingResultgMean(){
 				automargin: true
 			},
 			yaxis: {
+				title: { text:ytitle, font: {family: 'verdana',weight:'bold', size: 18, color:'black'}, },
 				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
 			},
 			legend: {
