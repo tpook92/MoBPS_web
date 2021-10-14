@@ -2,7 +2,7 @@
 //*********** Functions for running R Simulation ***********************************//
 function checkRunTime(){
 	var nodes = data_Vue.nodes.get();
-	
+
 	var nInd = 0;
 	var nF = 0;
 	for(var i=0;i < nodes.length; i++){
@@ -183,6 +183,7 @@ function ImportNode(copy){
 function runningR1(){
 	clearResult();
 	data_Vue.plottingData = new myPlottingData();
+	data_Vue.plottingPar = new myPlottingPar();
 	var jsondata = JSON.stringify(exportNetwork());
 	//console.log(jsondata);
 	//alert("Approx. simulation running time: " + Math.round(checkRunTime()/60*2.6*100)/100 + "minutes.");
@@ -665,7 +666,7 @@ function plottingResultpMean(){
 	for(var i=0; i < data_Vue.traitsinfo.length; i++){
 		var thisUnit = data_Vue.traitsinfo[i]['Trait Unit'];
 		if(thisUnit != '') { var ytitle = 'Observed phenotypes in ' + thisUnit } else {var ytitle = 'Observed phenotypes' }
-
+		
 		var layout = {
 			//title : titles[i],
 			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },	
@@ -734,10 +735,37 @@ function RunResultpMean(){
 		success: function (data, msg) {
 			
 			try{
-				if(data != ''){
+			     if(data != '' && data_Vue.traitsinfo.length !== 0){
 				//console.log(data);
-				data_Vue.plottingData.RespMean = JSON.parse(data);
-				//plottingResultgMean(JSON.parse(data));
+				//data_Vue.plottingData.RespMean = JSON.parse(data);
+				bsNodes = data_Vue.nodes.get();
+				var isPhenotypeExist = "";
+				var pclass = [];
+				for(var b=0; b < bsNodes.length; b++){
+					var phenotype = savedNodes[b]['Phenotyping Class'];
+					pclass.push(phenotype);
+				}					
+				const uniquep = new Set(pclass);
+				var uniquepclass = Array.from(uniquep);	
+
+				  for(var p=0; p< uniquepclass.length; p++){
+						data_Vue.phenotyping_class.forEach(item =>{
+						   for (const [key, value] of Object.entries(item)){
+						    //   console.log(key , value)
+							if(value >=1) { isPhenotypeExist = "Yes";}
+						    }
+						})
+				  }
+
+				   if(isPhenotypeExist == "Yes") { 
+					data_Vue.plottingData.RespMean = JSON.parse(data);
+				   }
+				   else {
+					alert('There are no Observed Phenotypes available to analysis for cohorts. So plots can not be created!')
+				    }
+				}
+				else {
+					alert('There are no traits available to analysis for cohorts. So plots can not be created!')
 				}
 			}
 			catch(err){
@@ -762,7 +790,8 @@ function RunResultpMean(){
 }
 
 function RunResultpMeanGroup(){
-	var filename = data_Vue.compareProjects;
+	
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var max_rep = data_Vue.plottingData.max_rep;
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
 	
@@ -789,6 +818,7 @@ function RunResultpMeanGroup(){
 				writeSumGroup();
 				//plottingResultgMean(JSON.parse(data));
 				}
+
 			}
 			catch(err){
 				alert("Failed to plot KS. Please run the Simulation first! here");
@@ -1001,7 +1031,7 @@ function plottingResultgMean(){
 	for(var i=0; i < data_Vue.traitsinfo.length; i++){
 		var thisUnit1 = data_Vue.traitsinfo[i]['Trait Unit'];
 		if(thisUnit1 != '') { var ytitle = 'True Breeding Values in ' + thisUnit1 } else {var ytitle = 'True Breeding Values' }
-
+		
 		var layout = {
 			//title : titles[i],
 			title: { text:titles[i], font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
@@ -1431,11 +1461,14 @@ function RunResultgMean(){
 		},
 		success: function (data, msg) {
 			try{
-				if(data != ''){
-					//console.log(data);
+				if(data != '' && data_Vue.traitsinfo.length !== 0){					//console.log(data);
 					data_Vue.plottingData.ResgMean = JSON.parse(data);
 					//plottingResultgMean(JSON.parse(data));
 				}
+				else {
+					alert('There are no traits available to analysis for cohorts. So plots can not be created!')
+				}
+
 			} catch(err){
 				alert("Failed to plot KS. Please run the Simulation first!");
 			}
@@ -1458,7 +1491,7 @@ function RunResultgMean(){
 
 function RunResultgMeanGroup(){
 	
-	var filename = data_Vue.compareProjects;
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var max_rep = data_Vue.plottingData.max_rep;
 	
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
@@ -1917,7 +1950,7 @@ function RunResultRel(){
 }
 
 function RunResultRelGroup(){
-	var filename = data_Vue.compareProjects;
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var consider_cohort = data_Vue.plottingData.consider_cohort;
 	var max_rep = data_Vue.plottingData.max_rep;
 	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
@@ -2303,7 +2336,7 @@ function RunResultQTL(){
 }
 
 function RunResultQTLGroup(){
-	var filename = data_Vue.compareProjects;
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var max_rep = data_Vue.plottingData.max_rep;
 	var qtl = 0;
 	for(var i=0; i< data_Vue.jsonDataList[0]['Trait Info'].length; i++){
@@ -2623,7 +2656,7 @@ function RunResultAccBVE(){
 
 function RunResultAccBVEGroup(){
 	
-	var filename = data_Vue.compareProjects;
+	var filename = data_Vue.cptreeModel.checked.map(el => el.text);
 	var max_rep = data_Vue.plottingData.max_rep;
 	
 	$.ajax
