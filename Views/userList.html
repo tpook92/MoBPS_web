@@ -73,12 +73,38 @@ body {
 
 </head>
 	
-		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+			<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> 
 
-		<script type="text/javascript" src="javascript/jQ1.js"></script>
-		<script type="text/javascript" src="javascript/jQ2.js"></script>
-		<script type="text/javascript" src="javascript/jQ2_2.js"></script>
+		<script src="https://unpkg.com/mathjs@5.8.0/dist/math.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+		
+		<script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.umd.min.js"></script>
+    	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.4.0/dist/vue-treeselect.min.css">
+		
+		<link rel="shortcut icon" href="#">
+		
+		<!-- for plotting graphs: -->
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+		<script type="text/javascript" src="https://unpkg.com/alea@1.0.0/alea.js"></script>
+		<link src="https://visjs.github.io/vis-network/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+		
+		<script type="text/javascript" src="https://almende.github.io/vis/dist/vis.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="./styles/mobps.css">
+	
+		<!--  for javascript and ajax call	-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script> 
 		<script type="text/javascript" src="javascript/jQ3.js"></script>
+
+		<!-- for drag and drop for Phenotype table -->	
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.16.0/vuedraggable.min.js"></script>	
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+	
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/liquor-tree/dist/liquor-tree.umd.js"></script>
+		<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" media="all" rel="stylesheet" type="text/css" />
+	
 	
 <body onLoad="init()">
 
@@ -94,20 +120,20 @@ body {
 			<br>
 			    <table >
 				<tr>
-					<td> User Name: </td>
-					<td> <input type="text" name="username" id = "username" v-model="userDB._id" placeholder="Username" required> </td>
+					<td> User Name: 
+					<input type="text" name="username" id = "username" v-model="userDB._id" placeholder="Username" required> </td>
 				</tr>
 				<tr>
-					<td> Password: </td>
-					<td> <input type="text" name="password" id="password" v-model="userDB.passw" placeholder="Password" required> </td>
+					<td> Password: 
+					 <input type="text" name="password" id="password" v-model="userDB.passw" placeholder="Password" required> </td>
 				</tr>				
 				<tr>
-					<td> Email: </td>
-					<td> <input type="text" name="email" id="email" v-model="userDB.email" placeholder="email"> </td>
+					<td> Email: 
+				 <input type="text" name="email" id="email" v-model="userDB.email" placeholder="email"> </td>
 				</tr>
 				<tr>
-					<td> Group: </td>
-					<td> <select v-model="userDB.group" name="group" id="group" required>
+					<td> Group: 
+					<select v-model="userDB.group" name="group" id="group" required>
 							  <option>1</option>
 							  <option>2</option>
 							  <option>3</option>
@@ -134,22 +160,22 @@ body {
 			<form action="addStudentsToDB" id = "userForm" method="POST">		
 			    <table>
 				<tr>
-					<td> User Name: </td>
-					<td> <input type="text" name="username" id = "username" v-model="students.username" placeholder="username" required> </td>
+					<td> User Name: 
+					 <input type="text" name="username" id = "username" v-model="students.username" placeholder="username" required> </td>
 				</tr>
 				<tr>
-					<td> From: </td>
-					<td> <input type="text" name="from" id = "from" v-model="students.from" placeholder="from" required> </td>
-					<td> to: </td>
-					<td> <input type="text" name="to" id="to" v-model="students.to" placeholder="to" required> </td>
+					<td> From: 
+					 <input type="text" name="from" id = "from" v-model="students.from" placeholder="from" required> 
+					 to: 
+					 <input type="text" name="to" id="to" v-model="students.to" placeholder="to" required> </td>
 				</tr>
 				<tr>
-					<td> Password: </td>
-					<td> <input type="text" name="password" id="password" v-model="students.password" placeholder="password" required> </td>
+					<td> Password: 
+					 <input type="text" name="password" id="password" v-model="students.password" placeholder="password" required> </td>
 				</tr>
 				<tr>
-					<td> Group: </td>
-					<td><select v-model="userDB.group" name="group" id="group" required>
+					<td> Group: 
+					<select v-model="userDB.group" name="group" id="group" required>
 							  <option>1</option>
 							  <option>2</option>
 							  <option>3</option>
@@ -256,6 +282,7 @@ body {
 						<td> {{getProjectsFortheUser[index]['createdDate']}} </td>
 						<td> {{getProjectsFortheUser[index]['updatedDate']}} </td>
 						<td> <button class="btn" @click="deleteProject(project)"> Delete </button></td> 
+												<td> <button class="btn" @click="downloadJSON(project);"> get JSON </button></td>
 					</tr>					
 			</table>			 			
 		</div>		

@@ -292,6 +292,7 @@ h6 {
 	height:750px;
 }
 
+
 #Rout_Div {
 	position:relative;
 	width: 800px;
@@ -695,6 +696,37 @@ button[disabled]{
 	font-family:cambria;
 }
 
+
+.v_drag_trait_table {
+	background-color: #f0f0f0;
+	width: 100%;
+}
+
+.v_drag_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	width:100%;
+	table-layout: fixed;
+}
+
+.v_drag_table td {
+	padding:5px;
+	height:20px;
+  	width: 56px;
+	font-size:8pt;
+	font-family:cambria;
+	font-weight:bold;
+}
+
+.v_drag_table input[type=number]{
+	margin-top:0px;
+	margin-bottom:0px;
+	font-size:11pt;
+	height: 20px;
+    border: 2px solid lightblue;  
+	font-family:cambria;
+}
 
 .corr_title {
     font-weight:bold;

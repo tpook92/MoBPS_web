@@ -7,7 +7,7 @@
 	</script>
 		
 	<head>
-		<title>MoBPS (v1.6.60)</title>
+		<title>MoBPS (v1.6.62)</title>
 		<!-- Javascripte Online -->
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> 
 
@@ -2992,6 +2992,13 @@
 				<br>
 				<br>
 				<br>
+								<br>
+				<br>
+								<br>
+				<br>
+								<br>
+				<br>
+				
 				
 				<table>
 				<tr>					
@@ -3089,6 +3096,45 @@
 				<br>
 				<br>
 
+				<h4> Principle Component Analysis </h4>
+				<button onclick="RunResultPCA()">Run Analysis</button>
+				
+				<table>
+					<tr>
+					<td>Only consider cohorts in repeat nr.:
+						<span class="tooltip">&#9432 <span class="tooltiptext">Enter a number of a comma separated list of numbers to only consider selected repeats (e.g.: "5", "5,6,7")</span></span>
+					</td>
+					<td>
+						<input placeholder="Type a number" v-model="plottingData.PCAconsider_cohort">
+					</td>
+					</tr>
+				</table>
+				
+				<template>
+					Coloring by:
+					<select v-model="plottingPar.PCA_pType" >
+						<option v-for="option in plottingType3" v-bind:value="option">
+						{{ option }} 
+						</option>
+					</select>
+					<br>
+					Select cohorts (multiple selection possible):
+					<!--select v-model="plottingPar.ResRel_cohorts" size="6" multiple>
+						<option v-for="option in Object.keys(plottingData.Summary)" v-bind:value="option">
+						{{ option }}   ({{plottingData.Summary[option].trep - 1}} Repeats)
+						</option>
+					</select-->
+					<button v-if="plottingData.PCA != ''" onclick="plottingResultPCA()" >Plot Results</button>
+					<treeselect :multiple="true" :options="Summary" v-model="plottingPar.PCA_cohorts" :searchable="true" style="width:800px"/>
+				</template>
+				
+				<br>
+				<br>
+				<div v-show="plottingData.PCA != ''" style="resize: both; overflow: scroll;" class="RSim_Div">
+					<div id="PCA_Div1" style="height:99%; width:99%;">
+					</div>
+				</div>
+				
 				<h4> Results: Relationship and Inbreeding within Cohorts </h4>
 				<table>
 					<tr>

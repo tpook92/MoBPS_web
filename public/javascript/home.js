@@ -228,7 +228,8 @@ function myPlottingPar(){
 	this['RespMean_pType'] = "By Repeats",
 	this['ResRel_pType'] = "By Repeats",
 	this['ResAccBVE_cohorts'] = [],
-	this['ResAccBVE_pType'] = "By Repeats"
+	this['ResAccBVE_pType'] = "By Repeats",
+	this['PCA_pType'] = "By Cohorts"
 }
 
 // returns an object with all data for plotting results:
@@ -241,7 +242,8 @@ function myPlottingData(){
 	this['RespMean'] = "",
 	this['ResAccBVE'] = "",
 	this['confidence'] = false,
-	this['legend'] = true
+	this['legend'] = true,
+	this['PCA'] = ""
 }
 
 
@@ -384,6 +386,7 @@ var data_Vue = new Vue({
 		individualsVar_options: [],
 		plottingType: ["By Repeats", "By Cohorts", "By Time"],
 		plottingType2: ["By Repeats", "By Time"],
+		plottingType3: ["By Cohorts", "By Sex", "By Time Point"],
 		download_data: ["VCF", "Ped", "Map", "Plain Genotypes", "Phenotypes", "Genomic Values", "Est. Breeding Values", "Pedigree"],
 		threshold_options: [">", "=", "<", ">=", "<="],
 		list_cohorts: [],		

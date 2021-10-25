@@ -183,6 +183,7 @@ function ImportNode(copy){
 function runningR1(){
 	clearResult();
 	data_Vue.plottingData = new myPlottingData();
+	data_Vue.plottingPar = new myPlottingPar();
 	var jsondata = JSON.stringify(exportNetwork());
 	//console.log(jsondata);
 	//alert("Approx. simulation running time: " + Math.round(checkRunTime()/60*2.6*100)/100 + "minutes.");
@@ -734,10 +735,37 @@ function RunResultpMean(){
 		success: function (data, msg) {
 			
 			try{
-				if(data != ''){
+				if(data != '' && data_Vue.traitsinfo.length !== 0){
 				//console.log(data);
-				data_Vue.plottingData.RespMean = JSON.parse(data);
-				//plottingResultgMean(JSON.parse(data));
+				//data_Vue.plottingData.RespMean = JSON.parse(data);
+				bsNodes = data_Vue.nodes.get();
+				var isPhenotypeExist = "";
+				var pclass = [];
+				for(var b=0; b < bsNodes.length; b++){
+					var phenotype = savedNodes[b]['Phenotyping Class'];
+					pclass.push(phenotype);
+				}					
+				const uniquep = new Set(pclass);
+				var uniquepclass = Array.from(uniquep);	
+
+				  for(var p=0; p< uniquepclass.length; p++){
+						data_Vue.phenotyping_class.forEach(item =>{
+						   for (const [key, value] of Object.entries(item)){
+						    //   console.log(key , value)
+							if(value >=1) { isPhenotypeExist = "Yes";}
+						    }
+						})
+				  }
+
+				   if(isPhenotypeExist == "Yes") { 
+					data_Vue.plottingData.RespMean = JSON.parse(data);
+				   }
+				   else {
+					alert('There are no Observed Phenotypes available to analysis for cohorts. So plots can not be created!')
+				    }
+				}
+				else {
+					alert('There are no traits available to analysis for cohorts. So plots can not be created!')
 				}
 			}
 			catch(err){
@@ -1432,11 +1460,15 @@ function RunResultgMean(){
 		},
 		success: function (data, msg) {
 			try{
-				if(data != ''){
+				if(data != '' && data_Vue.traitsinfo.length !== 0){	
 					//console.log(data);
 					data_Vue.plottingData.ResgMean = JSON.parse(data);
 					//plottingResultgMean(JSON.parse(data));
 				}
+				else {
+					alert('There are no traits available to analysis for cohorts. So plots can not be created!')
+				}
+				
 			} catch(err){
 				alert("Failed to plot KS. Please run the Simulation first!");
 			}
@@ -2045,6 +2077,115 @@ function RunResultRelbetweenC(){
 		dataType: "text",
 	});
 }
+
+function RunResultPCA(){
+	var filename = data_Vue.geninfo["Project Name"];
+	//var cohorts = data_Vue.plottingPar.ResgMean_cohorts;
+	
+	var PCAconsider_cohort = data_Vue.plottingData.PCAconsider_cohort;
+	var PCA_cohorts = data_Vue.plottingPar.PCA_cohorts;
+	var PCA_pType = data_Vue.plottingPar.PCA_pType;
+
+	$.ajax
+	({
+		type: "POST",
+		url: './RsimResult',
+		data: {
+			filename : filename,
+			script: "PCA",
+			consider_cohort : PCAconsider_cohort,
+			PCA_cohorts : PCA_cohorts,
+			PCA_pType : PCA_pType
+			},
+		beforeSend: function() {
+			document.getElementById("runningDogTitle").innerHTML = 'Calculating Results for Relationship between Cohorts...';
+			document.getElementById("runningDog").style.visibility = 'visible';
+			//alert("Now Sending!");
+		},
+		success: function (data, msg) {
+			try{
+				if(data != ''){
+					//console.log(data);
+					data_Vue.plottingData.PCA = JSON.parse(data);
+					//plottingResultgMean(JSON.parse(data));
+				}
+			}
+			catch(err){
+				alert("Failed to plot KS. Please run the Simulation first!");
+			}
+		},
+		failure: function(msg) 
+		{
+			alert("Failed to plot KS. Please run the Simulation first!");
+		},
+		complete: function(obj, msg){
+			document.getElementById("runningDog").style.visibility = 'hidden';
+			//document.getElementById("runningDog").innerHTML = '';
+			//alert(msg);
+			//console.log(obj);
+		},
+		dataType: "text",
+	});
+}
+
+function plottingResultPCA(){
+	
+	var points = data_Vue.plottingData.PCA[[0]];
+	var legend = data_Vue.plottingData.PCA[[1]];
+	var col = "#0000FF";
+	var data1 = {
+		x : [],
+		y : [],
+		text : [],
+		mode : 'markers',
+		marker : {
+			size : 20, 
+			color : []
+		}
+		
+	};
+	
+	
+	for(var i=0; i < points.length; i++){
+		data1.x.push(points[i][0]);
+		data1.y.push(points[i][1]);
+		data1.text.push(points[i][3]);
+		data1.marker.color.push(points[i][2]);
+	}; 
+	
+	var layout = {
+			title: { text:'PCA', font: {family: 'verdana',weight:'bold', size: 30, color:'blue'}, },
+			showlegend: false,
+			//plot_bgcolor: '#FFFFFF',
+			
+			xaxis: {
+				//title: 'Repeats',
+				title: { text:'PC1', font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				//tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+				//zeroline: false,
+				automargin: true
+			},
+			yaxis: {
+				title: { text:'PC2', font: {family: 'verdana',weight:'bold', size: 25, color:'black'}, },
+				tickfont: {  family: 'verdana',  size: 22,   color: 'black' },
+			},
+	};
+			var config = {
+			scrollZoom: true,
+			toImageButtonOptions: {
+				format: 'png', // one of png, svg, jpeg, webp
+				filename: 'custom_image',
+				height: 1500,
+				width: 1500,
+				scale: 0.8 // Multiply title/legend/axis/canvas sizes by this factor
+			}
+			};
+		
+	data2 = [data1];
+	Plotly.newPlot('PCA_Div1', data2, layout, config);
+
+}
+
 
 // ---- Plotting QTL:
 function plottingResultQTL(){
