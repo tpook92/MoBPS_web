@@ -396,7 +396,7 @@ var data_Vue = new Vue({
 		selectionType_options: ['Phenotypic', 'Random', 'BVE', 'Pseudo-BVE' ],
 		RelationshipMatrix_options: ['VanRaden', 'Pedigree', 'Single Step'],
 		RelationshipMatrixOGC_options: ['VanRaden', 'Pedigree'],
-		BVEMethod_options: ['Direct Mixed-Model', 'Last BVE', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Multi-trait REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
+		BVEMethod_options: ['Direct Mixed-Model', 'Last BVE', 'REML-GBLUP (EMMREML)', 'REML-GBLUP (rrBLUP)', 'REML-GBLUP (sommer)', 'Marker assisted selection (lm)', 'BayesA (BGLR)', 'BayesB (BGLR)', 'BayesC (BGLR)', 'RKHS (BGLR)', 'BL (BGLR)', 'BRR (BGLR)'],
 		BVEMethod_solver: ['Regular Inversion', 'PCG'],
 		Cohorts_options: ['Only this cohort', 'Last Generation', 'Last 2 Generations', 'Last 3 Generations', 'All',  'Manual select'],
 		ensembl_options:{
@@ -1246,7 +1246,18 @@ var data_Vue = new Vue({
 				for(var i=ind+1; i< len; i++){
 					this.matrix[i].row.splice(ind,1);
 					this.matrix2[i].row.splice(ind,1);
-					this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
+				}
+				for(var i=0; i < (len-1); i++){
+						console.log(i)
+						console.log(data_Vue.traitsinfo[i]['combi_weights'])
+					if(data_Vue.traitsinfo[i]['combi_weights'] !== undefined){
+						data_Vue.traitsinfo[i]['combi_weights'].splice(ind,1); 
+						console.log(i)
+						console.log(data_Vue.traitsinfo[i]['combi_weights'])
+					} else{
+						data_Vue.traitsinfo[i]['combi_weights'] = new Array(len-1).fill(0);
+					}
+
 				}
 				this.matrix.splice(ind,1);
 				this.matrix2.splice(ind,1);
@@ -2247,6 +2258,14 @@ function importNetwork_intern(inputData1) {
 			}
 			if(data_Vue.traitsinfo[j]['trafo'] == undefined){
 				data_Vue.traitsinfo[j]['trafo'] = "function(x){return(x)}";
+			}
+			
+			if((data_Vue.traitsinfo[j]['combi_weights'] != undefined) && (data_Vue.traitsinfo[j]['combi_weights'].length != data_Vue.traitsinfo.length)){
+				var temp = data_Vue.traitsinfo[j]['combi_weights'] ;
+				data_Vue.traitsinfo[j]['combi_weights'] = [];
+				for( var jj = 0; jj <data_Vue.traitsinfo.length; jj++){
+					data_Vue.traitsinfo[j]['combi_weights'].push(temp[jj]);
+				}
 			}
 		}
 	}
