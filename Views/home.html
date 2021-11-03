@@ -872,60 +872,73 @@
 							<td>Pheno. SD
 								<span class="tooltip">&#9432 <span class="tooltiptext">Trait variance for the group of all founders will be scaled accordingly. Residual variance is assumed to be fixed over all generations.</span></span>
 							</td>
-							<td style="padding-right:0px;">Heritability
+							<td style="padding-right:2px;padding-left:16px;" v-if="geninfo['advanced_trait_epi']==false">Heritability
 								<span class="tooltip">&#9432 <span class="tooltiptext">Heritability of the trait.</span></span>
 							</td>
-							<td  v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_repeat']">Repeatability
+							<td style="padding-right:2px;padding-left:6px;" v-if="geninfo['advanced_trait_epi']==true">Heritability
+								<span class="tooltip">&#9432 <span class="tooltiptext">Heritability of the trait.</span></span>
+							</td>
+							<td style="padding-right:0px;"  v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_repeat']">Repeatability
 								<span class="tooltip">&#9432 <span class="tooltiptext">Repeatability of the trait (If empty will be equal to heritability - independent observations).</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==false || geninfo['advanced_trait']==false || geninfo['advanced_trait_epi']==false"># Polygenic Loci
+							<td style="padding-right:5px;padding-left:3px;" v-if = "geninfo['advanced']==false || geninfo['advanced_trait']==false || geninfo['advanced_trait_epi']==false"># Polygenic Loci
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. To simulate non-additive QTL effect activate the advanced setting Complex Trait architecture.</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># additive QTL
+							<td style="padding-right:0px;" v-if="geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># additive QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL. To simulate non-additive QTL effect activate the advanced setting Complex Trait architecture.</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># dominant QTL
+							<td style="padding-right:0px;" v-if="geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># dominant QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of purely dominant QTL.</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true" ># qualitative epistatic QTL
+							<td style="padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true" ># qualitative epistatic QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL with qualitative epistatic effect between two markers.</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true" ># quantitative epistatic QTL
+							<td style="padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true" ># quantitative epistatic QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of QTL with quantitative epistatic effect between two markers.</span></span>
 							</td>
 							
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># additive equal size QTL 
+							<td style="padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># additive equal size QTL 
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of purely additive QTL with all QTLS having the same effect size.</span></span>
 							</td>
 							
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># dominant equal size QTL 
+							<td style="padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># dominant equal size QTL 
 								<span class="tooltip">&#9432 <span class="tooltiptext">Number of purely dominant QTL with all QTLS having the same effect size.</span></span>
 							</td>
 							
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># only positive dominant effects 
+							<td style="padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true"># only positive dominant effects 
 								<span class="tooltip">&#9432 <span class="tooltiptext"> Set this to make sure the heterozygous variant in each dominant QTL has the same as the effect as the better homozygous variant (e.g. for hybrid breeding).</span></span>
 							</td>
 							
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true" > maternal trait
+							<td style="padding-right:3px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true" > maternal trait
 								<span class="tooltip">&#9432 <span class="tooltiptext">Genomic value of the trait is caused by the mother</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true" > paternal trait
+							<td style="padding-right:1px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true" > paternal trait
 								<span class="tooltip">&#9432 <span class="tooltiptext">Genomic value of the trait is caused by the father</span></span>
 							</td>
 
-							<td style="padding-right:0px;">Major QTL
+							<td style="padding-right:5px;">Major QTL
 								<span class="tooltip">&#9432 <span class="tooltiptext">Use this if you want to manually add single marker effects to SNPs with known effects.</span></span>
 							</td>
-							<td v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true" > combination of traits
+							<td style="padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true && geninfo['advanced_trait_epi']==true" > combination of traits
 								<span class="tooltip">&#9432 <span class="tooltiptext"> This trait is a linear combination of other traits</span></span>
 							</td>
-							<td style="padding-right:0px;">Value per unit (&#8364;)
+							<td style="padding-left:5px;padding-right:10px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true && geninfo['advanced_trait_epi']==false" > combination of traits
+								<span class="tooltip">&#9432 <span class="tooltiptext"> This trait is a linear combination of other traits</span></span>
+							</td>
+							<td style="padding-right:0px;" v-if="geninfo['advanced_trait_trafo']==false">Value per unit (&#8364;)
 								<span class="tooltip">&#9432 <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
 							</td>
-							<td style="width:90px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_trafo']==true">Apply Transformation
+							<td style="padding-right:40px;" v-if="geninfo['advanced_trait_trafo']==true && geninfo['advanced_trait_epi']==false">Value per unit (&#8364;)
+								<span class="tooltip">&#9432 <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
+							</td>
+							<td style="padding-right:0px;" v-if="geninfo['advanced_trait_trafo']==true && geninfo['advanced_trait_epi']==true">Value per unit (&#8364;)
+								<span class="tooltip">&#9432 <span class="tooltiptext">Economic gain by increased unit of the trait. Only relevant for economic calculations. Currently only linear effect and no interactions - Contact Torsten if you need more!</span></span>
+							</td>
+							<td style="padding-right:55px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_trafo']==true">Apply Transformation
 								<span class="tooltip">&#9432 <span class="tooltiptext">The only allowed input variable is the genomic value (x). Potential input: function(x){y = x^2; return(y)}</span></span>
 							</td>
-							<td>Show Cor</td>
+							
+							<td style="padding-left:12px">Show Cor</td>
 							<td></td> 							
 						</tr>
 					</thead>
@@ -945,13 +958,13 @@
 							<td style="width:0.05%;padding-right:12px;">
 								<input class="phenoSmall" v-model="trait['Trait Unit']" > 
 							</td>
-							<td style="width:0.05%;padding-right:12px;"  v-if = "trait['is_combi'] == false">
+							<td style="width:0.05%;padding-right:5px;"  v-if = "trait['is_combi'] == false">
 								<input class="phenoSmall" v-model="trait['Trait Mean']" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')"> 
 							</td>
 							<td style="width:0.1%;"  v-if = "trait['is_combi'] == true">
 								<input class="phenoSmallReadOnly" v-model="trait['Trait Mean']" class="no-spinners" step=0.001 v-on:change="trait['Trait Mean'] = trait['Trait Mean'].replace(/,/g, '.')" readonly> 
 							</td>
-							<td style="width:0.05%;padding-right:4px;"  v-if = "trait['is_combi'] == false">
+							<td style="width:0.05%;padding-right:8px;"  v-if = "trait['is_combi'] == false">
 								<input class="phenoSmall" v-model="trait['Trait Std Deviation']" class="no-spinners" step=0.001 v-on:change="trait['Trait Std Deviation'] = trait['Trait Std Deviation'].replace(/,/g, '.')">  
 							</td>
 							<td style="width:0.1%;"  v-if = "trait['is_combi'] == true">
@@ -960,31 +973,31 @@
 							<td style="width:0.05%;padding-right:0px;">
 								<input class="phenoSmall" v-model="trait['Trait Heritability']" max=1 min=0 class="no-spinners" step=0.0001 v-on:change="trait['Trait Heritability'] = trait['Trait Heritability'].replace(/,/g, '.')"> 
 							</td>
-							<td style="width:0.3%;padding-right:0.07px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_repeat']==true">
+							<td style="width:0.3%;padding-right:0.0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_repeat']==true">
 								<input class="phenoSmall"  v-model="trait['Trait Repeatability']" max=1 min=0 class="no-spinners" step=0.0001 v-on:change="trait['Trait Repeatability'] = trait['Trait Repeatability'].replace(/,/g, '.')"> 
 							</td>
 							<td style="width:0.15%;padding-right:0px;" v-if = "trait['is_combi'] == false">
 								<input class="phenoSmall" v-model="trait['Trait Number of Polygenic Loci']" class="no-spinners" step=1> 
 							</td>
-							<td style="width:0.15%;padding-right:0.07px;" v-if = "trait['is_combi'] == true">
+							<td style="width:0.15%;padding-right:10px;" v-if = "trait['is_combi'] == true">
 								<input class="phenoSmallReadOnly" v-model="trait['Trait Number of Polygenic Loci']" class="no-spinners" step=1 readonly> 
 							</td>
-							<td style="width:0.1%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
+							<td style="width:0.1%;padding-left:5px;padding-right:5px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoSmall"  v-model="trait['dominant_qtl']"  class="no-spinners" step=1> 
 							</td>
-							<td style="width:0.4%;padding-right:4px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
+							<td style="width:0.1%;padding-right:5px;padding-left:2px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
 								<input class="phenoSmallReadOnly" v-model="trait['dominant_qtl']"  class="no-spinners" step=1 readonly> 
 							</td>
-							<td style="width:0.1%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
+							<td style="width:0.1%;padding-right:2px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoSmall" v-model="trait['qualitative_qtl']" class="no-spinners" step=1> 
 							</td>
-							<td style="width:0.4%;padding-right:4px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true" >
+							<td style="width:0.1%;padding-right:8px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true" >
 								<input class="phenoSmallReadOnly"  v-model="trait['qualitative_qtl']" class="no-spinners" step=1 readonly> 
 							</td>
 							<td style="width:0.1%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoSmall"  v-model="trait['quantitative_qtl']"  class="no-spinners" step=1> 
 							</td>
-							<td style="width:0.4%;padding-right:4px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
+							<td style="width:0.1%;padding-right:8px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
 								<input class="phenoSmallReadOnly"  v-model="trait['quantitative_qtl']"  class="no-spinners" step=1 readonly> 
 							</td>							
 							
@@ -992,22 +1005,22 @@
 							<td style="width:0.1%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoSmall" v-model="trait['additive_equal']" class="no-spinners" step=1> 
 							</td>
-							<td style="width:0.4%;padding-right:4px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true" >
+							<td style="width:0.1%;padding-right:8px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true" >
 								<input class="phenoSmallReadOnly"  v-model="trait['additive_equal']" class="no-spinners" step=1 readonly> 
 							</td>
 							
 							<td style="width:0.1%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoSmall" v-model="trait['dominant_equal']" class="no-spinners" step=1> 
 							</td>
-							<td style="width:0.4%;padding-right:4px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true" >
+							<td style="width:0.4%;padding-right:8px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true" >
 								<input class="phenoSmallReadOnly"  v-model="trait['dominant_equal']" class="no-spinners" step=1 readonly> 
 							</td>
 							
 							
-							<td style="width:0.3%;padding-right:5px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
+							<td style="width:0.3%;padding-right:0px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==false">
 								<input class="phenoCheck" type="checkbox" v-model="trait['dominant_positive']" >
 							</td>
-							<td style="width:0.3%;padding-right:5px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
+							<td style="width:0.3%;padding-right:8px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_epi']==true && trait['is_combi']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['dominant_positive']" >
 							</td>
 							
@@ -1018,18 +1031,19 @@
 							<td style="width:0.3%;padding-right:5px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_maternal']" >
 							</td>
-							<td style="width:0.3%;padding-right:5px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true">
+							<td style="width:0.3%;padding-right:2px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_maternal']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_paternal']" >
-							</td>							
+							</td>
+														
 							
-							<td style="width:0.04%;padding-right:0px;" v-if = "trait['is_combi'] == false">
+							<td style="width:0.03%;padding-right:2px;" v-if = "trait['is_combi'] == false">
 								<input class="phenoNumber" v-model="trait['Trait Major QTL']"  type="number" class="no-spinners" step=1 v-on:change="createQTL(index)"> 
 							</td>
-							<td style="width:0.1%;padding-right:15px;" v-if = "trait['is_combi'] == true">
+							<td style="width:0.01%;padding-right:8px;" v-if = "trait['is_combi'] == true">
 								<input class="phenoNumberReadOnly" v-model="trait['Trait Major QTL']"  type="number" class="no-spinners" step=1 v-on:change="createQTL(index)" readonly> 
 							</td>
 							
-							<td style="width:0.3%;padding-right:9px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true">
+							<td style="width:0.13%;padding-right:9px;" v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true">
 								<input class="phenoCheck" type="checkbox" v-model="trait['is_combi']" v-on:change="createCombi(index)" >
 							</td>
 							<td style="width:0.08%;padding-right:4px;">
@@ -1051,19 +1065,14 @@
 
 				<br>
 				<template v-if = "geninfo['advanced']==true && geninfo['advanced_trait']==true && geninfo['advanced_trait_combi']==true">
-					<table class="trait_table">
-						<thead>
+					<table class="weight_table">
 							<tr>
 								<td> Trait Name </td>
 								<td v-for="trait in traitsinfo"> Weight {{trait['Trait Name']}} </td>
 							</tr>
-						</thead>
-						<tbody>
 							<tr v-for="(trait_row, index2) in traitsinfo">
 								<td v-if="traitsinfo[index2]['is_combi'] == true"> {{trait_row['Trait Name']}} </td>
-								<td v-for="(trait,index) in traitsinfo" style = "width:15px;" v-if="traitsinfo[index2]['is_combi'] == true"> <input v-model="traitsinfo[index2]['combi_weights'][index]"></td>
-							</tr>
-						</tbody>
+								<td v-for="(trait,index) in traitsinfo" v-if="traitsinfo[index2]['is_combi'] == true"> <input type="value" v-model="traitsinfo[index2]['combi_weights'][index]"></td>
 					</table>
 				</template>
 				
@@ -1153,7 +1162,7 @@
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
 						<td v-for="(cl, cind) in matrix" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
-							<input v-model="matrix[rind].row[cind].val" style="width:40px;font-size:10pt;font-weight:bold;height:18px;border:2px solid lightblue;" v-if="rind > cind" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix[rind].row[cind].val = matrix[rind].row[cind].val.replace(/,/g, '.')">  
+							<input v-model="matrix[rind].row[cind].val" style="width:40px;font-size:10pt;text-align: center;font-weight:bold;height:18px;border:2px solid lightblue;" v-if="rind > cind" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix[rind].row[cind].val = matrix[rind].row[cind].val.replace(/,/g, '.')">  
 							<template v-if="rind <= cind">
 								{{ matrix[cind].row[rind].val }}
 							</template>
@@ -1187,18 +1196,18 @@
 						<td class="corr_td">
 							{{traitsinfo[rind]['Trait Name']}}
 						</td>
-						<td v-for="(cl, cind) in matrix2" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">
-							<input v-model="matrix2[rind].row[cind].val" style="width:40px;font-size:10pt;font-weight:bold;height:18px;border:2px solid lightblue;" v-if="rind > cind" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix2[rind].row[cind].val = matrix2[rind].row[cind].val.replace(/,/g, '.')">
-							<template v-if="rind <= cind">
-								{{ matrix2[cind].row[rind].val }}
+						<td v-for="(cl, cind) in matrix2" v-if="show_matrix_element[rind].show & show_matrix_element[cind].show">	
+							<input v-model="matrix2[rind].row[cind].val" style="width:40px;font-size:10pt;text-align: center;font-weight:bold;height:18px;border:none;background-color:#f2f2f2;" v-if="rind > cind & traitsinfo[cind]['is_combi'] == true" class="no-spinners"  v-on:change="matrix2[rind].row[cind].val = matrix2[rind].row[cind].val.replace(/,/g, '.') " readonly>							
+							<input v-model="matrix2[rind].row[cind].val" style="width:40px;font-size:10pt;text-align: center;font-weight:bold;height:18px;border:2px solid lightblue;" v-if="rind > cind & traitsinfo[cind]['is_combi'] == false" class="no-spinners" step=0.000001 min=-1 max=1 v-on:change="matrix2[rind].row[cind].val = matrix2[rind].row[cind].val.replace(/,/g, '.') ">
+							<template v-if="rind <= cind" >
+								{{ matrix2[cind].row[rind].val }} 
 							</template>
 						</td>
 					</tr>
 				</table>
 				<br>
 			
-
-			<div id="corrDiv" style="display:none">
+						<div id="corrDiv" style="display:none">
 				<h3> Import correlation matrices via Excel/csv  <span class="tooltip">&#9432 </h3>
 				<button class="accordion"> Press here to get info on how this module works! </button>
 			
@@ -1614,21 +1623,17 @@
 					<button class="sub_button" v-on:click="createSize()" v-show="geninfo['advanced'] && geninfo['advanced_litter']" > Add new litter size </button>
 				</td>
 				
-				<table v-if="geninfo['advanced'] && geninfo['advanced_litter']" id="general_Litter"> 			
-					<thead>
+				<table class="litter_table" v-if="geninfo['advanced'] && geninfo['advanced_litter']" id="general_Litter"> 			
 					<tr> 
 						<td>Litter size </td>
 						<td>Probability </td>
 						<td> </td>
 					</tr>
-					</thead>
-					<tbody>
 						<tr v-for='(litter, index) in litter_size["litter_info"]'>
-							<td><input v-model="litter.name" style = "width: 50px;"></td>
-							 <td><input v-model="litter.prob" style = "width: 50px;"></td>
+							<td><input type="value" v-model="litter.name"></td>
+							 <td><input type="value" v-model="litter.prob"></td>
 							<td><button v-on:click="removeSize(index)">X</button></td>
 						</tr>
-					</tbody>
 				</table>
 				<br>
 				<br>

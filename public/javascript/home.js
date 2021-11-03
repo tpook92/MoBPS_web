@@ -138,7 +138,8 @@ function myTrait (ind){
 	this['Trait Major QTL'] = 0,
 	this['Trait Value per Unit'] = 0,
 	this['trafo'] = "function(x){return(x)}",
-	this['Trait QTL Info'] = []
+	this['Trait QTL Info'] = [],
+	this['combi_weights'] = [];
 }
 
 function mySNP (ind){
@@ -284,6 +285,7 @@ var data_Vue = new Vue({
 		// params for general information:
 		geninfo: geninfo,
 		traitsinfo: [],
+		combiW_Traits:[],
 		economy: new myEconomy(),
 		culling: new myCulling(),
 		litter_size: new myLitter(),
@@ -728,6 +730,7 @@ var data_Vue = new Vue({
 		seeChange: function(event) {
 			getSI();
 			getPC();
+			getandUpdateWeight();
 			updateMatrices();
 			updateSIKeys();
 			updatePCKeys();
@@ -1143,16 +1146,12 @@ var data_Vue = new Vue({
 				}
 			}	
 		},		
-		
-		createCombi: function(ind){
-			
-		//	console.log(ind);
-		//	console.log(this.traitsinfo);
-			if( this.traitsinfo[ind]['is_combi'] == true){
-				this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
-			} 
+
+
+	createCombi:function(ind){
+		this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length).fill(0);
 		},
-		
+
 		// create/remove new QTL on change of the # QTls, depending on 
 		// whether new number is greater or smaller --> remove from bottom
 		createQTL: function(ind){
@@ -1230,9 +1229,7 @@ var data_Vue = new Vue({
 				for(var ind; ind < len; ind++){
 					this.traitsinfo[ind]['combi_weights'] = new Array(this.traitsinfo.length ).fill(0); 
 				}
-			}		
-			
-
+			}	
 		},
 		
 		// remove clicked Phenotype
@@ -1564,6 +1561,17 @@ function getPC() {
 	}
 }
 
+
+function getandUpdateWeight() {
+ 	for(var t=0; t < data_Vue.traitsinfo.length; t++){	
+		if (data_Vue.traitsinfo[t]['is_combi'] == true) {
+			arraymove((data_Vue.traitsinfo[t]['combi_weights']), data_Vue.geninfo['Traits moveFrom'], data_Vue.geninfo['Traits moveTo']);
+		//console.log(data_Vue.traitsinfo[t]['combi_weights']);
+		}				
+	}	
+}
+
+
 function trait_move(si, from, to) {
     if (to >= si.length) {
         var k = to - si.length + 1;
@@ -1574,6 +1582,13 @@ function trait_move(si, from, to) {
     si.splice(to, 0, si.splice(from, 1)[0]);
     return si; 
 };
+
+
+function arraymove(arr, fromIndex, toIndex) {
+    var element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
+}
 
 
 // if we use Variables for the # individuals, we need to update node.individuals:
@@ -1746,6 +1761,7 @@ function updatePCKeys() {
 	}
 }
 
+
 // function to export Data into OutputArea:
 
 function exportNetwork() {
@@ -1821,6 +1837,8 @@ function exportNetwork() {
 		runned : data_Vue.runned,
 	};
 	
+	
+		
 	var data_to_export = {
 		'Nodes': data_Vue.nodes.get(),
 		'Edges': data_Vue.edges.get(),
@@ -2267,10 +2285,15 @@ function importNetwork_intern(inputData1) {
 					data_Vue.traitsinfo[j]['combi_weights'].push(temp[jj]);
 				}
 			}
+			if(data_Vue.traitsinfo[j]['is_combi'] == true) {
+				data_Vue.combiW_Traits.push(data_Vue.traitsinfo[j]['Trait Name']);
+			}
 		}
 	}
 
 
+	//console.log(data_Vue.combiWeight);
+	
 	var mat1 = inputData['Phenotypic Correlation'];
 	var mat2 = inputData['Genetic Correlation'];
 	//console.log(mat1);

@@ -745,6 +745,8 @@ button[disabled]{
 	max-width:800px;
 }
 
+.corr_table input
+
 .corr_td {
 	padding:5px;
 	height:20px;
@@ -1415,4 +1417,50 @@ a[href], input[type='submit'], input[type='image'], label[for], select, button, 
 	width: 20px;
     height: 20px;
 	border: 1px solid blue;
+}
+
+.weight_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	max-width: 70%;
+}
+
+.weight_table td {
+	padding:5px;
+	height:20px;
+	font-size:11pt;
+	font-weight:bold;
+	font-family:cambria;
+}
+
+.weight_table input[type=value]{
+	font-size:12pt;
+    width: 70px;
+	height: 25px;
+    border: 2px solid lightblue;  
+	font-family:cambria;
+}
+
+.litter_table {
+	background-color: #f0f0f0;
+	border-collapse: collapse;
+	text-align: center;
+	max-width: 40%;
+}
+
+.litter_table td {
+	padding:5px;
+	height:20px;
+	font-size:12pt;
+	font-weight:bold;
+	font-family:cambria;
+}
+
+.litter_table input[type=value]{
+	font-size:12pt;
+    width: 90px;
+	height: 25px;
+    border: 2px solid lightblue;  
+	font-family:cambria;
 }
