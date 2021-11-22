@@ -676,10 +676,20 @@ button[disabled]{
 	text-align: center;
 	width:700px;
 	table-layout: fixed;
+	word-wrap: break-word;
+}
+
+.dragArea {
+	background-color:  #f0f0f0;
+	border-collapse: none;
+	text-align: center;
+	width:700px;
+	table-layout: auto;
+	border: 0px solid yellow;
 }
 
 .drag_table td {
-	padding:5px;
+	padding:3px;
 	height:20px;
   	width: 56px;
 	font-size:8pt;
@@ -784,7 +794,7 @@ button[disabled]{
 	height:18px;
 	border: 0px;
 	padding-left:0px;
-	color: #e8e3e3;
+	color: black;
 	background-color: #f2f2f2;
 }
 
