@@ -1163,7 +1163,7 @@ app.post('/addUsertoDB', function(request, response) {
 		if (err) throw err;
 		var dbo = db.db("DB");
 		var createdDate = new Date().toISOString().replace('T', ' ').substring(0, 19);
-		var myobj = {_id: request.body.username, passw: request.body.password, group: request.body.group, email: request.body.email, createdDate: createdDate};
+		var myobj = {_id: request.body.username, passw: "password", group: request.body.group, email: request.body.email, createdDate: createdDate};
 		
 		dbo.collection("Users").insertOne(myobj, function(err, result){
 			if (err) {
@@ -1187,7 +1187,7 @@ app.post('/addStudentsToDB', function(request, response) {
 		var start = request.body.from;
 		var end = request.body.to;
 			for(let i=start;i<=end; i++){
-				studentsObj.push({_id: request.body.username+i, passw: request.body.password+i, group: request.body.group, createdDate: request.body.createdDate});
+				studentsObj.push({_id: request.body.username+i, passw: "password", group: request.body.group, createdDate: request.body.createdDate});
 			}
 			dbo.collection("Users").insertMany(studentsObj, function(err, result){
 			if (err) {
